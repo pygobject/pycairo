@@ -712,7 +712,7 @@ pdf_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 	sfc = cairo_pdf_surface_create (PyString_AsString(file),
 					width_in_points, height_in_points);
 	Py_END_ALLOW_THREADS
-	    return PycairoSurface_FromSurface (sfc, NULL);
+        return PycairoSurface_FromSurface (sfc, NULL);
     }
     /* file or file-like object argument */
     writer = PyObject_GetAttrString (file, "write");

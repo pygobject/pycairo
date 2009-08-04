@@ -21,3 +21,12 @@ Install method2 - alternative install method
     1. Untar the .tar.gz file
     2. cd into the resulting directory
     3. python setup.py install
+
+
+Testing
+-------
+testing uses py.test from pylib
+http://codespeak.net/py/dist/
+
+$ cd test
+$ py.test

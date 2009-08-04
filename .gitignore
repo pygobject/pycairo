@@ -13,11 +13,15 @@ config.log
 config.status
 configure
 configure.scan
+depcomp
 doltcompile
 doltlibtool
+install-sh
 libtool
 Makefile
 Makefile.in
+missing
+py-compile
 pycairo.pc
 releases
 stamp-h

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """demonstrate pycairo and pygame
-method1: use a pycairo and pygame directly
+method1: use pycairo and pygame directly
 """
 
 import array

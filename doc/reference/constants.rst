@@ -47,7 +47,7 @@ cairo.HAS
           HAS_FT_FONT
           HAS_GLITZ_SURFACE
           HAS_IMAGE_SURFACE
-          HAS_HAS_PDF_SURFACE
+          HAS_PDF_SURFACE
           HAS_PNG_FUNCTIONS
           HAS_PS_SURFACE
           HAS_SVG_SURFACE

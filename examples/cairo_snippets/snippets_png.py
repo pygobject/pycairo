@@ -27,8 +27,9 @@ def do_snippet (snippet):
     try:
         execfile ('snippets/%s.py' % snippet, globals(), locals())
     except:
-        exc_type, exc_value = sys.exc_info()[:2]
-        print >> sys.stderr, exc_type, exc_value
+#        exc_type, exc_value = sys.exc_info()[:2]
+#        print >> sys.stderr, exc_type, exc_value
+        raise
     else:
         cr.restore()
         surface.write_to_png ('snippets/%s.png' % snippet)

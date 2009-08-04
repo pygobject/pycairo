@@ -20,7 +20,7 @@ AC_SUBST(PYCAIRO_VERSION_MICRO, [pycairo_version_micro])
 AC_SUBST(VERSION_INFO,
 	[pycairo_version_major,pycairo_version_minor,pycairo_version_micro])
 
-AC_CONFIG_SRCDIR([cairo/pycairo.h])
+AC_CONFIG_SRCDIR([src/pycairo.h])
 AC_CONFIG_HEADERS(config.h)
 
 AM_INIT_AUTOMAKE([1.9.6 -Wall])
@@ -96,7 +96,7 @@ esac
 AC_CONFIG_FILES([
 Makefile
 pycairo.pc
-cairo/Makefile
+src/Makefile
 doc/Makefile
 examples/Makefile
 test/Makefile

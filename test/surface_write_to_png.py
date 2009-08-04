@@ -14,14 +14,14 @@ import cairo
 class C(object):
     """a file-like object (for testing), it simulates sys.stdout
     """
-    def __init__ (self):
+    def __init__(self):
         self.closed = False
 
     def write(self, s):
         """just echo to stdout, without newlines"""
         if self.closed:
-            raise ValueError ("I/O operation on closed file")
-        sys.stdout.write (s)
+            raise ValueError("I/O operation on closed file")
+        sys.stdout.write(s)
 
     def close(self):
         self.closed = True
@@ -29,27 +29,27 @@ class C(object):
 
 WIDTH, HEIGHT  = 256, 256
 
-surface = cairo.ImageSurface (cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
-ctx = cairo.Context (surface)
+surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
+ctx = cairo.Context(surface)
 
-ctx.scale (WIDTH/1.0, HEIGHT/1.0)
+ctx.scale(WIDTH/1.0, HEIGHT/1.0)
 
-pat = cairo.LinearGradient (0.0, 0.0, 0.0, 1.0)
-pat.add_color_stop_rgba (1, 0, 0, 0, 1)
-pat.add_color_stop_rgba (0, 1, 1, 1, 1)
+pat = cairo.LinearGradient(0.0, 0.0, 0.0, 1.0)
+pat.add_color_stop_rgba(1, 0, 0, 0, 1)
+pat.add_color_stop_rgba(0, 1, 1, 1, 1)
 
-ctx.rectangle (0,0,1,1)
-ctx.set_source (pat)
-ctx.fill ()
+ctx.rectangle(0,0,1,1)
+ctx.set_source(pat)
+ctx.fill()
 
-pat = cairo.RadialGradient (0.45, 0.4, 0.1,
+pat = cairo.RadialGradient(0.45, 0.4, 0.1,
                             0.4,  0.4, 0.5)
-pat.add_color_stop_rgba (0, 1, 1, 1, 1)
-pat.add_color_stop_rgba (1, 0, 0, 0, 1)
+pat.add_color_stop_rgba(0, 1, 1, 1, 1)
+pat.add_color_stop_rgba(1, 0, 0, 0, 1)
 
-ctx.set_source (pat)
-ctx.arc (0.5, 0.5, 0.3, 0, 2 * math.pi)
-ctx.fill ()
+ctx.set_source(pat)
+ctx.arc(0.5, 0.5, 0.3, 0, 2 * math.pi)
+ctx.fill()
 
 # a selection of possible args to surface.write_to_png()
 #fo = '/tmp/f.png'
@@ -60,7 +60,7 @@ fo = file('/tmp/f.png', 'w')
 #fo = C()
 
 fo.close()  # this should cause: ValueError: I/O operation on closed file
-surface.write_to_png (fo)
+surface.write_to_png(fo)
 
 # for testing StringIO: get data and write to file
 #string = fo.getvalue()

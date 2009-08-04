@@ -30,3 +30,4 @@ ctx.arc (0.5, 0.5, 0.3, 0, 2 * math.pi)
 ctx.fill ()
 
 surface.write_to_png('gradient.png')
+#surface.write_to_png(10)

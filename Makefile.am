@@ -1,4 +1,4 @@
-SUBDIRS = cairo examples test doc
+SUBDIRS = src examples test doc
 
 EXTRA_DIST = \
   COPYING \
