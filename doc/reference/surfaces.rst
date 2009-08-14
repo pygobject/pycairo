@@ -637,8 +637,11 @@ if it is available.
 
 .. class:: XlibSurface
 
-   *XlibSurface* cannot be instantiated directly. But an XlibSurface instance
-   can be returned from a function call when using pygtk.
+   .. note:: *XlibSurface* cannot be instantiated directly because Python
+      interaction with Xlib would require open source Python bindings to Xlib
+      which provided a C API.
+      However, an *XlibSurface* instance can be returned from a function call
+      when using pygtk http://www.pygtk.org/.
 
    .. method:: get_depth()
 

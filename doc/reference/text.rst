@@ -46,6 +46,17 @@ use.
 
 
 
+class FreeTypeFontFace(:class:`FontFace`)
+=========================================
+
+FreeType Fonts - Font support for FreeType.
+
+The FreeType font backend is primarily used to render text on GNU/Linux
+systems, but can be used on other platforms too.
+
+   .. note:: FreeType Fonts are not implemented in pycairo because there is no open source Python bindings to FreeType (and fontconfig) that provides a C API. This a possible project idea for anyone interested in adding FreeType support to pycairo.
+
+
 class ToyFontFace(:class:`FontFace`)
 ====================================
 
@@ -91,6 +102,19 @@ The *cairo.ToyFontFace* class can be used instead of :meth:`Context.select_font_
       :returns: the :ref:`FONT_WEIGHT <constants_FONT_WEIGHT>` value
 
       .. versionadded:: 1.8.4
+
+
+class UserFontFace(:class:`FontFace`)
+=====================================
+
+The user-font feature allows the cairo user to provide drawings for glyphs in
+a font. This is most useful in implementing fonts in non-standard formats,
+like SVG fonts and Flash fonts, but can also be used by games and other
+application to draw "funky" fonts.
+
+   .. note:: UserFontFace support has not (yet) been added to pycairo. If you
+      need this feature in pycairo register your interest by sending a message
+      to the cairo mailing list, or by opening a pycairo bug report.
 
 
 class ScaledFont()
