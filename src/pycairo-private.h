@@ -1,4 +1,4 @@
-/* -*- mode: C; c-basic-offset: 4 -*-
+/* -*- mode: C; c-basic-offset: 2 -*-
  *
  * Pycairo - Python bindings for cairo
  *
@@ -105,57 +105,57 @@ int Pycairo_Check_Status (cairo_status_t status);
 
 /* error checking macros */
 #define RETURN_NULL_IF_CAIRO_ERROR(status)    \
-    do {                                      \
-	if (status != CAIRO_STATUS_SUCCESS) { \
-	    Pycairo_Check_Status (status);    \
-            return NULL;		      \
-	}                                     \
-    } while (0)
+  do {					      \
+    if (status != CAIRO_STATUS_SUCCESS) {     \
+      Pycairo_Check_Status (status);	      \
+      return NULL;			      \
+    }					      \
+  } while (0)
 
-#define RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(ctx) \
-    do {                                        \
-	cairo_status_t status = cairo_status (ctx); \
-	if (status != CAIRO_STATUS_SUCCESS) {   \
-	    Pycairo_Check_Status (status);      \
-            return NULL;		        \
-	}                                       \
-    } while (0)
+#define RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(ctx)    \
+  do {						   \
+    cairo_status_t status = cairo_status (ctx);	   \
+    if (status != CAIRO_STATUS_SUCCESS) {	   \
+      Pycairo_Check_Status (status);		   \
+      return NULL;				   \
+    }						   \
+  } while (0)
 
-#define RETURN_NULL_IF_CAIRO_PATTERN_ERROR(pattern) \
-    do {                                         \
-	cairo_status_t status = cairo_pattern_status (pattern); \
-	if (status != CAIRO_STATUS_SUCCESS) {    \
-	    Pycairo_Check_Status (status);       \
-            return NULL;		         \
-	}                                        \
-    } while (0)
+#define RETURN_NULL_IF_CAIRO_PATTERN_ERROR(pattern)             \
+  do {								\
+    cairo_status_t status = cairo_pattern_status (pattern);	\
+    if (status != CAIRO_STATUS_SUCCESS) {			\
+      Pycairo_Check_Status (status);				\
+      return NULL;						\
+    }								\
+  } while (0)
 
-#define RETURN_NULL_IF_CAIRO_SURFACE_ERROR(surface) \
-    do {                                         \
-	cairo_status_t status = cairo_surface_status (surface); \
-	if (status != CAIRO_STATUS_SUCCESS) {    \
-	    Pycairo_Check_Status (status);       \
-            return NULL;		         \
-	}                                        \
-    } while (0)
+#define RETURN_NULL_IF_CAIRO_SURFACE_ERROR(surface)	        \
+  do {								\
+    cairo_status_t status = cairo_surface_status (surface);	\
+    if (status != CAIRO_STATUS_SUCCESS) {			\
+      Pycairo_Check_Status (status);				\
+      return NULL;						\
+    }								\
+  } while (0)
 
-#define RETURN_NULL_IF_CAIRO_SCALED_FONT_ERROR(sc_font) \
-    do {                                         \
-	cairo_status_t status = cairo_scaled_font_status (sc_font); \
-	if (status != CAIRO_STATUS_SUCCESS) {    \
-	    Pycairo_Check_Status (status);       \
-            return NULL;		         \
-	}                                        \
-    } while (0)
+#define RETURN_NULL_IF_CAIRO_SCALED_FONT_ERROR(sc_font)             \
+  do {								    \
+    cairo_status_t status = cairo_scaled_font_status (sc_font);	    \
+    if (status != CAIRO_STATUS_SUCCESS) {			    \
+      Pycairo_Check_Status (status);				    \
+      return NULL;						    \
+    }								    \
+  } while (0)
 
-#define RETURN_NULL_IF_CAIRO_FONT_OPTIONS_ERROR(fo) \
-    do {                                         \
-	cairo_status_t status = cairo_font_options_status (fo); \
-	if (status != CAIRO_STATUS_SUCCESS) {    \
-	    Pycairo_Check_Status (status);       \
-            return NULL;		         \
-	}                                        \
-    } while (0)
+#define RETURN_NULL_IF_CAIRO_FONT_OPTIONS_ERROR(fo)	        \
+  do {								\
+    cairo_status_t status = cairo_font_options_status (fo);	\
+    if (status != CAIRO_STATUS_SUCCESS) {			\
+      Pycairo_Check_Status (status);				\
+      return NULL;						\
+    }								\
+  } while (0)
 
 
 #endif /* _PYCAIRO_PRIVATE_H_ */

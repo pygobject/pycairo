@@ -1,4 +1,4 @@
-/* -*- mode: C; c-basic-offset: 4 -*-
+/* -*- mode: C; c-basic-offset: 2 -*-
  *
  * Pycairo - Python bindings for cairo
  *
@@ -37,37 +37,37 @@
 
 
 typedef struct {
-    PyObject_HEAD
-    cairo_t *ctx;
-    PyObject *base; /* base object used to create context, or NULL */
+  PyObject_HEAD
+  cairo_t *ctx;
+  PyObject *base; /* base object used to create context, or NULL */
 } PycairoContext;
 
 typedef struct {
-    PyObject_HEAD
-    cairo_font_face_t *font_face;
+  PyObject_HEAD
+  cairo_font_face_t *font_face;
 } PycairoFontFace;
 
 #define PycairoToyFontFace PycairoFontFace
 
 typedef struct {
-    PyObject_HEAD
-    cairo_font_options_t *font_options;
+  PyObject_HEAD
+  cairo_font_options_t *font_options;
 } PycairoFontOptions;
 
 typedef struct {
-    PyObject_HEAD
-    cairo_matrix_t matrix;
+  PyObject_HEAD
+  cairo_matrix_t matrix;
 } PycairoMatrix;
 
 typedef struct {
-    PyObject_HEAD
-    cairo_path_t *path;
+  PyObject_HEAD
+  cairo_path_t *path;
 } PycairoPath;
 
 typedef struct {
-    PyObject_HEAD
-    cairo_pattern_t *pattern;
-    PyObject *base; /* base object used to create pattern, or NULL */
+  PyObject_HEAD
+  cairo_pattern_t *pattern;
+  PyObject *base; /* base object used to create pattern, or NULL */
 } PycairoPattern;
 
 #define PycairoSolidPattern   PycairoPattern
@@ -77,14 +77,14 @@ typedef struct {
 #define PycairoRadialGradient PycairoPattern
 
 typedef struct {
-    PyObject_HEAD
-    cairo_scaled_font_t *scaled_font;
+  PyObject_HEAD
+  cairo_scaled_font_t *scaled_font;
 } PycairoScaledFont;
 
 typedef struct {
-    PyObject_HEAD
-    cairo_surface_t *surface;
-    PyObject *base; /* base object used to create surface, or NULL */
+  PyObject_HEAD
+  cairo_surface_t *surface;
+  PyObject *base; /* base object used to create surface, or NULL */
 } PycairoSurface;
 
 #define PycairoImageSurface PycairoSurface
@@ -99,43 +99,43 @@ typedef struct {
 
 /* Define structure for C API. */
 typedef struct {
-    /* (type object, constructor) pairs */
-    PyTypeObject *Context_Type;
-    PyObject *(*Context_FromContext)(cairo_t *ctx, PyTypeObject *type,
-				     PyObject *base);
-    PyTypeObject *FontFace_Type;
-    PyTypeObject *ToyFontFace_Type;
-    PyObject *(*FontFace_FromFontFace)(cairo_font_face_t *font_face);
-    PyTypeObject *FontOptions_Type;
-    PyObject *(*FontOptions_FromFontOptions)(
-                                       cairo_font_options_t *font_options);
-    PyTypeObject *Matrix_Type;
-    PyObject *(*Matrix_FromMatrix)(const cairo_matrix_t *matrix);
-    PyTypeObject *Path_Type;
-    PyObject *(*Path_FromPath)(cairo_path_t *path);
+  /* (type object, constructor) pairs */
+  PyTypeObject *Context_Type;
+  PyObject *(*Context_FromContext)(cairo_t *ctx, PyTypeObject *type,
+				   PyObject *base);
+  PyTypeObject *FontFace_Type;
+  PyTypeObject *ToyFontFace_Type;
+  PyObject *(*FontFace_FromFontFace)(cairo_font_face_t *font_face);
+  PyTypeObject *FontOptions_Type;
+  PyObject *(*FontOptions_FromFontOptions)(
+					   cairo_font_options_t *font_options);
+  PyTypeObject *Matrix_Type;
+  PyObject *(*Matrix_FromMatrix)(const cairo_matrix_t *matrix);
+  PyTypeObject *Path_Type;
+  PyObject *(*Path_FromPath)(cairo_path_t *path);
 
-    PyTypeObject *Pattern_Type;
-    PyTypeObject *SolidPattern_Type;
-    PyTypeObject *SurfacePattern_Type;
-    PyTypeObject *Gradient_Type;
-    PyTypeObject *LinearGradient_Type;
-    PyTypeObject *RadialGradient_Type;
-    PyObject *(*Pattern_FromPattern)(cairo_pattern_t *pattern, PyObject *base);
+  PyTypeObject *Pattern_Type;
+  PyTypeObject *SolidPattern_Type;
+  PyTypeObject *SurfacePattern_Type;
+  PyTypeObject *Gradient_Type;
+  PyTypeObject *LinearGradient_Type;
+  PyTypeObject *RadialGradient_Type;
+  PyObject *(*Pattern_FromPattern)(cairo_pattern_t *pattern, PyObject *base);
 
-    PyTypeObject *ScaledFont_Type;
-    PyObject *(*ScaledFont_FromScaledFont)(cairo_scaled_font_t *scaled_font);
+  PyTypeObject *ScaledFont_Type;
+  PyObject *(*ScaledFont_FromScaledFont)(cairo_scaled_font_t *scaled_font);
 
-    PyTypeObject *Surface_Type;
-    PyTypeObject *ImageSurface_Type;
-    PyTypeObject *PDFSurface_Type;
-    PyTypeObject *PSSurface_Type;
-    PyTypeObject *SVGSurface_Type;
-    PyTypeObject *Win32Surface_Type;
-    PyTypeObject *XlibSurface_Type;
-    PyObject *(*Surface_FromSurface)(cairo_surface_t *surface, PyObject *base);
+  PyTypeObject *Surface_Type;
+  PyTypeObject *ImageSurface_Type;
+  PyTypeObject *PDFSurface_Type;
+  PyTypeObject *PSSurface_Type;
+  PyTypeObject *SVGSurface_Type;
+  PyTypeObject *Win32Surface_Type;
+  PyTypeObject *XlibSurface_Type;
+  PyObject *(*Surface_FromSurface)(cairo_surface_t *surface, PyObject *base);
 
-    /* misc functions */
-    int (*Check_Status)(cairo_status_t status);
+  /* misc functions */
+  int (*Check_Status)(cairo_status_t status);
 } Pycairo_CAPI_t;
 
 

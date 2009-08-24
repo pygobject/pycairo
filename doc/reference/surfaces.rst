@@ -383,7 +383,7 @@ is a multi-page vector surface backend.
 .. class:: PSSurface(fobj, width_in_points, height_in_points)
 
    :param fobj: a filename or writable file object. None may be used to specify no output. This will generate a *PSSurface* that may be queried and used as a source, without generating a temporary file.
-   :type fobj: str, file or file-like object
+   :type fobj: None, str, file or file-like object
    :param width_in_points: width of the surface, in points
      (1 point == 1/72.0 inch)
    :type  width_in_points: float
@@ -586,7 +586,7 @@ multi-page vector surface backend
 .. class:: SVGSurface(fobj, width_in_points, height_in_points)
 
    :param fobj: a filename or writable file object. None may be used to specify no output. This will generate a *SVGSurface* that may be queried and used as a source, without generating a temporary file.
-   :type fobj: str, file or file-like object
+   :type fobj: None, str, file or file-like object
    :param width_in_points: width of the surface, in points (1 point == 1/72.0 inch)
    :type  width_in_points: float
    :param height_in_points: height of the surface, in points (1 point == 1/72.0 inch)
