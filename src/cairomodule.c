@@ -34,7 +34,7 @@
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
-#include "pycairo-private.h"
+#include "private.h"
 
 /* to read CAIRO_PS_LEVEL_* constants */
 #ifdef CAIRO_HAS_PS_SURFACE

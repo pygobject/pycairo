@@ -34,7 +34,7 @@
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
-#include "pycairo-private.h"
+#include "private.h"
 
 
 /* PycairoContext_FromContext

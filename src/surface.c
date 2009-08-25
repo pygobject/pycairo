@@ -35,7 +35,7 @@
 #  include <config.h>
 #endif
 
-#include "pycairo-private.h"
+#include "private.h"
 
 
 /* Class Surface ---------------------------------------------------------- */
