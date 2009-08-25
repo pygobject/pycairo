@@ -368,7 +368,7 @@ PyTypeObject PycairoSurface_Type = {
   surface_methods,                    /* tp_methods */
   0,                                  /* tp_members */
   0,                                  /* tp_getset */
-  0, /* &PyBaseObject_Type, */        /* tp_base */
+  &PyBaseObject_Type,                 /* tp_base */
   0,                                  /* tp_dict */
   0,                                  /* tp_descr_get */
   0,                                  /* tp_descr_set */
@@ -645,7 +645,7 @@ PyTypeObject PycairoImageSurface_Type = {
   image_surface_methods,              /* tp_methods */
   0,                                  /* tp_members */
   0,                                  /* tp_getset */
-  0, /* &PycairoSurface_Type, */      /* tp_base */
+  &PycairoSurface_Type,               /* tp_base */
   0,                                  /* tp_dict */
   0,                                  /* tp_descr_get */
   0,                                  /* tp_descr_set */
@@ -759,7 +759,7 @@ PyTypeObject PycairoPDFSurface_Type = {
   pdf_surface_methods,                /* tp_methods */
   0,                                  /* tp_members */
   0,                                  /* tp_getset */
-  0, /* &PycairoSurface_Type, */      /* tp_base */
+  &PycairoSurface_Type,               /* tp_base */
   0,                                  /* tp_dict */
   0,                                  /* tp_descr_get */
   0,                                  /* tp_descr_set */
@@ -952,7 +952,7 @@ PyTypeObject PycairoPSSurface_Type = {
   ps_surface_methods,                 /* tp_methods */
   0,                                  /* tp_members */
   0,                                  /* tp_getset */
-  0, /* &PycairoSurface_Type, */      /* tp_base */
+  &PycairoSurface_Type,               /* tp_base */
   0,                                  /* tp_dict */
   0,                                  /* tp_descr_get */
   0,                                  /* tp_descr_set */
@@ -1058,7 +1058,7 @@ PyTypeObject PycairoSVGSurface_Type = {
   svg_surface_methods,                /* tp_methods */
   0,                                  /* tp_members */
   0,                                  /* tp_getset */
-  0, /* &PycairoSurface_Type, */      /* tp_base */
+  &PycairoSurface_Type,               /* tp_base */
   0,                                  /* tp_dict */
   0,                                  /* tp_descr_get */
   0,                                  /* tp_descr_set */
@@ -1123,7 +1123,7 @@ PyTypeObject PycairoWin32Surface_Type = {
   win32_surface_methods,              /* tp_methods */
   0,                                  /* tp_members */
   0,                                  /* tp_getset */
-  0, /* &PycairoSurface_Type, */      /* tp_base */
+  &PycairoSurface_Type,               /* tp_base */
   0,                                  /* tp_dict */
   0,                                  /* tp_descr_get */
   0,                                  /* tp_descr_set */
@@ -1203,7 +1203,7 @@ PyTypeObject PycairoXlibSurface_Type = {
   xlib_surface_methods,               /* tp_methods */
   0,                                  /* tp_members */
   0,                                  /* tp_getset */
-  0, /* &PycairoSurface_Type, */      /* tp_base */
+  &PycairoSurface_Type,               /* tp_base */
   0,                                  /* tp_dict */
   0,                                  /* tp_descr_get */
   0,                                  /* tp_descr_set */

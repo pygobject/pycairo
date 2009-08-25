@@ -196,7 +196,7 @@ PyTypeObject PycairoPattern_Type = {
   pattern_methods,                    /* tp_methods */
   0,                                  /* tp_members */
   0,                                  /* tp_getset */
-  0, /* &PyBaseObject_Type, */        /* tp_base */
+  &PyBaseObject_Type,                 /* tp_base */
   0,                                  /* tp_dict */
   0,                                  /* tp_descr_get */
   0,                                  /* tp_descr_set */
@@ -265,7 +265,7 @@ PyTypeObject PycairoSolidPattern_Type = {
   solid_pattern_methods,              /* tp_methods */
   0,                                  /* tp_members */
   0,                                  /* tp_getset */
-  0, /* &PyPattern_Type, */           /* tp_base */
+  &PycairoPattern_Type,               /* tp_base */
   0,                                  /* tp_dict */
   0,                                  /* tp_descr_get */
   0,                                  /* tp_descr_set */
@@ -357,7 +357,7 @@ PyTypeObject PycairoSurfacePattern_Type = {
   surface_pattern_methods,            /* tp_methods */
   0,                                  /* tp_members */
   0,                                  /* tp_getset */
-  0, /* &PycairoPattern_Type, */      /* tp_base */
+  &PycairoPattern_Type,               /* tp_base */
   0,                                  /* tp_dict */
   0,                                  /* tp_descr_get */
   0,                                  /* tp_descr_set */
@@ -442,7 +442,7 @@ PyTypeObject PycairoGradient_Type = {
   gradient_methods,                   /* tp_methods */
   0,                                  /* tp_members */
   0,                                  /* tp_getset */
-  0, /* &PycairoPattern_Type, */      /* tp_base */
+  &PycairoPattern_Type,               /* tp_base */
   0,                                  /* tp_dict */
   0,                                  /* tp_descr_get */
   0,                                  /* tp_descr_set */
@@ -512,7 +512,7 @@ PyTypeObject PycairoLinearGradient_Type = {
   linear_gradient_methods,            /* tp_methods */
   0,                                  /* tp_members */
   0,                                  /* tp_getset */
-  0, /* &PycairoGradient_Type, */     /* tp_base */
+  &PycairoGradient_Type,              /* tp_base */
   0,                                  /* tp_dict */
   0,                                  /* tp_descr_get */
   0,                                  /* tp_descr_set */
@@ -584,7 +584,7 @@ PyTypeObject PycairoRadialGradient_Type = {
   radial_gradient_methods,            /* tp_methods */
   0,                                  /* tp_members */
   0,                                  /* tp_getset */
-  0, /* &PycairoGradient_Type, */     /* tp_base */
+  &PycairoGradient_Type,              /* tp_base */
   0,                                  /* tp_dict */
   0,                                  /* tp_descr_get */
   0,                                  /* tp_descr_set */

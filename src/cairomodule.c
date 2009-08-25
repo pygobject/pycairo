@@ -172,80 +172,59 @@ init_cairo(void)
 {
   PyObject *m;
 
-  /* initialise 'tp_base' here to work round problem with MinGW compiler */
-  PycairoContext_Type.tp_base = &PyBaseObject_Type;
   if (PyType_Ready(&PycairoContext_Type) < 0)
     return;
-  PycairoFontFace_Type.tp_base = &PyBaseObject_Type;
   if (PyType_Ready(&PycairoFontFace_Type) < 0)
     return;
-  PycairoToyFontFace_Type.tp_base = &PycairoFontFace_Type;
   if (PyType_Ready(&PycairoToyFontFace_Type) < 0)
     return;
-  PycairoFontOptions_Type.tp_base = &PyBaseObject_Type;
   if (PyType_Ready(&PycairoFontOptions_Type) < 0)
     return;
-  PycairoMatrix_Type.tp_base = &PyBaseObject_Type;
   if (PyType_Ready(&PycairoMatrix_Type) < 0)
     return;
-  PycairoPath_Type.tp_base = &PyBaseObject_Type;
   if (PyType_Ready(&PycairoPath_Type) < 0)
     return;
   PycairoPathiter_Type.tp_iter=&PyObject_SelfIter;
 
-  PycairoPattern_Type.tp_base = &PyBaseObject_Type;
   if (PyType_Ready(&PycairoPattern_Type) < 0)
     return;
-  PycairoSolidPattern_Type.tp_base = &PycairoPattern_Type;
   if (PyType_Ready(&PycairoSolidPattern_Type) < 0)
     return;
-  PycairoSurfacePattern_Type.tp_base = &PycairoPattern_Type;
   if (PyType_Ready(&PycairoSurfacePattern_Type) < 0)
     return;
-  PycairoGradient_Type.tp_base = &PycairoPattern_Type;
   if (PyType_Ready(&PycairoGradient_Type) < 0)
     return;
-  PycairoLinearGradient_Type.tp_base = &PycairoGradient_Type;
   if (PyType_Ready(&PycairoLinearGradient_Type) < 0)
     return;
-  PycairoRadialGradient_Type.tp_base = &PycairoGradient_Type;
   if (PyType_Ready(&PycairoRadialGradient_Type) < 0)
     return;
 
-  PycairoScaledFont_Type.tp_base = &PyBaseObject_Type;
   if (PyType_Ready(&PycairoScaledFont_Type) < 0)
     return;
 
-  PycairoSurface_Type.tp_base = &PyBaseObject_Type;
   if (PyType_Ready(&PycairoSurface_Type) < 0)
     return;
 #ifdef CAIRO_HAS_IMAGE_SURFACE
-  PycairoImageSurface_Type.tp_base = &PycairoSurface_Type;
   if (PyType_Ready(&PycairoImageSurface_Type) < 0)
     return;
 #endif
 #ifdef CAIRO_HAS_PDF_SURFACE
-  PycairoPDFSurface_Type.tp_base = &PycairoSurface_Type;
   if (PyType_Ready(&PycairoPDFSurface_Type) < 0)
     return;
 #endif
 #ifdef CAIRO_HAS_PS_SURFACE
-  PycairoPSSurface_Type.tp_base = &PycairoSurface_Type;
   if (PyType_Ready(&PycairoPSSurface_Type) < 0)
     return;
 #endif
 #ifdef CAIRO_HAS_SVG_SURFACE
-  PycairoSVGSurface_Type.tp_base = &PycairoSurface_Type;
   if (PyType_Ready(&PycairoSVGSurface_Type) < 0)
     return;
 #endif
 #ifdef CAIRO_HAS_WIN32_SURFACE
-  PycairoWin32Surface_Type.tp_base = &PycairoSurface_Type;
   if (PyType_Ready(&PycairoWin32Surface_Type) < 0)
     return;
 #endif
 #ifdef CAIRO_HAS_XLIB_SURFACE
-  PycairoXlibSurface_Type.tp_base = &PycairoSurface_Type;
   if (PyType_Ready(&PycairoXlibSurface_Type) < 0)
     return;
 #endif

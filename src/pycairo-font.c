@@ -133,7 +133,7 @@ PyTypeObject PycairoFontFace_Type = {
   0,                                  /* tp_methods */
   0,                                  /* tp_members */
   0,                                  /* tp_getset */
-  0, /* &PyBaseObject_Type, */        /* tp_base */
+  &PyBaseObject_Type,                 /* tp_base */
   0,                                  /* tp_dict */
   0,                                  /* tp_descr_get */
   0,                                  /* tp_descr_set */
@@ -238,7 +238,7 @@ PyTypeObject PycairoToyFontFace_Type = {
   toy_font_face_methods,              /* tp_methods */
   0,                                  /* tp_members */
   0,                                  /* tp_getset */
-  0, /* &PycairoFontFace_Type, */     /* tp_base */
+  &PycairoFontFace_Type,              /* tp_base */
   0,                                  /* tp_dict */
   0,                                  /* tp_descr_get */
   0,                                  /* tp_descr_set */
@@ -412,7 +412,7 @@ PyTypeObject PycairoScaledFont_Type = {
   scaled_font_methods,                /* tp_methods */
   0,                                  /* tp_members */
   0,                                  /* tp_getset */
-  0, /* &PyBaseObject_Type, */        /* tp_base */
+  &PyBaseObject_Type,                 /* tp_base */
   0,                                  /* tp_dict */
   0,                                  /* tp_descr_get */
   0,                                  /* tp_descr_set */
@@ -597,7 +597,7 @@ PyTypeObject PycairoFontOptions_Type = {
   font_options_methods,               /* tp_methods */
   0,                                  /* tp_members */
   0,                                  /* tp_getset */
-  0, /* &PyBaseObject_Type, */        /* tp_base */
+  &PyBaseObject_Type,                 /* tp_base */
   0,                                  /* tp_dict */
   0,                                  /* tp_descr_get */
   0,                                  /* tp_descr_set */
