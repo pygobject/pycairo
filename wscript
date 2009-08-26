@@ -3,7 +3,8 @@
 import os
 
 APPNAME='pycairo'
-VERSION='1.8.8'
+VERSION='1.8.9'
+cairo_version_required = '1.8.8'
 srcdir = '.'
 blddir = '../%s-build' % APPNAME
 
@@ -29,7 +30,7 @@ def configure(conf):
   conf.check_tool('python')
   conf.check_python_version((2,6,0))
   conf.check_python_headers()
-  conf.check_cfg(package='cairo', atleast_version='1.8.8',
+  conf.check_cfg(package='cairo', atleast_version=cairo_version_required,
                  args='--cflags --libs')
 
   # add gcc options

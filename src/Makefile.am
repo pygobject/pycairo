@@ -1,3 +1,5 @@
+EXTRA_DIST = \
+  wscript
 
 pycairoexecdir = $(pyexecdir)/cairo
 

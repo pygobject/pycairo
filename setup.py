@@ -7,7 +7,7 @@ import io
 import subprocess
 import sys
 
-pycairo_version        = '1.8.8'
+pycairo_version        = '1.8.9'
 cairo_version_required = '1.8.8'
 pkgconfig_file = 'pycairo.pc'
 config_file    = 'src/config.h'
