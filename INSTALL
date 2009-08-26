@@ -1,31 +1,31 @@
-GNU Autotools - install method 1 - preferred method
---------------------------------
-Using the same install method of install as cairo - GNU autotools.
-
-  $ python -c "import sys; print sys.prefix"
-    # make a note of the python prefix
-  $ ./configure --prefix=<python_prefix>
-  $ make
-  $ make install       # may require superuser access
-
-To build from CVS, use this line instead of the configure line above:
-  $ ./autogen.sh --prefix=<python_prefix>
-
-If you're installing to another prefix than the one where Python is installed
-Python will not be able to find the cairo module until you add
-$prefix/lib/pythonX.Y/site-packages to the PYTHONPATH variable.
-
-
-Waf - install method 2 - alternative install method
-----------------------
+Waf - recommended install method
+---
 $ ./waf --help  # shows available waf options
 $ ./waf configure
 $ ./waf build
 $ ./waf install
 
 
-Python distutils - install method 3 - alternative install method
------------------------------------
+GNU Autotools - alternative install method
+-------------
+Using the same install method of install as cairo - GNU autotools.
+
+$ python -c "import sys; print sys.prefix"
+  # make a note of the python prefix
+$ ./configure --prefix=<python_prefix>
+$ make
+$ make install       # may require superuser access
+
+To build from CVS, use this line instead of the configure line above:
+$ ./autogen.sh --prefix=<python_prefix>
+
+If you're installing to another prefix than the one where Python is installed
+Python will not be able to find the cairo module until you add
+$prefix/lib/pythonX.Y/site-packages to the PYTHONPATH variable.
+
+
+Python distutils - alternative install method
+----------------
 $ python setup.py install
 
 

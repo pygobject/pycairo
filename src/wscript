@@ -20,7 +20,7 @@ def build(bld):
     features = 'cc cshlib pyext',
     source = 'cairomodule.c context.c font.c path.c pattern.c matrix.c surface.c',
     target = '_cairo',
-    includes = '. ..',  # '..' for config.h
+    includes = '.',
     uselib = 'CAIRO',
     install_path = '${PYTHONDIR}/cairo',
     )

@@ -1,10 +1,9 @@
 # -*- python -*-
 
-import io
 import os
 
 APPNAME='pycairo'
-VERSION='1.8.7'
+VERSION='1.8.8'
 srcdir = '.'
 blddir = '../%s-build' % APPNAME
 
@@ -45,8 +44,7 @@ def configure(conf):
   conf.define('PYCAIRO_VERSION_MINOR', version[1])
   conf.define('PYCAIRO_VERSION_MICRO', version[2])
 
-  conf.env.append_value('CCDEFINES', 'HAVE_CONFIG_H') # remove later - always have_config
-  conf.write_config_header('config.h')
+  conf.write_config_header('src/config.h')
 
 
 def build(bld):

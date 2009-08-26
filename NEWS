@@ -1,3 +1,14 @@
+Overview of changes from pycairo 1.8.6 to pycairo 1.8.8
+=======================================================
+General Changes:
+    Pycairo 1.8.8 requires cairo 1.8.8 (or later).
+    Move from CVS to git.
+    Add support for the waf build tool.
+
+Updated methods
+    The PDF/PS/SVGSurface constructors now accept None as a filename.
+
+
 Overview of changes from pycairo 1.8.4 to pycairo 1.8.6
 =======================================================
 General Changes:

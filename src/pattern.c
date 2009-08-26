@@ -31,9 +31,7 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
+#include "config.h"
 #include "private.h"
 
 

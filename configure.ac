@@ -4,7 +4,7 @@ AC_PREREQ(2.59)
 # the pycairo version number
 m4_define(pycairo_version_major, 1)
 m4_define(pycairo_version_minor, 8)
-m4_define(pycairo_version_micro, 7)
+m4_define(pycairo_version_micro, 8)
 m4_define(pycairo_version, pycairo_version_major.pycairo_version_minor.pycairo_version_micro)
 
 # versions of packages we require
@@ -19,7 +19,7 @@ AC_DEFINE(PYCAIRO_VERSION_MINOR, pycairo_version_minor, [pycairo minor version])
 AC_DEFINE(PYCAIRO_VERSION_MICRO, pycairo_version_micro, [pycairo macro version])
 
 AC_CONFIG_SRCDIR([src/pycairo.h])
-AC_CONFIG_HEADERS(config.h)
+AC_CONFIG_HEADERS(src/config.h)
 
 AM_INIT_AUTOMAKE([1.9.6 -Wall])
 

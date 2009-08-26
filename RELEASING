@@ -1,42 +1,25 @@
 Here are the steps to follow to create a new pycairo release:
 
-1) Ensure that there are no local, uncommitted modifications. The best
-   thing to do here may be to begin with a fresh checkout from CVS:
+1) Fill out an entry in the NEWS file
+Sift through the information in 'git log' since the last release. Summarize
+major changes briefly in a style similar to other entries in NEWS.
 
-	cvs -d cairographics.org:/cvs/cairo co pycairo
+2) Increment pycairo version number in:
+   configure.ac
+   doc/conf.py
+   README
+   setup.py
+   wscript
 
-   But it's probably good enough if "cvs -q update -Ad" generates no
-   output.
+   Increment pycairo_major/minor/micro_version in configure.ac
+   Increase the cairo_required_version - to an even numbered version.
+   Increment pycairo_major/minor version to match the cairo major/minor
+   version that pycairo requires (and increment the micro version if
+   necessary for any subsequent pycairo updates).
 
-2) Fill out an entry in the NEWS file
+(install fresh copy, run tests and examples)
 
-   Sift through the information in ChangeLog since the last release. Summarize
-   major changes briefly in a style similar to other entries in NEWS.
-
-3) Increment version numbers in:
-    cairo/cairomodule.c
-    configure.ac
-    doc/conf.py
-    README
-    setup.py
-
-    Increment pycairo_major/minor/micro_version in configure.ac
-    Increase the cairo_required_version - to an even numbered version.
-    Increment pycairo_major/minor version to match the cairo major/minor
-    version that pycairo requires (and increment the micro version if
-    necessary for any subsequent pycairo updates).
-
-(install fresh copy, run examples, run any other tests)
-
-4) Commit the changes to NEWS, configure.ac etc
-
-    Don't forget to fill out the ChangeLog just like with any other commit.
-    It's especially important to mention the new version number in the
-    ChangeLog.
-    Add a '=== Pycairo x.x.x ===' header to ChangeLog
-    Do "cvs -q update -Ad" to confirm there are no uncommitted changes.
-
-5) Run "make distcheck" and verify that it gives in no warnings or errors and
+3) Run "make distcheck" and verify that it gives in no warnings or errors and
    ends with a message of the form:
 
 	===============================================
@@ -44,7 +27,16 @@ Here are the steps to follow to create a new pycairo release:
 	pycairo-X.Y.Z.tar.gz
 	===============================================
 
-6) Edit Makefile.am and select either 'snapshot' or 'release'.
+4) Commit the changes to NEWS, configure.ac etc
+It's especially important to mention the new version number in the git commit
+comment.
+Add a '=== Pycairo x.x.x ===' header.
+
+$ git tag v 1.x.x
+
+push the changes to the freedesktop server.
+
+5) Edit Makefile.am and select either 'snapshot' or 'release'.
    Run "make release-publish" which will perform the following steps for you:
 
 	* Check that the version number ends with an even micro component
@@ -55,22 +47,21 @@ Here are the steps to follow to create a new pycairo release:
 	* scp both files to appear on http://cairographics.org/releases
 	* Place local copies of the files in the releases directory
 	* Create a LATEST-package-version file (after deleting any old one)
-	* Tag the entire source tree with a tag of the form RELEASE_X_Y_Z
 	* Provide some text for the release announcement (see below).
 
-7) Verify that the tar file arrived at the website.
+6) Verify that the tar file arrived at the website.
    Check tar file has read permissions for all.
    Update the pycairo webpage to reference the new release.
    Update http://cheeseshop.python.org entry for pycairo.
 
-8) Edit:
-   cairo/cairomodule.c
+7) Edit:
    configure.ac
    setup.py
+   wscript
    to increment pycairo_version_micro to the next larger (odd) number and
    commit.
 
-9) Send a message to cairo-announce@cairographics.org
+8) Send a message to cairo-announce@cairographics.org
               and CC python-announce-list@python.org
    to announce the new release using the text provided from
    "make release-publish".
