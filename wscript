@@ -39,6 +39,15 @@ def configure(conf):
       if opt not in env['CCFLAGS']:
         env.append_value('CCFLAGS', opt)
 
+  version = [int(s) for s in VERSION.split('.')]
+  conf.define('VERSION', VERSION)
+  conf.define('PYCAIRO_VERSION_MAJOR', version[0])
+  conf.define('PYCAIRO_VERSION_MINOR', version[1])
+  conf.define('PYCAIRO_VERSION_MICRO', version[2])
+
+  conf.env.append_value('CCDEFINES', 'HAVE_CONFIG_H') # remove later - always have_config
+  conf.write_config_header('config.h')
+
 
 def build(bld):
   print('  %s/build' %d)

@@ -14,11 +14,9 @@ AC_INIT([pycairo],
 	[pycairo_version],
 	[http://bugs.freedesktop.org/enter_bug.cgi?product=pycairo])
 
-AC_SUBST(PYCAIRO_VERSION_MAJOR, [pycairo_version_major])
-AC_SUBST(PYCAIRO_VERSION_MINOR, [pycairo_version_minor])
-AC_SUBST(PYCAIRO_VERSION_MICRO, [pycairo_version_micro])
-AC_SUBST(VERSION_INFO,
-	[pycairo_version_major,pycairo_version_minor,pycairo_version_micro])
+AC_DEFINE(PYCAIRO_VERSION_MAJOR, pycairo_version_major, [pycairo major version])
+AC_DEFINE(PYCAIRO_VERSION_MINOR, pycairo_version_minor, [pycairo minor version])
+AC_DEFINE(PYCAIRO_VERSION_MICRO, pycairo_version_micro, [pycairo macro version])
 
 AC_CONFIG_SRCDIR([src/pycairo.h])
 AC_CONFIG_HEADERS(config.h)

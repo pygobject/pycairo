@@ -32,7 +32,7 @@
 #include <Python.h>
 
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+#  include "config.h"
 #endif
 #include "private.h"
 
@@ -40,11 +40,6 @@
 #ifdef CAIRO_HAS_PS_SURFACE
 #  include <cairo-ps.h>
 #endif
-
-#define VERSION_MAJOR 1
-#define VERSION_MINOR 8
-#define VERSION_MICRO 7
-static char pycairo_version_string[] = "1.8.7";
 
 
 /* A module specific exception */
@@ -231,10 +226,13 @@ init_cairo(void)
 
   m = Py_InitModule("cairo._cairo", cairo_functions);
 
-  PyModule_AddStringConstant(m, "version", pycairo_version_string);
+  PyModule_AddStringConstant(m, "version", VERSION);
   PyModule_AddObject(m, "version_info",
-		     Py_BuildValue("(iii)", VERSION_MAJOR, VERSION_MINOR,
-				   VERSION_MICRO));
+		     Py_BuildValue("(iii)",
+				   PYCAIRO_VERSION_MAJOR,
+				   PYCAIRO_VERSION_MINOR,
+				   PYCAIRO_VERSION_MICRO
+				   ));
 
   Py_INCREF(&PycairoContext_Type);
   PyModule_AddObject(m, "Context", (PyObject *)&PycairoContext_Type);
