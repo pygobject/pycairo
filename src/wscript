@@ -1,0 +1,32 @@
+# -*- python -*-
+
+import os
+
+
+d = 'src'
+
+def build(bld):
+  print('  %s/build' %d)
+
+  # .py files
+  bld.new_task_gen(
+    features = 'py',
+    source = '__init__.py',
+    install_path = '${PYTHONDIR}/cairo',
+    )
+
+  # C extension module
+  bld.new_task_gen(
+    features = 'cc cshlib pyext',
+    source = 'cairomodule.c context.c font.c path.c pattern.c matrix.c surface.c',
+    target = '_cairo',
+    includes = '.',
+    uselib = 'CAIRO',
+    install_path = '${PYTHONDIR}/cairo',
+    )
+
+  # C API
+  bld.install_files(os.path.join(bld.env['PREFIX'], 'include', 'pycairo'),
+                    'pycairo.h')
+
+  # how to strip binaries ?

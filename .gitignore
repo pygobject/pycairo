@@ -1,7 +1,9 @@
 #
 .deps
 .libs
+.lock-wscript
 .perf
+.waf*
 #
 aclocal.m4
 autom4te.cache
@@ -27,6 +29,7 @@ releases
 stamp-h
 stamp-h1
 stamp-h.in
+waf
 #
 *~
 .*.sw?
