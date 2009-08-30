@@ -4,20 +4,18 @@ Here are the steps to follow to create a new pycairo release:
 Sift through the information in 'git log' since the last release. Summarize
 major changes briefly in a style similar to other entries in NEWS.
 
-2) Increment pycairo version number in:
+2) Increment pycairo and cairo version numbers in:
    configure.ac
    doc/conf.py
    README
    setup.py
    wscript
 
-   Increment pycairo_major/minor/micro_version in configure.ac
-   Increase the cairo_required_version - to an even numbered version.
-   Increment pycairo_major/minor version to match the cairo major/minor
-   version that pycairo requires (and increment the micro version if
-   necessary for any subsequent pycairo updates).
-
-(install fresh copy, run tests and examples)
+Increment pycairo_major/minor/micro_version in configure.ac
+Increase the cairo_required_version - to an even numbered version.
+Increment pycairo_major/minor version to match the cairo major/minor version
+that pycairo requires (and increment the micro version if necessary for any
+subsequent pycairo updates).
 
 3) Run "make distcheck" and verify that it gives in no warnings or errors and
    ends with a message of the form:
@@ -27,27 +25,29 @@ major changes briefly in a style similar to other entries in NEWS.
 	pycairo-X.Y.Z.tar.gz
 	===============================================
 
+Install from the tar.gz archive, run tests and examples.
+
 4) Commit the changes to NEWS, configure.ac etc
 It's especially important to mention the new version number in the git commit
 comment.
 Add a '=== Pycairo x.x.x ===' header.
 
-$ git tag v 1.x.x
-
-push the changes to the freedesktop server.
+$ git tag v X.Y.Z
+  push the changes to the freedesktop server.
+$ git push origin master
 
 5) Edit Makefile.am and select either 'snapshot' or 'release'.
    Run "make release-publish" which will perform the following steps for you:
 
-	* Check that the version number ends with an even micro component
-	* Check that no release exists with the current version
-	* Verify that make distcheck completes successfully
-	* Generate the final tar file
-	* Generate an md5sum file
-	* scp both files to appear on http://cairographics.org/releases
-	* Place local copies of the files in the releases directory
-	* Create a LATEST-package-version file (after deleting any old one)
-	* Provide some text for the release announcement (see below).
+* Check that the version number ends with an even micro component
+* Check that no release exists with the current version
+* Verify that make distcheck completes successfully
+* Generate the final tar file
+* Generate an md5sum file
+* scp both files to appear on http://cairographics.org/releases
+* Place local copies of the files in the releases directory
+* Create a LATEST-package-version file (after deleting any old one)
+* Provide some text for the release announcement (see below).
 
 6) Verify that the tar file arrived at the website.
    Check tar file has read permissions for all.
