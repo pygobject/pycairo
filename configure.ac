@@ -94,6 +94,7 @@ esac
 AC_CONFIG_FILES([
 Makefile
 pycairo.pc
+pycairo-uninstalled.pc
 src/Makefile
 doc/Makefile
 examples/Makefile

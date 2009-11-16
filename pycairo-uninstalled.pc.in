@@ -1,0 +1,8 @@
+prefix=@prefix@
+
+Name: Pycairo
+Description: Python bindings for cairo
+Version: @VERSION@
+Requires: cairo
+Cflags: -I${pc_top_builddir}/${pcfiledir}/src
+Libs:
