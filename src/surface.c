@@ -274,7 +274,7 @@ static PyObject *
 surface_write_to_png (PycairoSurface *o, PyObject *file) {
   cairo_status_t status;
 
-  if (PyObject_TypeCheck (file, &PyBaseString_Type)) {
+  if (PyObject_TypeCheck (file, &PyString_Type)) {
     /* string (filename) argument */
     Py_BEGIN_ALLOW_THREADS;
     status = cairo_surface_write_to_png (o->surface,
