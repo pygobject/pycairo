@@ -52,6 +52,7 @@ Objects::
   PycairoPSSurface
   PycairoSVGSurface
   PycairoWin32Surface
+  PycairoXCBSurface
   PycairoXlibSurface
 
 
@@ -78,6 +79,7 @@ Types::
   PyTypeObject *PSSurface_Type;
   PyTypeObject *SVGSurface_Type;
   PyTypeObject *Win32Surface_Type;
+  PyTypeObject *XCBSurface_Type;
   PyTypeObject *XlibSurface_Type;
 
 

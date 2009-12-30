@@ -626,6 +626,23 @@ Windows windows, bitmaps, and printing device contexts.
    cairo.FORMAT_RGB24, see :ref:`FORMAT attributes <constants_FORMAT>`.
 
 
+
+class XCBSurface(:class:`Surface`)
+===================================
+
+The XCB surface is used to render cairo graphics to X Window System windows
+and pixmaps using the XCB library.
+
+Note that the XCB surface automatically takes advantage of X render extension
+if it is available.
+
+.. class:: XCBSurface
+
+   .. note:: *XCBSurface* cannot be instantiated directly because Python
+      interaction with XCB would require open source Python bindings to Xlib
+      which provided a C API.
+
+
 class XlibSurface(:class:`Surface`)
 ===================================
 

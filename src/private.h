@@ -94,6 +94,10 @@ extern PyTypeObject PycairoSVGSurface_Type;
 extern PyTypeObject PycairoWin32Surface_Type;
 #endif
 
+#if CAIRO_HAS_XCB_SURFACE
+extern PyTypeObject PycairoXCBSurface_Type;
+#endif
+
 #if CAIRO_HAS_XLIB_SURFACE
 extern PyTypeObject PycairoXlibSurface_Type;
 #endif

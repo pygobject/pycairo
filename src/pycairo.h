@@ -92,6 +92,7 @@ typedef struct {
 #define PycairoPSSurface    PycairoSurface
 #define PycairoSVGSurface   PycairoSurface
 #define PycairoWin32Surface PycairoSurface
+#define PycairoXCBSurface   PycairoSurface
 #define PycairoXlibSurface  PycairoSurface
 
 /* get C object out of the Python wrapper */
@@ -131,6 +132,7 @@ typedef struct {
   PyTypeObject *PSSurface_Type;
   PyTypeObject *SVGSurface_Type;
   PyTypeObject *Win32Surface_Type;
+  PyTypeObject *XCBSurface_Type;
   PyTypeObject *XlibSurface_Type;
   PyObject *(*Surface_FromSurface)(cairo_surface_t *surface, PyObject *base);
 
@@ -184,6 +186,10 @@ typedef struct {
 
 #if CAIRO_HAS_WIN32_SURFACE
 #define PycairoWin32Surface_Type    *(Pycairo_CAPI->Win32Surface_Type)
+#endif
+
+#if CAIRO_HAS_XCB_SURFACE
+#define PycairoXCBSurface_Type      *(Pycairo_CAPI->XCBSurface_Type)
 #endif
 
 #if CAIRO_HAS_XLIB_SURFACE
