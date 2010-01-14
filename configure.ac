@@ -9,6 +9,7 @@ m4_define(pycairo_version, pycairo_version_major.pycairo_version_minor.pycairo_v
 
 # versions of packages we require
 m4_define(cairo_required_version, 1.8.8)
+m4_define(xpyb_required_version, 1.3)
 
 AC_INIT([pycairo],
 	[pycairo_version],
@@ -44,6 +45,11 @@ PKG_CHECK_MODULES(CAIRO, cairo >= cairo_required_version)
 if test -n "$export_dynamic"; then
   CAIRO_LIBS=`echo $CAIRO_LIBS | sed -e "s/$export_dynamic//"`
 fi
+
+# xpyb
+PKG_CHECK_MODULES(XPYB, xpyb >= xpyb_required_version,[have_xpyb=yes],[have_xpyb=no])
+AS_IF([test "x$have_xpyb" = "xyes"],
+      [AC_DEFINE([HAVE_XPYB], [1], [Define to 1 if xpyb is available])])
 
 # Checks for header files ---
 AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])

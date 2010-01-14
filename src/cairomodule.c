@@ -39,6 +39,11 @@
 #  include <cairo-ps.h>
 #endif
 
+/* for XCB api */
+#if defined(CAIRO_HAS_XCB_SURFACE) && defined(HAVE_XPYB)
+xpyb_CAPI_t *xpyb_CAPI;
+PyObject *xpybVISUALTYPE_type;
+#endif
 
 /* A module specific exception */
 PyObject *CairoError = NULL;

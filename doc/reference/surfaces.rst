@@ -637,10 +637,27 @@ Note that the XCB surface automatically takes advantage of X render extension
 if it is available.
 
 .. class:: XCBSurface
+   :param connection: an XCB connection
+   :param drawable: a X drawable
+   :param visualtype: a X visualtype
+   :param width: The surface width
+   :param height: The surface height
 
-   .. note:: *XCBSurface* cannot be instantiated directly because Python
-      interaction with XCB would require open source Python bindings to Xlib
-      which provided a C API.
+   Creates a cairo surface that targets the given drawable (pixmap or window).
+
+   .. note:: This methods works using xpyb.
+
+   .. method:: set_size(width, height)
+   :param width: The width of the surface
+   :param height: The height of the surface
+
+   Informs cairo of the new size of the X Drawable underlying the surface. For a surface created
+   for a Window (rather than a Pixmap), this function must be called each time the size of the
+   window changes. (For a subwindow, you are normally resizing the window yourself, but for a
+   toplevel window, it is necessary to listen for ConfigureNotify events.)
+
+   A Pixmap can never change size, so it is never necessary to call this function on a surface
+   created for a Pixmap.
 
 
 class XlibSurface(:class:`Surface`)
