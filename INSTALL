@@ -16,7 +16,7 @@ $ ./configure --prefix=<python_prefix>
 $ make
 $ make install       # may require superuser access
 
-To build from CVS, use this line instead of the configure line above:
+To build from git, use this line instead of the configure line above:
 $ ./autogen.sh --prefix=<python_prefix>
 
 If you're installing to another prefix than the one where Python is installed
@@ -31,7 +31,7 @@ $ python setup.py install
 
 Testing
 -------
-testing uses py.test from pylib
+The tests use py.test from pylib
 http://codespeak.net/py/dist/
 
 $ cd test

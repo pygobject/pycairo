@@ -188,6 +188,8 @@ init_cairo(void)
   if (PyType_Ready(&PycairoPath_Type) < 0)
     return;
   PycairoPathiter_Type.tp_iter=&PyObject_SelfIter;
+  if (PyType_Ready(&PycairoPathiter_Type) < 0)
+    return;
 
   if (PyType_Ready(&PycairoPattern_Type) < 0)
     return;
