@@ -37,16 +37,16 @@
 
 /* PycairoMatrix_FromMatrix
  * Create a new PycairoMatrix from a cairo_matrix_t
- * matrix - a cairo_matrix_t to 'wrap' into a Python object
+ * matrix - a cairo_matrix_t to 'wrap' into a Python object.
+ *          the cairo_matrix_t values are copied.
  * Return value: New reference or NULL on failure
  */
 PyObject *
 PycairoMatrix_FromMatrix (const cairo_matrix_t *matrix) {
-  PyObject *o;
   assert (matrix != NULL);
-  o = PycairoMatrix_Type.tp_alloc (&PycairoMatrix_Type, 0);
+  PyObject *o = PycairoMatrix_Type.tp_alloc (&PycairoMatrix_Type, 0);
   if (o != NULL)
-    ((PycairoMatrix *)o)->matrix = *matrix;
+    ((PycairoMatrix *)o)->matrix = *matrix; // copy struct
   return o;
 }
 
@@ -57,7 +57,6 @@ matrix_dealloc (PycairoMatrix *o) {
 
 static PyObject *
 matrix_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
-  PyObject *o;
   static char *kwlist[] = { "xx", "yx", "xy", "yy", "x0", "y0", NULL };
   double xx = 1.0, yx = 0.0, xy = 0.0, yy = 1.0, x0 = 0.0, y0 = 0.0;
 
@@ -66,11 +65,9 @@ matrix_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 				   &xx, &yx, &xy, &yy, &x0, &y0))
     return NULL;
 
-  o = type->tp_alloc(type, 0);
-  if (o)
-    cairo_matrix_init (&((PycairoMatrix *)o)->matrix,
-		       xx, yx, xy, yy, x0, y0);
-  return o;
+  cairo_matrix_t mx;
+  cairo_matrix_init (&mx, xx, yx, xy, yy, x0, y0);
+  return PycairoMatrix_FromMatrix (&mx);
 }
 
 static PyObject *
