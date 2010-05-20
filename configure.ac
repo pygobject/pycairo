@@ -4,7 +4,7 @@ AC_PREREQ(2.59)
 # the pycairo version number
 m4_define(pycairo_version_major, 1)
 m4_define(pycairo_version_minor, 8)
-m4_define(pycairo_version_micro, 10)
+m4_define(pycairo_version_micro, 11)
 m4_define(pycairo_version, pycairo_version_major.pycairo_version_minor.pycairo_version_micro)
 
 # versions of packages we require

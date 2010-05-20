@@ -3,7 +3,7 @@
 import os
 
 APPNAME='pycairo'
-VERSION='1.8.10'
+VERSION='1.8.11'
 cairo_version_required = '1.8.10'
 srcdir = '.'
 blddir = '../%s-build' % APPNAME

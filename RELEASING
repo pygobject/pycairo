@@ -32,7 +32,7 @@ It's especially important to mention the new version number in the git commit
 comment.
 Add a '=== Pycairo x.x.x ===' header.
 
-$ git tag v X.Y.Z
+$ git tag X.Y.Z
   push the changes to the freedesktop server.
 $ git push origin master
 
@@ -58,8 +58,8 @@ $ git push origin master
    configure.ac
    setup.py
    wscript
-   to increment pycairo_version_micro to the next larger (odd) number and
-   commit.
+   to increment pycairo_version_micro to the next larger (odd) number.
+$ git push origin master
 
 8) Send a message to cairo-announce@cairographics.org
               and CC python-announce-list@python.org
