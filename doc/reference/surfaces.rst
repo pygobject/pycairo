@@ -627,6 +627,27 @@ Windows windows, bitmaps, and printing device contexts.
 
 
 
+class Win32PrintingSurface(:class:`Surface`)
+============================================
+
+The Win32PrintingSurface is a multi-page vector surface type.
+
+.. class:: Win32PrintingSurface(hdc)
+
+   :param hdc: the DC to create a surface for
+   :type hdc: int
+   :returns: the newly created surface
+
+   Creates a cairo surface that targets the given DC. The DC will be queried
+   for its initial clip extents, and this will be used as the size of the
+   cairo surface. The DC should be a printing DC; antialiasing will be
+   ignored, and GDI will be used as much as possible to draw to the surface.
+
+   The returned surface will be wrapped using the paginated surface to provide
+   correct complex rendering behaviour; :meth:`.show_page` and associated
+   methods must be used for correct output.
+
+
 class XCBSurface(:class:`Surface`)
 ===================================
 

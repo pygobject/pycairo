@@ -134,7 +134,9 @@ static Pycairo_CAPI_t CAPI = {
 #endif
 #ifdef CAIRO_HAS_WIN32_SURFACE
   &PycairoWin32Surface_Type,
+  &PycairoWin32PrintingSurface_Type,
 #else
+  0,
   0,
 #endif
 #ifdef CAIRO_HAS_XCB_SURFACE
@@ -228,6 +230,8 @@ init_cairo(void)
 #ifdef CAIRO_HAS_WIN32_SURFACE
   if (PyType_Ready(&PycairoWin32Surface_Type) < 0)
     return;
+  if (PyType_Ready(&PycairoWin32PrintingSurface_Type) < 0)
+    return;
 #endif
 #ifdef CAIRO_HAS_XCB_SURFACE
   if (PyType_Ready(&PycairoXCBSurface_Type) < 0)
@@ -310,6 +314,9 @@ init_cairo(void)
   Py_INCREF(&PycairoWin32Surface_Type);
   PyModule_AddObject(m, "Win32Surface",
 		     (PyObject *)&PycairoWin32Surface_Type);
+  Py_INCREF(&PycairoWin32PrintingSurface_Type);
+  PyModule_AddObject(m, "Win32PrintingSurface",
+		     (PyObject *)&PycairoWin32PrintingSurface_Type);
 #endif
 
 #ifdef CAIRO_HAS_XCB_SURFACE
