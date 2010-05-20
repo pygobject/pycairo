@@ -1,12 +1,16 @@
-Waf - recommended install method
+Install Procedure
+-----------------
+Waf
 ---
-$ ./waf --help  # shows available waf options
-$ ./waf configure
+$ ./waf --help     # shows available waf options
+$ ./waf configure  # use '--prefix=PREFIX' if needed
 $ ./waf build
 $ ./waf install
 
 
-GNU Autotools - alternative install method
+Unsupported alternative install methods
+---------------------------------------
+GNU Autotools
 -------------
 Using the same install method of install as cairo - GNU autotools.
 
@@ -24,7 +28,7 @@ Python will not be able to find the cairo module until you add
 $prefix/lib/pythonX.Y/site-packages to the PYTHONPATH variable.
 
 
-Python distutils - alternative install method
+Python distutils
 ----------------
 $ python setup.py install
 

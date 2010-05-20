@@ -1,3 +1,24 @@
+Overview of changes from pycairo 1.8.8 to pycairo 1.8.10
+========================================================
+General Changes:
+    Pycairo 1.8.10 requires cairo 1.8.10 (or later).
+
+New Classes/Types:
+    Win32PrintingSurface
+    XCBSurface - add XCB support using xpyb
+
+Bug Fixes:
+    Fix for libtool 2.2 (#27974).
+    Mingw32 and pypy fixes (#25203).
+
+Other Changes:
+    Tests updated.
+
+The Win32PrintingSurface and XCBSurface changes mean that pycairo 1.8.10 is
+not binary compatible with pycairo 1.8.8. So modules that use the pycairo C
+API (like pygtk) will need to be recompiled to use pycairo 1.8.10.
+
+
 Overview of changes from pycairo 1.8.6 to pycairo 1.8.8
 =======================================================
 General Changes:
@@ -5,7 +26,7 @@ General Changes:
     Move from CVS to git.
     Add support for the waf build tool.
 
-Updated methods
+Updated Methods:
     The PDF/PS/SVGSurface constructors now accept None as a filename.
 
 

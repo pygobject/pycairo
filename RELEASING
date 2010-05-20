@@ -17,7 +17,7 @@ Increment pycairo_major/minor version to match the cairo major/minor version
 that pycairo requires (and increment the micro version if necessary for any
 subsequent pycairo updates).
 
-3) Run "make distcheck" and verify that it gives in no warnings or errors and
+3) Run "make distcheck" and verify that it gives no warnings or errors and
    ends with a message of the form:
 
 	===============================================
