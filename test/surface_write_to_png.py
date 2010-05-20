@@ -11,20 +11,24 @@ import StringIO
 import cairo
 
 
+if not (cairo.HAS_IMAGE_SURFACE and cairo.HAS_PNG_FUNCTIONS):
+  raise SystemExit ('cairo was not compiled with ImageSurface and PNG support')
+
+
 class C(object):
-    """a file-like object (for testing), it simulates sys.stdout
-    """
-    def __init__(self):
-        self.closed = False
+  """a file-like object (for testing), it simulates sys.stdout
+  """
+  def __init__(self):
+    self.closed = False
 
-    def write(self, s):
-        """just echo to stdout, without newlines"""
-        if self.closed:
-            raise ValueError("I/O operation on closed file")
-        sys.stdout.write(s)
+  def write(self, s):
+    """just echo to stdout, without newlines"""
+    if self.closed:
+      raise ValueError("I/O operation on closed file")
+    sys.stdout.write(s)
 
-    def close(self):
-        self.closed = True
+  def close(self):
+    self.closed = True
 
 
 WIDTH, HEIGHT  = 256, 256
@@ -59,7 +63,7 @@ fo = file('/tmp/f.png', 'w')
 #fo = sys.stdout
 #fo = C()
 
-fo.close()  # this should cause: ValueError: I/O operation on closed file
+#fo.close()  # this should cause: ValueError: I/O operation on closed file
 surface.write_to_png(fo)
 
 # for testing StringIO: get data and write to file

@@ -2,11 +2,14 @@
 """
 Test ImageSurface.get_data()
 """
+import tempfile
 
 import cairo
 import numpy
 
-dir_ = "/tmp/"
+if not (cairo.HAS_IMAGE_SURFACE and cairo.HAS_PNG_FUNCTIONS):
+  raise SystemExit ('cairo was not compiled with ImageSurface and PNG support')
+
 w, h = 128, 128
 
 surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
@@ -25,7 +28,9 @@ ctx.close_path()
 ctx.set_source_rgb(0, 0, 0)  # black
 ctx.set_line_width(15)
 ctx.stroke()
-surface.write_to_png(dir_ + "get_data_test1.png")
+_, outFileName = tempfile.mkstemp(prefix='pycairo_', suffix='.png')
+surface.write_to_png(outFileName)
+print "see %s output file" % outFileName
 
 # modify surface using numpy
 buf = surface.get_data()
@@ -40,4 +45,6 @@ a = numpy.ndarray(shape=(w,h,4), dtype=numpy.uint8, buffer=buf)
 a[:,40,0] = 255  # byte 0 is blue on little-endian systems
 a[:,40,1] = 0
 a[:,40,2] = 0
-surface.write_to_png(dir_ + "get_data_test2.png")
+_, outFileName = tempfile.mkstemp(prefix='pycairo_', suffix='.png')
+surface.write_to_png(outFileName)
+print "see %s output file" % outFileName

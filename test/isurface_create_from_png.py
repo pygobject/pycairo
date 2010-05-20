@@ -1,37 +1,56 @@
 #!/usr/bin/env python
-# test cairo.ImageSurface.create_from_png()
+'''test cairo.ImageSurface.create_from_png() and
+        cairo.Surface.write_to_png()
+'''
+
+import os
+import tempfile
 
 import cairo
 
-surface = cairo.ImageSurface.create_from_png("/tmp/warpedtext.png")
+if not (cairo.HAS_IMAGE_SURFACE and cairo.HAS_PNG_FUNCTIONS):
+  raise SystemExit ('cairo was not compiled with ImageSurface and PNG support')
+
+inFileName = os.path.join(os.path.dirname(__file__), '..', 'examples',
+                          'cairo_snippets', 'data', 'romedalen.png')
+surface = cairo.ImageSurface.create_from_png(inFileName)
 
 # write to filename
-surface.write_to_png("/tmp/t1.png")
+_, outFileName = tempfile.mkstemp(prefix='pycairo_', suffix='.png')
+surface.write_to_png(outFileName)
+print "see %s output file" % outFileName
 
 # write to file object
-f2=file("/tmp/t2.png", "w")
-surface.write_to_png(f2)
-f2.close()
+h, outFileName = tempfile.mkstemp(prefix='pycairo_', suffix='.png')
+os.close(h)
+f=file(outFileName, "w")
+surface.write_to_png(f)
+f.close()
+print "see %s output file" % outFileName
 
 # write to object that has a "write" method
 import StringIO
-buffer = StringIO.StringIO()
-surface.write_to_png(buffer)
-png_string = buffer.getvalue()
-buffer.close()
-f3=file("/tmp/t3.png", "w")
-f3.write(png_string)
-f3.close()
+_, outFileName = tempfile.mkstemp(prefix='pycairo_', suffix='.png')
+buf = StringIO.StringIO()
+surface.write_to_png(buf)
+png_string = buf.getvalue()
+buf.close()
+f=file(outFileName, "w")
+f.write(png_string)
+f.close()
+print "see %s output file" % outFileName
 
 # write to object that has a "write" method
+_, outFileName = tempfile.mkstemp(prefix='pycairo_', suffix='.png')
 import cStringIO
-buffer = cStringIO.StringIO()
-surface.write_to_png(buffer)
-png_string = buffer.getvalue()
-buffer.close()
-f4=file("/tmp/t4.png", "w")
-f4.write(png_string)
-f4.close()
+buf = cStringIO.StringIO()
+surface.write_to_png(buf)
+png_string = buf.getvalue()
+buf.close()
+f=file(outFileName, "w")
+f.write(png_string)
+f.close()
+print "see %s output file" % outFileName
 
 # error test - to check the error message, should raise TypeError
 #surface.write_to_png(101)

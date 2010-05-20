@@ -31,8 +31,4 @@ $ python setup.py install
 
 Testing
 -------
-The tests use py.test from pylib
-http://codespeak.net/py/dist/
-
-$ cd test
-$ py.test
+See test/README
