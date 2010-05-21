@@ -649,15 +649,16 @@ The Win32PrintingSurface is a multi-page vector surface type.
 
 
 class XCBSurface(:class:`Surface`)
-===================================
+==================================
 
 The XCB surface is used to render cairo graphics to X Window System windows
 and pixmaps using the XCB library.
 
-Note that the XCB surface automatically takes advantage of X render extension
-if it is available.
+Note that the XCB surface automatically takes advantage of the X render
+extension if it is available.
 
 .. class:: XCBSurface
+
    :param connection: an XCB connection
    :param drawable: a X drawable
    :param visualtype: a X visualtype
@@ -669,6 +670,7 @@ if it is available.
    .. note:: This methods works using xpyb.
 
    .. method:: set_size(width, height)
+
    :param width: The width of the surface
    :param height: The height of the surface
 

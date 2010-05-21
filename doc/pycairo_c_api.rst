@@ -88,7 +88,7 @@ Functions
 
 .. cfunction::  cairo_t * PycairoContext_GET(obj)
 
-   get the C cairo_t * object out of the PycairoContext *obj
+   get the C cairo_t \* object out of the PycairoContext \*obj
 
 
 .. cfunction::  PyObject * PycairoContext_FromContext(cairo_t *ctx, PyTypeObject *type, PyObject *base)

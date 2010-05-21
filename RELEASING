@@ -74,15 +74,15 @@ $ vi conf.py  # update the version and release numbers
 $ make clean
 $ make html
 $ cd .build/
-$ mv html pycairo-x.x.x-docs-html
-$ tar cjf /tmp/pycairo-x.x.x-docs-html.tar.bz2 pycairo-x.x.x-docs-html
-$ zip -r  /tmp/pycairo-x.x.x-docs-html.zip     pycairo-x.x.x-docs-html
-$ chmod a+r /tmp/pycairo*
+$ mv html py2cairo-x.x.x-docs-html
+$ tar cjf /tmp/py2cairo-x.x.x-docs-html.tar.bz2 py2cairo-x.x.x-docs-html
+$ zip -r  /tmp/py2cairo-x.x.x-docs-html.zip     py2cairo-x.x.x-docs-html
+$ chmod a+r /tmp/py2cairo*
 
 untar docs in /tmp and check that they have correct version number and view
 OK.
 copy file to the 'releases' directory on cairo website:
-  scp pycairo-xxx cairographics.org:/srv/cairo.freedesktop.org/www/releases
+  scp py2cairo-x.x.x-docs-html.tar.bz2 cairographics.org:/srv/cairo.freedesktop.org/www/releases
 
 cd doc
  html_docs_create.sh
