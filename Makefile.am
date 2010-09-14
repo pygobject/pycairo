@@ -29,10 +29,10 @@ RELEASE_URL_BASE = 	http://cairographics.org/releases
 RELEASE_ANNOUNCE_LIST = cairo-announce@cairographics.org (and CC python-announce-list@python.org)
 
 tar_file = $(PACKAGE)-$(VERSION).tar.gz
-md5_file = $(tar_file).md5
+sha1_file = $(tar_file).sha1
 
-$(md5_file): $(tar_file)
-	md5sum $^ > $@
+$(sha1_file): $(tar_file)
+	sha1sum $^ > $@
 
 release-verify-even-micro:
 	@echo -n "Checking that $(VERSION) has an even micro component..."
@@ -52,17 +52,17 @@ release-verify-newer:
 	@echo "Good."
 
 release-remove-old:
-	rm -f $(tar_file) $(md5_file)
+	rm -f $(tar_file) $(sha1_file)
 
-release-check: release-verify-even-micro release-verify-newer release-remove-old distcheck $(md5_file)
+release-check: release-verify-even-micro release-verify-newer release-remove-old distcheck $(sha1_file)
 
-release-upload: release-check $(tar_file) $(md5_file)
+release-upload: release-check $(tar_file) $(sha1_file)
 	mkdir -p releases
-	scp $(tar_file) $(md5_file) $(RELEASE_UPLOAD_HOST):$(RELEASE_UPLOAD_DIR)
-	mv $(tar_file) $(md5_file) releases
+	scp $(tar_file) $(sha1_file) $(RELEASE_UPLOAD_HOST):$(RELEASE_UPLOAD_DIR)
+	mv $(tar_file) $(sha1_file) releases
 	ssh $(RELEASE_UPLOAD_HOST) "rm -f $(RELEASE_UPLOAD_DIR)/LATEST-$(PACKAGE)-[0-9]* && ln -s $(tar_file) $(RELEASE_UPLOAD_DIR)/LATEST-$(PACKAGE)-$(VERSION)"
 
-release-publish: release-upload releases/$(md5_file)
+release-publish: release-upload releases/$(sha1_file)
 	@echo ""
 	@echo "Please send an announcement to $(RELEASE_ANNOUNCE_LIST)"
 	@echo "including the following:"
@@ -77,10 +77,10 @@ release-publish: release-upload releases/$(md5_file)
 	@echo "A new $(PACKAGE) release $(VERSION) is now available from:"
 	@echo ""
 	@echo "	$(RELEASE_URL_BASE)/$(tar_file)"
-	@echo "	$(RELEASE_URL_BASE)/$(md5_file)"
+	@echo "	$(RELEASE_URL_BASE)/$(sha1_file)"
 	@echo ""
 	@echo -n "	"
-	@cat releases/$(md5_file)
+	@cat releases/$(sha1_file)
 	@echo ""
 	@echo "============================== CUT HERE =============================="
 	@echo "Also, please include the new entries from the NEWS file."
