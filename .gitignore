@@ -1,5 +1,4 @@
-#
-#
+# top-level .gitignore
 *~
 .*.sw?
 .deps
@@ -11,8 +10,17 @@
 *.lo
 *.orig
 *.rej
+*.pyc
+*.pyo
+
+# image files
+*.pdf
+*.png
+*.ps
+*.svg
+
 *-uninstalled.pc
-#
+
 aclocal.m4
 autom4te.cache
 autoscan.log
