@@ -1016,7 +1016,7 @@ pycairo_set_operator(PycairoContext *o, PyObject *args) {
 static PyObject *
 pycairo_set_scaled_font(PycairoContext *o, PyObject *args) {
   PycairoScaledFont *f;
-  if (!PyArg_ParseTuple( args, "O!:Context.set_scaled_font",
+  if (!PyArg_ParseTuple (args, "O!:Context.set_scaled_font",
 			 &PycairoScaledFont_Type, &f))
     return NULL;
 
@@ -1029,7 +1029,7 @@ static PyObject *
 pycairo_set_source (PycairoContext *o, PyObject *args) {
   PycairoPattern *p;
 
-  if (!PyArg_ParseTuple( args, "O!:Context.set_source",
+  if (!PyArg_ParseTuple (args, "O!:Context.set_source",
 			 &PycairoPattern_Type, &p))
     return NULL;
 
