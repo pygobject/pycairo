@@ -21,8 +21,8 @@ subsequent pycairo updates).
    ends with a message of the form:
 
 	===============================================
-	pycairo-X.Y.Z archives ready for distribution:
-	pycairo-X.Y.Z.tar.gz
+	py2cairo-X.Y.Z archives ready for distribution:
+	py2cairo-X.Y.Z.tar.gz
 	===============================================
 
 Install from the tar.gz archive, run tests and examples.
@@ -30,7 +30,7 @@ Install from the tar.gz archive, run tests and examples.
 4) Commit the changes to NEWS, configure.ac etc
 It's especially important to mention the new version number in the git commit
 comment.
-Add a '=== Pycairo x.x.x ===' header.
+Add a '=== Py2cairo x.x.x ===' header.
 
 $ git tag X.Y.Z
   push the changes to the freedesktop server.
