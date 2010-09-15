@@ -149,35 +149,17 @@ PyTypeObject PycairoFontFace_Type = {
 
 static PyObject *
 toy_font_face_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
-  PyObject *obj;
-  PyObject *pyUTF8 = NULL;
-  const char *utf8family = NULL;
+  const char *utf8;
   cairo_font_slant_t slant   = CAIRO_FONT_SLANT_NORMAL;
   cairo_font_weight_t weight = CAIRO_FONT_WEIGHT_NORMAL;
 
-  if (!PyArg_ParseTuple(args, "O!|ii:ToyFontFace.__new__",
-			&PyBaseString_Type, &obj, &slant, &weight))
-    return NULL;
-
-  /* accept str and unicode family, auto convert to utf8 as required */
-  if (PyString_Check(obj)) {
-    /* A plain ASCII string is also a valid UTF-8 string */
-    utf8family = PyString_AS_STRING(obj);
-  } else if (PyUnicode_Check(obj)) {
-    pyUTF8 = PyUnicode_AsUTF8String(obj);
-    if (pyUTF8 != NULL) {
-      utf8family = PyString_AS_STRING(pyUTF8);
-    }
-  } else {
-    PyErr_SetString(PyExc_TypeError,
-		    "ToyFontFace.__new__: family must be str or unicode");
-  }
-  if (utf8family == NULL)
+  if (!PyArg_ParseTuple (args, "et|ii:ToyFontFace.__new__",
+			 "utf-8", &utf8, &slant, &weight))
     return NULL;
 
   PyObject *o = PycairoFontFace_FromFontFace (
-		     cairo_toy_font_face_create (utf8family, slant, weight));
-  Py_XDECREF(pyUTF8);
+		     cairo_toy_font_face_create (utf8, slant, weight));
+  PyMem_Free(utf8);
   return o;
 }
 
@@ -328,29 +310,15 @@ scaled_font_get_scale_matrix (PycairoScaledFont *o) {
 }
 
 static PyObject *
-scaled_font_text_extents (PycairoScaledFont *o, PyObject *obj) {
+scaled_font_text_extents (PycairoScaledFont *o, PyObject *args) {
+  const char *utf8;
   cairo_text_extents_t extents;
-  PyObject *pyUTF8 = NULL;
-  const char *utf8 = NULL;
 
-  /* accept str and unicode text, auto convert to utf8 as required */
-  if (PyString_Check(obj)) {
-    /* A plain ASCII string is also a valid UTF-8 string */
-    utf8 = PyString_AS_STRING(obj);
-  } else if (PyUnicode_Check(obj)) {
-    pyUTF8 = PyUnicode_AsUTF8String(obj);
-    if (pyUTF8 != NULL) {
-      utf8 = PyString_AS_STRING(pyUTF8);
-    }
-  } else {
-    PyErr_SetString(PyExc_TypeError,
-		    "ScaledFont.text_extents: text must be str or unicode");
-  }
-  if (utf8 == NULL)
+  if (!PyArg_ParseTuple (args, "et:ScaledFont.text_extents", "utf-8", &utf8))
     return NULL;
 
   cairo_scaled_font_text_extents (o->scaled_font, utf8, &extents);
-  Py_XDECREF(pyUTF8);
+  PyMem_Free(utf8);
   RETURN_NULL_IF_CAIRO_SCALED_FONT_ERROR(o->scaled_font);
   return Py_BuildValue("(dddddd)", extents.x_bearing, extents.y_bearing,
 		       extents.width, extents.height, extents.x_advance,
@@ -373,7 +341,7 @@ static PyMethodDef scaled_font_methods[] = {
   {"extents",       (PyCFunction)scaled_font_extents,        METH_NOARGS},
   {"get_font_face", (PyCFunction)scaled_font_get_font_face,  METH_NOARGS},
   {"get_scale_matrix", (PyCFunction)scaled_font_get_scale_matrix, METH_VARARGS},
-  {"text_extents",  (PyCFunction)scaled_font_text_extents,   METH_O},
+  {"text_extents",  (PyCFunction)scaled_font_text_extents,   METH_VARARGS},
   {NULL, NULL, 0, NULL},
 };
 

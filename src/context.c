@@ -794,34 +794,16 @@ pycairo_scale (PycairoContext *o, PyObject *args) {
 
 static PyObject *
 pycairo_select_font_face (PycairoContext *o, PyObject *args) {
-  PyObject *obj;
-  PyObject *pyUTF8 = NULL;
-  const char *utf8family = NULL;
+  const char *utf8;
   cairo_font_slant_t slant   = CAIRO_FONT_SLANT_NORMAL;
   cairo_font_weight_t weight = CAIRO_FONT_WEIGHT_NORMAL;
 
-  if (!PyArg_ParseTuple(args, "O!|ii:Context.select_font_face",
-			&PyBaseString_Type, &obj, &slant, &weight))
+  if (!PyArg_ParseTuple (args, "et|ii:Context.select_font_face",
+			 "utf-8", &utf8, &slant, &weight))
     return NULL;
 
-  /* accept str and unicode family, auto convert to utf8 as required */
-  if (PyString_Check(obj)) {
-    /* A plain ASCII string is also a valid UTF-8 string */
-    utf8family = PyString_AS_STRING(obj);
-  } else if (PyUnicode_Check(obj)) {
-    pyUTF8 = PyUnicode_AsUTF8String(obj);
-    if (pyUTF8 != NULL) {
-      utf8family = PyString_AS_STRING(pyUTF8);
-    }
-  } else {
-    PyErr_SetString(PyExc_TypeError,
-		    "Context.select_font_face: family must be str or unicode");
-  }
-  if (utf8family == NULL)
-    return NULL;
-
-  cairo_select_font_face (o->ctx, utf8family, slant, weight);
-  Py_XDECREF(pyUTF8);
+  cairo_select_font_face (o->ctx, utf8, slant, weight);
+  PyMem_Free(utf8);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   Py_RETURN_NONE;
 }
@@ -1120,30 +1102,17 @@ pycairo_show_page (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_show_text (PycairoContext *o, PyObject *obj) {
-  PyObject *pyUTF8 = NULL;
-  const char *utf8 = NULL;
+pycairo_show_text (PycairoContext *o, PyObject *args) {
+  const char *utf8;
 
-  /* accept str and unicode text, auto convert to utf8 as required */
-  if (PyString_Check(obj)) {
-    /* A plain ASCII string is also a valid UTF-8 string */
-    utf8 = PyString_AS_STRING(obj);
-  } else if (PyUnicode_Check(obj)) {
-    pyUTF8 = PyUnicode_AsUTF8String(obj);
-    if (pyUTF8 != NULL) {
-      utf8 = PyString_AS_STRING(pyUTF8);
-    }
-  } else {
-    PyErr_SetString(PyExc_TypeError,
-		    "Context.show_text: text must be str or unicode");
-  }
-  if (utf8 == NULL)
+  if (!PyArg_ParseTuple (args, "et:Context.show_text", "utf-8", &utf8))
     return NULL;
 
   Py_BEGIN_ALLOW_THREADS;
   cairo_show_text (o->ctx, utf8);
   Py_END_ALLOW_THREADS;
-  Py_XDECREF(pyUTF8);
+
+  PyMem_Free(utf8);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   Py_RETURN_NONE;
 }
@@ -1175,29 +1144,15 @@ pycairo_stroke_preserve (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_text_extents (PycairoContext *o, PyObject *obj) {
+pycairo_text_extents (PycairoContext *o, PyObject *args) {
   cairo_text_extents_t extents;
-  PyObject *pyUTF8 = NULL;
-  const char *utf8 = NULL;
+  const char *utf8;
 
-  /* accept str and unicode text, auto convert to utf8 as required */
-  if (PyString_Check(obj)) {
-    /* A plain ASCII string is also a valid UTF-8 string */
-    utf8 = PyString_AS_STRING(obj);
-  } else if (PyUnicode_Check(obj)) {
-    pyUTF8 = PyUnicode_AsUTF8String(obj);
-    if (pyUTF8 != NULL) {
-      utf8 = PyString_AS_STRING(pyUTF8);
-    }
-  } else {
-    PyErr_SetString(PyExc_TypeError,
-		    "Context.text_extents: text must be str or unicode");
-  }
-  if (utf8 == NULL)
+  if (!PyArg_ParseTuple (args, "et:Context.text_extents", "utf-8", &utf8))
     return NULL;
 
   cairo_text_extents (o->ctx, utf8, &extents);
-  Py_XDECREF(pyUTF8);
+  PyMem_Free(utf8);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   return Py_BuildValue("(dddddd)", extents.x_bearing, extents.y_bearing,
 		       extents.width, extents.height, extents.x_advance,
@@ -1205,28 +1160,14 @@ pycairo_text_extents (PycairoContext *o, PyObject *obj) {
 }
 
 static PyObject *
-pycairo_text_path (PycairoContext *o, PyObject *obj) {
-  PyObject *pyUTF8 = NULL;
-  const char *utf8 = NULL;
+pycairo_text_path (PycairoContext *o, PyObject *args) {
+  const char *utf8;
 
-  /* accept str and unicode text, auto convert to utf8 as required */
-  if (PyString_Check(obj)) {
-    /* A plain ASCII string is also a valid UTF-8 string */
-    utf8 = PyString_AS_STRING(obj);
-  } else if (PyUnicode_Check(obj)) {
-    pyUTF8 = PyUnicode_AsUTF8String(obj);
-    if (pyUTF8 != NULL) {
-      utf8 = PyString_AS_STRING(pyUTF8);
-    }
-  } else {
-    PyErr_SetString(PyExc_TypeError,
-		    "Context.text_path: text must be str or unicode");
-  }
-  if (utf8 == NULL)
+  if (!PyArg_ParseTuple (args, "et:Context.text_path", "utf-8", &utf8))
     return NULL;
 
   cairo_text_path (o->ctx, utf8);
-  Py_XDECREF(pyUTF8);
+  PyMem_Free(utf8);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   Py_RETURN_NONE;
 }
@@ -1384,12 +1325,12 @@ static PyMethodDef pycairo_methods[] = {
   {"set_tolerance",   (PyCFunction)pycairo_set_tolerance,    METH_VARARGS},
   {"show_glyphs",     (PyCFunction)pycairo_show_glyphs,      METH_VARARGS},
   {"show_page",       (PyCFunction)pycairo_show_page,        METH_NOARGS},
-  {"show_text",       (PyCFunction)pycairo_show_text,        METH_O},
+  {"show_text",       (PyCFunction)pycairo_show_text,        METH_VARARGS},
   {"stroke",          (PyCFunction)pycairo_stroke,           METH_NOARGS},
   {"stroke_extents",  (PyCFunction)pycairo_stroke_extents,   METH_NOARGS},
   {"stroke_preserve", (PyCFunction)pycairo_stroke_preserve,  METH_NOARGS},
-  {"text_extents",    (PyCFunction)pycairo_text_extents,     METH_O},
-  {"text_path",       (PyCFunction)pycairo_text_path,        METH_O},
+  {"text_extents",    (PyCFunction)pycairo_text_extents,     METH_VARARGS},
+  {"text_path",       (PyCFunction)pycairo_text_path,        METH_VARARGS},
   {"transform",       (PyCFunction)pycairo_transform,        METH_VARARGS},
   {"translate",       (PyCFunction)pycairo_translate,        METH_VARARGS},
   {"user_to_device",  (PyCFunction)pycairo_user_to_device,   METH_VARARGS},
