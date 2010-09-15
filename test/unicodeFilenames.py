@@ -15,7 +15,7 @@ import cairo
 
 WIDTH, HEIGHT = 256, 256
 
-#f = open(u"a1ēxāmple.pdf","w")
+#f = open(u"a1ēxāmple.pdf","wb")
 #surface = cairo.PDFSurface (f, WIDTH, HEIGHT)
 
 surface = cairo.PDFSurface(u"a1ēxāmple.pdf", WIDTH, HEIGHT)

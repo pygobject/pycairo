@@ -23,7 +23,7 @@ print "see %s output file" % outFileName
 # write to file object
 h, outFileName = tempfile.mkstemp(prefix='pycairo_', suffix='.png')
 os.close(h)
-f=file(outFileName, "w")
+f=file(outFileName, "wb")
 surface.write_to_png(f)
 f.close()
 print "see %s output file" % outFileName
@@ -35,7 +35,7 @@ buf = StringIO.StringIO()
 surface.write_to_png(buf)
 png_string = buf.getvalue()
 buf.close()
-f=file(outFileName, "w")
+f=file(outFileName, "wb")
 f.write(png_string)
 f.close()
 print "see %s output file" % outFileName
@@ -47,7 +47,7 @@ buf = cStringIO.StringIO()
 surface.write_to_png(buf)
 png_string = buf.getvalue()
 buf.close()
-f=file(outFileName, "w")
+f=file(outFileName, "wb")
 f.write(png_string)
 f.close()
 print "see %s output file" % outFileName

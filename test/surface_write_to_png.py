@@ -57,7 +57,7 @@ ctx.fill()
 
 # a selection of possible args to surface.write_to_png()
 #fo = '/tmp/f.png'
-fo = file('/tmp/f.png', 'w')
+fo = file('/tmp/f.png', 'wb')
 #fo = StringIO.StringIO()
 #fo = cStringIO.StringIO()
 #fo = sys.stdout
@@ -68,6 +68,6 @@ surface.write_to_png(fo)
 
 # for testing StringIO: get data and write to file
 #string = fo.getvalue()
-#f2 = file('/tmp/f.png', 'w')
+#f2 = file('/tmp/f.png', 'wb')
 #f2.write(string)
 #f2.close()

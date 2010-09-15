@@ -30,7 +30,7 @@ class C(object):
 
 # a selection of possible args to surface.write_to_png()
 #fo = '/tmp/f.ps'
-fo = file('/tmp/f.svg', 'w')
+fo = file('/tmp/f.svg', 'wb')
 #fo = StringIO.StringIO()
 #fo = cStringIO.StringIO()
 #fo = sys.stdout
@@ -76,6 +76,6 @@ surface.finish()
 
 # for testing StringIO: get data and write to file
 #string = fo.getvalue()
-#f2 = file('/tmp/f.ps', 'w')
+#f2 = file('/tmp/f.ps', 'wb')
 #f2.write(string)
 #f2.close()
