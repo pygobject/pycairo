@@ -3,7 +3,8 @@ Install Procedure
 Waf
 ---
 $ ./waf --help     # shows available waf options
-$ ./waf configure  # use '--prefix=PREFIX' if needed
+$ ./waf configure  # use --prefix and --libdir if necessary
+                   # --prefix=/usr --libdir=/usr/lib64  for Fedora 64-bit
 $ ./waf build
 $ ./waf install
 

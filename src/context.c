@@ -803,7 +803,7 @@ pycairo_select_font_face (PycairoContext *o, PyObject *args) {
     return NULL;
 
   cairo_select_font_face (o->ctx, utf8, slant, weight);
-  PyMem_Free(utf8);
+  PyMem_Free((void *)utf8);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   Py_RETURN_NONE;
 }
@@ -1112,7 +1112,7 @@ pycairo_show_text (PycairoContext *o, PyObject *args) {
   cairo_show_text (o->ctx, utf8);
   Py_END_ALLOW_THREADS;
 
-  PyMem_Free(utf8);
+  PyMem_Free((void *)utf8);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   Py_RETURN_NONE;
 }
@@ -1152,7 +1152,7 @@ pycairo_text_extents (PycairoContext *o, PyObject *args) {
     return NULL;
 
   cairo_text_extents (o->ctx, utf8, &extents);
-  PyMem_Free(utf8);
+  PyMem_Free((void *)utf8);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   return Py_BuildValue("(dddddd)", extents.x_bearing, extents.y_bearing,
 		       extents.width, extents.height, extents.x_advance,
@@ -1167,7 +1167,7 @@ pycairo_text_path (PycairoContext *o, PyObject *args) {
     return NULL;
 
   cairo_text_path (o->ctx, utf8);
-  PyMem_Free(utf8);
+  PyMem_Free((void *)utf8);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   Py_RETURN_NONE;
 }

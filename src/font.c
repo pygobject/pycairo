@@ -159,7 +159,7 @@ toy_font_face_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 
   PyObject *o = PycairoFontFace_FromFontFace (
 		     cairo_toy_font_face_create (utf8, slant, weight));
-  PyMem_Free(utf8);
+  PyMem_Free((void *)utf8);
   return o;
 }
 
@@ -318,7 +318,7 @@ scaled_font_text_extents (PycairoScaledFont *o, PyObject *args) {
     return NULL;
 
   cairo_scaled_font_text_extents (o->scaled_font, utf8, &extents);
-  PyMem_Free(utf8);
+  PyMem_Free((void *)utf8);
   RETURN_NULL_IF_CAIRO_SCALED_FONT_ERROR(o->scaled_font);
   return Py_BuildValue("(dddddd)", extents.x_bearing, extents.y_bearing,
 		       extents.width, extents.height, extents.x_advance,

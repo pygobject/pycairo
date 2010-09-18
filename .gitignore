@@ -25,6 +25,7 @@ aclocal.m4
 autom4te.cache
 autoscan.log
 build
+build_directory
 config.cache
 config.guess
 config.h
