@@ -68,7 +68,7 @@ def build(ctx):
     'prefix'    : ctx.env['PREFIX'],
     'includedir': os.path.join(ctx.env['PREFIX'], 'include'),
     }
-  obj.install_path = os.path.join(ctx.env['PREFIX'], 'lib', 'pkgconfig')
+  obj.install_path = os.path.join(ctx.env['LIBDIR'], 'pkgconfig')
 
 
 def dist_hook():
