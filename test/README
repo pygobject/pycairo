@@ -2,8 +2,8 @@ pycairo tests
 -------------
 
 The main test files are the '*_test.py' files.
-They use py.test from pylib.
-http://codespeak.net/py/dist/
+They use py.test.
+http://pytest.org/
 
 $ cd test
 $ py.test

@@ -1,11 +1,13 @@
 # top-level .gitignore
 *~
+
 .*.sw?
 .deps
 .libs
-.lock-wscript
+.lock*
 .perf
 .waf*
+
 *.la
 *.lo
 *.orig
@@ -51,4 +53,3 @@ releases
 stamp-h
 stamp-h1
 stamp-h.in
-waf

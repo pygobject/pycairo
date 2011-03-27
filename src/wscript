@@ -11,15 +11,15 @@ def build(ctx):
                                'python'+ctx.env['PYTHON_VERSION'],
                                'site-packages', 'cairo')
   # .py files
-  ctx.new_task_gen(
+  ctx(
     features     = 'py',
     source       = '__init__.py',
     install_path = pycairoLibDir,
     )
 
   # C extension module
-  ctx.new_task_gen(
-    features     = 'cc cshlib pyext',
+  ctx(
+    features     = 'c cshlib pyext',
     source       = ['cairomodule.c',
                     'context.c',
                     'font.c',
