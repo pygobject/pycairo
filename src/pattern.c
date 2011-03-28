@@ -295,14 +295,14 @@ surface_pattern_get_filter (PycairoSurfacePattern *o) {
 
 static PyObject *
 surface_pattern_get_surface (PycairoSurfacePattern *o) {
-  /*
+  if (o->base != NULL) {
+    // surface_pattern was created using surface_pattern_new()
+    return Py_BuildValue("O", o->base);
+  } else {
     cairo_surface_t *surface;
     cairo_pattern_get_surface (o->pattern, &surface);
-    return PycairoSurface_FromSurface (
-    cairo_surface_reference (surface), NULL);
-  */
-  /* return the surface used to create the pattern */
-  return Py_BuildValue("O", o->base);
+    return PycairoSurface_FromSurface(cairo_surface_reference (surface), NULL);
+  }
 }
 
 static PyObject *
