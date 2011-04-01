@@ -1,89 +1,23 @@
 Pycairo Documentation README
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------
 
 This directory contains the reStructuredText (reST) sources to the Pycairo
 documentation.
 
 Options for accessing pycairo documentation:
-1. Read the documentation online at http://cairographics.org/documentation/pycairo/
+1. Read the documentation online at
+http://cairographics.org/documentation/pycairo/
 
 2. Download the latest 'pycairo-x.x.x-docs-html.tar.gz' prebuilt documents
 from http://www.cairographics.org/releases/. Uncompress the docs and point
 your browser at the index.html file.
 
-3. Build the documentation yourself - the hardest option, see details below.
+3. Build the documentation yourself - the hardest option.
+Install Sphinx 1.0.7 or later.
 
+Build the docs using sphinx-build
+$ sphinx-build -b html sourcedir builddir
 
-Building the docs
-=================
-You need to install Python 2.4 or higher; the toolset used to build the docs are
-written in Python.  The toolset used to build the documentation is called
-*Sphinx*, it is not included in this tree, but maintained separately in the
-Python Subversion repository.  Also needed are Jinja, a templating engine
-(included in Sphinx as a Subversion external), and optionally Pygments, a code
-highlighter.
-
-
-Using make
-----------
-   make html
-
-Available make targets are:
-
- * "html", which builds standalone HTML files for offline viewing.
-
- * "htmlhelp", which builds HTML files and a HTML Help project file usable to
-   convert them into a single Compiled HTML (.chm) file -- these are popular
-   under Microsoft Windows, but very handy on every platform.
-
-   To create the CHM file, you need to run the Microsoft HTML Help Workshop
-   over the generated project (.hhp) file.
-
- * "latex", which builds LaTeX source files that can be run with "pdflatex"
-   to produce PDF documents.
-
- * "text", which builds a plain text file for each source file.
-
- * "linkcheck", which checks all external references to see whether they are
-   broken, redirected or malformed, and outputs this information to stdout
-   as well as a plain-text (.txt) file.
-
- * "changes", which builds an overview over all versionadded/versionchanged/
-   deprecated items in the current version. This is meant as a help for the
-   writer of the "What's New" document.
-
- * "pydoc-topics", which builds a Python module containing a dictionary
-   with plain text documentation for the labels defined in
-   `tools/sphinxext/pyspecific.py` -- pydoc needs these to show topic
-   and keyword help.
-
-A "make update" updates the Subversion checkouts in `tools/`.
-
-
-Without make
-------------
-
-You'll need to checkout the Sphinx package to the `tools/` directory::
-
-   svn co http://svn.python.org/projects/doctools/trunk/sphinx tools/sphinx
-
-Then, you need to install Docutils 0.4 (the SVN snapshot won't work), either
-by checking it out via ::
-
-   svn co http://svn.python.org/projects/external/docutils-0.4/docutils tools/docutils
-
-or by installing it from http://docutils.sf.net/.
-
-You can optionally also install Pygments, either as a checkout via ::
-
-   svn co http://svn.python.org/projects/external/Pygments-0.9/pygments tools/pygments
-
-or from PyPI at http://pypi.python.org/pypi/Pygments.
-
-
-Then, make an output directory, e.g. under `build/`, and run ::
-
-   python tools/sphinx-build.py -b<builder> . build/<outputdirectory>
-
-where `<builder>` is one of html, web or htmlhelp (for explanations see the make
-targets above).
+or, build the docs using make
+$ make clean
+$ make html

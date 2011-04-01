@@ -644,8 +644,8 @@ The Win32PrintingSurface is a multi-page vector surface type.
    ignored, and GDI will be used as much as possible to draw to the surface.
 
    The returned surface will be wrapped using the paginated surface to provide
-   correct complex rendering behaviour; :meth:`.show_page` and associated
-   methods must be used for correct output.
+   correct complex rendering behaviour; :meth:`cairo.Surface.show_page` and
+   associated methods must be used for correct output.
 
 
 class XCBSurface(:class:`Surface`)

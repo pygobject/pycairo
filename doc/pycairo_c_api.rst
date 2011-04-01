@@ -86,33 +86,33 @@ Types::
 Functions
 =========
 
-.. cfunction::  cairo_t * PycairoContext_GET(obj)
+.. c:function::  cairo_t * PycairoContext_GET(obj)
 
    get the C cairo_t \* object out of the PycairoContext \*obj
 
 
-.. cfunction::  PyObject * PycairoContext_FromContext(cairo_t *ctx, PyTypeObject *type, PyObject *base)
+.. c:function::  PyObject * PycairoContext_FromContext(cairo_t *ctx, PyTypeObject *type, PyObject *base)
 
 
-.. cfunction::  PyObject * PycairoFontFace_FromFontFace(cairo_font_face_t *font_face)
+.. c:function::  PyObject * PycairoFontFace_FromFontFace(cairo_font_face_t *font_face)
 
 
-.. cfunction::  PyObject * PycairoFontOptions_FromFontOptions(cairo_font_options_t *font_options)
+.. c:function::  PyObject * PycairoFontOptions_FromFontOptions(cairo_font_options_t *font_options)
 
 
-.. cfunction::  PyObject * PycairoMatrix_FromMatrix(const cairo_matrix_t *matrix)
+.. c:function::  PyObject * PycairoMatrix_FromMatrix(const cairo_matrix_t *matrix)
 
 
-.. cfunction::  PyObject * PycairoPath_FromPath(cairo_path_t *path)
+.. c:function::  PyObject * PycairoPath_FromPath(cairo_path_t *path)
 
 
-.. cfunction::  PyObject * PycairoPattern_FromPattern(cairo_pattern_t *pattern, PyObject *base)
+.. c:function::  PyObject * PycairoPattern_FromPattern(cairo_pattern_t *pattern, PyObject *base)
 
 
-.. cfunction::  PyObject * PycairoScaledFont_FromScaledFont(cairo_scaled_font_t *scaled_font)
+.. c:function::  PyObject * PycairoScaledFont_FromScaledFont(cairo_scaled_font_t *scaled_font)
 
 
-.. cfunction::  PyObject * PycairoSurface_FromSurface(cairo_surface_t *surface, PyObject *base)
+.. c:function::  PyObject * PycairoSurface_FromSurface(cairo_surface_t *surface, PyObject *base)
 
 
-.. cfunction::  int PycairoCheck_Status(cairo_status_t status)
+.. c:function::  int PycairoCheck_Status(cairo_status_t status)

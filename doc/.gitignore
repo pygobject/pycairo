@@ -1,6 +1,6 @@
-.build
-.static
-.templates
+_build
+_static
+_templates
 html_docs_create.sh
 html_docs_upload.sh
 Makefile

@@ -12,7 +12,7 @@ a more 'Pythonic' way.
 
 Features of the Pycairo bindings:
 
-* Provides an object oriented interface to cairo, using Python 2.2 new style classes.
+* Provides an object oriented interface to cairo.
 * Pycairo_Check_Status() is called to check the status of cairo operations, and raise exceptions as appropriate.
 * Provides a C API that can be used by other Python extensions.
 
