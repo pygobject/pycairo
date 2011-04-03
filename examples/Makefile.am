@@ -8,10 +8,8 @@ EXTRA_DIST = \
   cairo_snippets/snippets_png.py \
   cairo_snippets/snippets_ps.py \
   cairo_snippets/snippets_svg.py \
-  cairo_snippets/data/romedalen.png \
   cairo_snippets/snippets/arc_negative.py \
   cairo_snippets/snippets/arc.py \
-  cairo_snippets/snippets/clip_image.py \
   cairo_snippets/snippets/clip.py \
   cairo_snippets/snippets/curve_rectangle.py \
   cairo_snippets/snippets/curve_to.py \
@@ -22,8 +20,6 @@ EXTRA_DIST = \
   cairo_snippets/snippets/gradient.py \
   cairo_snippets/snippets/gradient_mask.py \
   cairo_snippets/snippets/group.py \
-  cairo_snippets/snippets/imagepattern.py \
-  cairo_snippets/snippets/image.py \
   cairo_snippets/snippets/__init__.py \
   cairo_snippets/snippets/path.py \
   cairo_snippets/snippets/set_line_cap.py \
