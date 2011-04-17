@@ -1,16 +1,17 @@
 Pycairo Documentation README
 ----------------------------
 
-This directory contains the reStructuredText (reST) sources to the Pycairo
+This directory contains the reStructuredText (reST) sources for the Pycairo
 documentation.
 
-Options for accessing pycairo documentation:
-1. Read the documentation online at
-http://cairographics.org/documentation/pycairo/
+Accessing pycairo documentation
+-------------------------------
+There are a number of options:
+1. Read the documentation supplied in the pycairo archive file
+  pycairo-X.X.X/doc/_build/html/index.html
 
-2. Download the latest 'pycairo-x.x.x-docs-html.tar.gz' prebuilt documents
-from http://www.cairographics.org/releases/. Uncompress the docs and point
-your browser at the index.html file.
+2. Read the documentation online at
+http://cairographics.org/documentation/pycairo/
 
 3. Build the documentation yourself - the hardest option.
 Install Sphinx 1.0.7 or later.

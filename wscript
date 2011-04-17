@@ -68,10 +68,15 @@ def build(ctx):
 def dist(ctx):
   # exclude these files from the distribution archive
   exclude  = (
-    'RELEASING',
-    'examples/cairo_snippets/c_to_python.py',
+    'build_directory/',
     'doc/html_docs_create.sh',
     'doc/html_docs_upload.sh',
+    'doc/_static/',
+    'doc/_templates/',
+    'doc/_build/doctrees/',
+    'doc/_build/html/_sources/',
+    'examples/cairo_snippets/c_to_python.py',
+    'RELEASING',
 
     '.git/',
     '**/.gitignore',

@@ -247,6 +247,8 @@ cairo.FORMAT
 These constants are used to identify the memory format of
 :class:`ImageSurface` data.
 
+New entries may be added in future versions.
+
 .. data:: FORMAT_ARGB32
 
    each pixel is a 32-bit quantity, with alpha in the upper 8 bits, then red,
@@ -271,7 +273,10 @@ These constants are used to identify the memory format of
    the uppermost bit, on a little-endian machine the first pixel is in the
    least-significant bit.
 
-New entries may be added in future versions.
+.. data:: FORMAT_RGB16_565
+
+   each pixel is a 16-bit quantity with red in the upper 5 bits, then green in
+   the middle 6 bits, and blue in the lower 5 bits.
 
 
 .. _constants_HINT_METRICS:
