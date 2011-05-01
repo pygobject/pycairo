@@ -7,7 +7,7 @@ out = 'build_directory'
 d = top
 
 APPNAME='py2cairo'
-VERSION='1.8.11'
+VERSION='1.10.0'
 cairo_version_required = '1.10.0'
 
 
@@ -69,8 +69,6 @@ def dist(ctx):
   # exclude these files from the distribution archive
   exclude  = (
     'build_directory/',
-    'doc/html_docs_create.sh',
-    'doc/html_docs_upload.sh',
     'doc/_static/',
     'doc/_templates/',
     'doc/_build/doctrees/',
@@ -94,6 +92,15 @@ def dist(ctx):
     'autogen.sh',
     'autom4*',
     'config.log',
-    # ... many more ...
+    'config.guess',
+    'config.sub',
+    'depcomp',
+    'install-sh',
+    'missing',
+    'py-compile',
+    'src/.deps/',
+    'src/.libs/',
+    '**/*.lo',
+    '**/stamp-h1',
     )
   ctx.excl = ' '.join(exclude)

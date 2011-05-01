@@ -1,31 +1,35 @@
-Here are the steps to follow to create a new pycairo release:
+Steps to follow to create a new py2cairo release
+------------------------------------------------
 
-1) Fill out an entry in the NEWS file
+1) Add a new NEWS entry
 Sift through the information in 'git log' since the last release. Summarize
 major changes briefly in a style similar to other entries in NEWS.
+
 
 2) Increment pycairo and cairo version numbers in:
    configure.ac
    doc/conf.py
    README
-   setup.py
    wscript
 
-Increment pycairo_major/minor/micro_version in configure.ac
-Increase the cairo_required_version - to an even numbered version.
-Increment pycairo_major/minor version to match the cairo major/minor version
-that pycairo requires (and increment the micro version if necessary for any
-subsequent pycairo updates).
 
-3) Run "make distcheck" and verify that it gives no warnings or errors and
-   ends with a message of the form:
+3) Create the archive
+$ cd doc
+$ make clean; make html  # view docs and ensure version number is correct
 
-	===============================================
-	py2cairo-X.Y.Z archives ready for distribution:
-	py2cairo-X.Y.Z.tar.gz
-	===============================================
+$ cd ..
+$ ./waf distcheck  # ensure there are no errors
+$ rm -rf py2cairo-X.X.X*
 
-Install from the tar.gz archive, run tests and examples.
+$ make clean  # clean from autotools
+$ ./waf clean distclean
+$ ./waf dist       # to create py2cairo-x.x.x.tar.bz2
+                   # create sha1 sum
+$ sha1sum py2cairo-x.x.x.tar.bz2 > py2cairo-x.x.x.tar.bz2.sha1
+
+$ mv py2cairo-X.X.X* /tmp
+  # install from the archive, run tests and examples.
+
 
 4) Commit the changes to NEWS, configure.ac etc
 It's especially important to mention the new version number in the git commit

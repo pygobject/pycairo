@@ -1,3 +1,28 @@
+Overview of changes from py2cairo 1.8.10 to py2cairo 1.10.0
+===========================================================
+General Changes:
+    py2cairo 1.10.0 requires cairo 1.10.0 (or later).
+
+New Constants:
+    cairo.FORMAT_RGB16_565
+
+Bug Fixes:
+    context.get_source().get_surface() fails        #33013
+    Add support for './waf configure --libdir=XXX'  #30230
+
+Documentation Changes:
+    Upgrade to using Sphinx 1.0.7.
+    Include html documentation in the pycairo archive file.
+
+Build Changes:
+    Update waf to 1.6.3
+
+Other Changes:
+    Remove setup.py
+    Improve/simplify unicode filename support.
+    Improve/simplify unicode text support.
+
+
 Overview of changes from pycairo 1.8.8 to pycairo 1.8.10
 ========================================================
 General Changes:
