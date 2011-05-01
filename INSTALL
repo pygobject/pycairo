@@ -33,11 +33,6 @@ Python will not be able to find the cairo module until you add
 $prefix/lib/pythonX.Y/site-packages to the PYTHONPATH variable.
 
 
-Python distutils
-----------------
-$ python setup.py install
-
-
 Testing
 -------
 See test/README
