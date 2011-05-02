@@ -16,9 +16,9 @@ Documentation Changes:
 
 Build Changes:
     Update waf to 1.6.3
+    Remove setup.py
 
 Other Changes:
-    Remove setup.py
     Improve/simplify unicode filename support.
     Improve/simplify unicode text support.
 

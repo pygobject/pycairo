@@ -26,12 +26,13 @@ $ ./waf clean distclean
 $ ./waf dist       # to create py2cairo-x.x.x.tar.bz2
                    # create sha1 sum
 $ sha1sum py2cairo-x.x.x.tar.bz2 > py2cairo-x.x.x.tar.bz2.sha1
+  # ensure html docs are present in the archive
 
 $ mv py2cairo-X.X.X* /tmp
   # install from the archive, run tests and examples.
 
 
-4) Commit the changes to NEWS, configure.ac etc
+4) git commit  # the changes to NEWS, etc.
 It's especially important to mention the new version number in the git commit
 comment.
 Add a '=== Py2cairo x.x.x ===' header.
@@ -40,54 +41,49 @@ $ git tag X.Y.Z
   push the changes to the freedesktop server.
 $ git push origin master
 
-5) Edit Makefile.am and select either 'snapshot' or 'release'.
-   Run "make release-publish" which will perform the following steps for you:
 
-* Check that the version number ends with an even micro component
-* Check that no release exists with the current version
-* Verify that make distcheck completes successfully
-* Generate the final tar file
-* Generate an md5sum file
-* scp both files to appear on http://cairographics.org/releases
-* Place local copies of the files in the releases directory
-* Create a LATEST-package-version file (after deleting any old one)
-* Provide some text for the release announcement (see below).
+5) Copy the archive to the cairo download server
+$ chmod a+r /tmp/py2cairo*
+$ scp py2cairo-x.x.x.tar.bz2 py2cairo-x.x.x.tar.bz2.sha1 cairographics.org:/srv/cairo.freedesktop.org/www/releases
+
 
 6) Verify that the tar file arrived at the website.
    Check tar file has read permissions for all.
    Update the pycairo webpage to reference the new release.
    Update http://cheeseshop.python.org entry for pycairo.
 
-7) Edit:
-   configure.ac
-   setup.py
-   wscript
-   to increment pycairo_version_micro to the next larger (odd) number.
-$ git push origin master
 
-8) Send a message to cairo-announce@cairographics.org
+7) Send a message to cairo-announce@cairographics.org
               and CC python-announce-list@python.org
-   to announce the new release using the text provided from
-   "make release-publish".
+   to announce the new release using the template below
+
+Subject: ANN: py2cairo release X.X.X now available
+
+Py2cairo is a set of Python 2.x bindings for the multi-platform 2D
+graphics library cairo.
+  http://cairographics.org
+  http://cairographics.org/pycairo
+
+Py2cairo release X.X.X is available from:
+  http://cairographics.org/releases/py2cairo-X.X.X.tar.bz2
+  http://cairographics.org/releases/py2cairo-X.X.X.tar.bz2.sha1
+
+<insert NEWS here ...>
 
 
-Generating documentation archives
----------------------------------
-$ cd doc/
-$ vi conf.py  # update the version and release numbers
-$ make clean
-$ make html
-$ cd .build/
-$ mv html py2cairo-x.x.x-docs-html
-$ tar cjf /tmp/py2cairo-x.x.x-docs-html.tar.bz2 py2cairo-x.x.x-docs-html
-$ zip -r  /tmp/py2cairo-x.x.x-docs-html.zip     py2cairo-x.x.x-docs-html
-$ chmod a+r /tmp/py2cairo*
+8) Generate documentation and copy to cairo web server
+$ cd doc/_build/html
+$ tar cjf /tmp/html.tar.bz2 *  # adds files to top level of archive
+$ scp /tmp/html.tar.bz2 cairographics.org:/srv/cairo.freedesktop.org/www/documentation/pycairo/2
+$ ssh cairographics.org
+  # login and untar the file
+  # test pycairo docs can be read from web
+  # check everyone has read permission (and 'x' for dirs)
 
-untar docs in /tmp and check that they have correct version number and view
-OK.
-copy file to the 'releases' directory on cairo website:
-  scp py2cairo-x.x.x-docs-html.tar.bz2 cairographics.org:/srv/cairo.freedesktop.org/www/releases
 
-cd doc
- html_docs_create.sh
- html_docs_upload.sh
+9) Increment pycairo version number, to next odd number in:
+   configure.ac
+   doc/conf.py
+   wscript
+$ git commit
+$ git push origin master
