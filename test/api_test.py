@@ -70,7 +70,7 @@ def test_surface():
     f, w, h = cairo.FORMAT_ARGB32, 100, 100
     s = cairo.ImageSurface(f, w, h)
     assert s.get_format() == f
-    assert s.get_width() == w
+    assert s.get_width()  == w
     assert s.get_height() == h
 
   if cairo.HAS_PDF_SURFACE:
@@ -80,6 +80,10 @@ def test_surface():
   if cairo.HAS_PS_SURFACE:
     f, w, h = tfi.TemporaryFile(mode='w+b'), 100, 100
     s = cairo.PSSurface(f, w, h)
+
+  if cairo.HAS_RECORDING_SURFACE:
+    s = cairo.RecordingSurface(cairo.CONTENT_COLOR, None)
+    s = cairo.RecordingSurface(cairo.CONTENT_COLOR, (1,1,10,10))
 
   if cairo.HAS_SVG_SURFACE:
     f, w, h = tfi.TemporaryFile(mode='w+b'), 100, 100

@@ -2,7 +2,8 @@
  *
  * Pycairo - Python bindings for cairo
  *
- * Copyright © 2003 James Henstridge, Steven Chaplin
+ * Copyright © 2003 James Henstridge
+ * Copyright © 2004-2011 Steven Chaplin
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -87,14 +88,15 @@ typedef struct {
   PyObject *base; /* base object used to create surface, or NULL */
 } PycairoSurface;
 
-#define PycairoImageSurface PycairoSurface
-#define PycairoPDFSurface   PycairoSurface
-#define PycairoPSSurface    PycairoSurface
-#define PycairoSVGSurface   PycairoSurface
-#define PycairoWin32Surface PycairoSurface
+#define PycairoImageSurface         PycairoSurface
+#define PycairoPDFSurface           PycairoSurface
+#define PycairoPSSurface            PycairoSurface
+#define PycairoRecordingSurface     PycairoSurface
+#define PycairoSVGSurface           PycairoSurface
+#define PycairoWin32Surface         PycairoSurface
 #define PycairoWin32PrintingSurface PycairoSurface
-#define PycairoXCBSurface   PycairoSurface
-#define PycairoXlibSurface  PycairoSurface
+#define PycairoXCBSurface           PycairoSurface
+#define PycairoXlibSurface          PycairoSurface
 
 /* get C object out of the Python wrapper */
 #define PycairoContext_GET(obj)    (((PycairoContext *)(obj))->ctx)
@@ -131,6 +133,7 @@ typedef struct {
   PyTypeObject *ImageSurface_Type;
   PyTypeObject *PDFSurface_Type;
   PyTypeObject *PSSurface_Type;
+  PyTypeObject *RecordingSurface_Type;
   PyTypeObject *SVGSurface_Type;
   PyTypeObject *Win32Surface_Type;
   PyTypeObject *Win32PrintingSurface_Type;
@@ -182,13 +185,19 @@ typedef struct {
 #define PycairoPSSurface_Type       *(Pycairo_CAPI->PSSurface_Type)
 #endif
 
+#if CAIRO_HAS_RECORDING_SURFACE
+#define PycairoRecordingSurface_Type \
+                                    *(Pycairo_CAPI->RecordingSurface_Type)
+#endif
+
 #if CAIRO_HAS_SVG_SURFACE
 #define PycairoSVGSurface_Type      *(Pycairo_CAPI->SVGSurface_Type)
 #endif
 
 #if CAIRO_HAS_WIN32_SURFACE
 #define PycairoWin32Surface_Type    *(Pycairo_CAPI->Win32Surface_Type)
-#define PycairoWin32PrintingSurface_Type    *(Pycairo_CAPI->Win32PrintingSurface_Type)
+#define PycairoWin32PrintingSurface_Type \
+                                    *(Pycairo_CAPI->Win32PrintingSurface_Type)
 #endif
 
 #if CAIRO_HAS_XCB_SURFACE
