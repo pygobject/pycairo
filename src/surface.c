@@ -43,6 +43,7 @@
  *   PycairoImageSurface,
  *   PycairoPDFSurface,
  *   PycairoPSSurface,
+ *   PycairoRecordingSurface,
  *   PycairoSVGSurface,
  *   PycairoWin32Surface,
  *   PycairoWin32PrintingSurface,
