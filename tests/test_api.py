@@ -4,7 +4,11 @@ from __future__ import division
 from __future__ import absolute_import
 from __future__ import print_function
 
+import io
+import sys
 import tempfile as tfi
+import base64
+import zlib
 
 import cairo
 import pytest
@@ -281,3 +285,68 @@ def test_constants():
 
     assert cairo.FORMAT_INVALID == -1
     assert cairo.FORMAT_RGB30 == 5
+
+    assert cairo.MIME_TYPE_JPEG == "image/jpeg"
+
+
+def test_surface_get_set_mime_data():
+    surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
+    assert surface.get_mime_data("foo") is None
+    assert surface.get_mime_data(cairo.MIME_TYPE_JPEG) is None
+
+    surface.set_mime_data("foo", b"bar")
+    assert surface.get_mime_data("foo") == b"bar"
+    surface.set_mime_data("foo", None)
+    assert surface.get_mime_data("foo") is None
+
+    surface.set_mime_data(cairo.MIME_TYPE_JPEG, b"\x00quux\x00")
+    assert surface.get_mime_data(cairo.MIME_TYPE_JPEG)[:] == b"\x00quux\x00"
+    surface.set_mime_data(cairo.MIME_TYPE_JPEG, None)
+    assert surface.get_mime_data(cairo.MIME_TYPE_JPEG) is None
+
+
+def test_surface_get_set_mime_data_references():
+    surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
+    if sys.version_info[0] == 2:
+        v = buffer(b"bla")
+        x = buffer(v, 0, 1)
+    else:
+        v = memoryview(b"bla")
+        x = v[:1]
+    assert sys.getrefcount(v) == 2
+    assert sys.getrefcount(x) == 2
+    surface.set_mime_data("foo", v)
+    surface.set_mime_data("foo2", v)
+    surface.set_mime_data("foo3", x)
+    assert surface.get_mime_data("foo") is v
+    assert surface.get_mime_data("foo2") is v
+    assert surface.get_mime_data("foo3") is x
+    surface.set_mime_data("foo", None)
+    surface.set_mime_data("foo2", None)
+    surface.set_mime_data("foo3", None)
+    surface.finish()
+    assert sys.getrefcount(v) == 2
+    assert sys.getrefcount(x) == 2
+
+
+def test_supports_mime_type():
+    surface = cairo.PDFSurface(None, 3, 3)
+    assert surface.supports_mime_type(cairo.MIME_TYPE_JPEG)
+    assert not surface.supports_mime_type("nope")
+
+
+def test_surface_mime_data_for_pdf():
+    jpeg_bytes = zlib.decompress(base64.b64decode(
+        b'eJz7f+P/AwYBLzdPNwZGRkYGDyBk+H+bwRnEowj8P8TAzcHACDJHkOH/EQYRIBsV'
+        b'cP6/xcDBCBJlrLcHqRBAV8EAVcHIylSPVwGbPQEFjPaK9XDrBAipBSq4CQB9jiS0'
+    ))
+
+    file_like = io.BytesIO()
+    surface = cairo.PDFSurface(file_like, 3, 3)
+    context = cairo.Context(surface)
+    image = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
+    image.set_mime_data(cairo.MIME_TYPE_JPEG, jpeg_bytes)
+    context.set_source_surface(image, 0, 0)
+    context.paint()
+    surface.finish()
+    assert jpeg_bytes in file_like.getvalue()
