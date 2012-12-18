@@ -520,6 +520,11 @@ PYCAIRO_MOD_INIT(_cairo)
 #else
   PyModule_AddIntConstant(m, "HAS_XLIB_SURFACE", 0);
 #endif
+#if CAIRO_HAS_MIME_SURFACE
+  PyModule_AddIntConstant(m, "HAS_MIME_SURFACE", 1);
+#else
+  PyModule_AddIntConstant(m, "HAS_MIME_SURFACE", 0);
+#endif
 
 #define CONSTANT(x) PyModule_AddIntConstant(m, #x, CAIRO_##x)
   CONSTANT(ANTIALIAS_DEFAULT);
@@ -676,6 +681,15 @@ PYCAIRO_MOD_INIT(_cairo)
   CONSTANT(STATUS_DEVICE_FINISHED);
   CONSTANT(STATUS_LAST_STATUS);
 
+#define STRCONSTANT(x) PyModule_AddStringConstant(m, #x, CAIRO_##x)
+
+  STRCONSTANT(MIME_TYPE_JP2);
+  STRCONSTANT(MIME_TYPE_JPEG);
+  STRCONSTANT(MIME_TYPE_PNG);
+  STRCONSTANT(MIME_TYPE_URI);
+  STRCONSTANT(MIME_TYPE_UNIQUE_ID);
+
+#undef STRCONSTANT
 #undef CONSTANT
 
 #if PY_MAJOR_VERSION >= 3

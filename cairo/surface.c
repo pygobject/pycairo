@@ -330,6 +330,127 @@ surface_write_to_png (PycairoSurface *o, PyObject *args) {
 }
 #endif  /* CAIRO_HAS_PNG_FUNCTIONS */
 
+static void
+_destroy_mime_user_data_func (PyObject *user_data) {
+  PyGILState_STATE gstate = PyGILState_Ensure();
+
+  Py_DECREF(user_data);
+
+  PyGILState_Release(gstate);
+}
+
+static void
+_destroy_mime_data_func (PyObject *user_data) {
+  cairo_surface_t *surface;
+  PyObject *mime_intern;
+
+  PyGILState_STATE gstate = PyGILState_Ensure();
+
+  /* Remove the user data holding the source object */
+  surface = PyCapsule_GetPointer(PyTuple_GET_ITEM(user_data, 0), NULL);
+  mime_intern = PyTuple_GET_ITEM(user_data, 2);
+  cairo_surface_set_user_data(
+    surface, (cairo_user_data_key_t *)mime_intern, NULL, NULL);
+
+  /* Destroy the user data */
+  _destroy_mime_user_data_func(user_data);
+
+  PyGILState_Release(gstate);
+}
+
+static PyObject *
+surface_set_mime_data (PycairoSurface *o, PyObject *args) {
+  PyObject *obj, *user_data, *mime_intern, *capsule;
+  const unsigned char *buffer;
+  const char *mime_type;
+  Py_ssize_t buffer_len;
+  int res;
+  cairo_status_t status;
+
+  if (!PyArg_ParseTuple(args, "sO:Surface.set_mime_data", &mime_type, &obj))
+    return NULL;
+
+  if (obj == Py_None) {
+    status = cairo_surface_set_mime_data (
+      o->surface, mime_type, NULL, 0, NULL, NULL);
+
+    RETURN_NULL_IF_CAIRO_ERROR(status);
+    Py_RETURN_NONE;
+  }
+
+  res = PyObject_AsReadBuffer (obj, (const void **)&buffer, &buffer_len);
+  if (res == -1)
+    return NULL;
+
+  /* We use the interned mime type string as user data key and store the
+   * passed in object with it. This allows us to return the same object in
+   * surface_get_mime_data().
+   */
+  mime_intern = PYCAIRO_PyUnicode_InternFromString(mime_type);
+  capsule = PyCapsule_New(o->surface, NULL, NULL);
+  user_data = Py_BuildValue("(NOO)", capsule, obj, mime_intern);
+  if (user_data == NULL)
+    return NULL;
+
+  status = cairo_surface_set_user_data(
+    o->surface, (cairo_user_data_key_t *)mime_intern, user_data,
+    (cairo_destroy_func_t)_destroy_mime_user_data_func);
+  if (status != CAIRO_STATUS_SUCCESS)
+    Py_DECREF(user_data);
+  RETURN_NULL_IF_CAIRO_ERROR(status);
+
+  status = cairo_surface_set_mime_data (
+    o->surface, mime_type, buffer, (unsigned long)buffer_len,
+    (cairo_destroy_func_t)_destroy_mime_data_func, user_data);
+  if (status != CAIRO_STATUS_SUCCESS) {
+    cairo_surface_set_user_data(
+      o->surface, (cairo_user_data_key_t *)mime_intern, NULL, NULL);
+  }
+  RETURN_NULL_IF_CAIRO_ERROR(status);
+  Py_INCREF(user_data);
+
+  Py_RETURN_NONE;
+}
+
+static PyObject *
+surface_get_mime_data (PycairoSurface *o, PyObject *args) {
+  PyObject *user_data, *obj, *mime_intern;
+  const char *mime_type;
+  const unsigned char *buffer;
+  unsigned long buffer_len;
+
+  if (!PyArg_ParseTuple(args, "s:Surface.get_mime_data", &mime_type))
+    return NULL;
+
+  cairo_surface_get_mime_data (o->surface, mime_type, &buffer, &buffer_len);
+  if (buffer == NULL) {
+    Py_RETURN_NONE;
+  }
+
+  mime_intern = PYCAIRO_PyUnicode_InternFromString(mime_type);
+  user_data = cairo_surface_get_user_data(
+    o->surface, (cairo_user_data_key_t *)mime_intern);
+
+  if (user_data == NULL) {
+    /* In case the mime data wasn't set through the Python API just copy it */
+    return Py_BuildValue(PYCAIRO_DATA_FORMAT "#", buffer, buffer_len);
+  } else {
+    obj = PyTuple_GET_ITEM(user_data, 1);
+    Py_INCREF(obj);
+    return obj;
+  }
+}
+
+static PyObject *
+surface_supports_mime_type (PycairoSurface *self, PyObject *args) {
+  const char *mime_type;
+
+  if (!PyArg_ParseTuple(args, "s:Surface.supports_mime_type", &mime_type))
+    return NULL;
+
+  return PyBool_FromLong(
+    cairo_surface_supports_mime_type(self->surface, mime_type));
+}
 
 static PyMethodDef surface_methods[] = {
   /* methods never exposed in a language binding:
@@ -358,6 +479,10 @@ static PyMethodDef surface_methods[] = {
 #ifdef CAIRO_HAS_PNG_FUNCTIONS
   {"write_to_png",   (PyCFunction)surface_write_to_png,       METH_VARARGS},
 #endif
+  {"set_mime_data",  (PyCFunction)surface_set_mime_data,      METH_VARARGS},
+  {"get_mime_data",  (PyCFunction)surface_get_mime_data,      METH_VARARGS},
+  {"supports_mime_type", (PyCFunction)surface_supports_mime_type,
+   METH_VARARGS},
   {NULL, NULL, 0, NULL},
 };
 

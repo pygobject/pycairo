@@ -44,6 +44,7 @@
 
 #define PYCAIRO_PyUnicode_FromString PyString_FromString
 #define PYCAIRO_PyUnicode_Join _PyString_Join
+#define PYCAIRO_PyUnicode_InternFromString PyString_InternFromString
 
 #define PYCAIRO_PyBytes_AsStringAndSize PyString_AsStringAndSize
 
@@ -63,6 +64,7 @@
 
 #define PYCAIRO_PyUnicode_FromString PyUnicode_FromString
 #define PYCAIRO_PyUnicode_Join PyUnicode_Join
+#define PYCAIRO_PyUnicode_InternFromString PyUnicode_InternFromString
 
 #define PYCAIRO_PyBytes_AsStringAndSize PyBytes_AsStringAndSize
 

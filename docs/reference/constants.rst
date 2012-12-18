@@ -1,4 +1,4 @@
-.. _constants:
+<.. _constants:
 
 ******************************
 Module Functions and Constants
@@ -43,6 +43,9 @@ Module Constants
 
 cairo.HAS
 ---------
+
+1 if the feature is present in the underlying C cairo library, 0 otherwise.
+
 .. data:: HAS_ATSUI_FONT
           HAS_FT_FONT
           HAS_GLITZ_SURFACE
@@ -59,8 +62,9 @@ cairo.HAS
           HAS_XCB_SURFACE
           HAS_XLIB_SURFACE
 
-   1 if the feature is present in the underlying C cairo library,
-   0 otherwise
+.. data:: HAS_MIME_SURFACE
+
+    .. versionadded:: 1.12.0
 
 
 .. _constants_ANTIALIAS:
@@ -726,6 +730,48 @@ cairo.STATUS
     STATUS_INVALID_MESH_CONSTRUCTION
     STATUS_DEVICE_FINISHED
     STATUS_LAST_STATUS
+
+
+.. _constants_MIME_TYPE:
+
+cairo.MIME_TYPE
+---------------
+
+.. data:: MIME_TYPE_JP2
+    :annotation: = "image/jp2"
+
+    The Joint Photographic Experts Group (JPEG) 2000 image coding standard
+    (ISO/IEC 15444-1).
+
+    .. versionadded:: 1.12.0
+
+.. data:: MIME_TYPE_JPEG
+    :annotation: = "image/jpeg"
+
+    The Joint Photographic Experts Group (JPEG) image coding standard (ISO/IEC
+    10918-1).
+
+    .. versionadded:: 1.12.0
+
+.. data:: MIME_TYPE_PNG
+    :annotation: = "image/png"
+
+    The Portable Network Graphics image file format (ISO/IEC 15948).
+
+    .. versionadded:: 1.12.0
+
+.. data:: MIME_TYPE_URI
+    :annotation: = "text/x-uri"
+
+    URI for an image file (unofficial MIME type).
+
+    .. versionadded:: 1.12.0
+
+.. data:: MIME_TYPE_UNIQUE_ID
+    :annotation: = "application/x-cairo.uuid"
+
+    Unique identifier for a surface (cairo specific MIME type). All surfaces
+    with the same unique identifier will only be embedded once.
 
     .. versionadded:: 1.12.0
 
