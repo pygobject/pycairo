@@ -1,0 +1,98 @@
+Here are the steps to follow to create a new pycairo release:
+
+1) Ensure that there are no local, uncommitted modifications. The best
+   thing to do here may be to begin with a fresh checkout from CVS:
+
+	cvs -d cairographics.org:/cvs/cairo co pycairo
+
+   But it's probably good enough if "cvs -q update -Ad" generates no
+   output.
+
+2) Fill out an entry in the NEWS file
+
+   Sift through the information in ChangeLog since the last release. Summarize
+   major changes briefly in a style similar to other entries in NEWS.
+
+3) Increment version numbers in:
+    cairo/cairomodule.c
+    configure.ac
+    doc/conf.py
+    README
+    setup.py
+
+    Increment pycairo_major/minor/micro_version in configure.ac
+    Increase the cairo_required_version - to an even numbered version.
+    Increment pycairo_major/minor version to match the cairo major/minor
+    version that pycairo requires (and increment the micro version if
+    necessary for any subsequent pycairo updates).
+
+(install fresh copy, run examples, run any other tests)
+
+4) Commit the changes to NEWS, configure.ac etc
+
+    Don't forget to fill out the ChangeLog just like with any other commit.
+    It's especially important to mention the new version number in the
+    ChangeLog.
+    Add a '=== Pycairo x.x.x ===' header to ChangeLog
+    Do "cvs -q update -Ad" to confirm there are no uncommitted changes.
+
+5) Run "make distcheck" and verify that it gives in no warnings or errors and
+   ends with a message of the form:
+
+	===============================================
+	pycairo-X.Y.Z archives ready for distribution:
+	pycairo-X.Y.Z.tar.gz
+	===============================================
+
+6) Edit Makefile.am and select either 'snapshot' or 'release'.
+   Run "make release-publish" which will perform the following steps for you:
+
+	* Check that the version number ends with an even micro component
+	* Check that no release exists with the current version
+	* Verify that make distcheck completes successfully
+	* Generate the final tar file
+	* Generate an md5sum file
+	* scp both files to appear on http://cairographics.org/releases
+	* Place local copies of the files in the releases directory
+	* Create a LATEST-package-version file (after deleting any old one)
+	* Tag the entire source tree with a tag of the form RELEASE_X_Y_Z
+	* Provide some text for the release announcement (see below).
+
+7) Verify that the tar file arrived at the website.
+   Check tar file has read permissions for all.
+   Update the pycairo webpage to reference the new release.
+   Update http://cheeseshop.python.org entry for pycairo.
+
+8) Edit:
+   cairo/cairomodule.c
+   configure.ac
+   setup.py
+   to increment pycairo_version_micro to the next larger (odd) number and
+   commit.
+
+9) Send a message to cairo-announce@cairographics.org
+              and CC python-announce-list@python.org
+   to announce the new release using the text provided from
+   "make release-publish".
+
+
+Generating documentation archives
+---------------------------------
+$ cd doc/
+$ vi conf.py  # update the version and release numbers
+$ make clean
+$ make html
+$ cd .build/
+$ mv html pycairo-x.x.x-docs-html
+$ tar cjf /tmp/pycairo-x.x.x-docs-html.tar.bz2 pycairo-x.x.x-docs-html
+$ zip -r  /tmp/pycairo-x.x.x-docs-html.zip     pycairo-x.x.x-docs-html
+$ chmod a+r /tmp/pycairo*
+
+untar docs in /tmp and check that they have correct version number and view
+OK.
+copy file to the 'releases' directory on cairo website:
+  scp pycairo-xxx cairographics.org:/srv/cairo.freedesktop.org/www/releases
+
+cd doc
+ html_docs_create.sh
+ html_docs_upload.sh

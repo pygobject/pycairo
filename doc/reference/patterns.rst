@@ -4,6 +4,8 @@
 Patterns
 ********
 
+.. currentmodule:: cairo
+
 
 Patterns are the paint with which cairo draws. The primary use of patterns is
 as the source for all cairo drawing operations, although they can also be used
@@ -27,7 +29,7 @@ derive. It cannot be instantiated directly.
       :rtype: int
 
       Gets the current extend mode for the *Pattern*. See
-      :ref:`EXTEND attributes <mattributes_extend>`
+      :ref:`EXTEND attributes <constants_EXTEND>`
       for details on the semantics of each extend strategy.
 
    .. method:: get_matrix()
@@ -36,19 +38,18 @@ derive. It cannot be instantiated directly.
 
    .. method:: set_extend(extend)
 
-      :param extend: an extend describing how the area outside of the *Pattern* will be drawn
+      :param extend: an :ref:`EXTEND <constants_EXTEND>` describing how the
+        area outside of the *Pattern* will be drawn
 
-      Sets the mode to be used for drawing outside the area of a *Pattern*. See
-      :ref:`EXTEND attributes <mattributes_extend>`
-      for details on the semantics of each extend strategy.
+      Sets the mode to be used for drawing outside the area of a *Pattern*.
 
-      The default extend mode is :attr:`cairo.EXTEND_NONE` for
-      :class:`SurfacePattern` and :attr:`cairo.EXTEND_PAD` for
+      The default extend mode is :data:`cairo.EXTEND_NONE` for
+      :class:`SurfacePattern` and :data:`cairo.EXTEND_PAD` for
       :class:`Gradient` Patterns.
 
    .. method:: set_matrix(matrix)
 
-      :param matrix: a cairo matrix (:class:`Matrix`)
+      :param matrix: a :class:`Matrix`
 
       Sets the *Pattern's* transformation matrix to *matrix*. This matrix is a
       transformation from user space to pattern space.
@@ -112,19 +113,13 @@ class SurfacePattern(:class:`Pattern`)
 .. class:: SurfacePattern(surface)
 
    :param surface: a cairo :class:`Surface`
-   :returns: the newly created *SurfacePattern*
-   :raises: MemoryError in case of no memory.
-
-   Create a new *SurfacePattern* for the given surface.
+   :returns: a newly created *SurfacePattern* for the given surface.
+   :raises: *MemoryError* in case of no memory.
 
    .. method:: get_filter()
 
-      :returns: the current filter used for resizing the *Pattern*.
-      :rtype: int
-
-      Gets the current filter for the *Pattern*.  See
-      :ref:`FILTER attributes <mattributes_filter>`
-      for details on each filter.
+      :returns: the current :ref:`FILTER <constants_filter>` used for
+        resizing the *SurfacePattern*.
 
    .. method:: get_surface()
 
@@ -134,11 +129,8 @@ class SurfacePattern(:class:`Pattern`)
 
    .. method:: set_filter(filter)
 
-      :param filter: a filter describing the filter to use for resizing the *Pattern*
-
-      Sets the filter to be used for resizing when using this pattern. See
-      :ref:`FILTER attributes <mattributes_filter>`
-      for details on each filter.
+      :param filter: a :ref:`FILTER <constants_filter>` describing the filter
+        to use for resizing the *Pattern*
 
       Note that you might want to control filtering even when you do not have
       an explicit *Pattern* object, (for example when using

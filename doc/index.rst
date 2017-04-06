@@ -1,13 +1,15 @@
 Pycairo Documentation
 =====================
 
+.. module:: cairo
+
 .. toctree::
    :maxdepth: 1
 
    overview
    reference/index
    faq
-   c-api
+   pycairo_c_api
 
 
 Indices and tables
@@ -15,4 +17,3 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`search`
-

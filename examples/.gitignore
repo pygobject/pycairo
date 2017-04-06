@@ -1,0 +1,7 @@
+Makefile
+Makefile.in
+*.pdf
+*.pyc
+*.pyo
+*.png
+*.ps

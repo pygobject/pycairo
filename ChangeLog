@@ -1,3 +1,100 @@
+2009-06-21 and 25 changes not committed - CVS down.
+
+2009-06-25  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* cairo/cairomodule.c:
+	* configure.ac:
+	* doc/conf.py:
+	* setup.py:
+	Increment version to 1.8.7
+
+=== Pycairo 1.8.6 ===
+2009-06-25  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* cairo/cairomodule.c:
+	* configure.ac:
+	* doc/conf.py:
+	* README:
+	* setup.py:
+	Update version to 1.8.6
+
+2009-06-21  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* doc/reference/surfaces.rst: update create_for_data
+
+2009-06-21  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* cairo/pycairo-private.h: remove __PyBaseString_AsUTF8 line.
+
+2009-06-21  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* doc/reference/context.rst:
+	* doc/reference/text.rst:
+	* cairo/pycairo-context.c (pycairo_select_font_face):
+	(pycairo_show_text, pycairo_text_extents, pycairo_text_path):
+	* cairo/pycairo-font.c (scaled_font_text_extents):
+	Unroll __PyBaseString_AsUTF8 into its calling functions and delete.
+	Because:
+	1. It calls Py_DECREF on the UTF8String too early - a bug.
+	2. In Python 3.x it will not be needed (as non-unicode str is replaced
+	   by unicode str).
+
+	* cairo/pycairo-font.c (toy_font_face_new): Allow family to be unicode
+	as well as str.
+
+2009-06-20  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* cairo/cairomodule.c : remove FORMAT_RGB16_565
+	* cairo/pycairo-context.c: delete a comment.
+
+	* doc/Makefile.am:
+	* doc/pycairo_c_api.rst: renamed from c-api.rst
+	* doc/reference/constants.rst: renamed from mattributes.rst
+
+	* doc/faq.rst:
+	* doc/overview.rst:
+	* doc/pycairo_c_api.rst:
+	* doc/reference/constants.rst:
+	* doc/reference/context.rst:
+	* doc/reference/exceptions.rst:
+	* doc/reference/index.rst:
+	* doc/reference/matrix.rst:
+	* doc/reference/paths.rst:
+	* doc/reference/patterns.rst:
+	* doc/reference/surfaces.rst:
+	* doc/reference/text.rst:
+	Completed documentation.
+
+2009-06-13  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* cairo/pycairo-matrix.c (matrix_operator_multiply):
+	* doc/reference/matrix.rst:
+	Undo 'cairo.Matrix * cairo.Matrix' change from 2008-12-27.
+	Fixes #19221, again.
+
+2009-03-25  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* doc/reference/surfaces.rst: update docs
+
+2009-03-24  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* cairo/cairomodule.c: fix error in
+	PycairoToyFontFace_Type.tp_base
+
+2009-03-21  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* cairo/pycairo-surface.c (_read_func):
+	Rearrange order of function calls to address possible bugs:
+	- DECREF pystr after (not before) str has been used in memcpy.
+	- check the length of the string returned by 'read'.
+
+2009-03-19  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* cairo/cairomodule.c:
+	* configure.ac:
+	* setup.py:
+	Increment version to 1.8.5
+
 === Pycairo 1.8.4 ===
 2009-03-19  Steven Chaplin  <stevech1097 # yahoo.com.au>
 

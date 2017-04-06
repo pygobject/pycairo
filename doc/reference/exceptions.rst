@@ -4,6 +4,8 @@
 Exceptions
 **********
 
+.. currentmodule:: cairo
+
 When a cairo function or method call fails an exception is raised. I/O errors
 raise IOError, memory errors raise MemoryError, and all other errors raise
 cairo.Error.

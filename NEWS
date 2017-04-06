@@ -1,3 +1,17 @@
+Overview of changes from pycairo 1.8.4 to pycairo 1.8.6
+=======================================================
+General Changes:
+    Pycairo 1.8.6 requires cairo 1.8.6 (or later)
+
+Bug Fixes:
+    ImageSurface.create_from_png _read_func fix
+    ToyFontFace type fix
+    19221: restore cairo.Matrix '*' operator to the way it originally worked.
+
+Other Changes:
+    Documentation completed.
+
+
 Overview of changes from pycairo 1.8.2 to pycairo 1.8.4
 =======================================================
 General Changes:

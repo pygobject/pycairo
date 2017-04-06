@@ -4,6 +4,9 @@
 Matrix
 ******
 
+.. currentmodule:: cairo
+
+
 class Matrix()
 ==============
 
@@ -27,9 +30,9 @@ To read the values from a *Matrix*::
 
 To multiply two matrices::
 
+  matrix3 = matrix1.multiply(matrix2)
+  # or equivalently
   matrix3 = matrix1 * matrix2
-  # Note: This operation is consistent with standard matrix multiplication
-  # and is equivalent to matrix3 = matrix2.multiply(matrix1)
 
 To compare two matrices::
 
@@ -73,24 +76,21 @@ For more information on matrix transformation see http://www.cairographics.org/m
      matrix = cairo.Matrix(xx=sy, yy=sy)
 
 
-   .. method:: init_rotate(radians)
+   .. classmethod:: init_rotate(radians)
 
       :param radians: angle of rotation, in radians. The direction of rotation
         is defined such that positive angles rotate in the direction from the
         positive X axis toward the positive Y axis. With the default axis
         orientation of cairo, positive angles rotate in a clockwise direction.
       :type radians: float
-      :returns: a new *Matrix*
-
-      This is a classmethod which creates a new *Matrix* set to a
-      transformation that rotates by *radians*.
+      :returns: a new *Matrix* set to a transformation that rotates by *radians*.
 
 
    .. method:: invert()
 
       :returns: If *Matrix* has an inverse, modifies *Matrix* to be the
         inverse matrix and returns *None*
-      :raises: :class:`cairo.Error` if the *Matrix* as no inverse
+      :raises: :exc:`cairo.Error` if the *Matrix* as no inverse
 
       Changes *Matrix* to be the inverse of it's original value. Not all
       transformation matrices have inverses; if the matrix collapses points
@@ -141,12 +141,12 @@ For more information on matrix transformation see http://www.cairographics.org/m
       :param dy: Y component of a distance vector.
       :type dy: float
       :returns: the transformed distance vector (dx,dy)
-      :rtype: 2-tuple of float
+      :rtype: (float, float)
 
       Transforms the distance vector *(dx,dy)* by *Matrix*. This is similar to
-      :meth:`.transform_point` except that the translation components of the
-      transformation are ignored. The calculation of the returned vector is as
-      follows::
+      :meth:`.transform_point` except that the translation components of
+      the transformation are ignored. The calculation of the returned vector
+      is as follows::
 
         dx2 = dx1 * a + dy1 * c
         dy2 = dx1 * b + dy1 * d
@@ -164,7 +164,7 @@ For more information on matrix transformation see http://www.cairographics.org/m
       :param y: Y position.
       :type y: float
       :returns: the transformed point (x,y)
-      :rtype: 2-tuple of float
+      :rtype: (float, float)
 
       Transforms the point *(x, y)* by *Matrix*.
 

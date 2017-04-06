@@ -468,26 +468,29 @@ image_surface_create_for_data (PyTypeObject *type, PyObject *args)
 static cairo_status_t
 _read_func (void *closure, unsigned char *data, unsigned int length)
 {
-    char *str;
+    char *buffer;
+    Py_ssize_t str_length;
+    cairo_status_t status = CAIRO_STATUS_READ_ERROR;
     PyGILState_STATE gstate = PyGILState_Ensure();
     PyObject *pystr = PyObject_CallMethod ((PyObject *)closure, "read", "(i)",
 					   length);
-    if (pystr == NULL){
+    if (pystr == NULL) {
 	/* an exception has occurred, it will be picked up later by
 	 * Pycairo_Check_Status()
 	 */
-	PyGILState_Release(gstate);
-	return CAIRO_STATUS_READ_ERROR;
+	goto end;
     }
-    str = PyString_AsString(pystr);
-    Py_DECREF(pystr);
-    PyGILState_Release(gstate);
-
-    if (str == NULL)
-	return CAIRO_STATUS_READ_ERROR;
+    int ret = PyString_AsStringAndSize(pystr, &buffer, &str_length);
+    if (ret == -1 || str_length < length) {
+	goto end;
+    }
     /* don't use strncpy() since png data may contain NUL bytes */
-    memcpy (data, str, length);
-    return CAIRO_STATUS_SUCCESS;
+    memcpy (data, buffer, str_length);
+    status = CAIRO_STATUS_SUCCESS;
+ end:
+    Py_XDECREF(pystr);
+    PyGILState_Release(gstate);
+    return status;
 }
 
 /* METH_O | METH_CLASS */

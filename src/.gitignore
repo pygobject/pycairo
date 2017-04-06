@@ -1,0 +1,9 @@
+.deps
+.libs
+__init__.py
+Makefile
+Makefile.in
+*.la
+*.lo
+*.pyc
+*.pyo

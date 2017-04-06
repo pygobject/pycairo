@@ -1,12 +1,42 @@
 .. _surfaces:
 
-*********************
-Surfaces (incomplete)
-*********************
+********
+Surfaces
+********
+
+.. currentmodule:: cairo
+
+.. comment block
+   example reST:
+   (add back '..' where required at column 0)
+ . class:: module.C[(signature)]
+   .. classmethod:: name(signature)
+   .. staticmethod:: name(signature)
+   .. method:: method(signature)
+
+      :param p1: xxx
+      :type p1: int
+      :param p2: xxx
+      :type p2: str
+      :returns: xxx
+      :rtype: list of strings
+      :raises: xxx
+
+      .. versionadded:: 1.6
+   links:
+     :data:`cairo.ANTIALIAS_SUBPIXEL`
+     :class:`Context`
+     :exc:`cairo.Error`
+     :meth:`.copy_page`
+     :meth:`Context.copy_page`
+     :ref:`LINE_CAP <constants_LINE_CAP>`
+
+     ``ctx.rel_move_to(dx, dy)``   # code snippet
+
 
 cairo.Surface is the abstract type representing all different drawing targets
 that cairo can render to. The actual drawings are performed using a
-:class:`cairo.Context`.
+:class:`Context`.
 
 A cairo.Surface is created by using backend-specific constructors
 of the form cairo.<XXX>Surface().
@@ -16,8 +46,8 @@ class Surface()
 
 .. class:: Surface()
 
-*Surface* is the abstract base class from which all the other surface classes
-derive. It cannot be instantiated directly.
+   *Surface* is the abstract base class from which all the other surface
+   classes derive. It cannot be instantiated directly.
 
    .. method:: copy_page()
 
@@ -32,7 +62,8 @@ derive. It cannot be instantiated directly.
 
    .. method:: create_similar(content, width, height)
 
-      :param content: the content for the new surface
+      :param content: the :ref:`CONTENT <constants_CONTENT>` for the new
+        surface
       :param width: width of the new surface, (in device-space units)
       :type width: int
       :param height: height of the new surface (in device-space units)
@@ -45,9 +76,6 @@ derive. It cannot be instantiated directly.
       resolution and :class:`FontOptions`. Generally, the new surface will
       also use the same backend, unless that is not possible for some
       reason.
-
-      See the documentation for :ref:`content <mattributes_content>`
-      for full details of the content options.
 
       Initially the surface contents are all 0 (transparent if contents have
       transparency, black otherwise.)
@@ -71,11 +99,9 @@ derive. It cannot be instantiated directly.
 
    .. method:: get_content()
 
-      :returns: The content type of *Surface*.
-
-      This function returns the content type of *Surface* which indicates
-      whether the surface contains color and/or alpha information. See
-      :ref:`content <mattributes_content>`.
+      :returns: The :ref:`CONTENT <constants_CONTENT>` type of *Surface*,
+        which indicates whether the *Surface* contains color and/or alpha
+        information.
 
       .. versionadded:: 1.2
 
@@ -86,7 +112,8 @@ derive. It cannot be instantiated directly.
         * x_offset: the offset in the X direction, in device units
         * y_offset: the offset in the Y direction, in device units
 
-      This method returns the previous device offset set by :meth:`.set_device_offset`.
+      This method returns the previous device offset set by
+      :meth:`.set_device_offset`.
 
       .. versionadded:: 1.2
 
@@ -213,11 +240,11 @@ class ImageSurface(:class:`Surface`)
 
 A *cairo.ImageSurface* provides the ability to render to memory buffers either
 allocated by cairo or by the calling code. The supported image formats are
-those defined in :ref:`FORMAT attributes <mattributes_format>`.
+those defined in :ref:`FORMAT attributes <constants_FORMAT>`.
 
 .. class:: ImageSurface(format, width, height)
 
-   :param format: format of pixels in the surface to create
+   :param format: :ref:`FORMAT <constants_FORMAT>` of pixels in the surface to create
    :param width: width of the surface, in pixels
    :param height: height of the surface, in pixels
    :returns: a new *ImageSurface*
@@ -228,17 +255,20 @@ those defined in :ref:`FORMAT attributes <mattributes_format>`.
    color or alpha channel belonging to format will be 0. The contents of bits
    within a pixel, but not belonging to the given format are undefined).
 
-   .. method:: create_for_data(data, format, width, height, stride)
+   .. classmethod:: create_for_data(data, format, width, height[, stride])
 
       :param data: a writable Python buffer object
-      :param format: the format of pixels in the buffer
+      :param format: the :ref:`FORMAT <constants_FORMAT>` of pixels in the
+        buffer
       :param width: the width of the image to be stored in the buffer
       :param height: the height of the image to be stored in the buffer
-      :param stride: the number of bytes between the start of rows in the buffer as allocated. This value should always be computed by :meth:`.format_stride_for_width` before allocating the data buffer.
+      :param stride: the number of bytes between the start of rows in the
+        buffer as allocated. If not given the value from
+        ``format_stride_for_width(format, width)`` is used.
       :returns: a new *ImageSurface*
       :raises: *MemoryError* in case of no memory.
 
-               :class:`cairo.Error` in case of invalid *stride* value.
+               :exc:`cairo.Error` in case of invalid *stride* value.
 
       Creates an *ImageSurface* for the provided pixel data. The initial
       contents of buffer will be used as the initial image contents; you must
@@ -254,26 +284,26 @@ those defined in :ref:`FORMAT attributes <mattributes_format>`.
       data and to create the *ImageSurface*. See
       :meth:`.format_stride_for_width` for example code.
 
-   .. method:: create_from_png(fobj)
+   .. classmethod:: create_from_png(fobj)
 
       :param fobj: a filename, file, or file-like object of the PNG to load.
+      :returns: a new *ImageSurface* initialized the contents to the given
+        PNG file.
 
-      Creates a new *ImageSurface* and initializes the contents to the given
-      PNG file.
+   .. staticmethod:: format_stride_for_width(format, width)
 
-   .. method:: format_stride_for_width(format, width)
-
-      :param format: a cairo :ref:`format <mattributes_format>` value
+      :param format: a cairo :ref:`FORMAT <constants_FORMAT>` value
       :param width: the desired width of an *ImageSurface* to be created.
-      :returns: the appropriate stride to use given the desired format and width, or -1 if either the format is invalid or the width too large.
+      :returns: the appropriate stride to use given the desired format and
+        width, or -1 if either the format is invalid or the width too large.
+      :rtype: int
 
       This method provides a stride value that will respect all alignment
       requirements of the accelerated image-rendering code within
       cairo. Typical usage will be of the form::
 
-        stride = cairo.ImageSurface.stride_for_width (format, width)
-        surface = cairo.ImageSurface.create_for_data (data, format,
-      				  width, height, stride)
+        stride = cairo.ImageSurface.format_stride_for_width (format, width)
+        surface = cairo.ImageSurface.create_for_data (data, format, width, height, stride)
 
       .. versionadded:: 1.6
 
@@ -285,79 +315,325 @@ those defined in :ref:`FORMAT attributes <mattributes_format>`.
 
    .. method:: get_format()
 
+      :returns: the :ref:`FORMAT <constants_FORMAT>` of the *ImageSurface*.
+
+      .. versionadded:: 1.2
+
    .. method:: get_height()
+
+      :returns: the height of the *ImageSurface* in pixels.
 
    .. method:: get_stride()
 
+      :returns: the stride of the *ImageSurface* in bytes. The stride is the distance in bytes from the beginning of one row of the image data to the beginning of the next row.
+
    .. method:: get_width()
+
+      :returns: the width of the *ImageSurface* in pixels.
 
 
 class PDFSurface(:class:`Surface`)
 ==================================
 
-.. class:: PDFSurface
+The PDFSurface is used to render cairo graphics to Adobe PDF files and is a
+multi-page vector surface backend.
 
-.. comment
- C:  surface = cairo_pdf_surface_create (filename, width_in_points,
- 				        height_in_points);
- Py: surface = cairo.PDFSurface (f, width_in_points, height_in_points)
-     where 'f' is a filename, a file object, or a file-like object
+.. class:: PDFSurface(fobj, width_in_points, height_in_points)
 
+   :param fobj: a filename or writable file object
+   :type fobj: str, file or file-like object
+   :param width_in_points: width of the surface, in points
+     (1 point == 1/72.0 inch)
+   :type  width_in_points: float
+   :param height_in_points: height of the surface, in points
+     (1 point == 1/72.0 inch)
+   :type  height_in_points: float
+   :returns: a new *PDFSurface* of the specified size in points to be written
+     to *fobj*.
+   :raises: *MemoryError* in case of no memory
+
+   .. versionadded:: 1.2
 
    .. method:: set_size()
+
+      :param width_in_points: new surface width, in points
+        (1 point == 1/72.0 inch)
+      :type  width_in_points: float
+      :param height_in_points: new surface height, in points
+        (1 point == 1/72.0 inch)
+      :type  height_in_points: float
+
+      Changes the size of a *PDFSurface* for the current (and subsequent) pages.
+
+      This function should only be called before any drawing operations have
+      been performed on the current page. The simplest way to do this is to
+      call this function immediately after creating the surface or immediately
+      after completing a page with either :meth:`Context.show_page` or
+      :meth:`Context.copy_page`.
+
+      .. versionadded:: 1.2
 
 
 class PSSurface(:class:`Surface`)
 =================================
 
-.. class:: PSSurface
+The *PSSurface* is used to render cairo graphics to Adobe PostScript files and
+is a multi-page vector surface backend.
 
-.. comment
- C:  surface = cairo_ps_surface_create (filename, width_in_points,
- 			               height_in_points);
- Py: surface = cairo.PSSurface  (f, width_in_points, height_in_points)
-     where 'f' is a filename, a file object, or a file-like object
+.. class:: PSSurface(fobj, width_in_points, height_in_points)
+
+   :param fobj:  a filename or writable file object
+   :type fobj: str, file or file-like object
+   :param width_in_points: width of the surface, in points
+     (1 point == 1/72.0 inch)
+   :type  width_in_points: float
+   :param height_in_points: height of the surface, in points
+     (1 point == 1/72.0 inch)
+   :type  height_in_points: float
+   :returns: a new *PDFSurface* of the specified size in points to be written
+     to *fobj*.
+   :raises: *MemoryError* in case of no memory
+
+   Note that the size of individual pages of the PostScript output can
+   vary. See :meth:`.set_size`.
 
    .. method:: dsc_begin_page_setup()
 
+      This method indicates that subsequent calls to
+      :meth:`.dsc_comment` should direct comments to the PageSetup
+      section of the PostScript output.
+
+      This method call is only needed for the first page of a surface. It
+      should be called after any call to :meth:`.dsc_begin_setup` and
+      before any drawing is performed to the surface.
+
+      See :meth:`.dsc_comment` for more details.
+
+      .. versionadded:: 1.2
+
    .. method:: dsc_begin_setup()
 
-   .. method:: dsc_comment()
+      This function indicates that subsequent calls to :meth:`.dsc_comment`
+      should direct comments to the Setup section of the PostScript output.
+
+      This function should be called at most once per surface, and must be
+      called before any call to :meth:`.dsc_begin_page_setup` and before any
+      drawing is performed to the surface.
+
+      See :meth:`.dsc_comment` for more details.
+
+      .. versionadded:: 1.2
+
+   .. method:: dsc_comment(comment)
+
+      :param comment: a comment string to be emitted into the PostScript output
+      :type comment: str
+
+      Emit a comment into the PostScript output for the given surface.
+
+      The comment is expected to conform to the PostScript Language
+      Document Structuring Conventions (DSC). Please see that manual for
+      details on the available comments and their meanings. In
+      particular, the %%IncludeFeature comment allows a
+      device-independent means of controlling printer device features. So
+      the PostScript Printer Description Files Specification will also be
+      a useful reference.
+
+      The comment string must begin with a percent character (%) and the
+      total length of the string (including any initial percent
+      characters) must not exceed 255 characters. Violating either of
+      these conditions will place *PSSurface* into an error state. But
+      beyond these two conditions, this function will not enforce
+      conformance of the comment with any particular specification.
+
+      The comment string should not have a trailing newline.
+
+      The DSC specifies different sections in which particular comments
+      can appear. This function provides for comments to be emitted
+      within three sections: the header, the Setup section, and the
+      PageSetup section.  Comments appearing in the first two sections
+      apply to the entire document while comments in the BeginPageSetup
+      section apply only to a single page.
+
+      For comments to appear in the header section, this function should
+      be called after the surface is created, but before a call to
+      :meth:`.dsc_begin_setup`.
+
+      For comments to appear in the Setup section, this function should be
+      called after a call to :meth:`.dsc_begin_setup` but before a call to
+      :meth:`.dsc_begin_page_setup`.
+
+      For comments to appear in the PageSetup section, this function should be
+      called after a call to :meth:`.dsc_begin_page_setup`.
+
+      Note that it is only necessary to call :meth:`.dsc_begin_page_setup` for
+      the first page of any surface. After a call to :meth:`Context.show_page`
+      or :meth:`Context.copy_page` comments are unambiguously directed to the
+      PageSetup section of the current page. But it doesn't hurt to call this
+      function at the beginning of every page as that consistency may make the
+      calling code simpler.
+
+      As a final note, cairo automatically generates several comments on
+      its own. As such, applications must not manually generate any of
+      the following comments:
+
+      Header section: %!PS-Adobe-3.0, %Creator, %CreationDate, %Pages,
+      %BoundingBox, %DocumentData, %LanguageLevel, %EndComments.
+
+      Setup section: %BeginSetup, %EndSetup
+
+      PageSetup section: %BeginPageSetup, %PageBoundingBox,
+      %EndPageSetup.
+
+      Other sections: %BeginProlog, %EndProlog, %Page, %Trailer, %EOF
+
+      Here is an example sequence showing how this function might be used::
+
+        surface = PSSurface (filename, width, height)
+        ...
+        surface.dsc_comment (surface, "%%Title: My excellent document")
+        surface.dsc_comment (surface, "%%Copyright: Copyright (C) 2006 Cairo Lover")
+        ...
+        surface.dsc_begin_setup (surface)
+        surface.dsc_comment (surface, "%%IncludeFeature: *MediaColor White")
+        ...
+        surface.dsc_begin_page_setup (surface)
+        surface.dsc_comment (surface, "%%IncludeFeature: *PageSize A3")
+        surface.dsc_comment (surface, "%%IncludeFeature: *InputSlot LargeCapacity")
+        surface.dsc_comment (surface, "%%IncludeFeature: *MediaType Glossy")
+        surface.dsc_comment (surface, "%%IncludeFeature: *MediaColor Blue")
+        ... draw to first page here ..
+        ctx.show_page (cr)
+        ...
+        surface.dsc_comment (surface, "%%IncludeFeature:  PageSize A5");
+        ...
+
+      .. versionadded:: 1.2
 
    .. method:: get_eps()
 
-   .. method:: ps_level_to_string()
+      :returns: True iff the *PSSurface* will output Encapsulated PostScript.
 
-   .. method:: restrict_to_level()
+      .. versionadded:: 1.6
 
-   .. method:: set_eps()
+   .. staticmethod:: ps_level_to_string(level)
 
-   .. method:: set_size()
+      :param level: a :ref:`PS_LEVEL <constants_PS_LEVEL>`
+      :returns: the string associated to given level.
+      :rtype: str
+      :raises: :exc:`cairo.Error` if *level* isn't valid.
+
+      Get the string representation of the given *level*.  See
+      :meth:`.ps_get_levels` for a way to get the list of valid level
+      ids.
+
+      .. versionadded:: 1.6
+
+   .. method:: restrict_to_level(level)
+
+      :param level: a :ref:`PS_LEVEL <constants_PS_LEVEL>`
+
+      Restricts the generated PostSript file to *level*. See
+      :meth:`.ps_get_levels` for a list of available level values that
+      can be used here.
+
+      This function should only be called before any drawing operations have
+      been performed on the given surface. The simplest way to do this is to
+      call this function immediately after creating the surface.
+
+      .. versionadded:: 1.6
+
+   .. method:: set_eps(eps)
+
+      :param eps: True to output EPS format PostScript
+      :type eps: bool
+
+      If *eps* is True, the PostScript surface will output Encapsulated
+      PostScript.
+
+      This function should only be called before any drawing operations have
+      been performed on the current page. The simplest way to do this is to
+      call this function immediately after creating the surface. An
+      Encapsulated PostScript file should never contain more than one page.
+
+      .. versionadded:: 1.6
+
+   .. method:: set_size(width_in_points, height_in_points)
+
+      :param width_in_points: new surface width, in points (1 point == 1/72.0 inch)
+      :param height_in_points: new surface height, in points (1 point == 1/72.0 inch)
+      :type width_in_points: float
+      :type height_in_points: float
+
+      Changes the size of a PostScript surface for the current (and
+      subsequent) pages.
+
+      This function should only be called before any drawing operations
+      have been performed on the current page. The simplest way to do
+      this is to call this function immediately after creating the
+      surface or immediately after completing a page with either
+      :meth:`Context.show_page` or :meth:`Context.copy_page`.
+
+      .. versionadded:: 1.2
 
 
 class SVGSurface(:class:`Surface`)
 ==================================
 
-.. class:: SVGSurface
+The *SVGSurface* is used to render cairo graphics to SVG files and is a
+multi-page vector surface backend
 
-.. comment
- Py: surface = cairo.SVGSurface (f, width_in_points, height_in_points)
-     where 'f' is a filename, a file object, or a file-like object
+.. class:: SVGSurface(fobj, width_in_points, height_in_points)
 
- C:  surface = cairo_svg_surface_create (filename, width_in_points,
- 				        height_in_points);
-..
+   :param fobj:  a filename or writable file object
+   :type fobj: str, file or file-like object
+   :param width_in_points: width of the surface, in points (1 point == 1/72.0 inch)
+   :type  width_in_points: float
+   :param height_in_points: height of the surface, in points (1 point == 1/72.0 inch)
+   :type  height_in_points: float
+   :returns: a new *SVGSurface* of the specified size in points to be written to *fobj*.
+   :raises: *MemoryError* in case of no memory
+
+
+   .. method:: get_versions
+
+      Not implemented in pycairo (yet)
+
+   .. method:: restrict_to_version
+
+      Not implemented in pycairo (yet)
+
+   .. method:: version_to_string
+
+      Not implemented in pycairo (yet)
 
 
 class Win32Surface(:class:`Surface`)
 ====================================
 
-.. class:: Win32Surface
+The Microsoft Windows surface is used to render cairo graphics to Microsoft
+Windows windows, bitmaps, and printing device contexts.
 
+.. class:: Win32Surface(hdc)
+
+   :param hdc: the DC to create a surface for
+   :type hdc: int
+   :returns: the newly created surface
+
+   Creates a cairo surface that targets the given DC. The DC will be queried
+   for its initial clip extents, and this will be used as the size of the
+   cairo surface. The resulting surface will always be of format
+   cairo.FORMAT_RGB24, see :ref:`FORMAT attributes <constants_FORMAT>`.
 
 
 class XlibSurface(:class:`Surface`)
 ===================================
+
+The XLib surface is used to render cairo graphics to X Window System windows
+and pixmaps using the XLib library.
+
+Note that the XLib surface automatically takes advantage of X render extension
+if it is available.
 
 .. class:: XlibSurface
 
@@ -366,6 +642,18 @@ class XlibSurface(:class:`Surface`)
 
    .. method:: get_depth()
 
+      :returns: the number of bits used to represent each pixel value.
+
+      .. versionadded:: 1.2
+
    .. method:: get_height()
 
+      :returns: the height of the X Drawable underlying the surface in pixels.
+
+      .. versionadded:: 1.2
+
    .. method:: get_width()
+
+      :returns: the width of the X Drawable underlying the surface in pixels.
+
+      .. versionadded:: 1.2

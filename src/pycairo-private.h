@@ -43,8 +43,6 @@
 
 extern PyObject *CairoError;
 
-char * __PyBaseString_AsUTF8 (PyObject *o);
-
 extern PyTypeObject PycairoContext_Type;
 PyObject *PycairoContext_FromContext (cairo_t *ctx, PyTypeObject *type,
 				      PyObject *base);

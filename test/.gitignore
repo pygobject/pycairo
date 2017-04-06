@@ -1,0 +1,5 @@
+Makefile
+Makefile.in
+*.png
+*.pyc
+*.pyo

@@ -1,15 +1,17 @@
 .. _reference_index:
 
-**********************
-Reference (incomplete)
-**********************
+*********
+Reference
+*********
+
+.. currentmodule:: cairo
 
 .. toctree::
    :maxdepth: 2
 
-   exceptions
-   mattributes
+   constants
    context
+   exceptions
    matrix
    paths
    patterns

@@ -2,6 +2,8 @@
 Overview
 ********
 
+.. currentmodule:: cairo
+
 Pycairo is a Python binding for the cairo graphics library.
 
 The Pycairo bindings are designed to match the cairo C API as closely as

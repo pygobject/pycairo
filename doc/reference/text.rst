@@ -4,11 +4,25 @@
 Text
 ****
 
+.. currentmodule:: cairo
+
 Cairo has two sets of text rendering capabilities:
 
-* The functions with text in their name form cairo's toy text API. The toy API takes UTF-8 encoded text and is limited in its functionality to rendering simple left-to-right text with no advanced features. That means for example that most complex scripts like Hebrew, Arabic, and Indic scripts are out of question. No kerning or correct positioning of diacritical marks either. The font selection is pretty limited too and doesn't handle the case that the selected font does not cover the characters in the text. This set of functions are really that, a toy text API, for testing and demonstration purposes. Any serious application should avoid them.
+* The functions with text in their name form cairo's toy text API. The toy API
+  takes UTF-8 encoded text and is limited in its functionality to rendering
+  simple left-to-right text with no advanced features. That means for example
+  that most complex scripts like Hebrew, Arabic, and Indic scripts are out of
+  question. No kerning or correct positioning of diacritical marks either. The
+  font selection is pretty limited too and doesn't handle the case that the
+  selected font does not cover the characters in the text. This set of
+  functions are really that, a toy text API, for testing and demonstration
+  purposes. Any serious application should avoid them.
 
-* The functions with glyphs in their name form cairo's low-level text API. The low-level API relies on the user to convert text to a set of glyph indexes and positions. This is a very hard problem and is best handled by external libraries, like the pangocairo that is part of the Pango text layout and rendering library. Pango is available from http://www.pango.org/.
+* The functions with glyphs in their name form cairo's low-level text API. The
+  low-level API relies on the user to convert text to a set of glyph indexes
+  and positions. This is a very hard problem and is best handled by external
+  libraries, like the pangocairo that is part of the Pango text layout and
+  rendering library. Pango is available from http://www.pango.org/.
 
 
 
@@ -27,7 +41,8 @@ use.
 
 .. class:: FontFace()
 
-   .. note:: This class cannot be instantiated directly, it is returned by :meth:`Context.get_font_face`.
+   .. note:: This class cannot be instantiated directly, it is returned by
+     :meth:`Context.get_font_face`.
 
 
 
@@ -36,20 +51,18 @@ class ToyFontFace(:class:`FontFace`)
 
 The *cairo.ToyFontFace* class can be used instead of :meth:`Context.select_font_face` to create a toy font independently of a context.
 
-.. class:: ToyFontFace(family, [slant[, weight]])
+.. class:: ToyFontFace(family[, slant[, weight]])
 
-   :param family: a font family name, encoded in UTF-8
-   :type family: str
-   :param slant: the slant of the font, by default
-        :attr:`cairo.FONT_SLANT_NORMAL`.  See :ref:`SLANT attributes
-        <mattributes_slant>` for details of the slant values available.
-   :param weight: the weight of the font, by default
-        :attr:`cairo.FONT_WEIGHT_NORMAL`.  See :ref:`WEIGHT attributes
-	<mattributes_weight>` for details of the available weights.
+   :param family: a font family name
+   :type family: str or unicode
+   :param slant: the :ref:`FONT_SLANT <constants_FONT_SLANT>` of the font,
+     defaults to :data:`cairo.FONT_SLANT_NORMAL`.
+   :param weight: the :ref:`FONT_WEIGHT <constants_FONT_WEIGHT>` of the font,
+     defaults to :data:`cairo.FONT_WEIGHT_NORMAL`.
    :returns: a new *ToyFontFace*
 
    Creates a *ToyFontFace* from a triplet of family, slant, and weight. These
-   font faces are used in implementation of the the cairo_t "toy" font API.
+   font faces are used in implementation of the the "toy" font API.
 
    If family is the zero-length string "", the platform-specific default
    family is assumed. The default family then can be queried using
@@ -62,26 +75,20 @@ The *cairo.ToyFontFace* class can be used instead of :meth:`Context.select_font_
 
    .. method:: get_family()
 
-      :returns: the family name
+      :returns: the family name of a toy font
       :rtype: str
-
-      Gets the familly name of a toy font.
 
       .. versionadded:: 1.8.4
 
    .. method:: get_slant()
 
-      :returns: the slant value
-
-      Gets the slant a toy font.
+      :returns: the :ref:`FONT_SLANT <constants_FONT_SLANT>` value
 
       .. versionadded:: 1.8.4
 
    .. method:: get_weight()
 
-      :returns: the weight value
-
-      Gets the weight a toy font.
+      :returns: the :ref:`FONT_WEIGHT <constants_FONT_WEIGHT>` value
 
       .. versionadded:: 1.8.4
 
@@ -100,13 +107,14 @@ use.
 .. class:: ScaledFont(font_face, font_matrix, ctm, options)
 
    :param font_face: a :class:`FontFace` instance
-   :param font_matrix: font space to user space transformation :class:`Matrix` for the
-      font. In the simplest case of a N point font, this matrix is
-      just a scale by N, but it can also be used to shear the font
-      or stretch it unequally along the two axes. See :meth:`Context.set_font_matrix`.
-   :param ctm: user to device transformation :class:`Matrix` with which the font will
-      be used.
-   :param options: a :class:`FontOptions` instance to use when getting metrics for the font and rendering with it.
+   :param font_matrix: font space to user space transformation :class:`Matrix`
+     for the font. In the simplest case of a N point font, this matrix is just
+     a scale by N, but it can also be used to shear the font or stretch it
+     unequally along the two axes. See :meth:`Context.set_font_matrix`.
+   :param ctm: user to device transformation :class:`Matrix` with which the
+     font will be used.
+   :param options: a :class:`FontOptions` instance to use when getting metrics
+     for the font and rendering with it.
 
    Creates a *ScaledFont* object from a *FontFace* and matrices that describe
    the size of the font and the environment in which it will be used.
@@ -117,11 +125,23 @@ use.
 
       Gets the metrics for a *ScaledFont*.
 
+   .. method:: get_ctm()
+
+      Not implemented in pycairo (yet)
+
    .. method:: get_font_face()
 
       :returns: the :class:`FontFace` that this *ScaledFont* was created for.
 
       .. versionadded:: 1.2
+
+   .. method:: get_font_matrix()
+
+      Not implemented in pycairo (yet)
+
+   .. method:: get_font_options()
+
+      Not implemented in pycairo (yet)
 
    .. method:: get_scale_matrix()
 
@@ -134,16 +154,23 @@ use.
       .. versionadded:: 1.8
 
 
-   .. method:: text_extents()
+   .. method:: glyph_extents()
 
-      :param utf8: text (str or unicode), encoded in UTF-8
-      :returns: (x_bearing, y_bearing, width, height, x_advance, y_advance), a tuple of float values.
+      Not implemented in pycairo (yet)
+
+
+   .. method:: text_extents(text)
+
+      :param text: text
+      :type text: str or unicode
+      :returns: (x_bearing, y_bearing, width, height, x_advance, y_advance)
+      :rtype: 6-tuple of float
 
       Gets the extents for a string of text. The extents describe a user-space
       rectangle that encloses the "inked" portion of the text drawn at the
-      origin (0,0) (as it would be drawn by :meth:`Context.show_text` if the cairo
-      graphics state were set to the same font_face, font_matrix, ctm, and
-      font_options as *ScaledFont*).  Additionally, the x_advance and
+      origin (0,0) (as it would be drawn by :meth:`Context.show_text` if the
+      cairo graphics state were set to the same font_face, font_matrix, ctm,
+      and font_options as *ScaledFont*).  Additionally, the x_advance and
       y_advance values indicate the amount by which the current point would be
       advanced by :meth:`Context.show_text`.
 
@@ -154,6 +181,11 @@ use.
       rectangle, though they will affect the x_advance and y_advance values.
 
       .. versionadded:: 1.2
+
+   .. method:: text_to_glyphs()
+
+      Not implemented in pycairo (yet)
+
 
 
 class FontOptions()
@@ -180,71 +212,44 @@ objects.
 
    .. method:: get_antialias()
 
-      :returns: the antialiasing mode for the *FontOptions* object
-
-      Gets the antialiasing mode for the *FontOptions* object.
-      See the documentation for :ref:`antialias <mattributes_antialias>`
-      for full details.
+      :returns: the :ref:`ANTIALIAS <constants_ANTIALIAS>` mode for the *FontOptions* object
 
    .. method:: get_hint_metrics()
 
-      :returns: the metrics hinting mode for the *FontOptions* object
-
-      Gets the metrics hinting mode for the *FontOptions* object.
-      See the documentation for :ref:`hint metrics <mattributes_hint_metrics>`
-      for full details.
+      :returns: the :ref:`HINT METRICS <constants_HINT_METRICS>` mode for the *FontOptions* object
 
    .. method:: get_hint_style()
 
-      :returns: the hint style for the *FontOptions* object
-
-      Gets the hint style for font outlines for the *FontOptions* object.
-      See the documentation for :ref:`hint style <mattributes_hint_style>`
-      for full details.
+      :returns: the :ref:`HINT STYLE <constants_HINT_STYLE>` for the *FontOptions* object
 
    .. method:: get_subpixel_order()
 
-      :returns: the subpixel order for the *FontOptions* object
-
-      Gets the subpixel order for the *FontOptions* object.
-      See the documentation for :ref:`subpixel order <mattributes_subpixel>`
-      for full details.
+      :returns: the :ref:`SUBPIXEL_ORDER <constants_SUBPIXEL_ORDER>` for the *FontOptions* object
 
    .. method:: set_antialias(antialias)
 
-      :param antialias: the new antialiasing mode
+      :param antialias: the :ref:`ANTIALIAS <constants_ANTIALIAS>` mode
 
-      Sets the antialiasing mode for the *FontOptions* object. This specifies
-      the type of antialiasing to do when rendering text.
-      See the documentation for :ref:`antialias <mattributes_antialias>`
-      for full details.
+      This specifies the type of antialiasing to do when rendering text.
 
    .. method:: set_hint_metrics(hint_metrics)
 
-      :param hint_metrics: the new metrics hinting mode
+      :param hint_metrics: the :ref:`HINT METRICS <constants_HINT_METRICS>` mode
 
-      Sets the metrics hinting mode for the *FontOptions* object. This controls
-      whether metrics are quantized to integer values in device units.
-      See the documentation for :ref:`hint metrics <mattributes_hint_metrics>`
-      for full details.
+      This controls whether metrics are quantized to integer values in device
+      units.
 
    .. method:: set_hint_style(hint_style)
 
-      :param hint_style: the new hint style
+      :param hint_style: the :ref:`HINT STYLE <constants_HINT_STYLE>`
 
-      Sets the hint style for font outlines for the *FontOptions* object. This
-      controls whether to fit font outlines to the pixel grid, and if so,
+      This controls whether to fit font outlines to the pixel grid, and if so,
       whether to optimize for fidelity or contrast.
-      See the documentation for :ref:`hint style <mattributes_hint_style>`
-      for full details.
 
    .. method:: set_subpixel_order(subpixel_order)
 
-      :param subpixel_order: the new subpixel order
+      :param subpixel_order: the :ref:`SUBPIXEL_ORDER <constants_SUBPIXEL_ORDER>`
 
-      Sets the subpixel order for the *FontOptions* object. The subpixel order
-      specifies the order of color elements within each pixel on the display
-      device when rendering with an antialiasing mode of
-      :attr:`cairo.ANTIALIAS_SUBPIXEL`.
-      See the documentation for :ref:`subpixel order <mattributes_subpixel>`
-      for full details.
+      The subpixel order specifies the order of color elements within each
+      pixel on the display device when rendering with an antialiasing mode of
+      :data:`cairo.ANTIALIAS_SUBPIXEL`.

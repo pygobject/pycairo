@@ -3,7 +3,7 @@ http://www.cairographics.org/pycairo
 
 Dependencies
 ------------
-    cairo   >= 1.8.4
+    cairo   >= 1.8.6
     Python  >= 2.6
 
 Compiling

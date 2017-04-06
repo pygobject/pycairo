@@ -1,17 +1,17 @@
 # distribute the Sphinx source files only,
 # the generated html files are distributed separately
 EXTRA_DIST = \
-  c-api.rst \
   conf.py \
   faq.rst \
   index.rst \
   overview.rst \
+  pycairo_c_api.rst \
   README \
+  reference/constants.rst \
   reference/context.rst \
   reference/exceptions.rst \
   reference/index.rst \
   reference/matrix.rst \
-  reference/mattributes.rst \
   reference/paths.rst \
   reference/patterns.rst \
   reference/surfaces.rst \

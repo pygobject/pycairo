@@ -43,8 +43,8 @@
 
 #define VERSION_MAJOR 1
 #define VERSION_MINOR 8
-#define VERSION_MICRO 4
-static char pycairo_version_string[] = "1.8.4";
+#define VERSION_MICRO 7
+static char pycairo_version_string[] = "1.8.7";
 
 
 /* A module specific exception */
@@ -167,13 +167,14 @@ init_cairo(void)
 {
     PyObject *m;
 
+    /* initialise 'tp_base' here to work round problem with MinGW compiler */
     PycairoContext_Type.tp_base = &PyBaseObject_Type;
     if (PyType_Ready(&PycairoContext_Type) < 0)
         return;
     PycairoFontFace_Type.tp_base = &PyBaseObject_Type;
     if (PyType_Ready(&PycairoFontFace_Type) < 0)
         return;
-    PycairoToyFontFace_Type.tp_base = &PyBaseObject_Type;
+    PycairoToyFontFace_Type.tp_base = &PycairoFontFace_Type;
     if (PyType_Ready(&PycairoToyFontFace_Type) < 0)
         return;
     PycairoFontOptions_Type.tp_base = &PyBaseObject_Type;
@@ -441,7 +442,6 @@ init_cairo(void)
     CONSTANT(FORMAT_RGB24);
     CONSTANT(FORMAT_A8);
     CONSTANT(FORMAT_A1);
-    CONSTANT(FORMAT_RGB16_565);
 
     CONSTANT(HINT_METRICS_DEFAULT);
     CONSTANT(HINT_METRICS_OFF);

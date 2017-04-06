@@ -119,7 +119,7 @@ static PyObject *
 matrix_operator_multiply (PycairoMatrix *o, PycairoMatrix *o2)
 {
     cairo_matrix_t result;
-    cairo_matrix_multiply (&result, &o2->matrix, &o->matrix);
+    cairo_matrix_multiply (&result, &o->matrix, &o2->matrix);
     return PycairoMatrix_FromMatrix (&result);
 }
 

@@ -2,6 +2,9 @@
 FAQ
 ***
 
+.. currentmodule:: cairo
+
+
 Pycairo FAQ - Frequently Asked Questions
 ========================================
 
