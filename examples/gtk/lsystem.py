@@ -2,8 +2,6 @@
 
 import cairo
 import gtk
-if gtk.pygtk_version < (2,7,0):
-    import cairo.gtk
 
 # Copyright 2003 Jesse Andrews (jdandr2@uky.edu) under GPL
 
@@ -27,11 +25,7 @@ class lindenmayer:
         drawable = drawingarea.window
         x, y, width, height = drawingarea.allocation
 
-        if gtk.pygtk_version >= (2,7,0):
-            ctx = drawable.cairo_create()
-        else:
-            ctx = cairo.gtk.gdk_cairo_create(drawable)
-
+        ctx = drawable.cairo_create()
         ctx.set_source_rgb(0, 0, 0)
 
         ctx.set_line_width(self.SIZE / 4)

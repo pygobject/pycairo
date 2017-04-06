@@ -28,6 +28,7 @@
  * the specific language governing rights and limitations.
  */
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 #ifdef HAVE_CONFIG_H
@@ -39,11 +40,14 @@
 /* Class Pattern ---------------------------------------------------------- */
 
 /* PycairoPattern_FromPattern
- * Create a new PycairoSolidPattern, PycairoSurfacePattern,
- * PycairoLinearGradient or PycairoRadialGradient from a cairo_pattern_t.
+ * Create a new
+ *   PycairoSolidPattern,
+ *   PycairoSurfacePattern,
+ *   PycairoLinearGradient, or
+ *   PycairoRadialGradient from a cairo_pattern_t.
  * pattern - a cairo_pattern_t to 'wrap' into a Python object.
- *           pattern is unreferenced if the PycairoPattern creation fails, or
- *           if the pattern is in an error status.
+ *           it is unreferenced if the PycairoPattern creation fails, or if the
+ *           pattern has an error status.
  * Return value: New reference or NULL on failure
  */
 PyObject *
@@ -107,7 +111,6 @@ pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
     PyErr_SetString(PyExc_TypeError,
 		    "The Pattern type cannot be instantiated");
     return NULL;
-
 }
 
 static PyObject *
@@ -196,30 +199,22 @@ PyTypeObject PycairoPattern_Type = {
 static PyObject *
 solid_pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    double red, green, blue;
-    double alpha = 1.0;
-    cairo_pattern_t *pattern;
-    PyObject *o;
-
-    if (!PyArg_ParseTuple (args, "ddd|d:SolidPattern.__new__",
-			   &red, &green, &blue, &alpha))
+    double r, g, b, a = 1.0;
+    if (!PyArg_ParseTuple (args, "ddd|d:SolidPattern.__new__", &r, &g, &b, &a))
 	return NULL;
+    return PycairoPattern_FromPattern (cairo_pattern_create_rgba (r, g, b, a));
+}
 
-    o = type->tp_alloc(type, 0);
-    if (o != NULL) {
-	pattern = cairo_pattern_create_rgba (red, green, blue, alpha);
-
-	if (Pycairo_Check_Status (cairo_pattern_status (pattern))) {
-	    cairo_pattern_destroy (pattern);
-	    Py_DECREF(o);
-	    return NULL;
-	}
-	((PycairoSolidPattern *)o)->pattern = pattern;
-    }
-    return o;
+static PyObject *
+solid_pattern_get_rgba (PycairoSolidPattern *o)
+{
+    double red, green, blue, alpha;
+    cairo_pattern_get_rgba (o->pattern, &red, &green, &blue, &alpha);
+    return Py_BuildValue("(dddd)", red, green, blue, alpha);
 }
 
 static PyMethodDef solid_pattern_methods[] = {
+    {"get_rgba",       (PyCFunction)solid_pattern_get_rgba,      METH_NOARGS },
     {NULL, NULL, 0, NULL},
 };
 
@@ -274,25 +269,11 @@ static PyObject *
 surface_pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     PycairoSurface *s;
-    cairo_pattern_t *pattern;
-    PyObject *o;
-
     if (!PyArg_ParseTuple (args, "O!:SurfacePattern.__new__",
 			   &PycairoSurface_Type, &s))
 	return NULL;
-
-    o = type->tp_alloc(type, 0);
-    if (o != NULL) {
-	pattern = cairo_pattern_create_for_surface (s->surface);
-
-	if (Pycairo_Check_Status (cairo_pattern_status (pattern))) {
-	    cairo_pattern_destroy (pattern);
-	    Py_DECREF(o);
-	    return NULL;
-	}
-	((PycairoSurfacePattern *)o)->pattern = pattern;
-    }
-    return o;
+    return PycairoPattern_FromPattern (
+	       cairo_pattern_create_for_surface (s->surface));
 }
 
 static PyObject *
@@ -305,6 +286,15 @@ static PyObject *
 surface_pattern_get_filter (PycairoSurfacePattern *o)
 {
     return PyInt_FromLong (cairo_pattern_get_filter (o->pattern));
+}
+
+static PyObject *
+surface_pattern_get_surface (PycairoSurfacePattern *o)
+{
+    cairo_surface_t *surface;
+    cairo_pattern_get_surface (o->pattern, &surface);
+    return PycairoSurface_FromSurface (
+			       cairo_surface_reference (surface), NULL);
 }
 
 static PyObject *
@@ -334,6 +324,7 @@ surface_pattern_set_filter (PycairoSurfacePattern *o, PyObject *args)
 static PyMethodDef surface_pattern_methods[] = {
     {"get_extend",    (PyCFunction)surface_pattern_get_extend,  METH_NOARGS },
     {"get_filter",    (PyCFunction)surface_pattern_get_filter,  METH_NOARGS },
+    {"get_surface",   (PyCFunction)surface_pattern_get_surface, METH_NOARGS },
     {"set_extend",    (PyCFunction)surface_pattern_set_extend,  METH_VARARGS },
     {"set_filter",    (PyCFunction)surface_pattern_set_filter,  METH_VARARGS },
     {NULL, NULL, 0, NULL},
@@ -398,14 +389,11 @@ static PyObject *
 gradient_add_color_stop_rgb (PycairoGradient *o, PyObject *args)
 {
     double offset, red, green, blue;
-
     if (!PyArg_ParseTuple(args, "dddd:Gradient.add_color_stop_rgb",
 			  &offset, &red, &green, &blue))
 	return NULL;
-
     cairo_pattern_add_color_stop_rgb (o->pattern, offset, red, green, blue);
-    if (Pycairo_Check_Status (cairo_pattern_status (o->pattern)))
-	return NULL;
+    RETURN_NULL_IF_CAIRO_PATTERN_ERROR(o->pattern);
     Py_RETURN_NONE;
 }
 
@@ -413,15 +401,12 @@ static PyObject *
 gradient_add_color_stop_rgba (PycairoGradient *o, PyObject *args)
 {
     double offset, red, green, blue, alpha;
-
     if (!PyArg_ParseTuple(args, "ddddd:Gradient.add_color_stop_rgba",
 			  &offset, &red, &green, &blue, &alpha))
 	return NULL;
-
     cairo_pattern_add_color_stop_rgba (o->pattern, offset, red,
 				       green, blue, alpha);
-    if (Pycairo_Check_Status (cairo_pattern_status (o->pattern)))
-	return NULL;
+    RETURN_NULL_IF_CAIRO_PATTERN_ERROR(o->pattern);
     Py_RETURN_NONE;
 }
 
@@ -484,28 +469,24 @@ static PyObject *
 linear_gradient_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     double x0, y0, x1, y1;
-    cairo_pattern_t *pattern;
-    PyObject *o;
-
     if (!PyArg_ParseTuple(args, "dddd:LinearGradient.__new__",
 			  &x0, &y0, &x1, &y1))
 	return NULL;
+    return PycairoPattern_FromPattern (
+               cairo_pattern_create_linear (x0, y0, x1, y1));
+}
 
-    o = type->tp_alloc(type, 0);
-    if (o != NULL) {
-	pattern = cairo_pattern_create_linear (x0, y0, x1, y1);
-
-	if (Pycairo_Check_Status (cairo_pattern_status (pattern))) {
-	    cairo_pattern_destroy (pattern);
-	    Py_DECREF(o);
-	    return NULL;
-	}
-	((PycairoLinearGradient *)o)->pattern = pattern;
-    }
-    return o;
+static PyObject *
+linear_gradient_get_linear_points (PycairoLinearGradient *o)
+{
+    double x0, y0, x1, y1;
+    cairo_pattern_get_linear_points (o->pattern, &x0, &y0, &x1, &y1);
+    return Py_BuildValue("(dddd)", x0, y0, x1, y1);
 }
 
 static PyMethodDef linear_gradient_methods[] = {
+    {"get_linear_points", (PyCFunction)linear_gradient_get_linear_points,
+                                                                 METH_NOARGS },
     {NULL, NULL, 0, NULL},
 };
 
@@ -559,29 +540,26 @@ PyTypeObject PycairoLinearGradient_Type = {
 static PyObject *
 radial_gradient_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    cairo_pattern_t *pattern;
     double cx0, cy0, radius0, cx1, cy1, radius1;
-    PyObject *o;
-
     if (!PyArg_ParseTuple(args, "dddddd:RadialGradient.__new__",
 			  &cx0, &cy0, &radius0, &cx1, &cy1, &radius1))
 	return NULL;
+    return PycairoPattern_FromPattern (
+           cairo_pattern_create_radial (cx0, cy0, radius0, cx1, cy1, radius1));
+}
 
-    o = type->tp_alloc(type, 0);
-    if (o != NULL) {
-	pattern = cairo_pattern_create_radial (cx0, cy0, radius0,
-					       cx1, cy1, radius1);
-	if (Pycairo_Check_Status (cairo_pattern_status (pattern))) {
-	    cairo_pattern_destroy (pattern);
-	    Py_DECREF(o);
-	    return NULL;
-	}
-	((PycairoRadialGradient *)o)->pattern = pattern;
-    }
-    return o;
+static PyObject *
+radial_gradient_get_radial_circles (PycairoRadialGradient *o)
+{
+    double x0, y0, r0, x1, y1, r1;
+    cairo_pattern_get_radial_circles (o->pattern, &x0, &y0, &r0,
+				      &x1, &y1, &r1);
+    return Py_BuildValue("(dddddd)", x0, y0, r0, x1, y1, r1);
 }
 
 static PyMethodDef radial_gradient_methods[] = {
+    {"get_radial_circles", (PyCFunction)radial_gradient_get_radial_circles,
+                                                                 METH_NOARGS },
     {NULL, NULL, 0, NULL},
 };
 

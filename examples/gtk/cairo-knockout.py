@@ -8,8 +8,6 @@ import sys
 
 import cairo
 import gtk
-if gtk.pygtk_version < (2,7,0):
-    import cairo.gtk
 
 
 def oval_path(ctx, xc, yc, xr, yr):
@@ -106,10 +104,7 @@ def draw (ctx, width, height):
     ctx.paint()
 
 def expose(drawingarea, event):
-    if gtk.pygtk_version < (2,7,0):
-        ctx = cairo.gtk.gdk_cairo_create(drawingarea.window)
-    else:
-        ctx = drawingarea.window.cairo_create()
+    ctx = drawingarea.window.cairo_create()
 
     _, _, width, height = drawingarea.allocation
     draw (ctx, width, height)

@@ -28,21 +28,13 @@
  * the specific language governing rights and limitations.
  */
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 #include "pycairo-private.h"
-
-#define RETURN_NULL_IF_CONTEXT_STATUS_ERROR(obj) \
-    do {                                         \
-	cairo_status_t status = cairo_status (obj->ctx); \
-	if (status != CAIRO_STATUS_SUCCESS) { \
-	    Pycairo_Check_Status (status);    \
-            return NULL;		      \
-	}                                     \
-    } while (0)
 
 
 /* Take a PyBaseString (str or unicode) object and return a pointer to the
@@ -124,24 +116,11 @@ pycairo_dealloc(PycairoContext *o)
 static PyObject *
 pycairo_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    PyObject *o;
     PycairoSurface *s;
-
     if (!PyArg_ParseTuple(args, "O!:Context.__new__",
 			  &PycairoSurface_Type, &s))
 	return NULL;
-
-    o = type->tp_alloc(type, 0);
-    if (o != NULL) {
-	cairo_t *ctx = cairo_create (s->surface);
-	if (Pycairo_Check_Status (cairo_status (ctx))) {
-	    cairo_destroy (ctx);
-	    Py_DECREF(o);
-	    return NULL;
-	}
-	((PycairoContext *)o)->ctx = ctx;
-    }
-    return o;
+    return PycairoContext_FromContext (cairo_create (s->surface), NULL, NULL);
 }
 
 static PyObject *
@@ -154,7 +133,7 @@ pycairo_append_path (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_append_path (o->ctx, p->path);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -168,7 +147,7 @@ pycairo_arc (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_arc (o->ctx, xc, yc, radius, angle1, angle2);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -182,7 +161,7 @@ pycairo_arc_negative (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_arc_negative (o->ctx, xc, yc, radius, angle1, angle2);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -190,15 +169,24 @@ static PyObject *
 pycairo_clip (PycairoContext *o)
 {
     cairo_clip (o->ctx);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
+}
+
+static PyObject *
+pycairo_clip_extents (PycairoContext *o)
+{
+    double x1, y1, x2, y2;
+    cairo_clip_extents (o->ctx, &x1, &y1, &x2, &y2);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
+    return Py_BuildValue("(dddd)", x1, y1, x2, y2);
 }
 
 static PyObject *
 pycairo_clip_preserve (PycairoContext *o)
 {
     cairo_clip_preserve (o->ctx);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -206,15 +194,48 @@ static PyObject *
 pycairo_close_path (PycairoContext *o)
 {
     cairo_close_path (o->ctx);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
+}
+
+/* a possible candidate for an iterator (like cairo_copy_path), but for the
+ * typical rectangle_list a simple Python tuple in fine?
+ */
+static PyObject *
+pycairo_copy_clip_rectangle_list (PycairoContext *o)
+{
+    int i;
+    PyObject *rv = NULL;
+    cairo_rectangle_t *r;
+    cairo_rectangle_list_t *rlist = cairo_copy_clip_rectangle_list (o->ctx);
+    if (rlist->status != CAIRO_STATUS_SUCCESS) {
+	Pycairo_Check_Status (rlist->status);
+	goto exit;
+    }
+
+    rv = PyTuple_New(rlist->num_rectangles);
+    if (rv == NULL)
+	goto exit;
+
+    for (i = 0, r = rlist->rectangles; i < rlist->num_rectangles; i++, r++) {
+	PyObject *py_rect = Py_BuildValue("(dddd)", r->x, r->y,
+					  r->width, r->height);
+	if (py_rect == NULL) {
+	    Py_CLEAR(rv);
+	    goto exit;
+	}
+	PyTuple_SET_ITEM (rv, i, py_rect);
+    }
+ exit:
+    cairo_rectangle_list_destroy(rlist);
+    return rv;
 }
 
 static PyObject *
 pycairo_copy_page (PycairoContext *o)
 {
     cairo_copy_page (o->ctx);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -240,7 +261,7 @@ pycairo_curve_to (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_curve_to (o->ctx, x1, y1, x2, y2, x3, y3);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -253,7 +274,7 @@ pycairo_device_to_user(PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_device_to_user(o->ctx, &x, &y);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     return Py_BuildValue("(dd)", x, y);
 }
 
@@ -267,7 +288,7 @@ pycairo_device_to_user_distance (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_device_to_user_distance (o->ctx, &dx, &dy);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     return Py_BuildValue("(dd)", dx, dy);
 }
 
@@ -275,7 +296,7 @@ static PyObject *
 pycairo_fill (PycairoContext *o)
 {
     cairo_fill (o->ctx);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -284,7 +305,7 @@ pycairo_fill_extents (PycairoContext *o)
 {
     double x1, y1, x2, y2;
     cairo_fill_extents (o->ctx, &x1, &y1, &x2, &y2);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     return Py_BuildValue("(dddd)", x1, y1, x2, y2);
 }
 
@@ -292,7 +313,7 @@ static PyObject *
 pycairo_fill_preserve (PycairoContext *o)
 {
     cairo_fill_preserve (o->ctx);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -302,7 +323,7 @@ pycairo_font_extents (PycairoContext *o)
     cairo_font_extents_t e;
 
     cairo_font_extents (o->ctx, &e);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     return Py_BuildValue("(ddddd)", e.ascent, e.descent, e.height,
 			 e.max_x_advance, e.max_y_advance);
 }
@@ -319,6 +340,43 @@ pycairo_get_current_point (PycairoContext *o)
     double x, y;
     cairo_get_current_point (o->ctx, &x, &y);
     return Py_BuildValue("(dd)", x, y);
+}
+
+static PyObject *
+pycairo_get_dash (PycairoContext *o)
+{
+    double *dashes = NULL, offset;
+    int count, i;
+    PyObject *py_dashes = NULL, *rv = NULL;
+
+    count = cairo_get_dash_count (o->ctx);
+    dashes = PyMem_Malloc (count * sizeof(double));
+    if (dashes == NULL)
+	return PyErr_NoMemory();
+
+    cairo_get_dash (o->ctx, dashes, &offset);
+    py_dashes = PyTuple_New(count);
+    if (py_dashes == NULL)
+	goto exit;
+
+    for (i = 0; i < count; i++) {
+	PyObject *dash = PyFloat_FromDouble(dashes[i]);
+	if (dash == NULL)
+	    goto exit;
+	PyTuple_SET_ITEM (py_dashes, i, dash);
+    }
+    rv = Py_BuildValue("(Od)", py_dashes, offset);
+
+ exit:
+    PyMem_Free (dashes);
+    Py_XDECREF(py_dashes);
+    return rv;
+}
+
+static PyObject *
+pycairo_get_dash_count (PycairoContext *o)
+{
+    return PyInt_FromLong (cairo_get_dash_count (o->ctx));
 }
 
 static PyObject *
@@ -346,7 +404,6 @@ static PyObject *
 pycairo_get_font_options (PycairoContext *o)
 {
     cairo_font_options_t *options = cairo_font_options_create();
-
     cairo_get_font_options (o->ctx, options);
     /* there is no reference fn */
     return PycairoFontOptions_FromFontOptions (options);
@@ -401,6 +458,13 @@ pycairo_get_operator (PycairoContext *o)
 }
 
 static PyObject *
+pycairo_get_scaled_font (PycairoContext *o)
+{
+    return PycairoScaledFont_FromScaledFont (
+	       cairo_scaled_font_reference (cairo_get_scaled_font (o->ctx)));
+}
+
+static PyObject *
 pycairo_get_source (PycairoContext *o)
 {
     return PycairoPattern_FromPattern (
@@ -421,11 +485,105 @@ pycairo_get_tolerance (PycairoContext *o)
     return PyFloat_FromDouble (cairo_get_tolerance (o->ctx));
 }
 
+/* read a Python sequence of (i,x,y) sequences
+ * return cairo_glyph_t *
+ *        num_glyphs
+ *        must call PyMem_Free(glyphs) when finished using the glyphs
+ */
+static cairo_glyph_t *
+_PyGlyphs_AsGlyphs (PyObject *py_object, int *num_glyphs)
+{
+    int length, i;
+    cairo_glyph_t *glyphs = NULL, *glyph;
+    PyObject *py_glyphs, *py_seq = NULL;
+
+    py_glyphs = PySequence_Fast (py_object, "glyphs must be a sequence");
+    if (py_glyphs == NULL)
+	return NULL;
+
+    length = PySequence_Fast_GET_SIZE(py_glyphs);
+    if (*num_glyphs < 0 || *num_glyphs > length)
+	*num_glyphs = length;
+
+    glyphs = PyMem_Malloc (*num_glyphs * sizeof(cairo_glyph_t));
+    if (glyphs == NULL) {
+	PyErr_NoMemory();
+	goto error;
+    }
+    for (i = 0, glyph = glyphs; i < *num_glyphs; i++, glyph++) {
+	PyObject *py_item = PySequence_Fast_GET_ITEM(py_glyphs, i);
+	py_seq = PySequence_Fast (py_item, "glyph items must be a sequence");
+	if (py_seq == NULL)
+	    goto error;
+	if (PySequence_Fast_GET_SIZE(py_seq) != 3) {
+	    PyErr_SetString(PyExc_ValueError,
+			    "each glyph item must be an (i,x,y) sequence");
+	    goto error;
+	}
+	glyph->index = PyInt_AsLong(PySequence_Fast_GET_ITEM(py_seq, 0));
+	glyph->x = PyFloat_AsDouble(PySequence_Fast_GET_ITEM(py_seq, 1));
+	glyph->y = PyFloat_AsDouble(PySequence_Fast_GET_ITEM(py_seq, 2));
+	if (PyErr_Occurred())
+	    goto error;
+	Py_DECREF(py_seq);
+    }
+    Py_DECREF(py_glyphs);
+    return glyphs;
+ error:
+    Py_DECREF(py_glyphs);
+    Py_XDECREF(py_seq);
+    PyMem_Free(glyphs);
+    return NULL;
+}
+
+static PyObject *
+pycairo_glyph_extents (PycairoContext *o, PyObject *args)
+{
+    int num_glyphs = -1;
+    cairo_glyph_t *glyphs;
+    cairo_text_extents_t extents;
+    PyObject *py_object;
+
+    if (!PyArg_ParseTuple (args, "O|i:Context.glyph_extents",
+			   &py_object, &num_glyphs))
+	return NULL;
+
+    glyphs = _PyGlyphs_AsGlyphs (py_object, &num_glyphs);
+    if (glyphs == NULL)
+	return NULL;
+    cairo_glyph_extents (o->ctx, glyphs, num_glyphs, &extents);
+    PyMem_Free (glyphs);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
+    return Py_BuildValue("(dddddd)", extents.x_bearing, extents.y_bearing,
+			 extents.width, extents.height, extents.x_advance,
+			 extents.y_advance);
+}
+
+static PyObject *
+pycairo_glyph_path (PycairoContext *o, PyObject *args)
+{
+    int num_glyphs = -1;
+    cairo_glyph_t *glyphs;
+    PyObject *py_object;
+
+    if (!PyArg_ParseTuple (args, "O|i:Context.glyph_path",
+			   &py_object, &num_glyphs))
+	return NULL;
+
+    glyphs = _PyGlyphs_AsGlyphs (py_object, &num_glyphs);
+    if (glyphs == NULL)
+	return NULL;
+    cairo_glyph_path (o->ctx, glyphs, num_glyphs);
+    PyMem_Free (glyphs);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
+    Py_RETURN_NONE;
+}
+
 static PyObject *
 pycairo_identity_matrix (PycairoContext *o)
 {
     cairo_identity_matrix (o->ctx);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -439,7 +597,7 @@ pycairo_in_fill (PycairoContext *o, PyObject *args)
 	return NULL;
 
     result = cairo_in_fill (o->ctx, x, y) ? Py_True : Py_False;
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_INCREF(result);
     return result;
 }
@@ -454,7 +612,7 @@ pycairo_in_stroke (PycairoContext *o, PyObject *args)
 	return NULL;
 
     result = cairo_in_stroke (o->ctx, x, y) ? Py_True : Py_False;
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_INCREF(result);
     return result;
 }
@@ -468,7 +626,7 @@ pycairo_line_to (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_line_to (o->ctx, x, y);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -481,7 +639,7 @@ pycairo_mask (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_mask (o->ctx, p->pattern);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -496,7 +654,7 @@ pycairo_mask_surface (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_mask_surface (o->ctx, s->surface, surface_x, surface_y);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -509,7 +667,7 @@ pycairo_move_to (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_move_to (o->ctx, x, y);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -517,7 +675,7 @@ static PyObject *
 pycairo_new_path (PycairoContext *o)
 {
     cairo_new_path (o->ctx);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -525,7 +683,7 @@ static PyObject *
 pycairo_new_sub_path (PycairoContext *o)
 {
     cairo_new_sub_path (o->ctx);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -533,7 +691,7 @@ static PyObject *
 pycairo_paint (PycairoContext *o)
 {
     cairo_paint (o->ctx);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -546,7 +704,7 @@ pycairo_paint_with_alpha (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_paint_with_alpha (o->ctx, alpha);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -567,7 +725,7 @@ static PyObject *
 pycairo_push_group (PycairoContext *o)
 {
     cairo_push_group (o->ctx);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -580,7 +738,7 @@ pycairo_push_group_with_content (PycairoContext *o, PyObject *args)
 			  &content))
 	return NULL;
     cairo_push_group_with_content (o->ctx, content);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -594,7 +752,7 @@ pycairo_rectangle (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_rectangle (o->ctx, x, y, width, height);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -608,7 +766,7 @@ pycairo_rel_curve_to (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_rel_curve_to (o->ctx, dx1, dy1, dx2, dy2, dx3, dy3);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -621,7 +779,7 @@ pycairo_rel_line_to (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_rel_line_to (o->ctx, dx, dy);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -634,7 +792,7 @@ pycairo_rel_move_to (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_rel_move_to (o->ctx, dx, dy);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -642,7 +800,7 @@ static PyObject *
 pycairo_reset_clip (PycairoContext *o)
 {
     cairo_reset_clip (o->ctx);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -650,7 +808,7 @@ static PyObject *
 pycairo_restore (PycairoContext *o)
 {
     cairo_restore (o->ctx);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -663,7 +821,7 @@ pycairo_rotate (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_rotate (o->ctx, angle);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -671,7 +829,7 @@ static PyObject *
 pycairo_save (PycairoContext *o)
 {
     cairo_save (o->ctx);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -684,7 +842,7 @@ pycairo_scale (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_scale (o->ctx, sx, sy);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -705,7 +863,7 @@ pycairo_select_font_face (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_select_font_face (o->ctx, family, slant, weight);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -718,7 +876,7 @@ pycairo_set_antialias (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_antialias (o->ctx, antialias);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -726,7 +884,7 @@ static PyObject *
 pycairo_set_dash (PycairoContext *o, PyObject *args)
 {
     double *dashes, offset = 0;
-    int ndash, i;
+    int num_dashes, i;
     PyObject *py_dashes;
 
     if (!PyArg_ParseTuple (args, "O|d:Context.set_dash", &py_dashes, &offset))
@@ -734,26 +892,28 @@ pycairo_set_dash (PycairoContext *o, PyObject *args)
 
     py_dashes = PySequence_Fast (py_dashes,
 				 "first argument must be a sequence");
-    if (!py_dashes)
+    if (py_dashes == NULL)
 	return NULL;
 
-    ndash = PySequence_Fast_GET_SIZE(py_dashes);
-    dashes = malloc (ndash * sizeof(double));
-    for (i = 0; i < ndash; i++) {
-	PyObject *item = PySequence_Fast_GET_ITEM(py_dashes, i);
+    num_dashes = PySequence_Fast_GET_SIZE(py_dashes);
+    dashes = PyMem_Malloc (num_dashes * sizeof(double));
+    if (dashes == NULL) {
+	Py_DECREF(py_dashes);
+	return PyErr_NoMemory();
+    }
 
-	dashes[i] = PyFloat_AsDouble(item);
+    for (i = 0; i < num_dashes; i++) {
+	dashes[i] = PyFloat_AsDouble(PySequence_Fast_GET_ITEM(py_dashes, i));
 	if (PyErr_Occurred()) {
-	    free (dashes);
+	    PyMem_Free (dashes);
 	    Py_DECREF(py_dashes);
 	    return NULL;
 	}
     }
+    cairo_set_dash (o->ctx, dashes, num_dashes, offset);
+    PyMem_Free (dashes);
     Py_DECREF(py_dashes);
-
-    cairo_set_dash (o->ctx, dashes, ndash, offset);
-    free (dashes);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -766,7 +926,7 @@ pycairo_set_fill_rule (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_fill_rule (o->ctx, fill_rule);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -780,7 +940,7 @@ pycairo_set_font_matrix (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_font_matrix (o->ctx, &matrix->matrix);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -797,7 +957,7 @@ pycairo_set_font_face (PycairoContext *o, PyObject *obj)
 			"cairo.FontFace or None");
 	return NULL;
     }
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -811,7 +971,7 @@ pycairo_set_font_options (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_font_options (o->ctx, options->font_options);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -824,7 +984,7 @@ pycairo_set_font_size (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_font_size (o->ctx, size);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -837,7 +997,7 @@ pycairo_set_line_cap (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_line_cap (o->ctx, line_cap);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -850,7 +1010,7 @@ pycairo_set_line_join (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_line_join (o->ctx, line_join);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -863,7 +1023,7 @@ pycairo_set_line_width (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_line_width (o->ctx, width);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -877,7 +1037,7 @@ pycairo_set_matrix (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_matrix (o->ctx, &matrix->matrix);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -890,7 +1050,7 @@ pycairo_set_miter_limit (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_miter_limit (o->ctx, limit);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -903,7 +1063,7 @@ pycairo_set_operator(PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_operator(o->ctx, op);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -917,7 +1077,7 @@ pycairo_set_source (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_source (o->ctx, p->pattern);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -931,7 +1091,7 @@ pycairo_set_source_rgb (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_source_rgb (o->ctx, red, green, blue);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -946,7 +1106,7 @@ pycairo_set_source_rgba (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_source_rgba (o->ctx, red, green, blue, alpha);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -961,7 +1121,7 @@ pycairo_set_source_surface (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_source_surface (o->ctx, surface->surface, x, y);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -969,12 +1129,30 @@ static PyObject *
 pycairo_set_tolerance (PycairoContext *o, PyObject *args)
 {
     double tolerance;
-
     if (!PyArg_ParseTuple (args, "d:Context.set_tolerance", &tolerance))
 	return NULL;
-
     cairo_set_tolerance (o->ctx, tolerance);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
+    Py_RETURN_NONE;
+}
+
+static PyObject *
+pycairo_show_glyphs (PycairoContext *o, PyObject *args)
+{
+    int num_glyphs = -1;
+    cairo_glyph_t *glyphs;
+    PyObject *py_object;
+
+    if (!PyArg_ParseTuple (args, "O|i:Context.show_glyphs",
+			   &py_object, &num_glyphs))
+	return NULL;
+
+    glyphs = _PyGlyphs_AsGlyphs (py_object, &num_glyphs);
+    if (glyphs == NULL)
+	return NULL;
+    cairo_show_glyphs (o->ctx, glyphs, num_glyphs);
+    PyMem_Free (glyphs);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -982,7 +1160,7 @@ static PyObject *
 pycairo_show_page (PycairoContext *o)
 {
     cairo_show_page (o->ctx);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -998,7 +1176,7 @@ pycairo_show_text (PycairoContext *o, PyObject *obj)
     }
 
     cairo_show_text (o->ctx, utf8);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -1006,7 +1184,7 @@ static PyObject *
 pycairo_stroke (PycairoContext *o)
 {
     cairo_stroke (o->ctx);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -1015,7 +1193,7 @@ pycairo_stroke_extents (PycairoContext *o)
 {
     double x1, y1, x2, y2;
     cairo_stroke_extents (o->ctx, &x1, &y1, &x2, &y2);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     return Py_BuildValue("(dddd)", x1, y1, x2, y2);
 }
 
@@ -1023,7 +1201,7 @@ static PyObject *
 pycairo_stroke_preserve (PycairoContext *o)
 {
     cairo_stroke_preserve (o->ctx);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -1040,7 +1218,7 @@ pycairo_text_extents (PycairoContext *o, PyObject *obj)
     }
 
     cairo_text_extents (o->ctx, utf8, &extents);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     return Py_BuildValue("(dddddd)", extents.x_bearing, extents.y_bearing,
 			 extents.width, extents.height, extents.x_advance,
 			 extents.y_advance);
@@ -1058,7 +1236,7 @@ pycairo_text_path (PycairoContext *o, PyObject *obj)
     }
 
     cairo_text_path (o->ctx, utf8);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -1071,7 +1249,7 @@ pycairo_translate (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_translate (o->ctx, tx, ty);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -1085,7 +1263,7 @@ pycairo_transform (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_transform (o->ctx, &matrix->matrix);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
 
@@ -1098,7 +1276,7 @@ pycairo_user_to_device (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_user_to_device (o->ctx, &x, &y);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     return Py_BuildValue("(dd)", x, y);
 }
 
@@ -1112,7 +1290,7 @@ pycairo_user_to_device_distance (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_user_to_device_distance (o->ctx, &dx, &dy);
-    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     return Py_BuildValue("(dd)", dx, dy);
 }
 
@@ -1121,6 +1299,7 @@ static PyMethodDef pycairo_methods[] = {
     /* methods never exposed in a language binding:
      * cairo_destroy()
      * cairo_reference()
+     * cairo_rectangle_list_destroy()
      *
      * cairo_status()
      * cairo_status_string()
@@ -1131,8 +1310,11 @@ static PyMethodDef pycairo_methods[] = {
     {"arc",             (PyCFunction)pycairo_arc,             METH_VARARGS},
     {"arc_negative",    (PyCFunction)pycairo_arc_negative,    METH_VARARGS},
     {"clip",            (PyCFunction)pycairo_clip,            METH_NOARGS},
+    {"clip_extents",    (PyCFunction)pycairo_clip_extents,    METH_NOARGS},
     {"clip_preserve",   (PyCFunction)pycairo_clip_preserve,   METH_NOARGS},
     {"close_path",      (PyCFunction)pycairo_close_path,      METH_NOARGS},
+    {"copy_clip_rectangle_list", (PyCFunction)pycairo_copy_clip_rectangle_list,
+                                                              METH_NOARGS},
     {"copy_page",       (PyCFunction)pycairo_copy_page,       METH_NOARGS},
     {"copy_path",       (PyCFunction)pycairo_copy_path,       METH_NOARGS},
     {"copy_path_flat",  (PyCFunction)pycairo_copy_path_flat,  METH_NOARGS},
@@ -1146,6 +1328,8 @@ static PyMethodDef pycairo_methods[] = {
     {"font_extents",    (PyCFunction)pycairo_font_extents,    METH_NOARGS},
     {"get_antialias",   (PyCFunction)pycairo_get_antialias,   METH_NOARGS},
     {"get_current_point",(PyCFunction)pycairo_get_current_point,METH_NOARGS},
+    {"get_dash",        (PyCFunction)pycairo_get_dash,        METH_NOARGS},
+    {"get_dash_count",  (PyCFunction)pycairo_get_dash_count,  METH_NOARGS},
     {"get_fill_rule",   (PyCFunction)pycairo_get_fill_rule,   METH_NOARGS},
     {"get_font_face",   (PyCFunction)pycairo_get_font_face,   METH_NOARGS},
     {"get_font_matrix", (PyCFunction)pycairo_get_font_matrix, METH_NOARGS},
@@ -1157,11 +1341,12 @@ static PyMethodDef pycairo_methods[] = {
     {"get_matrix",      (PyCFunction)pycairo_get_matrix,      METH_NOARGS},
     {"get_miter_limit", (PyCFunction)pycairo_get_miter_limit, METH_NOARGS},
     {"get_operator",    (PyCFunction)pycairo_get_operator,    METH_NOARGS},
+    {"get_scaled_font", (PyCFunction)pycairo_get_scaled_font, METH_NOARGS},
     {"get_source",      (PyCFunction)pycairo_get_source,      METH_NOARGS},
     {"get_target",      (PyCFunction)pycairo_get_target,      METH_NOARGS},
     {"get_tolerance",   (PyCFunction)pycairo_get_tolerance,   METH_NOARGS},
-    /* glyph_extents */
-    /* glyph_path    - undocumented */
+    {"glyph_extents",   (PyCFunction)pycairo_glyph_extents,   METH_VARARGS},
+    {"glyph_path",      (PyCFunction)pycairo_glyph_path,      METH_VARARGS},
     {"identity_matrix", (PyCFunction)pycairo_identity_matrix, METH_NOARGS},
     {"in_fill",         (PyCFunction)pycairo_in_fill,         METH_VARARGS},
     {"in_stroke",       (PyCFunction)pycairo_in_stroke,       METH_VARARGS},
@@ -1209,7 +1394,7 @@ static PyMethodDef pycairo_methods[] = {
     {"set_source_surface",(PyCFunction)pycairo_set_source_surface,
                                                               METH_VARARGS},
     {"set_tolerance",   (PyCFunction)pycairo_set_tolerance,   METH_VARARGS},
-    /* show_glyphs - undocumented */
+    {"show_glyphs",     (PyCFunction)pycairo_show_glyphs,     METH_VARARGS},
     {"show_page",       (PyCFunction)pycairo_show_page,       METH_NOARGS},
     {"show_text",       (PyCFunction)pycairo_show_text,       METH_O},
     {"stroke",          (PyCFunction)pycairo_stroke,          METH_NOARGS},

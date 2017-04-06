@@ -18,6 +18,7 @@ EXTRA_DIST = \
   cairo_snippets/snippets/ellipse.py \
   cairo_snippets/snippets/fill_and_stroke2.py \
   cairo_snippets/snippets/fill_and_stroke.py \
+  cairo_snippets/snippets/glyph_path.py \
   cairo_snippets/snippets/gradient.py \
   cairo_snippets/snippets/gradient_mask.py \
   cairo_snippets/snippets/group.py \
@@ -27,6 +28,7 @@ EXTRA_DIST = \
   cairo_snippets/snippets/path.py \
   cairo_snippets/snippets/set_line_cap.py \
   cairo_snippets/snippets/set_line_join.py \
+  cairo_snippets/snippets/show_glyphs.py \
   cairo_snippets/snippets/text_align_center.py \
   cairo_snippets/snippets/text_extents.py \
   cairo_snippets/snippets/text.py \

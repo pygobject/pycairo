@@ -3,17 +3,8 @@ http://www.cairographics.org/pycairo
 
 Dependencies
 ------------
-    cairo  		>= 1.2.6
-    Python 		>= 2.3
-
-Not required, but supported if they are detected:
-    Numeric Python	any version (?)
-    PyGTK		2.2.0 <= version < 2.7.0
-
-PyGTK and the cairo.gtk module:
-PyGTK 2.8 and above has built in support for cairo and does not need to use the
-cairo.gtk module. The cairo.gtk module is deprecated and will be removed from
-a future version of pycairo.
+    cairo   >= 1.4.0
+    Python  >= 2.3
 
 Compiling
 ---------

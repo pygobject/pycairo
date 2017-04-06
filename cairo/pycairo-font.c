@@ -28,6 +28,7 @@
  * the specific language governing rights and limitations.
  */
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 #ifdef HAVE_CONFIG_H
@@ -204,20 +205,9 @@ scaled_font_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 			  &PycairoMatrix_Type, &mx2,
 			  &PycairoFontOptions_Type, &fo))
 	return NULL;
-
-    PyObject *o = type->tp_alloc(type, 0);
-    if (o != NULL) {
-	cairo_scaled_font_t *scaled_font = cairo_scaled_font_create
-	    (ff->font_face, &mx1->matrix, &mx2->matrix, fo->font_options);
-
-	if (Pycairo_Check_Status (cairo_scaled_font_status (scaled_font))) {
-	    cairo_scaled_font_destroy (scaled_font);
-	    Py_DECREF(o);
-	    return NULL;
-	}
-	((PycairoScaledFont *)o)->scaled_font = scaled_font;
-    }
-    return o;
+    return PycairoScaledFont_FromScaledFont (
+               cairo_scaled_font_create (ff->font_face, &mx1->matrix,
+					 &mx2->matrix, fo->font_options));
 }
 
 static PyObject *
@@ -226,8 +216,7 @@ scaled_font_extents (PycairoScaledFont *o)
     cairo_font_extents_t e;
 
     cairo_scaled_font_extents (o->scaled_font, &e);
-    if (Pycairo_Check_Status (cairo_scaled_font_status(o->scaled_font)))
-	return NULL;
+    RETURN_NULL_IF_CAIRO_SCALED_FONT_ERROR(o->scaled_font);
     return Py_BuildValue ("(ddddd)", e.ascent, e.descent, e.height,
 			  e.max_x_advance, e.max_y_advance);
 }
@@ -253,8 +242,7 @@ scaled_font_text_extents (PycairoScaledFont *o, PyObject *obj)
     }
 
     cairo_scaled_font_text_extents (o->scaled_font, utf8, &extents);
-    if (Pycairo_Check_Status (cairo_scaled_font_status(o->scaled_font)))
-	return NULL;
+    RETURN_NULL_IF_CAIRO_SCALED_FONT_ERROR(o->scaled_font);
     return Py_BuildValue("(dddddd)", extents.x_bearing, extents.y_bearing,
 			 extents.width, extents.height, extents.x_advance,
 			 extents.y_advance);
@@ -372,18 +360,7 @@ font_options_dealloc(PycairoFontOptions *o)
 static PyObject *
 font_options_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    PyObject *o = type->tp_alloc(type, 0);
-    if (o != NULL) {
-	cairo_font_options_t *font_options = cairo_font_options_create();
-
-	if (Pycairo_Check_Status (cairo_font_options_status (font_options))) {
-	    cairo_font_options_destroy (font_options);
-	    Py_DECREF(o);
-	    return NULL;
-	}
-	((PycairoFontOptions *)o)->font_options = font_options;
-    }
-    return o;
+    return PycairoFontOptions_FromFontOptions (cairo_font_options_create());
 }
 
 static PyObject *
@@ -422,8 +399,7 @@ font_options_set_antialias (PycairoFontOptions *o, PyObject *args)
 	return NULL;
 
     cairo_font_options_set_antialias (o->font_options, aa);
-    if (Pycairo_Check_Status (cairo_font_options_status (o->font_options)))
-	return NULL;
+    RETURN_NULL_IF_CAIRO_FONT_OPTIONS_ERROR(o->font_options);
     Py_RETURN_NONE;
 }
 
@@ -436,8 +412,7 @@ font_options_set_hint_metrics (PycairoFontOptions *o, PyObject *args)
 	return NULL;
 
     cairo_font_options_set_hint_metrics (o->font_options, hm);
-    if (Pycairo_Check_Status (cairo_font_options_status (o->font_options)))
-	return NULL;
+    RETURN_NULL_IF_CAIRO_FONT_OPTIONS_ERROR(o->font_options);
     Py_RETURN_NONE;
 }
 
@@ -450,8 +425,7 @@ font_options_set_hint_style (PycairoFontOptions *o, PyObject *args)
 	return NULL;
 
     cairo_font_options_set_hint_style (o->font_options, hs);
-    if (Pycairo_Check_Status (cairo_font_options_status (o->font_options)))
-	return NULL;
+    RETURN_NULL_IF_CAIRO_FONT_OPTIONS_ERROR(o->font_options);
     Py_RETURN_NONE;
 }
 
@@ -464,8 +438,7 @@ font_options_set_subpixel_order (PycairoFontOptions *o, PyObject *args)
 	return NULL;
 
     cairo_font_options_set_subpixel_order (o->font_options, so);
-    if (Pycairo_Check_Status (cairo_font_options_status (o->font_options)))
-	return NULL;
+    RETURN_NULL_IF_CAIRO_FONT_OPTIONS_ERROR(o->font_options);
     Py_RETURN_NONE;
 }
 

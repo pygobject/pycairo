@@ -7,9 +7,6 @@ import sys
 
 import cairo
 import gtk
-if gtk.pygtk_version < (2,7,0):
-    import cairo.gtk
-
 import pango
 
 from snippets import snip_list, snippet_normalize
@@ -59,10 +56,7 @@ class Window (gtk.Window):
     def da_expose_event (self, da, event, data=None):
         x, y, width, height = da.allocation
 
-        if gtk.pygtk_version < (2,7,0):
-            cr = cairo.gtk.gdk_cairo_create (da.window)
-        else:
-            cr = da.window.cairo_create()
+        cr = da.window.cairo_create()
 
         try:
             exec (self.snippet_str, globals(), locals())

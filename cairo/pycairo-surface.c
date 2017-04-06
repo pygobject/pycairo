@@ -28,25 +28,26 @@
  * the specific language governing rights and limitations.
  */
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
-#include <stdint.h>
 #include "pycairo-private.h"
 
-
-#ifdef HAVE_NUMPY
-#  include <Numeric/arrayobject.h>
-   static int load_numpy (void);
-#endif
 
 /* Class Surface ---------------------------------------------------------- */
 
 /* PycairoSurface_FromSurface
- * Create a new PycairoSurface from a cairo_surface_t
+ * Create a new
+ *   PycairoImageSurface,
+ *   PycairoPDFSurface,
+ *   PycairoPSSurface,
+ *   PycairoSVGSurface,
+ *   PycairoWin32Surface, or
+ *   PycairoXlibSurface from a cairo_surface_t.
  * surface - a cairo_surface_t to 'wrap' into a Python object.
  *           it is unreferenced if the PycairoSurface creation fails, or if
  *           the cairo_surface_t has an error status
@@ -58,7 +59,7 @@
 PyObject *
 PycairoSurface_FromSurface (cairo_surface_t *surface, PyObject *base)
 {
-    PyTypeObject *type;
+    PyTypeObject *type = NULL;
     PyObject *o;
 
     assert (surface != NULL);
@@ -121,7 +122,7 @@ static cairo_status_t
 _write_func (void *closure, const unsigned char *data, unsigned int length)
 {
     PyObject *res = PyObject_CallMethod ((PyObject *)closure, "write", "(s#)",
-					 data, length);
+					 data, (Py_ssize_t)length);
     if (res == NULL) {
 	/* an exception has occurred, it will be picked up later by
 	 * Pycairo_Check_Status()
@@ -177,9 +178,7 @@ surface_finish (PycairoSurface *o)
 {
     cairo_surface_finish (o->surface);
     Py_CLEAR(o->base);
-
-    if (Pycairo_Check_Status (cairo_surface_status(o->surface)))
-	return NULL;
+    RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
     Py_RETURN_NONE;
 }
 
@@ -187,9 +186,7 @@ static PyObject *
 surface_flush (PycairoSurface *o)
 {
     cairo_surface_flush (o->surface);
-
-    if (Pycairo_Check_Status (cairo_surface_status(o->surface)))
-	return NULL;
+    RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
     Py_RETURN_NONE;
 }
 
@@ -229,9 +226,7 @@ surface_mark_dirty (PycairoSurface *o, PyObject *args, PyObject *kwds)
 	return NULL;
 
     cairo_surface_mark_dirty_rectangle (o->surface, x, y, width, height);
-
-    if (Pycairo_Check_Status (cairo_surface_status(o->surface)))
-	return NULL;
+    RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
     Py_RETURN_NONE;
 }
 
@@ -285,8 +280,7 @@ surface_write_to_png (PycairoSurface *o, PyObject *file)
 	status = cairo_surface_write_to_png_stream (o->surface, _write_func,
 						    file);
     }
-    if (Pycairo_Check_Status (status))
-	return NULL;
+    RETURN_NULL_IF_CAIRO_ERROR(status);
     Py_RETURN_NONE;
 }
 #endif  /* CAIRO_HAS_PNG_FUNCTIONS */
@@ -381,73 +375,14 @@ image_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 	       NULL);
 }
 
-#ifdef HAVE_NUMPY
-static PyObject *
-image_surface_create_for_array (PyTypeObject *type, PyObject *args)
-{
-    PyArrayObject *array;
-    cairo_format_t format;
-    cairo_surface_t *surface;
-    int nd;
-
-    if (!load_numpy())
-	return NULL;
-
-    if (!PyArg_ParseTuple(args, "O!:surface_create_for_array",
-			  &PyArray_Type, &array))
-	return NULL;
-
-    if (array->descr->type_num != PyArray_UBYTE) {
-	PyErr_SetString(PyExc_TypeError, "array data must be unsigned bytes");
-	return NULL;
-    }
-
-    nd = array->nd;
-    if (nd < 2) {
-	PyErr_SetString(PyExc_TypeError,
-			"array must have at least two dimensions");
-	return NULL;
-    }
-    if (nd == 2 || (nd == 3 && array->dimensions[2] == 1)) {
-	if (array->strides[1] != 1) {
-	    PyErr_SetString(PyExc_TypeError, "second axis must be contiguous");
-	    return NULL;
-	}
-	format = CAIRO_FORMAT_A8;
-    } else if (nd == 3 && array->dimensions[2] == 3) {
-	if (array->strides[1] != 3) {
-	    PyErr_SetString(PyExc_TypeError, "second axis must be contiguous");
-	    return NULL;
-	}
-	format = CAIRO_FORMAT_RGB24;
-    } else if (nd == 3 && array->dimensions[2] == 4) {
-	if (array->strides[1] != 4) {
-	    PyErr_SetString(PyExc_TypeError, "second axis must be contiguous");
-	    return NULL;
-	}
-	format = CAIRO_FORMAT_ARGB32;
-    } else {
-	PyErr_SetString(PyExc_TypeError,
-			"array must be MxN or MxNxP where P is 1, 3 or 4");
-	return NULL;
-    }
-    surface = cairo_image_surface_create_for_data(
-		                          (unsigned char *) array->data,
-					  format,
-					  array->dimensions[1],
-					  array->dimensions[0],
-					  array->strides[0]);
-    return PycairoSurface_FromSurface(surface, (PyObject *)array);
-}
-#endif /* HAVE_NUMPY */
-
 static PyObject *
 image_surface_create_for_data (PyTypeObject *type, PyObject *args)
 {
     cairo_surface_t *surface;
     cairo_format_t format;
     unsigned char *buffer;
-    int buffer_len, width, height, stride = -1, res;
+    int width, height, stride = -1, res;
+    Py_ssize_t buffer_len;
     PyObject *obj;
 
     if (!PyArg_ParseTuple(args, "Oiii|i:Surface.create_for_data",
@@ -519,6 +454,8 @@ _read_func (void *closure, unsigned char *data, unsigned int length)
 static PyObject *
 image_surface_create_from_png (PyTypeObject *type, PyObject *file)
 {
+    PyObject* reader;
+
     if (PyObject_TypeCheck (file, &PyBaseString_Type)) {
 	return PycairoSurface_FromSurface (
             cairo_image_surface_create_from_png (PyString_AsString(file)),
@@ -526,7 +463,7 @@ image_surface_create_from_png (PyTypeObject *type, PyObject *file)
     }
 
     /* file or file-like object argument */
-    PyObject* reader = PyObject_GetAttrString (file, "read");
+    reader = PyObject_GetAttrString (file, "read");
     if (reader == NULL || !PyCallable_Check (reader)) {
 	Py_XDECREF(reader);
 	PyErr_SetString(PyExc_TypeError,
@@ -577,14 +514,16 @@ static int
 image_surface_buffer_getreadbuf (PycairoImageSurface *o, int segment,
 				 const void **ptr)
 {
+    cairo_surface_t *surface = o->surface;
+    int height, stride;
+
     if (segment != 0) {
 	PyErr_SetString(PyExc_SystemError,
 			"accessing non-existent ImageSurface segment");
 	return -1;
     }
-    cairo_surface_t *surface = o->surface;
-    int height = cairo_image_surface_get_height (surface);
-    int stride = cairo_image_surface_get_stride (surface);
+    height = cairo_image_surface_get_height (surface);
+    stride = cairo_image_surface_get_stride (surface);
     *ptr = (void *) cairo_image_surface_get_data (surface);
     return height * stride;
 }
@@ -593,14 +532,16 @@ static int
 image_surface_buffer_getwritebuf (PycairoImageSurface *o, int segment,
 				  const void **ptr)
 {
+    cairo_surface_t *surface = o->surface;
+    int height, stride;
+
     if (segment != 0) {
 	PyErr_SetString(PyExc_SystemError,
 			"accessing non-existent ImageSurface segment");
 	return -1;
     }
-    cairo_surface_t *surface = o->surface;
-    int height = cairo_image_surface_get_height (surface);
-    int stride = cairo_image_surface_get_stride (surface);
+    height = cairo_image_surface_get_height (surface);
+    stride = cairo_image_surface_get_stride (surface);
     *ptr = (void *) cairo_image_surface_get_data (surface);
     return height * stride;
 }
@@ -620,17 +561,13 @@ image_surface_buffer_getsegcount (PycairoImageSurface *o, int *lenp)
 
 /* See Python C API Manual 10.7 */
 static PyBufferProcs image_surface_as_buffer = {
-    (getreadbufferproc) image_surface_buffer_getreadbuf,
-    (getwritebufferproc)image_surface_buffer_getwritebuf,
-    (getsegcountproc)   image_surface_buffer_getsegcount,
-    (getcharbufferproc) NULL,
+    (readbufferproc) image_surface_buffer_getreadbuf,
+    (writebufferproc)image_surface_buffer_getwritebuf,
+    (segcountproc)   image_surface_buffer_getsegcount,
+    (charbufferproc) NULL,
 };
 
 static PyMethodDef image_surface_methods[] = {
-#ifdef HAVE_NUMPY
-    {"create_for_array",(PyCFunction)image_surface_create_for_array,
-                                                   METH_VARARGS | METH_CLASS },
-#endif
     {"create_for_data",(PyCFunction)image_surface_create_for_data,
                                                    METH_VARARGS | METH_CLASS },
 #ifdef CAIRO_HAS_PNG_FUNCTIONS
@@ -700,7 +637,7 @@ static PyObject *
 pdf_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     double width_in_points, height_in_points;
-    PyObject *file;
+    PyObject *file, *writer;
 
     if (!PyArg_ParseTuple(args, "Odd:PDFSurface.__new__",
 			  &file, &width_in_points, &height_in_points))
@@ -714,7 +651,7 @@ pdf_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 	       NULL);
     }
     /* file or file-like object argument */
-    PyObject* writer = PyObject_GetAttrString (file, "write");
+    writer = PyObject_GetAttrString (file, "write");
     if (writer == NULL || !PyCallable_Check (writer)) {
 	Py_XDECREF(writer);
 	PyErr_SetString(PyExc_TypeError,
@@ -803,7 +740,7 @@ static PyObject *
 ps_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     double width_in_points, height_in_points;
-    PyObject *file;
+    PyObject *file, *writer;
 
     if (!PyArg_ParseTuple(args, "Odd:PSSurface.__new__",
 			  &file, &width_in_points, &height_in_points))
@@ -818,7 +755,7 @@ ps_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 
     }
     /* else: file or file-like object argument */
-    PyObject* writer = PyObject_GetAttrString (file, "write");
+    writer = PyObject_GetAttrString (file, "write");
     if (writer == NULL || !PyCallable_Check (writer)) {
 	Py_XDECREF(writer);
 	PyErr_SetString(PyExc_TypeError,
@@ -838,8 +775,7 @@ static PyObject *
 ps_surface_dsc_begin_page_setup (PycairoPSSurface *o)
 {
     cairo_ps_surface_dsc_begin_page_setup (o->surface);
-    if (Pycairo_Check_Status (cairo_surface_status (o->surface)))
-	return NULL;
+    RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
     Py_RETURN_NONE;
 }
 
@@ -847,8 +783,7 @@ static PyObject *
 ps_surface_dsc_begin_setup (PycairoPSSurface *o)
 {
     cairo_ps_surface_dsc_begin_setup (o->surface);
-    if (Pycairo_Check_Status (cairo_surface_status (o->surface)))
-	return NULL;
+    RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
     Py_RETURN_NONE;
 }
 
@@ -856,13 +791,10 @@ static PyObject *
 ps_surface_dsc_comment (PycairoPSSurface *o, PyObject *args)
 {
     const char *comment;
-
     if (!PyArg_ParseTuple(args, "s:PSSurface.dsc_comment", &comment))
 	return NULL;
-
     cairo_ps_surface_dsc_comment (o->surface, comment);
-    if (Pycairo_Check_Status (cairo_surface_status (o->surface)))
-	return NULL;
+    RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
     Py_RETURN_NONE;
 }
 
@@ -942,7 +874,7 @@ static PyObject *
 svg_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     double width_in_points, height_in_points;
-    PyObject *file;
+    PyObject *file, *writer;
 
     if (!PyArg_ParseTuple(args, "Odd:SVGSurface.__new__",
 			  &file, &width_in_points, &height_in_points))
@@ -956,7 +888,7 @@ svg_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 	       NULL);
     }
     /* else: file or file-like object argument */
-    PyObject* writer = PyObject_GetAttrString (file, "write");
+    writer = PyObject_GetAttrString (file, "write");
     if (writer == NULL || !PyCallable_Check (writer)) {
 	Py_XDECREF(writer);
 	PyErr_SetString(PyExc_TypeError,
@@ -1176,39 +1108,3 @@ PyTypeObject PycairoXlibSurface_Type = {
     0,                                  /* tp_bases */
 };
 #endif  /* CAIRO_HAS_XLIB_SURFACE */
-
-
-/* Numeric routines ------------------------------------------------------- */
-
-#ifdef HAVE_NUMPY
-/* load the Numeric Python module
- * Return 1 if Numeric is available,
- *        0 and set exception if it is not.
- *
- * copied from pygtk
- */
-static int
-load_numpy(void)
-{
-    static int import_done = 0;
-    static PyObject *exc_type=NULL, *exc_value=NULL;
-    PyObject *exc_tb=NULL;
-
-    if (exc_type != NULL) {
-	PyErr_Restore(exc_type, exc_value, NULL);
-	return 0;
-    }
-    if (!import_done) {
-	import_done = 1;
-	import_array();
-	if (PyErr_Occurred()) {
-	    PyErr_Fetch(&exc_type, &exc_value, &exc_tb);
-	    Py_INCREF(exc_type);
-	    Py_XINCREF(exc_value);
-	    PyErr_Restore(exc_type, exc_value, exc_tb);
-	    return 0;
-	}
-    }
-    return 1;
-}
-#endif /* HAVE_NUMPY */

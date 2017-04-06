@@ -6,7 +6,7 @@ Test ImageSurface.get_data()
 import cairo
 import numpy
 
-filename_base = "/tmp/file"
+dir_ = "/tmp/"
 w, h = 128, 128
 
 surface = cairo.ImageSurface (cairo.FORMAT_ARGB32, w, h)
@@ -25,7 +25,7 @@ ctx.close_path()
 ctx.set_source_rgb (0, 0, 0)  # black
 ctx.set_line_width(15)
 ctx.stroke()
-surface.write_to_png (filename_base + "get_data_test1.png")
+surface.write_to_png (dir_ + "get_data_test1.png")
 
 # modify surface using numpy
 buf = surface.get_data()
@@ -34,11 +34,10 @@ buf = surface.get_data()
 # - is a Python bug?
 #buf = buffer (surface1)
 
-a = numpy.frombuffer (buf, numpy.uint8)
-a.shape = (w, h, 4)
+a = numpy.ndarray (shape=(w,h,4), dtype=numpy.uint8, buffer=buf)
 
 # draw a vertical line
 a[:,40,0] = 255  # byte 0 is blue on little-endian systems
 a[:,40,1] = 0
 a[:,40,2] = 0
-surface.write_to_png (filename_base + "get_data_test2.png")
+surface.write_to_png (dir_ + "get_data_test2.png")

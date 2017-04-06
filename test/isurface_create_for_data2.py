@@ -1,39 +1,26 @@
 #!/usr/bin/env python
+"""test cairo.ImageSurface.create_for_data() with a numpy array
 """
-use ImageSurface.create_for_data() to access Numeric, using the buffer
-protocol
-"""
-import math
 
 import cairo
-import Numeric
+import numpy
 
-width, height = 30*16, 30*9
+dir_ = "/tmp/"
+imgW, imgH = 255, 255
+data = numpy.ndarray (shape=(imgH,imgW,4), dtype=numpy.uint8)
 
-data = Numeric.zeros ((width,height,4), Numeric.UInt8)
-stride = width * 4
+for x in range(imgW):
+    for y in range(imgH):
+        alpha = y
+
+        # cairo.FORMAT_ARGB32 uses pre-multiplied alpha
+        data[y][x][0] = int(x * alpha/255.0)
+        data[y][x][1] = int(y * alpha/255.0)
+        data[y][x][2] = 0
+        data[y][x][3] = alpha
+
+stride = imgW * 4
 surface = cairo.ImageSurface.create_for_data (data, cairo.FORMAT_ARGB32,
-                                              width, height, stride);
-del data  # to test that create_for_data() references 'data'
+                                              imgW, imgH, stride)
 ctx = cairo.Context (surface)
-
-ctx.scale (width, height)
-
-pat = cairo.LinearGradient (0.0, 0.0, 0.0, 1.0)
-pat.add_color_stop_rgba (1, 0, 0, 0, 1)
-pat.add_color_stop_rgba (0, 1, 1, 1, 1)
-
-ctx.rectangle (0,0,1,1)
-ctx.set_source (pat)
-ctx.fill ()
-
-pat = cairo.RadialGradient (0.45, 0.4, 0.1,
-                            0.4,  0.4, 0.5)
-pat.add_color_stop_rgba (0, 1, 1, 1, 1)
-pat.add_color_stop_rgba (1, 0, 0, 0, 1)
-
-ctx.set_source (pat)
-ctx.arc (0.5, 0.5, 0.3, 0, 2 * math.pi)
-ctx.fill ()
-
-surface.write_to_png ('for_data2.png')
+surface.write_to_png (dir_ + 'for_data2.png')

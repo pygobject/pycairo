@@ -1,3 +1,177 @@
+=== Pycairo 1.4.0 ===
+2007-03-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+	* README:
+	* NEWS: update for version 1.4.0
+
+2007-03-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* configure.ac:
+	* setup.py:
+	* cairo/cairomodule.c:
+	Set pycairo version to 1.4.0, require cairo 1.4.0
+
+	* cairo/pycairo-context.c (pycairo_get_scaled_font): new binding
+
+2007-01-21  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/pycairo-context.c (pycairo_get_dash)
+	(pycairo_copy_clip_rectangles, pycairo_get_dash_count):
+	update to new API
+
+	* configure.ac:
+	* setup.py:
+	Set pycairo version to 1.3.11, require cairo 1.3.12
+
+2007-01-17  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* README:
+	* NOTES:
+	* configure.ac:
+	* cairo/pycairo-surface.c:
+	Remove Numeric Python support, since Numeric has been made obsolete by
+	numpy, and numpy data can be read using	ImageSurface.create_for_data.
+
+	* test/isurface_create_for_array.py: delete file
+	* test/Makefile.am (EXTRA_DIST): remove isurface_create_for_array.py
+
+2007-01-16  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/cairomodule.c:
+	* cairo/pycairo-context.c:
+	* cairo/pycairo-font.c:
+	* cairo/pycairo-matrix.c:
+	* cairo/pycairo-path.c:
+	* cairo/pycairo-pattern.c:
+	* cairo/pycairo-private.h:
+	* cairo/pycairo-surface.c:
+        Add support for Py_ssize_t from Python 2.5
+
+2007-01-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/pycairo-context.c (_PyGlyphs_AsGlyphs): new utility function
+	used by the pycairo_glyph_extents, pycairo_glyph_path and
+	pycairo_show_glyphs.
+
+2007-01-13  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/pycairo-context.c (pycairo_show_glyphs, pycairo_glyph_path)
+	(pycairo_glyph_extents): new bindings.
+
+	* examples/cairo_snippets/snippets/show_glyphs.py:
+	* examples/cairo_snippets/snippets/glyph_path.py: new examples
+
+	* examples/Makefile.am : add glyph_path.py, show_glyphs.py
+
+2007-01-08  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/pycairo-private.h add RETURN_NULL_IF_CAIRO_SCALED_FONT_ERROR
+	and RETURN_NULL_IF_CAIRO_FONT_OPTIONS_ERROR
+
+	* cairo/pycairo-font.c (scaled_font_extents, scaled_font_text_extents):
+	use RETURN_NULL_IF_CAIRO_SCALED_FONT_ERROR
+	(font_options_set_antialias, font_options_set_hint_metrics)
+	(font_options_set_hint_style, font_options_set_subpixel_order):
+	use RETURN_NULL_IF_CAIRO_FONT_OPTIONS_ERROR
+	(scaled_font_new): usePycairoScaledFont_FromScaledFont
+	(font_options_new): use PycairoFontOptions_FromFontOptions
+
+	* cairo/pycairo-matrix.c (PycairoMatrix_FromMatrix): update comment
+
+	* cairo/pycairo-context.c (pycairo_copy_clip_rectangles): tidy up the
+	loop.
+
+2006-12-28  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/pycairo-context.c:
+	* cairo/pycairo-private.h: Move RETURN_NULL_IF_*_STATUS_ERROR macros
+	to from	pycairo-context.c to pycairo-private.h and rename to
+	RETURN_NULL_IF_CAIRO_*_ERROR
+
+	* cairo/pycairo-private.h: add
+	RETURN_NULL_IF_CAIRO_PATTERN_ERROR, and
+	RETURN_NULL_IF_CAIRO_SURFACE_ERROR
+
+	* cairo/pycairo-pattern.c (gradient_add_color_stop_rgb)
+	(gradient_add_color_stop_rgb): use RETURN_NULL_IF_CAIRO_PATTERN_ERROR
+
+	* cairo/pycairo-surface.c  use RETURN_NULL_IF_CAIRO_SURFACE_ERROR
+
+	* cairo/pycairo-context.c (pycairo_copy_clip_rectangles): new binding
+	(pycairo_new): use PycairoContext_FromContext
+
+2006-12-28  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/pycairo-context.c (pycairo_get_dash): Add new bindings.
+	(pycairo_set_dash): update to be consistent with pycairo_get_dash
+
+2006-12-28  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/cairomodule.c: increment pycairo version to 1.3.1
+
+2006-12-28  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/pycairo-pattern.c (surface_pattern_get_surface)
+	(linear_gradient_get_linear_points)
+	(radial_gradient_get_radial_circles):
+	Add new bindings.
+
+2006-12-28  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/pycairo-surface.c (PycairoSurface_FromSurface): update the
+	comment to list all surfaces supported.
+
+	* cairo/pycairo-pattern.c: use PycairoPattern_FromPattern in all the
+	'*_new' constructors.
+	(solid_pattern_get_rgba): Add new bindings.
+
+2006-12-27  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* configure.ac:
+	* setup.py (pycairo_version):
+	increase pycairo version to 1.3.1 and require cairo 1.3.2
+
+	* cairo/pycairo-context.c (pycairo_clip_extents)
+	(pycairo_get_dash_count):
+	Add new bindings
+
+2006-12-21  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/cairogtkmodule.c: remove file
+	Remove the cairo.gtk module (pygtk 2.7.0 onwards has cairo support
+	built in).
+
+	* configure.ac:
+	* INSTALL:
+	* NOTES:
+	* README:
+	* cairo/Makefile.am:
+	Update files to note the cairo.gtk module no longer exists.
+
+	* examples/gtk/cairo-demo.py:
+	* examples/gtk/cairo-knockout.py:
+	* examples/gtk/hangman.py:
+	* examples/gtk/lsystem.py:
+	* examples/gtk/png_view.py:
+	* examples/gtk/text.py:
+	* examples/cairo_snippets/snippets_gtk.py:
+	Update examples to run without using the cairo.gtk module
+
+2006-12-21  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/pycairo-surface.c: remove unused #include <stdint.h>
+
+	* cairo/pycairo-surface.c:
+	* cairo/pycairo-font.c (scaled_font_new):
+	Make declarations at top of the block - changes to downgrade from C99
+	to ANSI/ISO standard C, patch from Akihiko Hayashi, fixes bug #8910.
+
+2006-11-27  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* configure.ac:
+	* cairo/cairomodule.c:
+	* setup.py (pycairo_version):
+	increment pycairo version to 1.2.7
+
 === Pycairo 1.2.6 ===
 2006-11-27  Steve Chaplin  <steve1097 # yahoo.com.au>
 

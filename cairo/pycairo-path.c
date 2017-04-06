@@ -28,6 +28,7 @@
  * the specific language governing rights and limitations.
  */
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 #ifdef HAVE_CONFIG_H

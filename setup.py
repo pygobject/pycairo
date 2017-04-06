@@ -6,8 +6,8 @@ import distutils.file_util as fut
 import os
 import sys
 
-pycairo_version        = '1.2.6'
-cairo_version_required = '1.2.6'
+pycairo_version        = '1.4.0'
+cairo_version_required = '1.4.0'
 
 # Notes:
 # on Fedora Core 5 module is compiled with 'gcc -g' - why -g?

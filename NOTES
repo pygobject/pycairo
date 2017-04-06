@@ -14,11 +14,6 @@ Features of the Pycairo bindings
 * Pycairo_Check_Status() is called to check the status of cairo operations,
 and raise exceptions as appropriate.
 
-* Includes the cairo.gtk module - a extension module with a single function
-for creating a cairo context from a GdkDrawable.  This makes it possible to
-use the Pycairo with PyGTK. However, this module is not needed when using PyGTK
-2.8 and above.
-
 * Provides a C API that can be used by other Python extensions.
 
 
@@ -163,10 +158,6 @@ Py: surface = cairo.ImageSurface (format, width, height)
       where 'f' is a filename, a file object, or a file-like object
     surface = cairo.ImageSurface.create_for_data (data, format, w, h, stride)
       where 'data' if a writable Python buffer object
-
-    extra pycairo ImageSurface creation methods:
-    surface = cairo.ImageSurface.create_for_array (array)
-                where 'array' is a Numerical Python array
 
 C:  surface = cairo_pdf_surface_create (filename, width_in_points,
 				        height_in_points);

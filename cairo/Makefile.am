@@ -20,12 +20,3 @@ _cairo_la_SOURCES = \
   pycairo-pattern.c \
   pycairo-surface.c \
   cairomodule.c
-
-if WITH_PYGTK
-pycairoexec_LTLIBRARIES += gtk.la
-gtk_la_LDFLAGS = -module -avoid-version -export-symbols-regex initgtk
-gtk_la_LIBADD = $(CAIRO_LIBS) $(GTK_LIBS)
-gtk_la_CPPFLAGS = $(PYTHON_INCLUDES) $(CAIRO_CFLAGS) $(GTK_CFLAGS)
-gtk_la_SOURCES = \
-  cairogtkmodule.c
-endif

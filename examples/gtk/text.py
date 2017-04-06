@@ -2,14 +2,10 @@
 
 import cairo
 import gtk
-if gtk.pygtk_version < (2,7,0):
-    import cairo.gtk
+
 
 def expose_event(widget, event):
-    if gtk.pygtk_version >= (2,7,0):
-        ctx = widget.window.cairo_create()
-    else:
-        ctx = cairo.gtk.gdk_cairo_create(widget.window)
+    ctx = widget.window.cairo_create()
 
     ctx.set_line_width(6)
     ctx.set_tolerance(.1)

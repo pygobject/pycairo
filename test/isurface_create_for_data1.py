@@ -1,36 +1,28 @@
 #!/usr/bin/env python
+"""test cairo.ImageSurface.create_for_data() with a Python array
+"""
 
 import array
-import math
 
 import cairo
 
-width, height = 30*16, 30*9
+dir_ = "/tmp/"
+imgW, imgH = 255, 255
+data = array.array('B', [0] * imgW * imgH * 4)
 
-data = array.array('c', 'a' * width * height * 4)
-stride = width * 4
+for y in range(imgH):
+    for x in range(imgW):
+        offset = (x + (y * imgW)) * 4
+        alpha = y
+
+        # cairo.FORMAT_ARGB32 uses pre-multiplied alpha
+        data[offset+0] = int(x * alpha/255.0) # B
+        data[offset+1] = int(y * alpha/255.0) # G
+        data[offset+2] = 0                    # R
+        data[offset+3] = alpha                # A
+
+stride = imgW * 4
 surface = cairo.ImageSurface.create_for_data (data, cairo.FORMAT_ARGB32,
-                                              width, height, stride);
-del data  # to test that create_for_data() references 'data'
+                                              imgW, imgH, stride)
 ctx = cairo.Context (surface)
-
-ctx.scale (width, height)
-
-pat = cairo.LinearGradient (0.0, 0.0, 0.0, 1.0)
-pat.add_color_stop_rgba (1, 0, 0, 0, 1)
-pat.add_color_stop_rgba (0, 1, 1, 1, 1)
-
-ctx.rectangle (0,0,1,1)
-ctx.set_source (pat)
-ctx.fill ()
-
-pat = cairo.RadialGradient (0.45, 0.4, 0.1,
-                            0.4,  0.4, 0.5)
-pat.add_color_stop_rgba (0, 1, 1, 1, 1)
-pat.add_color_stop_rgba (1, 0, 0, 0, 1)
-
-ctx.set_source (pat)
-ctx.arc (0.5, 0.5, 0.3, 0, 2 * math.pi)
-ctx.fill ()
-
-surface.write_to_png ('for_data1.png')
+surface.write_to_png (dir_ + 'for_data1.png')

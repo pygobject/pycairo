@@ -28,6 +28,7 @@
  * the specific language governing rights and limitations.
  */
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 #ifdef HAVE_CONFIG_H
@@ -40,17 +41,14 @@
  * Create a new PycairoMatrix from a cairo_matrix_t
  * matrix - a cairo_matrix_t to 'wrap' into a Python object
  * Return value: New reference or NULL on failure
- *
- * takes a copy of cairo_matrix_t
  */
 PyObject *
 PycairoMatrix_FromMatrix (const cairo_matrix_t *matrix)
 {
     PyObject *o;
-
     assert (matrix != NULL);
     o = PycairoMatrix_Type.tp_alloc (&PycairoMatrix_Type, 0);
-    if (o)
+    if (o != NULL)
 	((PycairoMatrix *)o)->matrix = *matrix;
     return o;
 }
@@ -208,7 +206,7 @@ matrix_transform_point (PycairoMatrix *o, PyObject *args)
 }
 
 static PyObject *
-matrix_item (PycairoMatrix *o, int i)
+matrix_item (PycairoMatrix *o, Py_ssize_t i)
 {
     switch (i) {
     case 0:
@@ -240,7 +238,7 @@ static PyNumberMethods matrix_as_number = {
   (unaryfunc)0,
   (unaryfunc)0,
   (unaryfunc)0,
-  (inquiry)0,
+  (lenfunc)0,
   (unaryfunc)0,
   (binaryfunc)0,
   (binaryfunc)0,
@@ -259,7 +257,7 @@ static PySequenceMethods matrix_as_sequence = {
     0,                  		/* sq_length */
     0,                  		/* sq_concat */
     0,                  		/* sq_repeat */
-    (intargfunc)matrix_item,		/* sq_item */
+    (ssizeargfunc)matrix_item,		/* sq_item */
     0,                     		/* sq_slice */
     0,					/* sq_ass_item */
     0,					/* sq_ass_slice */

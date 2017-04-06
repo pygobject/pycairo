@@ -6,15 +6,10 @@ import sys
 
 import cairo
 import gtk
-if gtk.pygtk_version < (2,7,0):
-    import cairo.gtk
 
 
 def expose_event(widget, event, surface):
-    if gtk.pygtk_version >= (2,7,0):
-        ctx = widget.window.cairo_create()
-    else:
-        ctx = cairo.gtk.gdk_cairo_create(widget.window)
+    ctx = widget.window.cairo_create()
     ctx.set_source_surface(surface, 0,0)
     ctx.paint()
 

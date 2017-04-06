@@ -3,8 +3,6 @@
 """
 import cairo
 import gtk
-if gtk.pygtk_version < (2,7,0):
-    import cairo.gtk
 
 SIZE = 30
 
@@ -80,10 +78,7 @@ def stroke_shapes(ctx, x, y):
     draw_shapes(ctx, x, y, False)
 
 def expose (da, event):
-    if gtk.pygtk_version < (2,7,0):
-        ctx = cairo.gtk.gdk_cairo_create(da.window)
-    else:
-        ctx = da.window.cairo_create()
+    ctx = da.window.cairo_create()
 
     ctx.set_source_rgb(0, 0, 0)
 

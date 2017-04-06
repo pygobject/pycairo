@@ -28,6 +28,7 @@
  * the specific language governing rights and limitations.
  */
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 #ifdef HAVE_CONFIG_H
@@ -36,9 +37,9 @@
 #include "pycairo-private.h"
 
 #define VERSION_MAJOR 1
-#define VERSION_MINOR 2
-#define VERSION_MICRO 6
-static char pycairo_version_string[] = "1.2.6";
+#define VERSION_MINOR 4
+#define VERSION_MICRO 0
+static char pycairo_version_string[] = "1.4.0";
 
 
 /* A module specific exception */

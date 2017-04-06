@@ -29,8 +29,6 @@ from random import randint
 
 import cairo
 import gtk
-if gtk.pygtk_version < (2,7,0):
-    import cairo.gtk
 
 letters_guessed = ""
 letters_guessed_right = ""
@@ -65,11 +63,7 @@ def expose_event(widget, event):
         size = height
 
     pixmap = gtk.gdk.Pixmap (widget.window, width, height)
-
-    if gtk.pygtk_version < (2,7,0):
-        ctx = cairo.gtk.gdk_cairo_create(pixmap)
-    else:
-        ctx = pixmap.cairo_create()
+    ctx = pixmap.cairo_create()
 
     # set the background
     ctx.set_source_rgb(0.7,0.7,0.7)
