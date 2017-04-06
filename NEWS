@@ -1,3 +1,30 @@
+Overview of changes from pycairo 0.9.0 to pycairo 1.0.0
+=======================================================
+General changes:
+Pycairo has been updated to work with cairo 1.0.0.
+
+New cairo functions supported:
+    cairo.cairo_version()
+    cairo.cairo_version_string()
+    PSSurface.set_dpi()
+
+Patterns are now implemented in a class hierarchy, the new constructors are:
+    cairo.SolidPattern (r, g, b, a=1.0)
+    cairo.SurfacePattern (surface)
+    cairo.LinearGradient (x0, y0, x1, y1)
+    cairo.RadialGradient (cx0, cy0, radius0, cx1, cy1, radius1)
+
+Updated functions:
+    Surface.write_to_png() now accepts a file object as well as a filename
+
+Updated examples:
+    The gtk examples now work with pygtk >= 2.7.0 without requiring the
+    cairo.gtk module
+
+Bug Fixes
+    fix "initializer element is not constant" compiler warnings
+
+
 Overview of changes from pycairo 0.6.0 to pycairo 0.9.0
 =======================================================
 General changes:

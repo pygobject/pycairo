@@ -1,4 +1,4 @@
-/* -*- mode: C; c-basic-offset: 4 -*- 
+/* -*- mode: C; c-basic-offset: 4 -*-
  *
  * Pycairo - Python bindings for cairo
  *
@@ -75,7 +75,7 @@ matrix_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 
     o = type->tp_alloc(type, 0);
     if (o)
-	cairo_matrix_init (&((PycairoMatrix *)o)->matrix, 
+	cairo_matrix_init (&((PycairoMatrix *)o)->matrix,
 			   xx, yx, xy, yy, x0, y0);
     return o;
 }
@@ -134,8 +134,8 @@ static PyObject *
 matrix_get_value (PycairoMatrix *o)
 {
     return Py_BuildValue("(dddddd)",
-			 o->matrix.xx, o->matrix.yx, 
-			 o->matrix.xy, o->matrix.yy, 
+			 o->matrix.xx, o->matrix.yx,
+			 o->matrix.xy, o->matrix.yy,
 			 o->matrix.x0, o->matrix.y0);
 }
 
@@ -187,8 +187,8 @@ matrix_repr (PycairoMatrix *o)
     char buf[256];
 
     PyOS_snprintf(buf, sizeof(buf), "cairo.Matrix(%g, %g, %g, %g, %g, %g)",
-		  o->matrix.xx, o->matrix.yx, 
-		  o->matrix.xy, o->matrix.yy, 
+		  o->matrix.xx, o->matrix.yx,
+		  o->matrix.xy, o->matrix.yy,
 		  o->matrix.x0, o->matrix.y0);
     return PyString_FromString(buf);
 }
@@ -226,7 +226,7 @@ matrix_rotate (PycairoMatrix *o, PyObject *args)
 
     if (!PyArg_ParseTuple(args, "d:Matrix.rotate", &radians))
 	return NULL;
-    
+
     cairo_matrix_rotate (&o->matrix, radians);
     Py_RETURN_NONE;
 }
@@ -238,7 +238,7 @@ matrix_scale (PycairoMatrix *o, PyObject *args)
 
     if (!PyArg_ParseTuple(args, "dd:Matrix.scale", &sx, &sy))
 	return NULL;
-    
+
     cairo_matrix_scale (&o->matrix, sx, sy);
     Py_RETURN_NONE;
 }
@@ -250,7 +250,7 @@ matrix_translate (PycairoMatrix *o, PyObject *args)
 
     if (!PyArg_ParseTuple(args, "dd:Matrix.translate", &tx, &ty))
 	return NULL;
-    
+
     cairo_matrix_translate (&o->matrix, tx, ty);
     Py_RETURN_NONE;
 }
@@ -289,7 +289,7 @@ static PyMethodDef matrix_methods[] = {
      * cairo_matrix_init_scale()       cairo.Matrix(xx=xx,yy=yy)
      * cairo_matrix_init_rotate()      cairo.Matrix.init_rotate(radians)
      */
-    {"init_rotate", (PyCFunction)matrix_init_rotate,           
+    {"init_rotate", (PyCFunction)matrix_init_rotate,
                                                    METH_VARARGS | METH_CLASS },
     {"invert",      (PyCFunction)matrix_invert,                METH_NOARGS },
     {"rotate",      (PyCFunction)matrix_rotate,                METH_VARARGS },
@@ -313,7 +313,7 @@ static PyGetSetDef matrix_getsets[] = {
 };
 
 PyTypeObject PycairoMatrix_Type = {
-    PyObject_HEAD_INIT(&PyType_Type)
+    PyObject_HEAD_INIT(NULL)
     0,                                  /* ob_size */
     "cairo.Matrix",                     /* tp_name */
     sizeof(PycairoMatrix),              /* tp_basicsize */
@@ -344,7 +344,7 @@ PyTypeObject PycairoMatrix_Type = {
     matrix_methods,                     /* tp_methods */
     0,                                  /* tp_members */
     matrix_getsets,                     /* tp_getset */
-    &PyBaseObject_Type,                 /* tp_base */
+    0, /* &PyBaseObject_Type, */        /* tp_base */
     0,                                  /* tp_dict */
     0,                                  /* tp_descr_get */
     0,                                  /* tp_descr_set */

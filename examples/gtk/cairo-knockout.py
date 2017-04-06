@@ -6,9 +6,10 @@ from __future__ import division
 import math
 import sys
 
-import gtk
 import cairo
-import cairo.gtk
+import gtk
+if gtk.pygtk_version < (2,7,0):
+    import cairo.gtk
 
 
 def oval_path(ctx, xc, yc, xr, yr):
@@ -105,7 +106,10 @@ def draw (ctx, width, height):
     ctx.paint()
 
 def expose(drawingarea, event):
-    ctx = cairo.gtk.gdk_cairo_create(drawingarea.window)
+    if gtk.pygtk_version >= (2,7,0):
+        ctx = drawingarea.window.cairo_create()
+    else:
+        ctx = cairo.gtk.gdk_cairo_create(drawingarea.window)
 
     draw (ctx, drawingarea.allocation.width, drawingarea.allocation.height)
 

@@ -78,7 +78,15 @@ static Pycairo_CAPI_t CAPI = {
     &PycairoFontOptions_Type,  PycairoFontOptions_FromFontOptions,
     &PycairoMatrix_Type,       PycairoMatrix_FromMatrix,
     &PycairoPath_Type,         PycairoPath_FromPath,
-    &PycairoPattern_Type,      PycairoPattern_FromPattern,
+
+    &PycairoPattern_Type,
+    &PycairoSolidPattern_Type,
+    &PycairoSurfacePattern_Type,
+    &PycairoGradient_Type,
+    &PycairoLinearGradient_Type,
+    &PycairoRadialGradient_Type,
+                               PycairoPattern_FromPattern,
+
     &PycairoScaledFont_Type,   PycairoScaledFont_FromScaledFont,
 
     &PycairoSurface_Type,
@@ -103,44 +111,93 @@ static Pycairo_CAPI_t CAPI = {
     Pycairo_Check_Status,
 };
 
+static PyObject *
+pycairo_cairo_version (PyObject *self)
+{
+    return PyInt_FromLong (cairo_version());
+}
+
+static PyObject *
+pycairo_cairo_version_string (PyObject *self)
+{
+    return PyString_FromString (cairo_version_string());
+}
+
+static PyMethodDef cairo_functions[] = {
+    {"cairo_version",    (PyCFunction)pycairo_cairo_version, METH_NOARGS},
+    {"cairo_version_string", (PyCFunction)pycairo_cairo_version_string,
+                                                             METH_NOARGS},
+    {NULL, NULL, 0, NULL},
+};
+
+
 DL_EXPORT(void)
 init_cairo(void)
 {
     PyObject *m;
 
+    PycairoContext_Type.tp_base = &PyBaseObject_Type;
     if (PyType_Ready(&PycairoContext_Type) < 0)
         return;
+    PycairoFontFace_Type.tp_base = &PyBaseObject_Type;
     if (PyType_Ready(&PycairoFontFace_Type) < 0)
         return;
+    PycairoFontOptions_Type.tp_base = &PyBaseObject_Type;
     if (PyType_Ready(&PycairoFontOptions_Type) < 0)
         return;
+    PycairoMatrix_Type.tp_base = &PyBaseObject_Type;
     if (PyType_Ready(&PycairoMatrix_Type) < 0)
         return;
+    PycairoPath_Type.tp_base = &PyBaseObject_Type;
     if (PyType_Ready(&PycairoPath_Type) < 0)
 	return;
+
+    PycairoPattern_Type.tp_base = &PyBaseObject_Type;
     if (PyType_Ready(&PycairoPattern_Type) < 0)
         return;
+    PycairoSolidPattern_Type.tp_base = &PycairoPattern_Type;
+    if (PyType_Ready(&PycairoSolidPattern_Type) < 0)
+        return;
+    PycairoSurfacePattern_Type.tp_base = &PycairoPattern_Type;
+    if (PyType_Ready(&PycairoSurfacePattern_Type) < 0)
+        return;
+    PycairoGradient_Type.tp_base = &PycairoPattern_Type;
+    if (PyType_Ready(&PycairoGradient_Type) < 0)
+        return;
+    PycairoLinearGradient_Type.tp_base = &PycairoGradient_Type;
+    if (PyType_Ready(&PycairoLinearGradient_Type) < 0)
+        return;
+    PycairoRadialGradient_Type.tp_base = &PycairoGradient_Type;
+    if (PyType_Ready(&PycairoRadialGradient_Type) < 0)
+        return;
+
+    PycairoScaledFont_Type.tp_base = &PyBaseObject_Type;
     if (PyType_Ready(&PycairoScaledFont_Type) < 0)
         return;
 
+    PycairoSurface_Type.tp_base = &PyBaseObject_Type;
     if (PyType_Ready(&PycairoSurface_Type) < 0)
         return;
+    PycairoImageSurface_Type.tp_base = &PycairoSurface_Type;
     if (PyType_Ready(&PycairoImageSurface_Type) < 0)
         return;
 #ifdef CAIRO_HAS_PDF_SURFACE
+    PycairoPDFSurface_Type.tp_base = &PycairoSurface_Type;
     if (PyType_Ready(&PycairoPDFSurface_Type) < 0)
         return;
 #endif
 #ifdef CAIRO_HAS_PS_SURFACE
+    PycairoPSSurface_Type.tp_base = &PycairoSurface_Type;
     if (PyType_Ready(&PycairoPSSurface_Type) < 0)
         return;
 #endif
 #ifdef CAIRO_HAS_WIN32_SURFACE
+    PycairoWin32Surface_Type.tp_base = &PycairoSurface_Type;
     if (PyType_Ready(&PycairoWin32Surface_Type) < 0)
         return;
 #endif
 
-    m = Py_InitModule("cairo._cairo", NULL);
+    m = Py_InitModule("cairo._cairo", cairo_functions);
 
     Py_INCREF(&PycairoContext_Type);
     PyModule_AddObject(m, "Context", (PyObject *)&PycairoContext_Type);
@@ -156,6 +213,21 @@ init_cairo(void)
      */
     Py_INCREF(&PycairoPattern_Type);
     PyModule_AddObject(m, "Pattern", (PyObject *)&PycairoPattern_Type);
+    Py_INCREF(&PycairoSolidPattern_Type);
+    PyModule_AddObject(m, "SolidPattern",
+		       (PyObject *)&PycairoSolidPattern_Type);
+    Py_INCREF(&PycairoSurfacePattern_Type);
+    PyModule_AddObject(m, "SurfacePattern",
+		       (PyObject *)&PycairoSurfacePattern_Type);
+    Py_INCREF(&PycairoGradient_Type);
+    PyModule_AddObject(m, "Gradient", (PyObject *)&PycairoGradient_Type);
+    Py_INCREF(&PycairoLinearGradient_Type);
+    PyModule_AddObject(m, "LinearGradient",
+		       (PyObject *)&PycairoLinearGradient_Type);
+    Py_INCREF(&PycairoRadialGradient_Type);
+    PyModule_AddObject(m, "RadialGradient",
+		       (PyObject *)&PycairoRadialGradient_Type);
+
     Py_INCREF(&PycairoScaledFont_Type);
     PyModule_AddObject(m, "ScaledFont", (PyObject *)&PycairoScaledFont_Type);
 

@@ -1,4 +1,4 @@
-/* -*- mode: C; c-basic-offset: 4 -*- 
+/* -*- mode: C; c-basic-offset: 4 -*-
  *
  * Pycairo - Python bindings for cairo
  *
@@ -49,7 +49,7 @@ PycairoFontFace_FromFontFace (cairo_font_face_t *font_face)
 {
     PyObject *o;
 
-    assert (font_face != NULL);	
+    assert (font_face != NULL);
 
     if (Pycairo_Check_Status (cairo_font_face_status (font_face))) {
 	cairo_font_face_destroy (font_face);
@@ -91,7 +91,7 @@ font_face_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 /*
 static PyMethodDef font_face_methods[] = {
      * methods never exposed in a language binding:
-     * cairo_font_face_destroy()  
+     * cairo_font_face_destroy()
      * cairo_font_face_reference()
      * cairo_font_face_get_user_data()
      * cairo_font_face_set_user_data(),
@@ -101,7 +101,7 @@ static PyMethodDef font_face_methods[] = {
 */
 
 PyTypeObject PycairoFontFace_Type = {
-    PyObject_HEAD_INIT(&PyType_Type)
+    PyObject_HEAD_INIT(NULL)
     0,                                  /* ob_size */
     "cairo.FontFace",                   /* tp_name */
     sizeof(PycairoFontFace),            /* tp_basicsize */
@@ -132,7 +132,7 @@ PyTypeObject PycairoFontFace_Type = {
     0,                                  /* tp_methods */
     0,                                  /* tp_members */
     0,                                  /* tp_getset */
-    &PyBaseObject_Type,                 /* tp_base */
+    0, /* &PyBaseObject_Type, */        /* tp_base */
     0,                                  /* tp_dict */
     0,                                  /* tp_descr_get */
     0,                                  /* tp_descr_set */
@@ -159,7 +159,7 @@ PycairoScaledFont_FromScaledFont (cairo_scaled_font_t *scaled_font)
 {
     PyObject *o;
 
-    assert (scaled_font != NULL);	
+    assert (scaled_font != NULL);
 
     if (Pycairo_Check_Status (cairo_scaled_font_status (scaled_font))) {
 	cairo_scaled_font_destroy (scaled_font);
@@ -206,7 +206,7 @@ scaled_font_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 
     PyObject *o = type->tp_alloc(type, 0);
     if (o) {
-	cairo_scaled_font_t *scaled_font = cairo_scaled_font_create 
+	cairo_scaled_font_t *scaled_font = cairo_scaled_font_create
 	    (ff->font_face, &mx1->matrix, &mx2->matrix, fo->font_options);
 
 	if (Pycairo_Check_Status (cairo_scaled_font_status (scaled_font))) {
@@ -227,13 +227,13 @@ scaled_font_extents (PycairoScaledFont *o)
     cairo_scaled_font_extents (o->scaled_font, &e);
     if (Pycairo_Check_Status (cairo_scaled_font_status(o->scaled_font)))
 	return NULL;
-    return Py_BuildValue ("(ddddd)", e.ascent, e.descent, e.height, 
+    return Py_BuildValue ("(ddddd)", e.ascent, e.descent, e.height,
 			  e.max_x_advance, e.max_y_advance);
 }
 
 static PyMethodDef scaled_font_methods[] = {
     /* methods never exposed in a language binding:
-     * cairo_scaled_font_destroy()  
+     * cairo_scaled_font_destroy()
      * cairo_scaled_font_reference()
      */
     /* glyph_extents - undocumented */
@@ -243,7 +243,7 @@ static PyMethodDef scaled_font_methods[] = {
 
 
 PyTypeObject PycairoScaledFont_Type = {
-    PyObject_HEAD_INIT(&PyType_Type)
+    PyObject_HEAD_INIT(NULL)
     0,                                  /* ob_size */
     "cairo.ScaledFont",                 /* tp_name */
     sizeof(PycairoScaledFont),          /* tp_basicsize */
@@ -274,7 +274,7 @@ PyTypeObject PycairoScaledFont_Type = {
     scaled_font_methods,                /* tp_methods */
     0,                                  /* tp_members */
     0,                                  /* tp_getset */
-    &PyBaseObject_Type,                 /* tp_base */
+    0, /* &PyBaseObject_Type, */        /* tp_base */
     0,                                  /* tp_dict */
     0,                                  /* tp_descr_get */
     0,                                  /* tp_descr_set */
@@ -301,7 +301,7 @@ PycairoFontOptions_FromFontOptions (cairo_font_options_t *font_options)
 {
     PyObject *o;
 
-    assert (font_options != NULL);	
+    assert (font_options != NULL);
 
     if (Pycairo_Check_Status (cairo_font_options_status (font_options))) {
 	cairo_font_options_destroy (font_options);
@@ -352,7 +352,7 @@ font_options_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 
 static PyMethodDef font_options_methods[] = {
     /* methods never exposed in a language binding:
-     * cairo_font_options_destroy()  
+     * cairo_font_options_destroy()
      * cairo_font_options_reference()
      */
     /* TODO:
@@ -369,7 +369,7 @@ static PyMethodDef font_options_methods[] = {
 
 
 PyTypeObject PycairoFontOptions_Type = {
-    PyObject_HEAD_INIT(&PyType_Type)
+    PyObject_HEAD_INIT(NULL)
     0,                                  /* ob_size */
     "cairo.FontOptions",                /* tp_name */
     sizeof(PycairoFontOptions),         /* tp_basicsize */
@@ -400,7 +400,7 @@ PyTypeObject PycairoFontOptions_Type = {
     font_options_methods,               /* tp_methods */
     0,                                  /* tp_members */
     0,                                  /* tp_getset */
-    &PyBaseObject_Type,                 /* tp_base */
+    0, /* &PyBaseObject_Type, */        /* tp_base */
     0,                                  /* tp_dict */
     0,                                  /* tp_descr_get */
     0,                                  /* tp_descr_set */

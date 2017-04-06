@@ -191,16 +191,41 @@ surface_set_device_offset (PycairoSurface *o, PyObject *args)
 }
 
 #ifdef CAIRO_HAS_PNG_FUNCTIONS
-static PyObject *
-surface_write_to_png (PycairoSurface *o, PyObject *args)
+static cairo_status_t
+pycairo_write_func (void *closure, unsigned char *data, unsigned int length)
 {
-    const char *filename;
+    if (fwrite (data, 1, (size_t) length, (FILE *)closure) != length)
+	return CAIRO_STATUS_WRITE_ERROR;
+    return CAIRO_STATUS_SUCCESS;
+}
+
+/* METH_O */
+static PyObject *
+surface_write_to_png (PycairoSurface *o, PyObject *file)
+{
+    FILE *fp;
     cairo_status_t status;
 
-    if (!PyArg_ParseTuple (args, "s:Surface.write_to_png", &filename))
-	return NULL;
+    if (PyObject_TypeCheck (file, &PyBaseString_Type)) {
+	fp = fopen (PyString_AsString(file), "wb");
+	if (fp == NULL) {
+	    PyErr_SetString(PyExc_IOError, "unable to open file for writing");
+	    return NULL;
+	}
+    } else if (PyObject_TypeCheck (file, &PyFile_Type)) {
+	fp = PyFile_AsFile(file);
 
-    status = cairo_surface_write_to_png (o->surface, filename);
+    } else {
+	PyErr_SetString(PyExc_TypeError,
+			"Surface.write_to_png takes one argument "
+			"which must be a filename (str) or file object");
+	return NULL;
+    }
+    status = cairo_surface_write_to_png_stream (o->surface, pycairo_write_func,
+						fp);
+    if (PyObject_TypeCheck (file, &PyBaseString_Type))
+    	fclose (fp);
+
     if (Pycairo_Check_Status (status))
 	return NULL;
     Py_RETURN_NONE;
@@ -223,15 +248,14 @@ static PyMethodDef surface_methods[] = {
     {"set_device_offset",(PyCFunction)surface_set_device_offset,
                                                                 METH_VARARGS },
 #ifdef CAIRO_HAS_PNG_FUNCTIONS
-    {"write_to_png",   (PyCFunction)surface_write_to_png,      METH_VARARGS },
-    /* write_to_png_stream */
+    {"write_to_png",   (PyCFunction)surface_write_to_png,      METH_O },
 #endif
     {NULL, NULL, 0, NULL},
 };
 
 
 PyTypeObject PycairoSurface_Type = {
-    PyObject_HEAD_INIT(&PyType_Type)
+    PyObject_HEAD_INIT(NULL)
     0,                                  /* ob_size */
     "cairo.Surface",                    /* tp_name */
     sizeof(PycairoSurface),             /* tp_basicsize */
@@ -262,7 +286,7 @@ PyTypeObject PycairoSurface_Type = {
     surface_methods,                    /* tp_methods */
     0,                                  /* tp_members */
     0,                                  /* tp_getset */
-    &PyBaseObject_Type,                 /* tp_base */
+    0, /* &PyBaseObject_Type, */        /* tp_base */
     0,                                  /* tp_dict */
     0,                                  /* tp_descr_get */
     0,                                  /* tp_descr_set */
@@ -492,7 +516,7 @@ static PyMethodDef image_surface_methods[] = {
 
 
 PyTypeObject PycairoImageSurface_Type = {
-    PyObject_HEAD_INIT(&PyType_Type)
+    PyObject_HEAD_INIT(NULL)
     0,                                  /* ob_size */
     "cairo.ImageSurface",               /* tp_name */
     sizeof(PycairoImageSurface),        /* tp_basicsize */
@@ -523,7 +547,7 @@ PyTypeObject PycairoImageSurface_Type = {
     image_surface_methods,              /* tp_methods */
     0,                                  /* tp_members */
     0,                                  /* tp_getset */
-    &PycairoSurface_Type,               /* tp_base */
+    0, /* &PycairoSurface_Type, */      /* tp_base */
     0,                                  /* tp_dict */
     0,                                  /* tp_descr_get */
     0,                                  /* tp_descr_set */
@@ -584,7 +608,7 @@ static PyMethodDef pdfsurface_methods[] = {
 };
 
 PyTypeObject PycairoPDFSurface_Type = {
-    PyObject_HEAD_INIT(&PyType_Type)
+    PyObject_HEAD_INIT(NULL)
     0,                                  /* ob_size */
     "cairo.PDFSurface",                 /* tp_name */
     sizeof(PycairoPDFSurface),          /* tp_basicsize */
@@ -615,7 +639,7 @@ PyTypeObject PycairoPDFSurface_Type = {
     pdfsurface_methods,                 /* tp_methods */
     0,                                  /* tp_members */
     0,                                  /* tp_getset */
-    &PycairoSurface_Type,               /* tp_base */
+    0, /* &PycairoSurface_Type, */      /* tp_base */
     0,                                  /* tp_dict */
     0,                                  /* tp_descr_get */
     0,                                  /* tp_descr_set */
@@ -659,7 +683,7 @@ ps_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
     }
     return o;
 }
-/* declared in cairo-ps.h but function does not exist!
+
 static PyObject *
 ps_surface_set_dpi (PycairoPSSurface *o, PyObject *args)
 {
@@ -670,14 +694,14 @@ ps_surface_set_dpi (PycairoPSSurface *o, PyObject *args)
     cairo_ps_surface_set_dpi (o->surface, x_dpi, y_dpi);
     Py_RETURN_NONE;
 }
-*/
+
 static PyMethodDef pssurface_methods[] = {
-    /*{"set_dpi", (PyCFunction)ps_surface_set_dpi,    METH_VARARGS },*/
+    {"set_dpi", (PyCFunction)ps_surface_set_dpi,    METH_VARARGS },
     {NULL, NULL, 0, NULL},
 };
 
 PyTypeObject PycairoPSSurface_Type = {
-    PyObject_HEAD_INIT(&PyType_Type)
+    PyObject_HEAD_INIT(NULL)
     0,                                  /* ob_size */
     "cairo.PSSurface",                  /* tp_name */
     sizeof(PycairoPSSurface),           /* tp_basicsize */
@@ -708,7 +732,7 @@ PyTypeObject PycairoPSSurface_Type = {
     pssurface_methods,                  /* tp_methods */
     0,                                  /* tp_members */
     0,                                  /* tp_getset */
-    &PycairoSurface_Type,               /* tp_base */
+    0, /* &PycairoSurface_Type, */      /* tp_base */
     0,                                  /* tp_dict */
     0,                                  /* tp_descr_get */
     0,                                  /* tp_descr_set */
@@ -755,7 +779,7 @@ static PyMethodDef win32surface_methods[] = {
 };
 
 PyTypeObject PycairoWin32Surface_Type = {
-    PyObject_HEAD_INIT(&PyType_Type)
+    PyObject_HEAD_INIT(NULL)
     0,                                  /* ob_size */
     "cairo.Win32Surface",               /* tp_name */
     sizeof(PycairoWin32Surface),        /* tp_basicsize */
@@ -786,7 +810,7 @@ PyTypeObject PycairoWin32Surface_Type = {
     win32surface_methods,               /* tp_methods */
     0,                                  /* tp_members */
     0,                                  /* tp_getset */
-    &PycairoSurface_Type,               /* tp_base */
+    0, /* &PycairoSurface_Type, */      /* tp_base */
     0,                                  /* tp_dict */
     0,                                  /* tp_descr_get */
     0,                                  /* tp_descr_set */

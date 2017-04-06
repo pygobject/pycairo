@@ -7,19 +7,24 @@ from __future__ import division
 import os
 import sys
 
-import gtk
 import cairo
 import cairo.svg
-import cairo.gtk
+import gobject
+import gtk
+if gtk.pygtk_version < (2,7,0):
+    import cairo.gtk
 
 
 action_list = [
-    ('FileMenu',   None,                 '_File'),
-    ('Open',       gtk.STOCK_OPEN,       '_Open',       '<CTL>O',      'Open a file',       'cb_open'),
-    ('Quit',       gtk.STOCK_QUIT,       '_Quit',       '<CTL>Q',      'Quit application',  'cb_quit'),
+    ('FileMenu',   None,           '_File'),
+    ('Open',       gtk.STOCK_OPEN, '_Open', '<CTL>O', 'Open a file',
+     'cb_open'),
+    ('Quit',       gtk.STOCK_QUIT, '_Quit', '<CTL>Q', 'Quit application',
+     'cb_quit'),
     ]
 
-ui_string = """<ui>
+ui_string = """\
+<ui>
   <menubar name='MenuBar'>
     <menu action='FileMenu'>
       <menuitem action='Open'/>
@@ -33,7 +38,7 @@ ui_string = """<ui>
 def fix_actions (actions, instance):
     "UIManager Helper function to map method strings to an instance method"
     retval = []
-    
+
     for action in actions:
         if len (action) >= 6: # action[5] is the callcack function as a string
             action = action[0:5] + (getattr (instance, action[5]),) + \
@@ -47,14 +52,14 @@ def gdkcolor_to_rgb (gdkcolor):
 
 
 class Window (gtk.Window):
-    def __init__ (self, title=None, type=gtk.WINDOW_TOPLEVEL):
-        gtk.Window.__init__ (self, type)
+    def __init__ (self, title=None):
+        gtk.Window.__init__ (self)
         if title:
             self.set_title (title)
         self.set_default_size(300, 200)
 
-        self.af     = None
-        self.da     = None
+        self.af = None
+        self.da = None
 
         self.vbox = gtk.VBox()
         self.add (self.vbox)
@@ -63,7 +68,7 @@ class Window (gtk.Window):
         ag = gtk.ActionGroup ('WindowActions')
         actions        = fix_actions (action_list, self)
         ag.add_actions (actions)
-        
+
         self.ui = gtk.UIManager()
         self.ui.insert_action_group (ag, 0)
         self.add_accel_group (self.ui.get_accel_group())
@@ -83,76 +88,79 @@ class Window (gtk.Window):
         self.fileselect = MyFileChooserDialog(parent=self)
 
 
-    def create_da (self):
-        """add AspectFrame and DrawingArea widgets
+    def load_file (self, filename):
+        """parse the svg file
         """
-        af = gtk.AspectFrame()
-        self.vbox.pack_start(af)
-        
-        da = gtk.DrawingArea()
-        af.add(da)
-        da.connect ('expose-event', self.cb_da_expose_event)
-        da.set_double_buffered(False)
-    
-        af.show_all()
+        if self.af is None:
+            self.af = gtk.AspectFrame()
+            self.vbox.pack_start(self.af)
 
-        da.realize()
-        self.rgb_bg = gdkcolor_to_rgb (da.style.bg[gtk.STATE_NORMAL])
+            self.da = SVGWidget()
+            self.af.add(self.da)
 
-        self.af, self.da = af, da
+        self.da.load_file (filename)
+        width, height = self.da.svg.get_size()
 
-
-    def cb_da_expose_event (self, da, event, data=None):
-        width, height = da.allocation.width, da.allocation.height
-        pixmap = gtk.gdk.Pixmap (da.window, width, height)
-    
-        ctx = cairo.gtk.gdk_cairo_create (pixmap)
-    
-        # draw to pixmap
-        ctx.rectangle(0,0,width,height)
-        ctx.set_source_rgb(*self.rgb_bg)
-        ctx.fill()
-    
-        svg_width, svg_height = self.svg.get_size()
-        matrix = cairo.Matrix (xx=width/svg_width, yy=height/svg_height)
-        ctx.set_matrix (matrix)
-        self.svg.render (ctx)
-
-        # draw pixmap to gdk.window
-        da.window.draw_drawable(gtk.gdk.GC(da.window), pixmap, 0,0, 0,0, -1,-1)
+        self.af.set (xalign=0.5, yalign=0.5,
+                     ratio=width/height, obey_child=False)
+        self.da.queue_draw()
 
 
     def cb_open (self, action, data=None):
-        """Open svg file (if one is selected) and render to an off-screen
-        pixmap
+        """Open svg file (if one is selected) and render to widget
         """
         filename = self.fileselect.get_filename_from_user()
         if filename:
             self.load_file (filename)
 
 
+    def cb_quit (self, action, data=None):
+        gtk.main_quit()
+
+
+class SVGWidget (gtk.DrawingArea):
+    """
+    A gtk.DrawingArea widget for displaying an SVG file
+
+    uses cairo.svg - a SVG parser/renderer
+    """
+    __gsignals__ = {'expose_event' : 'override',
+                    }
+
+    def __init__ (self, filename=None):
+        gtk.DrawingArea.__init__ (self)
+        self.svg = None
+
+        if filename:
+            self.load_file (filename)
+
+
     def load_file (self, filename):
-        """parse the svg file
-        """
         self.svg = cairo.svg.Context()
         try:
             self.svg.parse (filename)
         except cairo.svg.Error:
-            exc_type, exc_value = sys.exc_info()[:2] 
+            exc_type, exc_value = sys.exc_info()[:2]
             print >>sys.stderr, '%s: %s' % (exc_type, exc_value)
 
+
+    def do_expose_event (self, event):
+        if self.svg is None:
+            return
+
+        if gtk.pygtk_version >= (2,7,0):
+            ctx = self.window.cairo_create()
         else:
-            if self.af is None:
-                self.create_da()
-            
-            width, height = self.svg.get_size()
-            self.af.set (xalign=0.5, yalign=0.5,
-                         ratio=width/height, obey_child=False)
-            self.da.queue_draw()
+            ctx = cairo.gtk.gdk_cairo_create (self.window)
 
+        x, y, width, height = self.allocation
+        svg_width, svg_height = self.svg.get_size()
+        matrix = cairo.Matrix (xx=width/svg_width, yy=height/svg_height)
+        ctx.set_matrix (matrix)
+        self.svg.render (ctx)
 
-    def cb_quit (self, action, data=None):  
-        gtk.main_quit()
+if gtk.pygtk_version < (2,7,0):
+    gobject.type_register (SVGWidget)
 
 
 class MyFileChooserDialog (gtk.FileChooserDialog):
@@ -200,7 +208,7 @@ class MyFileChooserDialog (gtk.FileChooserDialog):
             self.set_preview_widget_active (True)
         except Exception, exc:
             self.set_preview_widget_active (False)
-            
+
 
     def get_filename_from_user (self, path=None, title=None):
         if path:  self.path = path
@@ -209,7 +217,7 @@ class MyFileChooserDialog (gtk.FileChooserDialog):
             self.set_current_folder (self.path)
         else:
             self.set_filename (self.path)
-                
+
         filename = None
         if self.run() == gtk.RESPONSE_OK:
             self.path = filename = self.get_filename()
@@ -221,11 +229,11 @@ if __name__ == '__main__':
     filename = None
     if len(sys.argv) == 2:
         filename = sys.argv[1]
-    
+
     app = Window (title='SVGView')
     app.connect('destroy', gtk.main_quit)
     if filename:
         app.load_file (filename)
-    
+
     app.show_all()
     gtk.main()

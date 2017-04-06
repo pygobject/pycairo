@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 """Based on cairo-demo/X11/cairo-demo.c
 """
-import gtk
 import cairo
-import cairo.gtk
+import gtk
+if gtk.pygtk_version < (2,7,0):
+    import cairo.gtk
 
 SIZE = 30
 
@@ -78,14 +79,14 @@ def fill_shapes(ctx, x, y):
 def stroke_shapes(ctx, x, y):
     draw_shapes(ctx, x, y, False)
 
-def expose(drawingarea, event):
-    drawable = drawingarea.window
-    width  = drawingarea.allocation.width
-    height = drawingarea.allocation.height
+def expose (da, event):
+    x, y, width, height = da.allocation
 
-    drawable.clear()
+    if gtk.pygtk_version >= (2,7,0):
+        ctx = da.window.cairo_create()
+    else:
+        ctx = cairo.gtk.gdk_cairo_create(da.window)
 
-    ctx = cairo.gtk.gdk_cairo_create(drawable)
     ctx.set_source_rgb(0, 0, 0)
 
     ctx.set_line_width(SIZE / 4)
@@ -113,7 +114,7 @@ def expose(drawingarea, event):
 
 def main():
     win = gtk.Window()
-    win.connect('destroy', lambda x: gtk.main_quit())
+    win.connect('destroy', gtk.main_quit)
     win.set_default_size(450, 550)
 
     drawingarea = gtk.DrawingArea()

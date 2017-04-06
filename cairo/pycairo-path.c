@@ -1,4 +1,4 @@
-/* -*- mode: C; c-basic-offset: 4 -*- 
+/* -*- mode: C; c-basic-offset: 4 -*-
  *
  * Pycairo - Python bindings for cairo
  *
@@ -117,7 +117,7 @@ path_str(PycairoPath *p)
 	switch (data->header.type) {
 
 	case CAIRO_PATH_MOVE_TO:
-	    PyOS_snprintf(buf, sizeof(buf), "move_to %f %f", 
+	    PyOS_snprintf(buf, sizeof(buf), "move_to %f %f",
 	    		  data[1].point.x, data[1].point.y);
 	    s = PyString_FromString(buf);
 	    if (!s)
@@ -129,7 +129,7 @@ path_str(PycairoPath *p)
 	    break;
 
 	case CAIRO_PATH_LINE_TO:
-	    PyOS_snprintf(buf, sizeof(buf), "line_to %f %f", 
+	    PyOS_snprintf(buf, sizeof(buf), "line_to %f %f",
 	    		  data[1].point.x, data[1].point.y);
 	    s = PyString_FromString(buf);
 	    if (!s)
@@ -141,7 +141,7 @@ path_str(PycairoPath *p)
 	    break;
 
 	case CAIRO_PATH_CURVE_TO:
-	    PyOS_snprintf(buf, sizeof(buf), "curve_to %f %f %f %f %f %f", 
+	    PyOS_snprintf(buf, sizeof(buf), "curve_to %f %f %f %f %f %f",
 	    		  data[1].point.x, data[1].point.y,
 			  data[2].point.x, data[2].point.y,
 			  data[3].point.x, data[3].point.y);
@@ -181,7 +181,7 @@ static PyObject * path_iter(PyObject *seq); /* forward declaration */
 
 
 PyTypeObject PycairoPath_Type = {
-    PyObject_HEAD_INIT(&PyType_Type)
+    PyObject_HEAD_INIT(NULL)
     0,				        /* ob_size */
     "cairo.Path",			/* tp_name */
     sizeof(PycairoPath),		/* tp_basicsize */
@@ -212,7 +212,7 @@ PyTypeObject PycairoPath_Type = {
     0,			        	/* tp_methods */
     0,					/* tp_members */
     0,					/* tp_getset */
-    0,					/* tp_base */
+    0, /* &PyBaseObject_Type, */        /* tp_base */
     0,					/* tp_dict */
     0,					/* tp_descr_get */
     0,					/* tp_descr_set */
@@ -304,7 +304,7 @@ pathiter_next(PycairoPathiter *it)
 }
 
 static PyTypeObject PycairoPathiter_Type = {
-    PyObject_HEAD_INIT(&PyType_Type)
+    PyObject_HEAD_INIT(NULL)
     0,                                  /* ob_size */
     "cairo.Pathiter",                   /* tp_name */
     sizeof(PycairoPathiter),            /* tp_basicsize */

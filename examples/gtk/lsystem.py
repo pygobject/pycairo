@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-import gtk
 import cairo
-import cairo.gtk
+import gtk
+if gtk.pygtk_version < (2,7,0):
+    import cairo.gtk
 
 # Copyright 2003 Jesse Andrews (jdandr2@uky.edu) under GPL
 
@@ -24,12 +25,12 @@ class lindenmayer:
 
     def expose( self, drawingarea, event ):
         drawable = drawingarea.window
-        width = drawingarea.allocation.width
-        height = drawingarea.allocation.height
+        x, y, width, height = drawingarea.allocation
 
-        drawable.clear()
-
-        ctx = cairo.gtk.gdk_cairo_create(drawable)
+        if gtk.pygtk_version >= (2,7,0):
+            ctx = drawable.cairo_create()
+        else:
+            ctx = cairo.gtk.gdk_cairo_create(drawable)
 
         ctx.set_source_rgb(0, 0, 0)
 

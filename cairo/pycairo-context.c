@@ -379,7 +379,10 @@ pycairo_get_source (PycairoContext *o)
 {
     cairo_pattern_t *pattern = cairo_get_source (o->ctx);
     cairo_pattern_reference (pattern);
-    return PycairoPattern_FromPattern (pattern);
+    /* bug #2765 - "How do we identify surface (and pattern) types?"
+     * should pass pattern type as arg2
+     */
+    return PycairoPattern_FromPattern (pattern, NULL);
 }
 
 static PyObject *
@@ -1189,7 +1192,7 @@ static PyMethodDef pycairo_methods[] = {
 
 
 PyTypeObject PycairoContext_Type = {
-    PyObject_HEAD_INIT(&PyType_Type)
+    PyObject_HEAD_INIT(NULL)
     0,                                  /* ob_size */
     "cairo.Context",                    /* tp_name */
     sizeof(PycairoContext),             /* tp_basicsize */
@@ -1220,7 +1223,7 @@ PyTypeObject PycairoContext_Type = {
     pycairo_methods,                    /* tp_methods */
     0,                                  /* tp_members */
     0,                                  /* tp_getset */
-    &PyBaseObject_Type,                 /* tp_base */
+    0, /* &PyBaseObject_Type, */        /* tp_base */
     0,                                  /* tp_dict */
     0,                                  /* tp_descr_get */
     0,                                  /* tp_descr_set */

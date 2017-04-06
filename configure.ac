@@ -2,23 +2,26 @@
 AC_PREREQ(2.54)
 
 # the pycairo version number
-m4_define(pycairo_major_version, 0)
-m4_define(pycairo_minor_version, 9)
-m4_define(pycairo_micro_version, 0)
-m4_define(pycairo_version, pycairo_major_version.pycairo_minor_version.pycairo_micro_version)
+m4_define(pycairo_version_major, 1)
+m4_define(pycairo_version_minor, 0)
+m4_define(pycairo_version_micro, 0)
+m4_define(pycairo_version, pycairo_version_major.pycairo_version_minor.pycairo_version_micro)
 
 # versions of packages we require
-m4_define(cairo_required_version,    0.9.0)
+m4_define(cairo_required_version,    1.0.0)
 m4_define(gtk_required_version,      2.2.0)
 m4_define(pygtk_required_version,    2.2.0)
 m4_define(libsvg_cairo_required_version, 0.1.6)
 
-AC_INIT(pycairo, pycairo_version)
+AC_INIT([pycairo],
+	[pycairo_version],
+	[http://bugs.freedesktop.org/enter_bug.cgi?product=cairo])
 
-AC_DEFINE(PYCAIRO_MAJOR_VERSION, pycairo_major_version,[Pycairo major version])
-AC_DEFINE(PYCAIRO_MINOR_VERSION, pycairo_minor_version,[Pycairo minor version])
-AC_DEFINE(PYCAIRO_MICRO_VERSION, pycairo_micro_version,[Pycairo macro version])
-AC_SUBST(VERSION_INFO, [pycairo_major_version,pycairo_minor_version,pycairo_micro_version])
+AC_SUBST(PYCAIRO_VERSION_MAJOR, [pycairo_version_major])
+AC_SUBST(PYCAIRO_VERSION_MINOR, [pycairo_version_minor])
+AC_SUBST(PYCAIRO_VERSION_MICRO, [pycairo_version_micro])
+AC_SUBST(VERSION_INFO,
+	[pycairo_version_major,pycairo_version_minor,pycairo_version_micro])
 
 AC_CONFIG_SRCDIR([cairo/pycairo.h])
 AC_CONFIG_HEADERS(config.h)
@@ -63,24 +66,14 @@ fi
 if test x"$with_pygtk" = xyes; then
   PKG_CHECK_MODULES(GTK,
     [gtk+-2.0 >= gtk_required_version
-    pygtk-2.0 >= pygtk_required_version],
+    pygtk-2.0 >= pygtk_required_version
+    pygtk-2.0 < 2.7.0],
     [], [with_pygtk=no])
   if test -n "$export_dynamic"; then
     GTK_LIBS=`echo $GTK_LIBS | sed -e "s/$export_dynamic//"`
   fi
 fi
 AM_CONDITIONAL(WITH_PYGTK, test x$with_pygtk = xyes)
-
-# Define HAVE_GTK28 if gtk+ > 2.7 is found
-if test x"$with_pygtk" = xyes; then
-  AC_MSG_CHECKING([for gtk+ 2.8 API])
-  if $PKG_CONFIG --modversion "gtk+-2.0 >= 2.7.0" > /dev/null 2>&1; then
-     AC_MSG_RESULT([found])
-     AC_DEFINE([HAVE_GTK28], [1], [Define to 1 if gtk+ 2.8 API is found])
-  else
-     AC_MSG_RESULT([not found])
-  fi
-fi
 
 # Numeric Python
 save_CPPFLAGS="$CPPFLAGS"
@@ -122,7 +115,7 @@ changequote([,])dnl
 
 case $GCC in
 yes)
-  # code using Py_True, Py_False will receive 
+  # code using Py_True, Py_False will receive
   # "warning: dereferencing type-punned pointer will break strict-aliasing rules"
   # -fno-strict-aliasing (as used in Python build) switches warnings off
     AC_MSG_CHECKING(whether $CC accepts -fno-strict-aliasing)

@@ -1,4 +1,4 @@
-/* -*- mode: C; c-basic-offset: 4 -*- 
+/* -*- mode: C; c-basic-offset: 4 -*-
  *
  * Pycairo - Python bindings for cairo
  *
@@ -67,6 +67,12 @@ typedef struct {
     cairo_pattern_t *pattern;
 } PycairoPattern;
 
+#define PycairoSolidPattern   PycairoPattern
+#define PycairoSurfacePattern PycairoPattern
+#define PycairoGradient       PycairoPattern
+#define PycairoLinearGradient PycairoPattern
+#define PycairoRadialGradient PycairoPattern
+
 typedef struct {
     PyObject_HEAD
     cairo_scaled_font_t *scaled_font;
@@ -101,8 +107,16 @@ typedef struct {
     PyObject *(*Matrix_FromMatrix)(const cairo_matrix_t *matrix);
     PyTypeObject *Path_Type;
     PyObject *(*Path_FromPath)(cairo_path_t *path);
+
     PyTypeObject *Pattern_Type;
-    PyObject *(*Pattern_FromPattern)(cairo_pattern_t *pattern);
+    PyTypeObject *SolidPattern_Type;
+    PyTypeObject *SurfacePattern_Type;
+    PyTypeObject *Gradient_Type;
+    PyTypeObject *LinearGradient_Type;
+    PyTypeObject *RadialGradient_Type;
+    PyObject *(*Pattern_FromPattern)(cairo_pattern_t *pattern,
+				     PyTypeObject *type);
+
     PyTypeObject *ScaledFont_Type;
     PyObject *(*ScaledFont_FromScaledFont)(cairo_scaled_font_t *scaled_font);
 
@@ -111,7 +125,7 @@ typedef struct {
     PyTypeObject *PDFSurface_Type;
     PyTypeObject *PSSurface_Type;
     PyTypeObject *Win32Surface_Type;
-    PyObject *(*Surface_FromSurface)(cairo_surface_t *surface, 
+    PyObject *(*Surface_FromSurface)(cairo_surface_t *surface,
 				     PyTypeObject *type, PyObject *base);
 
     /* misc functions */
@@ -133,8 +147,15 @@ typedef struct {
 #define PycairoMatrix_FromMatrix     (Pycairo_CAPI->Matrix_FromMatrix)
 #define PycairoPath_Type            *(Pycairo_CAPI->Path_Type)
 #define PycairoPath_FromPath         (Pycairo_CAPI->Path_FromPath)
+
 #define PycairoPattern_Type         *(Pycairo_CAPI->Pattern_Type)
+#define PycairoSolidPattern_Type    *(Pycairo_CAPI->SolidPattern_Type)
+#define PycairoSurfacePattern_Type  *(Pycairo_CAPI->SurfacePattern_Type)
+#define PycairoGradient_Type        *(Pycairo_CAPI->Gradient_Type)
+#define PycairoLinearGradient_Type  *(Pycairo_CAPI->LinearGradient_Type)
+#define PycairoRadialGradient_Type  *(Pycairo_CAPI->RadialGradient_Type)
 #define PycairoPattern_FromPattern   (Pycairo_CAPI->Pattern_FromPattern)
+
 #define PycairoScaledFont_Type      *(Pycairo_CAPI->ScaledFont_Type)
 #define PycairoScaledFont_FromScaledFont \
                                      (Pycairo_CAPI->ScaledFont_FromScaledFont)

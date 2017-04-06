@@ -1,4 +1,4 @@
-/* -*- mode: C; c-basic-offset: 4 -*- 
+/* -*- mode: C; c-basic-offset: 4 -*-
  *
  * Pycairo - Python bindings for cairo
  *
@@ -59,7 +59,13 @@ extern PyTypeObject PycairoPath_Type;
 PyObject *PycairoPath_FromPath (cairo_path_t *path);
 
 extern PyTypeObject PycairoPattern_Type;
-PyObject *PycairoPattern_FromPattern (cairo_pattern_t *pattern);
+extern PyTypeObject PycairoSolidPattern_Type;
+extern PyTypeObject PycairoSurfacePattern_Type;
+extern PyTypeObject PycairoGradient_Type;
+extern PyTypeObject PycairoLinearGradient_Type;
+extern PyTypeObject PycairoRadialGradient_Type;
+PyObject *PycairoPattern_FromPattern (cairo_pattern_t *pattern,
+				      PyTypeObject *type);
 
 extern PyTypeObject PycairoScaledFont_Type;
 PyObject *PycairoScaledFont_FromScaledFont (cairo_scaled_font_t *scaled_font);
@@ -79,7 +85,7 @@ extern PyTypeObject PycairoPSSurface_Type;
 extern PyTypeObject PycairoWin32Surface_Type;
 #endif
 
-PyObject *PycairoSurface_FromSurface (cairo_surface_t *surface,  
+PyObject *PycairoSurface_FromSurface (cairo_surface_t *surface,
 				      PyTypeObject *type,
 				      PyObject *base);
 

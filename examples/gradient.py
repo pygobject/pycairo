@@ -12,7 +12,7 @@ ctx = cairo.Context(surface)
 
 ctx.scale (WIDTH/1.0, HEIGHT/1.0)
 
-pat = cairo.Pattern.create_linear(0.0, 0.0, 0.0, 1.0)
+pat = cairo.LinearGradient (0.0, 0.0, 0.0, 1.0)
 pat.add_color_stop_rgba (1, 0, 0, 0, 1)
 pat.add_color_stop_rgba (0, 1, 1, 1, 1)
 
@@ -20,8 +20,8 @@ ctx.rectangle (0,0,1,1)
 ctx.set_source (pat)
 ctx.fill ()
 
-pat = cairo.Pattern.create_radial (0.45, 0.4, 0.1,
-                                   0.4,  0.4, 0.5)
+pat = cairo.RadialGradient (0.45, 0.4, 0.1,
+                            0.4,  0.4, 0.5)
 pat.add_color_stop_rgba (0, 1, 1, 1, 1)
 pat.add_color_stop_rgba (1, 0, 0, 0, 1)
 

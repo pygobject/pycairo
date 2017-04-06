@@ -14,15 +14,22 @@ Features of the Pycairo bindings
 * Pycairo_Check_Status() is called to check the status of cairo operations,
 and raise exceptions as appropriate.
 
-* Includes the cairo.gtk module - a simple extension with functions for
-creating cairo objects from GdkDrawables or GdkPixbufs.  This makes it
-possible to use the Pycairo with PyGTK.
+* Includes the cairo.gtk module - a extension module with a single function
+for creating a cairo context from a GdkDrawable.  This makes it possible to
+use the Pycairo with PyGTK. However, this module is not needed when using PyGTK
+2.8 and above.
 
 * Provides a C API that can be used by other Python extensions.
 
 
-Constants
----------
+cairo module attributes and functions
+-------------------------------------
+cairo.version                 # the pycairo version, as a string
+cairo.version_info            # the pycairo version, as a tuple
+
+cairo.cairo_version()         # calls cairo_version()
+cairo.cairo_version_string()  # calls cairo_version_string()
+
 The C API has many constant/enumeration values that are translated into
 Python as follows:
 C			Python
@@ -111,11 +118,13 @@ Path.__str__ lists the path elements
 
 cairo.Pattern
 -------------
-pat = cairo.Pattern() # does not work, Pattern cannot be instantiated directly,
-                      # instead use
-pat = cairo.Pattern.create_for_surface (surface)
-pat = cairo.Pattern.create_linear (x0, y0, x1, y1)
-pat = cairo.Pattern.create_radial (cx0, cy0, radius0, cx1, cy1, radius1)
+Patterns are implemented in a class hierarchy:
+Pattern  - abstract base class
+  SolidPattern (r, g, b, a=1.0)
+  SurfacePattern (surface)
+  Gradient  - abstract base class
+    LinearGradient (x0, y0, x1, y1)
+    RadialGradient (cx0, cy0, radius0, cx1, cy1, radius1)
 
 
 cairo.ScaledFont
@@ -125,11 +134,17 @@ cairo.ScaledFont
 cairo.Surface
 -------------
 Surfaces are implemented in a class hierarchy:
-  Surface         - base class, contains methods applicable to all surfaces
-    ImageSurface
-    PDFSurface
-    PSSurface
-    Win32Surface
+Surface         - base class, contains methods applicable to all surfaces
+  ImageSurface
+  PDFSurface
+  PSSurface
+  Win32Surface
+
+C:  cairo_surface_write_to_png (surface, filename);
+    cairo_surface_write_to_png_stream (surface, write_func, closure);
+
+Py: surface.write_to_png (filename)
+    surface.write_to_png (file_object)
 
 C : surface = cairo_image_surface_create (format, width, height);
     surface = cairo_image_surface_create_from_png (filename);

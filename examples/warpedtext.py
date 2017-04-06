@@ -13,18 +13,18 @@ def warpPath(ctx, function):
                 first = False
             x, y = function(*points)
             ctx.move_to(x, y)
-	
+
         elif type == cairo.PATH_LINE_TO:
             x, y = function(*points)
             ctx.line_to(x, y)
-		
+
         elif type == cairo.PATH_CURVE_TO:
             x1, y1, x2, y2, x3, y3 = points
             x1, y1 = function(x1, y1)
             x2, y2 = function(x2, y2)
             x3, y3 = function(x3, y3)
             ctx.curve_to(x1, y1, x2, y2, x3, y3)
-		
+
         elif type == cairo.PATH_CLOSE_PATH:
             ctx.close_path()
 
@@ -50,7 +50,7 @@ ctx = cairo.Context(surface)
 solidpattern = ctx.get_source()
 
 # background
-pat = cairo.Pattern.create_linear(0.0, 0.0, 0, Height)
+pat = cairo.LinearGradient (0.0, 0.0, 0, Height)
 pat.add_color_stop_rgba (1, 0, 0, 0, 1)
 pat.add_color_stop_rgba (0, 1, 1, 1, 1)
 

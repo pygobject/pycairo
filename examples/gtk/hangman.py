@@ -27,9 +27,10 @@
 from math import pi
 from random import randint
 
-import gtk
 import cairo
-import cairo.gtk
+import gtk
+if gtk.pygtk_version < (2,7,0):
+    import cairo.gtk
 
 letters_guessed = ""
 letters_guessed_right = ""
@@ -38,7 +39,7 @@ letters_guessed_wrong = ""
 body_parts = 6
 words = ['cairo', 'graphics', 'pencil', 'keyboard', 'science', 'ricochet', 'flood', 'president', 'sanity']
 
-idxRandom = randint(0, len(words) -1) 
+idxRandom = randint(0, len(words) -1)
 word_chosen = words[idxRandom]
 
 #print "The secret word is " + word_chosen
@@ -65,9 +66,12 @@ def expose_event(widget, event):
         size = height
 
     pixmap = gtk.gdk.Pixmap (widget.window, width, height)
-    
-    ctx = cairo.gtk.gdk_cairo_create(pixmap)
-    
+
+    if gtk.pygtk_version >= (2,7,0):
+        ctx = pixmap.cairo_create()
+    else:
+        ctx = cairo.gtk.gdk_cairo_create(pixmap)
+
     # set the background
     ctx.set_source_rgb(0.7,0.7,0.7)
     ctx.rectangle(0,0,width, height)
@@ -93,7 +97,7 @@ def expose_event(widget, event):
         else:
             ctx.move_to(idxLetter * 15, 150)
             ctx.show_text('_')
-            
+
     # Draw Letters Guessed
 
     ctx.move_to(0, 160)
@@ -138,7 +142,7 @@ def expose_event(widget, event):
     ctx.line_to(130, 130)
     ctx.set_source_rgb(0, 0, 0)
     ctx.stroke()
-    
+
     # Draw 2nd stair
 
     ctx.move_to(50, 130)
@@ -146,7 +150,7 @@ def expose_event(widget, event):
     ctx.line_to(60, 121)
     ctx.line_to(130, 121)
     ctx.stroke()
-    
+
     # Draw 3rd stair
 
     ctx.move_to(60, 121)
@@ -154,9 +158,9 @@ def expose_event(widget, event):
     ctx.line_to(70, 113)
     ctx.line_to(130, 113)
     ctx.stroke()
-    
+
     # Draw 4th(top) stair
-        
+
     ctx.move_to(70, 113)
     ctx.line_to(70, 105)
     ctx.line_to(130, 105)
@@ -189,7 +193,7 @@ def expose_event(widget, event):
         ctx.move_to(100.5, 19)
         ctx.line_to(99.5, 21)
         ctx.line_to(100.5, 21)
-    
+
         # Draw Mouth
 
         if len(letters_guessed_wrong) < 6:
@@ -201,7 +205,7 @@ def expose_event(widget, event):
             ctx.move_to(100.5, 24)
             ctx.arc(100, 24, .5, 0, 2*pi)
             ctx.set_line_width(.5)
-            ctx.stroke()        
+            ctx.stroke()
 
     ctx.set_source_rgb(0, 0, 0)
     ctx.set_line_width(1)
@@ -233,7 +237,7 @@ def expose_event(widget, event):
         ctx.move_to(100, 70)
         ctx.line_to(112, 95)
         ctx.stroke()
-        
+
     # Draw Leg 2
 
     if len(letters_guessed_wrong) > 5:
@@ -243,7 +247,7 @@ def expose_event(widget, event):
 
     # draw pixmap to gdk.window
     gc = gtk.gdk.GC(widget.window)
-    widget.window.draw_drawable(gc, pixmap, 0,0, 0,0, -1,-1)        
+    widget.window.draw_drawable(gc, pixmap, 0,0, 0,0, -1,-1)
 
 
 win = gtk.Window()
@@ -255,6 +259,6 @@ drawingarea = gtk.DrawingArea()
 win.add(drawingarea)
 drawingarea.connect('expose_event', expose_event)
 drawingarea.set_size_request(300,320)
-    
+
 win.show_all()
 gtk.main()

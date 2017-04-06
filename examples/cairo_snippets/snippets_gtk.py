@@ -5,10 +5,12 @@ from __future__ import division
 from math import pi as M_PI  # used by many snippets
 import sys
 
-import gtk
-import pango
 import cairo
-import cairo.gtk
+import gtk
+if gtk.pygtk_version < (2,7,0):
+    import cairo.gtk
+
+import pango
 
 from snippets import snip_list, snippet_normalize, snippet_set_bg_svg
 
@@ -58,10 +60,12 @@ class Window (gtk.Window):
 
 
     def da_expose_event (self, da, event, data=None):
-        width  = da.allocation.width
-        height = da.allocation.height
+        x, y, width, height = da.allocation
 
-        cr = cairo.gtk.gdk_cairo_create (da.window)
+        if gtk.pygtk_version >= (2,7,0):
+            cr = da.window.cairo_create()
+        else:
+            cr = cairo.gtk.gdk_cairo_create (da.window)
 
         # set window bg
         cr.set_source_rgb (*self._bg_rgb)
@@ -73,7 +77,7 @@ class Window (gtk.Window):
             exec (self.snippet_str, globals(), locals())
         except:
             exc_type, exc_value = sys.exc_info()[:2]
-            print exc_type, exc_value
+            print >> sys.stderr, exc_type, exc_value
 
         return True
 

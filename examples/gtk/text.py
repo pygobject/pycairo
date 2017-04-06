@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 
-import gtk
 import cairo
-import cairo.gtk
+import gtk
+if gtk.pygtk_version < (2,7,0):
+    import cairo.gtk
 
 def expose_event(widget, event):
-    widget.window.clear()
-
-    ctx = cairo.gtk.gdk_cairo_create(widget.window)
+    if gtk.pygtk_version >= (2,7,0):
+        ctx = widget.window.cairo_create()
+    else:
+        ctx = cairo.gtk.gdk_cairo_create(widget.window)
 
     ctx.set_line_width(6)
     ctx.set_tolerance(.1)
@@ -32,7 +34,7 @@ def expose_event(widget, event):
     ctx.show_text('Hello World')
 
 win = gtk.Window()
-win.connect('destroy', lambda x: gtk.main_quit())
+win.connect('destroy', gtk.main_quit)
 
 drawingarea = gtk.DrawingArea()
 win.add(drawingarea)

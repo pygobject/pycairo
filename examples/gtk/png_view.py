@@ -4,14 +4,17 @@
 
 import sys
 
-import gtk
 import cairo
-import cairo.gtk
+import gtk
+if gtk.pygtk_version < (2,7,0):
+    import cairo.gtk
+
 
 def expose_event(widget, event, surface):
-    widget.window.clear()
-
-    ctx = cairo.gtk.gdk_cairo_create(widget.window)
+    if gtk.pygtk_version >= (2,7,0):
+        ctx = widget.window.cairo_create()
+    else:
+        ctx = cairo.gtk.gdk_cairo_create(widget.window)
     ctx.set_source_surface(surface, 0,0)
     ctx.paint()
 
@@ -26,7 +29,7 @@ Width  = surface.get_width()
 Height = surface.get_height()
 
 win = gtk.Window()
-win.connect('destroy', lambda x: gtk.main_quit())
+win.connect('destroy', gtk.main_quit)
 
 drawingarea = gtk.DrawingArea()
 win.add(drawingarea)

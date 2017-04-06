@@ -1,3 +1,120 @@
+=== Pycairo 1.0.0 ===
+2005-08-30  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* configure.ac:
+	* Makefile.am : fix errors introduced by previous commit
+
+2005-08-30  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* Makefile.am : update to follow (some of) the new cairo release
+	procedures
+
+	* README : increase cairo dependency to 1.0.0
+
+	* setup.py :
+	* configure.ac: increase pycairo version to 1.0.0
+
+	* NEWS: update for 1.0.0 release
+
+	* RELEASING: updated procedure
+
+2005-08-29  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* examples/gradient.py :
+	* examples/warpedtext.py:
+	* examples/cairo_snippets/snippets/gradient.py :
+	* examples/cairo_snippets/snippets/imagepattern.py:
+	update examples to use the updated Patterns
+
+	* NOTES : list new Pattern hierarchy
+
+	* cairo/cairomodule.c:
+	* cairo/pycairo-context.c :
+	* cairo/pycairo.h :
+	* cairo/pycairo-private.h:
+	* cairo/pycairo-pattern.c : rewrite as a hierarchy of Pattern types
+
+2005-08-29  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* examples/svg/svgview.py :
+	update to work with pygtk >= 2.7.0, create an SVG Widget
+
+2005-08-29  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* examples/cairo_snippets/snippets_pdf.py :
+	* examples/cairo_snippets/snippets_ps.py: cleanup whitespace
+
+	* examples/cairo_snippets/snippets_gtk.py :
+	* examples/gtk/cairo-demo.py :
+	* examples/gtk/cairo-knockout.py :
+	* examples/gtk/hangman.py :
+	* examples/gtk/lsystem.py :
+	* examples/gtk/png_view.py :
+	* examples/gtk/text.py :
+	update to work with pygtk >= 2.7.0
+
+2005-08-25  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* configure.ac: require cairo 1.0.0
+
+	* cairo/pycairo-surface.c (surface_write_to_png): update to accept
+	filename or file object
+
+	* NOTES : add note listing surface.write_to_png (file_object)
+
+2005-08-22  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* configure.ac: require cairo 0.9.3
+
+	* cairo/cairomodule.c (pycairo_cairo_version_string):
+	(pycairo_cairo_version): new wrappers
+
+	* cairo/pycairo-surface.c (ps_surface_set_dpi): new wrapper
+
+	* NOTES: update to show the cairo_version() functions
+
+2005-08-19  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/cairomodule.c (init_cairo):
+	* cairo/cairosvgmodule.c:
+	* cairo/pycairo-context.c:
+	* cairo/pycairo-font.c:
+	* cairo/pycairo-matrix.c:
+	* cairo/pycairo-path.c:
+	* cairo/pycairo-pattern.c:
+	* cairo/pycairo-surface.c:
+	move &PyBaseObject_Type and &PycairoSurface_Type out of the _Type
+	structures and initialise the .tp_base field at runtime - fixes
+	problems reported by some compilers.
+
+2005-08-18  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/cairosvgmodule.c:
+	* cairo/pycairo-context.c:
+	* cairo/pycairo-font.c:
+	* cairo/pycairo-matrix.c:
+	* cairo/pycairo-path.c:
+	* cairo/pycairo-pattern.c:
+	* cairo/pycairo-surface.c:
+	change PyObject_HEAD_INIT(&PyType_Type) to PyObject_HEAD_INIT(NULL)
+	to fix problems reported by some compilers
+
+2005-08-12  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/cairogtkmodule.c (gdk_cairo_create): rename to
+	_gdk_cairo_create and remove the "#ifndef HAVE_GTK28" check
+
+	* configure.ac : delete HAVE_GTK28 check. If pygtk > 2.7 do not
+	compile cairo.gtk (use pygtk instead)
+
+2005-08-12  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* RELEASING: add new step #9 - post message to python-announce-list
+
+2005-08-11  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* NOTES: update the cairo.gtk note
+
 === Pycairo 0.9.0 ===
 2005-08-10  Steve Chaplin  <steve1097@yahoo.com.au>
 

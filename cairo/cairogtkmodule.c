@@ -50,12 +50,11 @@ static Pycairo_CAPI_t *Pycairo_CAPI;
 static PyTypeObject *_PyGdkDrawable_Type;
 #define PyGdkDrawable_Type (*_PyGdkDrawable_Type)
 
-#ifndef HAVE_GTK28
 /* copied from gtk+/gdk/gdkcairo.c and gtk+/gdk/x11/gdkdrawable-x11.c
  * gdk_cairo_create() will be available in gtk 2.8
  */
 static cairo_t *
-gdk_cairo_create (GdkDrawable *target)
+_gdk_cairo_create (GdkDrawable *target)
 {
     int width, height;
     int x_off=0, y_off=0;
@@ -98,7 +97,6 @@ gdk_cairo_create (GdkDrawable *target)
     cairo_surface_destroy (surface);
     return cr;
 }
-#endif
 
 /* gdk.cairo_create() will be available in pygtk 2.8 */
 static PyObject *
@@ -111,7 +109,7 @@ pygdk_cairo_create(PyObject *self, PyObject *args)
 			  &PyGdkDrawable_Type, &py_drawable))
 	return NULL;
 
-    cr = gdk_cairo_create (GDK_DRAWABLE(py_drawable->obj));
+    cr = _gdk_cairo_create (GDK_DRAWABLE(py_drawable->obj));
     return PycairoContext_FromContext (cr, NULL, (PyObject *)py_drawable);
 }
 
