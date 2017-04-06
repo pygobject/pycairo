@@ -134,6 +134,7 @@ Module Attributes
 
  These attributes are used to indicate what filtering should be applied when reading pixel values from patterns. See :meth:`SurfacePattern.set_filter` for indicating the desired filter to be used with a particular pattern.
 
+.. _mattributes_weight:
 .. attribute:: cairo.FONT_WEIGHT_NORMAL
                cairo.FONT_WEIGHT_BOLD
 
@@ -142,6 +143,7 @@ Module Attributes
 
  These attributes specify variants of a font face based on their weight.
 
+.. _mattributes_slant:
 .. attribute:: cairo.FONT_SLANT_NORMAL
                cairo.FONT_SLANT_ITALIC
                cairo.FONT_SLANT_OBLIQUE
@@ -152,6 +154,7 @@ Module Attributes
 
  These attributes specify variants of a font face based on their slant.
 
+.. _mattributes_format:
 .. attribute:: cairo.FORMAT_ARGB32
    	       cairo.FORMAT_RGB24
    	       cairo.FORMAT_A8
@@ -162,7 +165,8 @@ Module Attributes
 * *cairo.FORMAT_RGB24*: each pixel is a 32-bit quantity, with the upper 8 bits unused. Red, Green, and Blue are stored in the remaining 24 bits in that order.
 * *cairo.FORMAT_A8*: each pixel is a 8-bit quantity holding an alpha value.
 * *cairo.FORMAT_A1*: each pixel is a 1-bit quantity holding an alpha value. Pixels are packed together into 32-bit quantities. The ordering of the bits matches the endianess of the platform. On a big-endian machine, the first pixel is in the uppermost bit, on a little-endian machine the first pixel is in the least-significant bit.
-* *cairo.FORMAT_RGB16_565*: This format value is deprecated. It has never been properly implemented in cairo and should not be used by applications. (since 1.2)
+* *cairo.FORMAT_RGB16_565*: This format value is deprecated. It has never been properly implemented in cairo and should not be used by applications.
+   .. versionadded:: 1.2
 
  These attributes are used to identify the memory format of image data.
 

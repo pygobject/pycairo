@@ -1,3 +1,30 @@
+Overview of changes from pycairo 1.8.2 to pycairo 1.8.4
+=======================================================
+General Changes:
+    Pycairo 1.8.4 requires cairo 1.8.4 (or later) and Python 2.6
+
+Bug Fixes:
+    20674: Add get/set_extend for Gradient Patterns
+
+New Classes:
+    cairo.ToyFontFace
+
+New Methods:
+    Pattern.get_extend
+    Pattern.set_extend
+    ToyFontFace.get_family
+    ToyFontFace.get_slant
+    ToyFontFace.get_weight
+
+Deleted Methods:
+    SurfacePattern.get_extend
+    SurfacePattern.set_extend
+
+Other Changes:
+    Threading for surfaces with stream functions has been reenabled.
+    Documentation updates.
+
+
 Overview of changes from pycairo 1.8.0 to pycairo 1.8.2
 =======================================================
 

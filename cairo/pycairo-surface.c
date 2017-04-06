@@ -103,7 +103,6 @@ PycairoSurface_FromSurface (cairo_surface_t *surface, PyObject *base)
 	type = &PycairoSurface_Type;
 	break;
     }
-
     o = type->tp_alloc (type, 0);
     if (o == NULL) {
 	cairo_surface_destroy (surface);
@@ -122,15 +121,18 @@ PycairoSurface_FromSurface (cairo_surface_t *surface, PyObject *base)
 static cairo_status_t
 _write_func (void *closure, const unsigned char *data, unsigned int length)
 {
+    PyGILState_STATE gstate = PyGILState_Ensure();
     PyObject *res = PyObject_CallMethod ((PyObject *)closure, "write", "(s#)",
 					 data, (Py_ssize_t)length);
     if (res == NULL) {
 	/* an exception has occurred, it will be picked up later by
 	 * Pycairo_Check_Status()
 	 */
+	PyGILState_Release(gstate);
 	return CAIRO_STATUS_WRITE_ERROR;
     }
     Py_DECREF(res);
+    PyGILState_Release(gstate);
     return CAIRO_STATUS_SUCCESS;
 }
 
@@ -310,10 +312,10 @@ surface_write_to_png (PycairoSurface *o, PyObject *file)
 	    return NULL;
 	}
 	Py_DECREF(writer);
-	/*Py_BEGIN_ALLOW_THREADS*/ /*seg faults reported*/
+	Py_BEGIN_ALLOW_THREADS
 	status = cairo_surface_write_to_png_stream (o->surface, _write_func,
 						    file);
-	/*Py_END_ALLOW_THREADS*/
+	Py_END_ALLOW_THREADS
     }
     RETURN_NULL_IF_CAIRO_ERROR(status);
     Py_RETURN_NONE;
@@ -467,12 +469,20 @@ static cairo_status_t
 _read_func (void *closure, unsigned char *data, unsigned int length)
 {
     char *str;
+    PyGILState_STATE gstate = PyGILState_Ensure();
     PyObject *pystr = PyObject_CallMethod ((PyObject *)closure, "read", "(i)",
 					   length);
-    if (pystr == NULL)
+    if (pystr == NULL){
+	/* an exception has occurred, it will be picked up later by
+	 * Pycairo_Check_Status()
+	 */
+	PyGILState_Release(gstate);
 	return CAIRO_STATUS_READ_ERROR;
+    }
     str = PyString_AsString(pystr);
     Py_DECREF(pystr);
+    PyGILState_Release(gstate);
+
     if (str == NULL)
 	return CAIRO_STATUS_READ_ERROR;
     /* don't use strncpy() since png data may contain NUL bytes */
@@ -505,9 +515,9 @@ image_surface_create_from_png (PyTypeObject *type, PyObject *file)
     }
     Py_DECREF(reader);
 
-    /*Py_BEGIN_ALLOW_THREADS*/ /*seg faults reported*/
+    Py_BEGIN_ALLOW_THREADS
     is = cairo_image_surface_create_from_png_stream (_read_func, file);
-    /*Py_END_ALLOW_THREADS*/
+    Py_END_ALLOW_THREADS
     return PycairoSurface_FromSurface (is, NULL);
 }
 #endif /* CAIRO_HAS_PNG_FUNCTIONS */
@@ -542,15 +552,15 @@ image_surface_get_height (PycairoImageSurface *o)
 }
 
 static PyObject *
-image_surface_get_width (PycairoImageSurface *o)
-{
-    return PyInt_FromLong (cairo_image_surface_get_width (o->surface));
-}
-
-static PyObject *
 image_surface_get_stride (PycairoImageSurface *o)
 {
     return PyInt_FromLong (cairo_image_surface_get_stride (o->surface));
+}
+
+static PyObject *
+image_surface_get_width (PycairoImageSurface *o)
+{
+    return PyInt_FromLong (cairo_image_surface_get_width (o->surface));
 }
 
 
@@ -625,8 +635,8 @@ static PyMethodDef image_surface_methods[] = {
     {"get_data",      (PyCFunction)image_surface_get_data,        METH_NOARGS},
     {"get_format",    (PyCFunction)image_surface_get_format,      METH_NOARGS},
     {"get_height",    (PyCFunction)image_surface_get_height,      METH_NOARGS},
-    {"get_width",     (PyCFunction)image_surface_get_width,       METH_NOARGS},
     {"get_stride",    (PyCFunction)image_surface_get_stride,      METH_NOARGS},
+    {"get_width",     (PyCFunction)image_surface_get_width,       METH_NOARGS},
     {NULL, NULL, 0, NULL},
 };
 
@@ -712,10 +722,10 @@ pdf_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
     }
     Py_DECREF(writer);
 
-    /*Py_BEGIN_ALLOW_THREADS*/ /*seg faults reported*/
+    Py_BEGIN_ALLOW_THREADS
     sfc = cairo_pdf_surface_create_for_stream (_write_func, file,
 					       width_in_points, height_in_points);
-    /*Py_END_ALLOW_THREADS*/
+    Py_END_ALLOW_THREADS
     return PycairoSurface_FromSurface (sfc, file);
 }
 
@@ -818,10 +828,10 @@ ps_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
     }
     Py_DECREF(writer);
 
-    /*Py_BEGIN_ALLOW_THREADS*/ /*seg faults reported*/
+    Py_BEGIN_ALLOW_THREADS
     sfc = cairo_ps_surface_create_for_stream (_write_func, file,
 					width_in_points, height_in_points);
-    /*Py_END_ALLOW_THREADS*/
+    Py_END_ALLOW_THREADS
     return PycairoSurface_FromSurface (sfc, file);
 }
 
@@ -1010,10 +1020,10 @@ svg_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
     }
     Py_DECREF(writer);
 
-    /*Py_BEGIN_ALLOW_THREADS*/ /*seg faults reported*/
+    Py_BEGIN_ALLOW_THREADS
     sfc = cairo_svg_surface_create_for_stream (_write_func, file,
 					 width_in_points, height_in_points);
-    /*Py_END_ALLOW_THREADS*/
+    Py_END_ALLOW_THREADS
     return PycairoSurface_FromSurface (sfc, file);
 }
 

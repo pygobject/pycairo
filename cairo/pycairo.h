@@ -47,6 +47,8 @@ typedef struct {
     cairo_font_face_t *font_face;
 } PycairoFontFace;
 
+#define PycairoToyFontFace PycairoFontFace
+
 typedef struct {
     PyObject_HEAD
     cairo_font_options_t *font_options;
@@ -102,6 +104,7 @@ typedef struct {
     PyObject *(*Context_FromContext)(cairo_t *ctx, PyTypeObject *type,
 				     PyObject *base);
     PyTypeObject *FontFace_Type;
+    PyTypeObject *ToyFontFace_Type;
     PyObject *(*FontFace_FromFontFace)(cairo_font_face_t *font_face);
     PyTypeObject *FontOptions_Type;
     PyObject *(*FontOptions_FromFontOptions)(
@@ -117,7 +120,7 @@ typedef struct {
     PyTypeObject *Gradient_Type;
     PyTypeObject *LinearGradient_Type;
     PyTypeObject *RadialGradient_Type;
-    PyObject *(*Pattern_FromPattern)(cairo_pattern_t *pattern);
+    PyObject *(*Pattern_FromPattern)(cairo_pattern_t *pattern, PyObject *base);
 
     PyTypeObject *ScaledFont_Type;
     PyObject *(*ScaledFont_FromScaledFont)(cairo_scaled_font_t *scaled_font);
@@ -142,6 +145,7 @@ typedef struct {
 #define PycairoContext_Type         *(Pycairo_CAPI->Context_Type)
 #define PycairoContext_FromContext   (Pycairo_CAPI->Context_FromContext)
 #define PycairoFontFace_Type        *(Pycairo_CAPI->FontFace_Type)
+#define PycairoToyFontFace_Type     *(Pycairo_CAPI->ToyFontFace_Type)
 #define PycairoFontFace_FromFontFace (Pycairo_CAPI->FontFace_FromFontFace)
 #define PycairoFontOptions_Type     *(Pycairo_CAPI->FontOptions_Type)
 #define PycairoFontOptions_FromFontOptions \

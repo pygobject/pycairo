@@ -48,6 +48,7 @@
 PyObject *
 PycairoFontFace_FromFontFace (cairo_font_face_t *font_face)
 {
+    PyTypeObject *type = NULL;
     PyObject *o;
 
     assert (font_face != NULL);
@@ -57,7 +58,15 @@ PycairoFontFace_FromFontFace (cairo_font_face_t *font_face)
 	return NULL;
     }
 
-    o = PycairoFontFace_Type.tp_alloc (&PycairoFontFace_Type, 0);
+    switch (cairo_font_face_get_type (font_face)) {
+    case CAIRO_FONT_TYPE_TOY:
+        type = &PycairoToyFontFace_Type;
+        break;
+    default:
+        type = &PycairoFontFace_Type;
+        break;
+    }
+    o = type->tp_alloc (type, 0);
     if (o == NULL)
 	cairo_font_face_destroy (font_face);
     else
@@ -135,6 +144,95 @@ PyTypeObject PycairoFontFace_Type = {
     0,                                  /* tp_init */
     0,                                  /* tp_alloc */
     (newfunc)font_face_new,             /* tp_new */
+    0,                                  /* tp_free */
+    0,                                  /* tp_is_gc */
+    0,                                  /* tp_bases */
+};
+
+
+/* class cairo.ToyFontFace ------------------------------------------------- */
+
+static PyObject *
+toy_font_face_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+    char *family;
+    cairo_font_slant_t slant = CAIRO_FONT_SLANT_NORMAL;
+    cairo_font_weight_t weight = CAIRO_FONT_WEIGHT_NORMAL;
+
+    if (!PyArg_ParseTuple(args, "s|II:ToyFont.__new__", &family, &slant,
+			  &weight))
+	return NULL;
+
+    return PycairoFontFace_FromFontFace (
+             cairo_toy_font_face_create (family, slant, weight));
+}
+
+static PyObject *
+toy_font_get_family (PycairoToyFontFace *o)
+{
+    return PyString_FromString (cairo_toy_font_face_get_family (o->font_face));
+}
+
+static PyObject *
+toy_font_get_slant (PycairoToyFontFace *o)
+{
+    return PyInt_FromLong (cairo_toy_font_face_get_slant (o->font_face));
+}
+
+static PyObject *
+toy_font_get_weight (PycairoToyFontFace *o)
+{
+    return PyInt_FromLong (cairo_toy_font_face_get_weight (o->font_face));
+}
+
+static PyMethodDef toy_font_face_methods[] = {
+    {"get_family",       (PyCFunction)toy_font_get_family, METH_NOARGS},
+    {"get_slant",        (PyCFunction)toy_font_get_slant,  METH_NOARGS},
+    {"get_weight",       (PyCFunction)toy_font_get_weight, METH_NOARGS},
+    {NULL, NULL, 0, NULL},
+};
+
+
+PyTypeObject PycairoToyFontFace_Type = {
+    PyObject_HEAD_INIT(NULL)
+    0,                                  /* ob_size */
+    "cairo.ToyFontFace",                /* tp_name */
+    sizeof(PycairoToyFontFace),         /* tp_basicsize */
+    0,                                  /* tp_itemsize */
+    0,                                  /* tp_dealloc */
+    0,                                  /* tp_print */
+    0,                                  /* tp_getattr */
+    0,                                  /* tp_setattr */
+    0,                                  /* tp_compare */
+    0,                                  /* tp_repr */
+    0,                                  /* tp_as_number */
+    0,                                  /* tp_as_sequence */
+    0,                                  /* tp_as_mapping */
+    0,                                  /* tp_hash */
+    0,                                  /* tp_call */
+    0,                                  /* tp_str */
+    0,                                  /* tp_getattro */
+    0,                                  /* tp_setattro */
+    0,                                  /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,                 /* tp_flags */
+    0,                                  /* tp_doc */
+    0,                                  /* tp_traverse */
+    0,                                  /* tp_clear */
+    0,                                  /* tp_richcompare */
+    0,                                  /* tp_weaklistoffset */
+    0,                                  /* tp_iter */
+    0,                                  /* tp_iternext */
+    toy_font_face_methods,              /* tp_methods */
+    0,                                  /* tp_members */
+    0,                                  /* tp_getset */
+    0, /* &PycairoFontFace_Type, */     /* tp_base */
+    0,                                  /* tp_dict */
+    0,                                  /* tp_descr_get */
+    0,                                  /* tp_descr_set */
+    0,                                  /* tp_dictoffset */
+    0,                                  /* tp_init */
+    0,                                  /* tp_alloc */
+    (newfunc)toy_font_face_new,         /* tp_new */
     0,                                  /* tp_free */
     0,                                  /* tp_is_gc */
     0,                                  /* tp_bases */

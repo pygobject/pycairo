@@ -1,3 +1,69 @@
+=== Pycairo 1.8.4 ===
+2009-03-19  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* cairo/cairomodule.c:
+	* configure.ac:
+	* doc/conf.py:
+	* NEWS:
+	* setup.py:
+	Update for 1.8.4 release.
+
+2009-03-19  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* doc/reference/surfaces.rst: update documentation.
+
+2009-03-16  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* cairo/pycairo-pattern.c :
+	* doc/reference/patterns.rst:
+	Move SurfacePattern.{get_extend,set_extend} up into the Pattern class
+	so Gradient Patterns can use the methods also.
+	Fixes #20674.
+
+2009-03-03  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* configure.ac:
+	* setup.py:
+	* README:
+	Require Python 2.6, cairo 1.8.4
+
+	* cairo/pycairo-surface.c: tidy up.
+
+	* doc/reference/mattributes.rst:
+	* doc/reference/surfaces.rst:
+	Update docs.
+
+2009-02-16  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* cairo/pycairo-surface.c: Reenable threading for all cairo stream
+	functions and wrap PyGILState_Ensure/PyGILState_Release around the
+	calls to PyObject_CallMethod. This should fix bug #19287.
+	Patch from Torsten Marek.
+
+2009-02-12  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* doc/reference/patterns.rst:
+	* doc/reference/surfaces.rst:
+	use '.. versionadded::' markup
+
+	* cairo/cairomodule.c:
+	* cairo/pycairo-font.c:
+	* cairo/pycairo.h:
+	* cairo/pycairo-private.h:
+	* doc/reference/mattributes.rst:
+	* doc/reference/text.rst:
+	Add patch by Torsten Marek to support ToyFontFace.
+
+	* cairo/pycairo.h : update Pattern_FromPattern prototype
+	* cairo/pycairo-pattern.c (surface_pattern_new): remove unused variable.
+
+2009-01-15  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* configure.ac:
+	* cairo/cairomodule.c:
+	* setup.py:
+	increment version to 1.8.3
+
 === Pycairo 1.8.2 ===
 2009-01-15  Steven Chaplin  <stevech1097 # yahoo.com.au>
 

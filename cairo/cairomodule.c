@@ -43,8 +43,8 @@
 
 #define VERSION_MAJOR 1
 #define VERSION_MINOR 8
-#define VERSION_MICRO 2
-static char pycairo_version_string[] = "1.8.2";
+#define VERSION_MICRO 4
+static char pycairo_version_string[] = "1.8.4";
 
 
 /* A module specific exception */
@@ -88,7 +88,10 @@ Pycairo_Check_Status (cairo_status_t status)
  */
 static Pycairo_CAPI_t CAPI = {
     &PycairoContext_Type,      PycairoContext_FromContext,
-    &PycairoFontFace_Type,     PycairoFontFace_FromFontFace,
+
+    &PycairoFontFace_Type,
+    &PycairoToyFontFace_Type,  PycairoFontFace_FromFontFace,
+
     &PycairoFontOptions_Type,  PycairoFontOptions_FromFontOptions,
     &PycairoMatrix_Type,       PycairoMatrix_FromMatrix,
     &PycairoPath_Type,         PycairoPath_FromPath,
@@ -170,6 +173,9 @@ init_cairo(void)
     PycairoFontFace_Type.tp_base = &PyBaseObject_Type;
     if (PyType_Ready(&PycairoFontFace_Type) < 0)
         return;
+    PycairoToyFontFace_Type.tp_base = &PyBaseObject_Type;
+    if (PyType_Ready(&PycairoToyFontFace_Type) < 0)
+        return;
     PycairoFontOptions_Type.tp_base = &PyBaseObject_Type;
     if (PyType_Ready(&PycairoFontOptions_Type) < 0)
         return;
@@ -249,6 +255,8 @@ init_cairo(void)
     PyModule_AddObject(m, "Context", (PyObject *)&PycairoContext_Type);
     Py_INCREF(&PycairoFontFace_Type);
     PyModule_AddObject(m, "FontFace",(PyObject *)&PycairoFontFace_Type);
+    Py_INCREF(&PycairoToyFontFace_Type);
+    PyModule_AddObject(m, "ToyFontFace",(PyObject *)&PycairoToyFontFace_Type);
     Py_INCREF(&PycairoFontOptions_Type);
     PyModule_AddObject(m, "FontOptions",(PyObject *)&PycairoFontOptions_Type);
     Py_INCREF(&PycairoMatrix_Type);

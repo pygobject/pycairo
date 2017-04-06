@@ -6,8 +6,8 @@ import distutils.file_util as fut
 import subprocess
 import sys
 
-pycairo_version        = '1.8.2'
-cairo_version_required = '1.8.2'
+pycairo_version        = '1.8.4'
+cairo_version_required = '1.8.4'
 
 def call(command):
     pipe = subprocess.Popen(command, shell=True,
@@ -32,8 +32,8 @@ def pkg_config_parse(opt, pkg):
     return [x.lstrip(opt) for x in output.split()]
 
 
-if sys.version_info < (2,5):
-    raise SystemExit('Error: Python >= 2.5 is required')
+if sys.version_info < (2,6):
+    raise SystemExit('Error: Python >= 2.6 is required')
 
 pkg_config_version_check ('cairo', cairo_version_required)
 if sys.platform == 'win32':

@@ -22,11 +22,68 @@ unequally in the two directions). A *FontFace* can be set on a
 matrix are set with :meth:`Context.set_font_size` and
 :meth:`Context.set_font_matrix`.
 
-*FontFace* cannot be instantiated directly, it is returned from
-:meth:`Context.get_font_face`
-
 There are various types of *FontFace*, depending on the font backend they
 use.
+
+.. class:: FontFace()
+
+   .. note:: This class cannot be instantiated directly, it is returned by :meth:`Context.get_font_face`.
+
+
+
+class ToyFontFace(:class:`FontFace`)
+====================================
+
+The *cairo.ToyFontFace* class can be used instead of :meth:`Context.select_font_face` to create a toy font independently of a context.
+
+.. class:: ToyFontFace(family, [slant[, weight]])
+
+   :param family: a font family name, encoded in UTF-8
+   :type family: str
+   :param slant: the slant of the font, by default
+        :attr:`cairo.FONT_SLANT_NORMAL`.  See :ref:`SLANT attributes
+        <mattributes_slant>` for details of the slant values available.
+   :param weight: the weight of the font, by default
+        :attr:`cairo.FONT_WEIGHT_NORMAL`.  See :ref:`WEIGHT attributes
+	<mattributes_weight>` for details of the available weights.
+   :returns: a new *ToyFontFace*
+
+   Creates a *ToyFontFace* from a triplet of family, slant, and weight. These
+   font faces are used in implementation of the the cairo_t "toy" font API.
+
+   If family is the zero-length string "", the platform-specific default
+   family is assumed. The default family then can be queried using
+   :meth:`.get_family`.
+
+   The :meth:`Context.select_font_face` method uses this to create font
+   faces. See that function for limitations of toy font faces.
+
+   .. versionadded:: 1.8.4
+
+   .. method:: get_family()
+
+      :returns: the family name
+      :rtype: str
+
+      Gets the familly name of a toy font.
+
+      .. versionadded:: 1.8.4
+
+   .. method:: get_slant()
+
+      :returns: the slant value
+
+      Gets the slant a toy font.
+
+      .. versionadded:: 1.8.4
+
+   .. method:: get_weight()
+
+      :returns: the weight value
+
+      Gets the weight a toy font.
+
+      .. versionadded:: 1.8.4
 
 
 class ScaledFont()
@@ -64,7 +121,7 @@ use.
 
       :returns: the :class:`FontFace` that this *ScaledFont* was created for.
 
-      Since: 1.2
+      .. versionadded:: 1.2
 
    .. method:: get_scale_matrix()
 
@@ -74,7 +131,7 @@ use.
       with the scaled font, and hence is the matrix mapping from font space to
       device space.
 
-      Since: 1.8
+      .. versionadded:: 1.8
 
 
    .. method:: text_extents()
@@ -96,7 +153,7 @@ use.
       trailing whitespace characters are likely to not affect the size of the
       rectangle, though they will affect the x_advance and y_advance values.
 
-      Since: 1.2
+      .. versionadded:: 1.2
 
 
 class FontOptions()

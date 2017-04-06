@@ -50,6 +50,7 @@ PyObject *PycairoContext_FromContext (cairo_t *ctx, PyTypeObject *type,
 				      PyObject *base);
 
 extern PyTypeObject PycairoFontFace_Type;
+extern PyTypeObject PycairoToyFontFace_Type;
 PyObject *PycairoFontFace_FromFontFace (cairo_font_face_t *font_face);
 
 extern PyTypeObject PycairoFontOptions_Type;

@@ -28,7 +28,7 @@ derive. It cannot be instantiated directly.
 
       :meth:`Context.copy_page` is a convenience function for this.
 
-      Since: 1.6
+      .. versionadded:: 1.6
 
    .. method:: create_similar(content, width, height)
 
@@ -77,7 +77,7 @@ derive. It cannot be instantiated directly.
       whether the surface contains color and/or alpha information. See
       :ref:`content <mattributes_content>`.
 
-      Since: 1.2
+      .. versionadded:: 1.2
 
    .. method:: get_device_offset()
 
@@ -88,7 +88,7 @@ derive. It cannot be instantiated directly.
 
       This method returns the previous device offset set by :meth:`.set_device_offset`.
 
-      Since: 1.2
+      .. versionadded:: 1.2
 
    .. method:: get_fallback_resolution()
 
@@ -101,7 +101,7 @@ derive. It cannot be instantiated directly.
       :meth:`.set_fallback_resolution`, or default fallback resolution if
       never set.
 
-      Since: 1.8
+      .. versionadded:: 1.8
 
    .. method:: get_font_options()
 
@@ -185,7 +185,7 @@ derive. It cannot be instantiated directly.
       The default fallback resoultion is 300 pixels per inch in both
       dimensions.
 
-      Since: 1.2
+      .. versionadded:: 1.2
 
    .. method:: show_page()
 
@@ -195,7 +195,7 @@ derive. It cannot be instantiated directly.
       There is a convenience function for this that takes a
       :meth:`Context.show_page`.
 
-      Since: 1.6
+      .. versionadded:: 1.6
 
    .. method:: write_to_png(fobj)
 
@@ -211,36 +211,85 @@ derive. It cannot be instantiated directly.
 class ImageSurface(:class:`Surface`)
 ====================================
 
-.. class:: ImageSurface
+A *cairo.ImageSurface* provides the ability to render to memory buffers either
+allocated by cairo or by the calling code. The supported image formats are
+those defined in :ref:`FORMAT attributes <mattributes_format>`.
 
-.. comment
- C : surface = cairo_image_surface_create (format, width, height);
-     surface = cairo_image_surface_create_from_png (filename);
-     surface = cairo_image_surface_create_from_png_stream (read_func, closure);
-     surface = cairo_image_surface_create_for_data (data, format, w, h, stride)
+.. class:: ImageSurface(format, width, height)
 
- Py: surface = cairo.ImageSurface (format, width, height)
-     surface = cairo.ImageSurface.create_from_png (f)
-       where 'f' is a filename, a file object, or a file-like object
-     surface = cairo.ImageSurface.create_for_data (data, format, w, h, stride)
-       where 'data' if a writable Python buffer object
-..
+   :param format: format of pixels in the surface to create
+   :param width: width of the surface, in pixels
+   :param height: height of the surface, in pixels
+   :returns: a new *ImageSurface*
+   :raises: *MemoryError* in case of no memory
 
-   .. method:: create_for_data()
+   Creates an *ImageSurface* of the specified format and dimensions. Initially
+   the surface contents are all 0. (Specifically, within each pixel, each
+   color or alpha channel belonging to format will be 0. The contents of bits
+   within a pixel, but not belonging to the given format are undefined).
 
-   .. method:: create_from_png()
+   .. method:: create_for_data(data, format, width, height, stride)
 
-   .. method:: format_stride_for_width()
+      :param data: a writable Python buffer object
+      :param format: the format of pixels in the buffer
+      :param width: the width of the image to be stored in the buffer
+      :param height: the height of the image to be stored in the buffer
+      :param stride: the number of bytes between the start of rows in the buffer as allocated. This value should always be computed by :meth:`.format_stride_for_width` before allocating the data buffer.
+      :returns: a new *ImageSurface*
+      :raises: *MemoryError* in case of no memory.
+
+               :class:`cairo.Error` in case of invalid *stride* value.
+
+      Creates an *ImageSurface* for the provided pixel data. The initial
+      contents of buffer will be used as the initial image contents; you must
+      explicitly clear the buffer, using, for example, cairo_rectangle() and
+      cairo_fill() if you want it cleared.
+
+      Note that the *stride* may be larger than width*bytes_per_pixel to
+      provide proper alignment for each pixel and row. This alignment is
+      required to allow high-performance rendering within cairo. The correct
+      way to obtain a legal stride value is to call
+      :meth:`.format_stride_for_width` with the desired format and maximum
+      image width value, and use the resulting stride value to allocate the
+      data and to create the *ImageSurface*. See
+      :meth:`.format_stride_for_width` for example code.
+
+   .. method:: create_from_png(fobj)
+
+      :param fobj: a filename, file, or file-like object of the PNG to load.
+
+      Creates a new *ImageSurface* and initializes the contents to the given
+      PNG file.
+
+   .. method:: format_stride_for_width(format, width)
+
+      :param format: a cairo :ref:`format <mattributes_format>` value
+      :param width: the desired width of an *ImageSurface* to be created.
+      :returns: the appropriate stride to use given the desired format and width, or -1 if either the format is invalid or the width too large.
+
+      This method provides a stride value that will respect all alignment
+      requirements of the accelerated image-rendering code within
+      cairo. Typical usage will be of the form::
+
+        stride = cairo.ImageSurface.stride_for_width (format, width)
+        surface = cairo.ImageSurface.create_for_data (data, format,
+      				  width, height, stride)
+
+      .. versionadded:: 1.6
 
    .. method:: get_data()
+
+      :returns: a Python buffer object for the data of the *ImageSurface*, for direct inspection or modification.
+
+      .. versionadded:: 1.2
 
    .. method:: get_format()
 
    .. method:: get_height()
 
-   .. method:: get_width()
-
    .. method:: get_stride()
+
+   .. method:: get_width()
 
 
 class PDFSurface(:class:`Surface`)

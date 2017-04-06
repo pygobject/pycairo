@@ -21,9 +21,30 @@ derive. It cannot be instantiated directly.
 
 .. class:: Pattern()
 
+   .. method:: get_extend()
+
+      :returns: the current extend strategy used for drawing the *Pattern*.
+      :rtype: int
+
+      Gets the current extend mode for the *Pattern*. See
+      :ref:`EXTEND attributes <mattributes_extend>`
+      for details on the semantics of each extend strategy.
+
    .. method:: get_matrix()
 
       :returns: a new :class:`Matrix` which stores a copy of the *Pattern's* transformation matrix
+
+   .. method:: set_extend(extend)
+
+      :param extend: an extend describing how the area outside of the *Pattern* will be drawn
+
+      Sets the mode to be used for drawing outside the area of a *Pattern*. See
+      :ref:`EXTEND attributes <mattributes_extend>`
+      for details on the semantics of each extend strategy.
+
+      The default extend mode is :attr:`cairo.EXTEND_NONE` for
+      :class:`SurfacePattern` and :attr:`cairo.EXTEND_PAD` for
+      :class:`Gradient` Patterns.
 
    .. method:: set_matrix(matrix)
 
@@ -82,7 +103,7 @@ class SolidPattern(:class:`Pattern`)
 
       Gets the solid color for a *SolidPattern*.
 
-      Since: 1.4
+      .. versionadded:: 1.4
 
 
 class SurfacePattern(:class:`Pattern`)
@@ -95,15 +116,6 @@ class SurfacePattern(:class:`Pattern`)
    :raises: MemoryError in case of no memory.
 
    Create a new *SurfacePattern* for the given surface.
-
-   .. method:: get_extend()
-
-      :returns: the current extend strategy used for drawing the *Pattern*.
-      :rtype: int
-
-      Gets the current extend mode for the *Pattern*. See
-      :ref:`EXTEND attributes <mattributes_extend>`
-      for details on the semantics of each extend strategy.
 
    .. method:: get_filter()
 
@@ -118,18 +130,7 @@ class SurfacePattern(:class:`Pattern`)
 
       :returns: the :class:`Surface` of the *SurfacePattern*.
 
-      Since: 1.4
-
-   .. method:: set_extend(extend)
-
-      :param extend: an extend describing how the area outside of the *Pattern* will be drawn
-
-      Sets the mode to be used for drawing outside the area of a *Pattern*. See
-      :ref:`EXTEND attributes <mattributes_extend>`
-      for details on the semantics of each extend strategy.
-
-      The default extend mode is :attr:`cairo.EXTEND_NONE` for *SurfacePatterns*
-      and :attr:`cairo.EXTEND_PAD` for *Gradient* patterns.
+      .. versionadded:: 1.4
 
    .. method:: set_filter(filter)
 
@@ -245,7 +246,7 @@ class LinearGradient(:class:`Gradient`)
 
       Gets the gradient endpoints for a *LinearGradient*.
 
-      Since: 1.4
+      .. versionadded:: 1.4
 
 
 class RadialGradient(:class:`Gradient`)
@@ -290,4 +291,4 @@ class RadialGradient(:class:`Gradient`)
       Gets the *Gradient* endpoint circles for a *RadialGradient*, each
       specified as a center coordinate and a radius.
 
-      Since: 1.4
+      .. versionadded:: 1.4

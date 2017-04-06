@@ -117,11 +117,29 @@ pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 }
 
 static PyObject *
+pattern_get_extend (PycairoPattern *o)
+{
+    return PyInt_FromLong (cairo_pattern_get_extend (o->pattern));
+}
+
+static PyObject *
 pattern_get_matrix (PycairoPattern *o)
 {
     cairo_matrix_t matrix;
     cairo_pattern_get_matrix (o->pattern, &matrix);
     return PycairoMatrix_FromMatrix (&matrix);
+}
+
+static PyObject *
+pattern_set_extend (PycairoPattern *o, PyObject *args)
+{
+    int extend;
+
+    if (!PyArg_ParseTuple(args, "i:Pattern.set_extend", &extend))
+ 	return NULL;
+
+    cairo_pattern_set_extend (o->pattern, extend);
+    Py_RETURN_NONE;
 }
 
 static PyObject *
@@ -146,8 +164,10 @@ static PyMethodDef pattern_methods[] = {
      * cairo_pattern_status()
      * - not needed since Pycairo handles status checking
      */
-    {"get_matrix",       (PyCFunction)pattern_get_matrix,      METH_NOARGS },
-    {"set_matrix",       (PyCFunction)pattern_set_matrix,      METH_VARARGS },
+    {"get_extend", (PyCFunction)pattern_get_extend,          METH_NOARGS },
+    {"get_matrix", (PyCFunction)pattern_get_matrix,          METH_NOARGS },
+    {"set_extend", (PyCFunction)pattern_set_extend,          METH_VARARGS },
+    {"set_matrix", (PyCFunction)pattern_set_matrix,          METH_VARARGS },
     {NULL, NULL, 0, NULL},
 };
 
@@ -273,18 +293,11 @@ static PyObject *
 surface_pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     PycairoSurface *s;
-    PyObject *o;
     if (!PyArg_ParseTuple (args, "O!:SurfacePattern.__new__",
 			   &PycairoSurface_Type, &s))
 	return NULL;
     return PycairoPattern_FromPattern (
-              cairo_pattern_create_for_surface (s->surface), s);
-}
-
-static PyObject *
-surface_pattern_get_extend (PycairoSurfacePattern *o)
-{
-    return PyInt_FromLong (cairo_pattern_get_extend (o->pattern));
+		cairo_pattern_create_for_surface (s->surface), (PyObject *)s);
 }
 
 static PyObject *
@@ -307,18 +320,6 @@ surface_pattern_get_surface (PycairoSurfacePattern *o)
 }
 
 static PyObject *
-surface_pattern_set_extend (PycairoSurfacePattern *o, PyObject *args)
-{
-    int extend;
-
-    if (!PyArg_ParseTuple(args, "i:SurfacePattern.set_extend", &extend))
- 	return NULL;
-
-    cairo_pattern_set_extend (o->pattern, extend);
-    Py_RETURN_NONE;
-}
-
-static PyObject *
 surface_pattern_set_filter (PycairoSurfacePattern *o, PyObject *args)
 {
     int filter;
@@ -331,10 +332,8 @@ surface_pattern_set_filter (PycairoSurfacePattern *o, PyObject *args)
 }
 
 static PyMethodDef surface_pattern_methods[] = {
-    {"get_extend",    (PyCFunction)surface_pattern_get_extend,  METH_NOARGS },
     {"get_filter",    (PyCFunction)surface_pattern_get_filter,  METH_NOARGS },
     {"get_surface",   (PyCFunction)surface_pattern_get_surface, METH_NOARGS },
-    {"set_extend",    (PyCFunction)surface_pattern_set_extend,  METH_VARARGS },
     {"set_filter",    (PyCFunction)surface_pattern_set_filter,  METH_VARARGS },
     {NULL, NULL, 0, NULL},
 };
