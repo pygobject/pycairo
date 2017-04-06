@@ -22,15 +22,10 @@ for filename in sys.argv[1:]:
 
     svg = cairo.svg.Context()
     svg.parse (filename)
-    width, height = svg.size
+    width, height = svg.get_size()
 
-    try:
-        fileObject = file(file_out, 'wb')
-    except IOError, exc:
-        raise SystemExit("%s: %s" % (exc.filename, exc.strerror))
-
-    ctx = cairo.Context()
-    ctx.set_target_png (fileObject, cairo.FORMAT_ARGB32, width, height)
+    surface = cairo.ImageSurface (cairo.FORMAT_ARGB32, width, height)
+    ctx = cairo.Context(surface)
     svg.render (ctx)
-    ctx.show_page()
+    surface.write_to_png (file_out)
     print 'saved', file_out

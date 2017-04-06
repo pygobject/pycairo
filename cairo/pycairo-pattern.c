@@ -1,8 +1,8 @@
 /* -*- mode: C; c-basic-offset: 4 -*- 
  *
- * PyCairo - Python bindings for Cairo
+ * Pycairo - Python bindings for cairo
  *
- * Copyright © 2004 Steve Chaplin
+ * Copyright © 2004-2005 Steve Chaplin
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -26,134 +26,166 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY
  * OF ANY KIND, either express or implied. See the LGPL or the MPL for
  * the specific language governing rights and limitations.
- *
- * Contributor(s):
- *	           Maarten Breddels
  */
+
+#include <Python.h>
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 #include "pycairo-private.h"
-#include "pycairo-misc.h"
 
 
-/* wrap an existing cairo_pattern_t in a PyCairoPattern object */
+/* PycairoPattern_FromPattern
+ * Create a new PycairoPattern from a cairo_pattern_t
+ * pattern - a cairo_pattern_t to 'wrap' into a Python object.
+ *           it is unreferenced if the PycairoPattern creation fails
+ * Return value: New reference or NULL on failure
+ */
 PyObject *
-pycairo_pattern_wrap(cairo_pattern_t *pattern)
+PycairoPattern_FromPattern (cairo_pattern_t *pattern)
 {
-    PyCairoPattern *self;
+    PyObject *o;
 
-    self = PyObject_New(PyCairoPattern, &PyCairoPattern_Type);
-    if (self) {
-	cairo_pattern_reference(pattern);
-	self->pattern = pattern;
-    }
-    return (PyObject *)self;
+    assert (pattern != NULL);
+    o = PycairoPattern_Type.tp_alloc (&PycairoPattern_Type, 0);
+    if (o)
+	((PycairoPattern *)o)->pattern = pattern;
+    else
+	cairo_pattern_destroy (pattern);
+    return o;
 }
 
 static void
-pycairo_pattern_dealloc(PyCairoPattern *self)
+pattern_dealloc (PycairoPattern *o)
 {
-    if (self->pattern)
-	cairo_pattern_destroy(self->pattern);
-    self->pattern = NULL;
-
-    if (self->ob_type->tp_free)
-	self->ob_type->tp_free((PyObject *)self);
-    else
-	PyObject_Del(self);
+#ifdef DEBUG
+    printf("pattern_dealloc start\n");
+#endif
+    if (o->pattern) {
+	cairo_pattern_destroy (o->pattern);
+	o->pattern = NULL;
+    }
+    o->ob_type->tp_free((PyObject *)o);
+#ifdef DEBUG
+    printf("pattern_dealloc end\n");
+#endif
 }
 
 static PyObject *
-pycairo_pattern_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    PyCairoPattern *self = (PyCairoPattern *)type->tp_alloc(type, 0);
+    PyErr_SetString(PyExc_TypeError,
+		    "The Pattern type cannot be instantiated");
+    return NULL;
 
-    if (self)
-      self->pattern = NULL;
-    return (PyObject *)self;
-}
-
-static int
-pycairo_pattern_init(PyCairoPattern *self, PyObject *args, PyObject *kwargs)
-{
-    static char *kwlist[] = { "x0", "y0", "x1", "y1",
-			      "cx0", "cy0", "radius0", "cx1", "cy1", "radius1",
-			      "surface",
-			      NULL };
-    double x0 = -1.0, y0 = -1.0, x1 = -1.0, y1 = -1.0;
-    double cx0 =-1.0, cy0 =-1.0, radius0 =-1.0, cx1 =-1.0, cy1 =-1.0, radius1 =-1.0;
-    PyCairoSurface *surface = NULL;
-    cairo_pattern_t *pattern = NULL;
-
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,
-				     "|ddddddddddO!:Pattern.__init__", kwlist,
-				     &x0, &y0, &x1, &y1,
-				     &cx0, &cy0, &radius0,
-				     &cx1, &cy1, &radius1,
-				     &PyCairoSurface_Type, &surface
-				     )) /* change to keywords only? */
-	return -1;
-
-    /* three alternative constructors */
-    if (x0 != -1.0 && y0 != -1.0 && x1 != -1.0 && y1 != -1.0) {
-	pattern = cairo_pattern_create_linear (x0, y0, x1, y1);
-
-    } else if (cx0 != -1.0 && cy0 != -1.0 && radius0 != -1.0 &&
-	       cx1 != -1.0 && cy1 != -1.0 && radius1 != -1.0) {
-	pattern = cairo_pattern_create_radial (cx0, cy0, radius0,
-					       cx1, cy1, radius1);
-
-    } else if (surface != NULL) {
-	pattern = cairo_pattern_create_for_surface (surface->surface);
-
-    } else {
-	PyErr_SetString(PyExc_ValueError, "incorrect arguments for pattern");
-	return -1;
-    }
-
-    if (!pattern) {
-	PyErr_SetString(PyExc_RuntimeError, "could not create pattern");
-	return -1;
-    }
-    self->pattern = pattern;
-    return 0;
 }
 
 static PyObject *
-pycairo_pattern_add_color_stop(PyCairoPattern *self, PyObject *args)
+pattern_create_for_surface (PyTypeObject *type, PyObject *args)
+{
+    PycairoSurface *s;
+    cairo_pattern_t *pattern;
+
+    if (!PyArg_ParseTuple (args, "O!:Pattern.create_for_surface", 
+			   &PycairoSurface_Type, &s))
+	return NULL;
+
+    pattern = cairo_pattern_create_for_surface (s->surface);
+    if (!pattern)
+	return PyErr_NoMemory();
+    return PycairoPattern_FromPattern (pattern);
+}
+
+static PyObject *
+pattern_create_linear (PyTypeObject *type, PyObject *args)
+{
+    double x0, y0, x1, y1;
+    cairo_pattern_t *pattern;
+    
+    if (!PyArg_ParseTuple(args, "dddd:Pattern.create_linear", 
+			  &x0, &y0, &x1, &y1))
+	return NULL;
+
+    pattern = cairo_pattern_create_linear (x0, y0, x1, y1);
+    if (!pattern)
+	return PyErr_NoMemory();
+    return PycairoPattern_FromPattern (pattern);
+}
+
+static PyObject *
+pattern_create_radial (PyTypeObject *type, PyObject *args)
+{
+    cairo_pattern_t *pattern;
+    double cx0, cy0, radius0, cx1, cy1, radius1;
+
+    if (!PyArg_ParseTuple(args, "dddddd:Pattern.create_radial", 
+			  &cx0, &cy0, &radius0, &cx1, &cy1, &radius1))
+	return NULL;
+
+    pattern = cairo_pattern_create_radial (cx0, cy0, radius0, 
+					   cx1, cy1, radius1);
+    if (!pattern)
+	return PyErr_NoMemory();
+    return PycairoPattern_FromPattern (pattern);
+}
+
+static PyObject *
+pattern_add_color_stop_rgb (PycairoPattern *o, PyObject *args)
+{
+    double offset, red, green, blue;
+    cairo_status_t status;
+
+    if (!PyArg_ParseTuple(args, "dddd:Pattern.add_color_stop_rgb",
+			  &offset, &red, &green, &blue))
+	return NULL;
+
+    status = cairo_pattern_add_color_stop_rgb (o->pattern, offset, red, green, 
+					       blue);
+    if (Pycairo_Check_Status(status))
+	return NULL;
+    Py_RETURN_NONE;
+}
+
+static PyObject *
+pattern_add_color_stop_rgba (PycairoPattern *o, PyObject *args)
 {
     double offset, red, green, blue, alpha;
     cairo_status_t status;
 
-    if (!PyArg_ParseTuple(args, "ddddd:Pattern.add_color_stop",
+    if (!PyArg_ParseTuple(args, "ddddd:Pattern.add_color_stop_rgba",
 			  &offset, &red, &green, &blue, &alpha))
 	return NULL;
 
-    status = cairo_pattern_add_color_stop (self->pattern, offset, red, green, 
-					   blue, alpha);
-    if (pycairo_check_status(status))
+    status = cairo_pattern_add_color_stop_rgba (o->pattern, offset, red, 
+						green, blue, alpha);
+    if (Pycairo_Check_Status(status))
 	return NULL;
     Py_RETURN_NONE;
 }
 
 static PyObject *
-pycairo_pattern_set_matrix(PyCairoPattern *self, PyObject *args)
+pattern_get_extend (PycairoPattern *o)
 {
-    PyCairoMatrix *matrix;
-
-    if (!PyArg_ParseTuple(args, "O!:Pattern.set_matrix",
-			  &PyCairoMatrix_Type, &matrix))
-	return NULL;
-
-    /* always returns status = success */
-    cairo_pattern_set_matrix(self->pattern, matrix->matrix);
-    Py_RETURN_NONE;
+    return PyInt_FromLong(cairo_pattern_get_extend (o->pattern));
 }
 
 static PyObject *
-pycairo_pattern_set_extend(PyCairoPattern *self, PyObject *args)
+pattern_get_filter (PycairoPattern *o)
+{
+    return PyInt_FromLong(cairo_pattern_get_filter (o->pattern));
+}
+
+static PyObject *
+pattern_get_matrix (PycairoPattern *o)
+{
+    cairo_matrix_t matrix;
+    cairo_pattern_get_matrix (o->pattern, &matrix);
+    return PycairoMatrix_FromMatrix (&matrix);
+}
+
+static PyObject *
+pattern_set_extend (PycairoPattern *o, PyObject *args)
 {
     int extend;
 
@@ -161,107 +193,102 @@ pycairo_pattern_set_extend(PyCairoPattern *self, PyObject *args)
  	return NULL;
  
     /* always returns status = success */
-    cairo_pattern_set_extend(self->pattern, extend);
+    cairo_pattern_set_extend (o->pattern, extend);
     Py_RETURN_NONE;
 }
  
 static PyObject *
-pycairo_pattern_set_filter(PyCairoPattern *self, PyObject *args)
+pattern_set_filter (PycairoPattern *o, PyObject *args)
 {
     int filter;
 
-    if (!PyArg_ParseTuple(args, "i:Pattern.set_filter", &filter))
+    if (!PyArg_ParseTuple (args, "i:Pattern.set_filter", &filter))
 	return NULL;
 
     /* always returns status = success */
-    cairo_pattern_set_filter(self->pattern, filter);
+    cairo_pattern_set_filter (o->pattern, filter);
     Py_RETURN_NONE;
 }
- 
+  
 static PyObject *
-pycairo_pattern_get_matrix(PyCairoPattern *self)
+pattern_set_matrix (PycairoPattern *o, PyObject *args)
 {
-    cairo_matrix_t *matrix;
+    PycairoMatrix *m;
 
-    matrix = cairo_matrix_create();
-    if (!matrix)
-	return PyErr_NoMemory();
+    if (!PyArg_ParseTuple (args, "O!:Pattern.set_matrix",
+			   &PycairoMatrix_Type, &m))
+	return NULL;
 
     /* always returns status = success */
-    cairo_pattern_get_matrix(self->pattern, matrix);
-    return pycairo_matrix_wrap(matrix);
+    cairo_pattern_set_matrix (o->pattern, &m->matrix);
+    Py_RETURN_NONE;
 }
 
-static PyObject *
-pycairo_pattern_get_extend(PyCairoPattern *self)
-{
-    return PyInt_FromLong(cairo_pattern_get_extend(self->pattern));
-}
-
-static PyObject *
-pycairo_pattern_get_filter(PyCairoPattern *self)
-{
-    return PyInt_FromLong(cairo_pattern_get_filter(self->pattern));
-}
-
- 
-static PyMethodDef pycairo_pattern_methods[] = {
-    { "add_color_stop", (PyCFunction)pycairo_pattern_add_color_stop, 
-      METH_VARARGS },
-    { "set_extend", (PyCFunction)pycairo_pattern_set_extend, METH_VARARGS },
-    { "set_filter", (PyCFunction)pycairo_pattern_set_filter, METH_VARARGS },
-    { "set_matrix", (PyCFunction)pycairo_pattern_set_matrix, METH_VARARGS },
-    { NULL, NULL, 0 }
+static PyMethodDef pattern_methods[] = {
+    /* methods never exposed in a language binding:
+     * cairo_pattern_destroy()
+     * cairo_pattern_reference()
+     */
+    {"add_color_stop_rgb",(PyCFunction)pattern_add_color_stop_rgb,  
+                                                               METH_VARARGS },
+    {"add_color_stop_rgba",(PyCFunction)pattern_add_color_stop_rgba,  
+                                                               METH_VARARGS },
+    {"create_for_surface",(PyCFunction)pattern_create_for_surface, 
+                                                  METH_VARARGS | METH_CLASS },
+    {"create_linear",    (PyCFunction)pattern_create_linear, 
+                                                  METH_VARARGS | METH_CLASS },
+    {"create_radial",    (PyCFunction)pattern_create_radial, 
+                                                  METH_VARARGS | METH_CLASS },
+    {"get_extend",       (PyCFunction)pattern_get_extend,      METH_NOARGS },
+    {"get_filter",       (PyCFunction)pattern_get_filter,      METH_NOARGS },
+    {"get_matrix",       (PyCFunction)pattern_get_matrix,      METH_NOARGS },
+    {"set_extend",       (PyCFunction)pattern_set_extend,      METH_VARARGS },
+    {"set_filter",       (PyCFunction)pattern_set_filter,      METH_VARARGS },
+    {"set_matrix",       (PyCFunction)pattern_set_matrix,      METH_VARARGS },
+    {NULL, NULL, 0, NULL},
 };
 
-static PyGetSetDef pycairo_pattern_getsets[] = {
-    { "extend", (getter)pycairo_pattern_get_extend, (setter)0 },
-    { "filter", (getter)pycairo_pattern_get_filter, (setter)0 },
-    { "matrix", (getter)pycairo_pattern_get_matrix, (setter)0 },
-    { NULL, (getter)0, (setter)0 }
-};
-
-PyTypeObject PyCairoPattern_Type = {
-    PyObject_HEAD_INIT(NULL)
+PyTypeObject PycairoPattern_Type = {
+    PyObject_HEAD_INIT(&PyType_Type)
     0,                                  /* ob_size */
     "cairo.Pattern",                    /* tp_name */
-    sizeof(PyCairoPattern),             /* tp_basicsize */
+    sizeof(PycairoPattern),             /* tp_basicsize */
     0,                                  /* tp_itemsize */
-    (destructor)pycairo_pattern_dealloc, /* tp_dealloc */
-    (printfunc)0,                       /* tp_print */
-    (getattrfunc)0,                     /* tp_getattr */
-    (setattrfunc)0,                     /* tp_setattr */
-    (cmpfunc)0,                         /* tp_compare */
-    (reprfunc)0,                        /* tp_repr */
+    (destructor)pattern_dealloc,        /* tp_dealloc */
+    0,                                  /* tp_print */
+    0,                                  /* tp_getattr */
+    0,                                  /* tp_setattr */
+    0,                                  /* tp_compare */
+    0,                                  /* tp_repr */
     0,                                  /* tp_as_number */
     0,                                  /* tp_as_sequence */
     0,                                  /* tp_as_mapping */
-    (hashfunc)0,                        /* tp_hash */
-    (ternaryfunc)0,                     /* tp_call */
-    (reprfunc)0,                        /* tp_str */
-    (getattrofunc)0,                    /* tp_getattro */
-    (setattrofunc)0,                    /* tp_setattro */
+    0,                                  /* tp_hash */
+    0,                                  /* tp_call */
+    0,                                  /* tp_str */
+    0,                                  /* tp_getattro */
+    0,                                  /* tp_setattro */
     0,                                  /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /* tp_flags */
-    "Pattern objects",                  /* tp_doc */
-    (traverseproc)0,                    /* tp_traverse */
-    (inquiry)0,                         /* tp_clear */
-    (richcmpfunc)0,                     /* tp_richcompare */
+    Py_TPFLAGS_DEFAULT,                 /* tp_flags */
+    0,                                  /* tp_doc */
+    0,                                  /* tp_traverse */
+    0,                                  /* tp_clear */
+    0,                                  /* tp_richcompare */
     0,                                  /* tp_weaklistoffset */
-    (getiterfunc)0,                     /* tp_iter */
-    (iternextfunc)0,                    /* tp_iternext */
-    pycairo_pattern_methods,            /* tp_methods */
+    0,                                  /* tp_iter */
+    0,                                  /* tp_iternext */
+    pattern_methods,                    /* tp_methods */
     0,                                  /* tp_members */
-    pycairo_pattern_getsets,            /* tp_getset */
-    (PyTypeObject *)0,                  /* tp_base */
-    (PyObject *)0,                      /* tp_dict */
+    0,                                  /* tp_getset */
+    &PyBaseObject_Type,                 /* tp_base */
+    0,                                  /* tp_dict */
     0,                                  /* tp_descr_get */
     0,                                  /* tp_descr_set */
     0,                                  /* tp_dictoffset */
-    (initproc)pycairo_pattern_init,     /* tp_init */
-    (allocfunc)0,                       /* tp_alloc */
-    pycairo_pattern_new,                /* tp_new */
+    0,                                  /* tp_init */
+    0,                                  /* tp_alloc */
+    (newfunc)pattern_new,               /* tp_new */
     0,                                  /* tp_free */
-    (inquiry)0,                         /* tp_is_gc */
-    (PyObject *)0,                      /* tp_bases */
+    0,                                  /* tp_is_gc */
+    0,                                  /* tp_bases */
 };

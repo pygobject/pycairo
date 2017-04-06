@@ -1,8 +1,8 @@
 /* -*- mode: C; c-basic-offset: 4 -*- 
  *
- * PyCairo - Python bindings for Cairo
+ * Pycairo - Python bindings for cairo
  *
- * Copyright © 2003-2004 Steve Chaplin
+ * Copyright © 2003-2005 Steve Chaplin
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -26,26 +26,33 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY
  * OF ANY KIND, either express or implied. See the LGPL or the MPL for
  * the specific language governing rights and limitations.
- *
- * Contributor(s):
- *                 Steve Chaplin
  */
 
-#ifndef _PYCAIRO_MISC_H_
-#define _PYCAIRO_MISC_H_
+#ifndef _PYCAIROSVG_H_
+#define _PYCAIROSVG_H_
 
-#if PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION < 4
-#  define Py_RETURN_NONE return Py_INCREF(Py_None), Py_None
-#  define Py_RETURN_TRUE return Py_INCREF(Py_True), Py_True
-#  define Py_RETURN_FALSE return Py_INCREF(Py_False), Py_False
-#  define Py_CLEAR(op)				\
-        do {                            	\
-                if (op) {			\
-                        PyObject *tmp = (PyObject *)(op);	\
-                        (op) = NULL;		\
-                        Py_DECREF(tmp);		\
-                }				\
-        } while (0)
-#endif /* PY_MAJOR_VERSION */
+#include <Python.h>
 
-#endif /* _PYCAIRO_MISC_H_ */
+#include <svg-cairo.h>
+
+#include "pycairo.h"
+
+
+typedef struct { 
+    PyObject_HEAD
+    svg_cairo_t *ctx;
+} PycairoSVGContext;
+
+
+/* Define structure for C API. */
+/* ... */
+
+#ifndef _INSIDE_PYCAIROSVG_
+
+/* Macros for accessing the C API */
+/* ... */
+
+
+#endif /* ifndef _INSIDE_PYCAIROSVG_ */
+
+#endif /* ifndef _PYCAIROSVG_H_ */

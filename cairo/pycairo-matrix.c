@@ -1,8 +1,8 @@
 /* -*- mode: C; c-basic-offset: 4 -*- 
  *
- * PyCairo - Python bindings for Cairo
+ * Pycairo - Python bindings for cairo
  *
- * Copyright © 2003-2004 James Henstridge
+ * Copyright © 2003-2005 James Henstridge
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -26,123 +26,139 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY
  * OF ANY KIND, either express or implied. See the LGPL or the MPL for
  * the specific language governing rights and limitations.
- *
- * Contributor(s):
- *
  */
+
+#include <Python.h>
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 #include "pycairo-private.h"
 
+
+/* PycairoMatrix_FromMatrix
+ * Create a new PycairoMatrix from a cairo_matrix_t
+ * matrix - a cairo_matrix_t to 'wrap' into a Python object
+ * Return value: New reference or NULL on failure
+ *
+ * takes a copy of cairo_matrix_t
+ */
 PyObject *
-pycairo_matrix_wrap(cairo_matrix_t *matrix)
+PycairoMatrix_FromMatrix (const cairo_matrix_t *matrix)
 {
-    PyCairoMatrix *self;
+    PyObject *o;
 
-    self = PyObject_New(PyCairoMatrix, &PyCairoMatrix_Type);
-    if (!self) {
-	cairo_matrix_destroy(matrix);
-	return NULL;
-    }
-
-    self->matrix = matrix;
-
-    return (PyObject *)self;
-}
-
-static int
-pycairo_matrix_init(PyCairoMatrix *self, PyObject *args, PyObject *kwargs)
-{
-    static char *kwlist[] = { "a", "b", "c", "d", "tx", "ty", NULL };
-    double a = 1.0, b = 0.0, c = 0.0, d = 1.0, tx = 0.0, ty = 0.0;
-
-    self->matrix = cairo_matrix_create();
-    if (!self->matrix) {
-	PyErr_SetString(PyExc_RuntimeError, "could not create matrix");
-	return -1;
-    }
-
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,
-				     "|dddddd:Matrix.__init__", kwlist,
-				     &a, &b, &c, &d, &tx, &ty))
-	return -1;
-
-    cairo_matrix_set_affine(self->matrix, a, b, c, d, tx, ty);
-
-    return 0;
+    assert (matrix != NULL);
+    o = PycairoMatrix_Type.tp_alloc (&PycairoMatrix_Type, 0);
+    if (o)
+	((PycairoMatrix *)o)->matrix = *matrix;
+    return o;
 }
 
 static void
-pycairo_matrix_dealloc(PyCairoMatrix *self)
+matrix_dealloc (PycairoMatrix *o)
 {
-    if (self->matrix)
-	cairo_matrix_destroy(self->matrix);
-    self->matrix = NULL;
-
-    if (self->ob_type->tp_free)
-	self->ob_type->tp_free((PyObject *)self);
-    else
-	PyObject_Del(self);
+    o->ob_type->tp_free((PyObject *)o);
 }
 
 static PyObject *
-pycairo_matrix_repr(PyCairoMatrix *self)
+matrix_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    char buf[256];
-    double a, b, c, d, tx, ty;
+    PyObject *o;
+    static char *kwlist[] = { "xx", "yx", "xy", "yy", "x0", "y0", NULL };
+    double xx = 1.0, yx = 0.0, xy = 0.0, yy = 1.0, x0 = 0.0, y0 = 0.0;
 
-    cairo_matrix_get_affine(self->matrix, &a, &b, &c, &d, &tx, &ty);
-    PyOS_snprintf(buf, sizeof(buf), "cairo.Matrix(%g, %g, %g, %g, %g, %g)",
-		  a, b, c, d, tx, ty);
-    return PyString_FromString(buf);
+    if (!PyArg_ParseTupleAndKeywords(args, kwds,
+				     "|dddddd:Matrix.__init__", kwlist,
+				     &xx, &yx, &xy, &yy, &x0, &y0))
+	return NULL;
+
+    o = type->tp_alloc(type, 0);
+    if (o)
+	cairo_matrix_init (&((PycairoMatrix *)o)->matrix, 
+			   xx, yx, xy, yy, x0, y0);
+    return o;
 }
 
 static PyObject *
-pycairo_matrix_richcmp(PyCairoMatrix *self, PyCairoMatrix *other, int op)
+matrix_init_rotate (PyTypeObject *type, PyObject *args)
 {
-    double a1, b1, c1, d1, tx1, ty1;
-    double a2, b2, c2, d2, tx2, ty2;
-    int equal;
-    PyObject *ret;
+    cairo_matrix_t matrix;
+    double radians;
 
-    if (!PyObject_TypeCheck(other, &PyCairoMatrix_Type) ||
-	!(op == Py_EQ || op == Py_NE)) {
-	Py_INCREF(Py_NotImplemented);
-	return Py_NotImplemented;
-    }
+    if (!PyArg_ParseTuple(args, "d:Matrix.init_rotate", &radians))
+	return NULL;
 
-    cairo_matrix_get_affine(self->matrix, &a1, &b1, &c1, &d1, &tx1, &ty1);
-    cairo_matrix_get_affine(other->matrix, &a2, &b2, &c2, &d2, &tx2, &ty2);
-    equal = a1 == a2 &&	b1 == b2 && c1 == c2 && d1 == d2 &&
-	tx1 == tx2 && ty1 == ty2;
-
-    if (op == Py_EQ)
-	ret = equal ? Py_True : Py_False;
-    else
-	ret = equal ? Py_False : Py_True;
-    Py_INCREF(ret);
-    return ret;
+    cairo_matrix_init_rotate (&matrix, radians);
+    return PycairoMatrix_FromMatrix (&matrix);
 }
 
 static PyObject *
-pycairo_matrix_multiply(PyCairoMatrix *self, PyCairoMatrix *other)
+matrix_get_xx (PycairoMatrix *o)
 {
-    cairo_matrix_t *result;
-
-    result = cairo_matrix_create();
-    if (!result)
-	return PyErr_NoMemory();
-
-    cairo_matrix_multiply(result, self->matrix, other->matrix);
-    return pycairo_matrix_wrap(result);
+    return Py_BuildValue("d", o->matrix.xx);
 }
 
-static PyNumberMethods pycairo_matrix_as_number = {
+static PyObject *
+matrix_get_yx (PycairoMatrix *o)
+{
+    return Py_BuildValue("d", o->matrix.yx);
+}
+
+static PyObject *
+matrix_get_xy (PycairoMatrix *o)
+{
+    return Py_BuildValue("d", o->matrix.xy);
+}
+
+static PyObject *
+matrix_get_yy (PycairoMatrix *o)
+{
+    return Py_BuildValue("d", o->matrix.yy);
+}
+
+static PyObject *
+matrix_get_x0 (PycairoMatrix *o)
+{
+    return Py_BuildValue("d", o->matrix.x0);
+}
+
+static PyObject *
+matrix_get_y0 (PycairoMatrix *o)
+{
+    return Py_BuildValue("d", o->matrix.y0);
+}
+
+/* return cairo_matrix_t data as a 6-tuple */
+static PyObject *
+matrix_get_value (PycairoMatrix *o)
+{
+    return Py_BuildValue("(dddddd)",
+			 o->matrix.xx, o->matrix.yx, 
+			 o->matrix.xy, o->matrix.yy, 
+			 o->matrix.x0, o->matrix.y0);
+}
+
+static PyObject *
+matrix_invert (PycairoMatrix *o)
+{
+    if (Pycairo_Check_Status (cairo_matrix_invert (&o->matrix)))
+	return NULL;
+    Py_RETURN_NONE;
+}
+
+static PyObject *
+matrix_multiply (PycairoMatrix *o, PycairoMatrix *o2)
+{
+    cairo_matrix_t result;
+    cairo_matrix_multiply (&result, &o->matrix, &o2->matrix);
+    return PycairoMatrix_FromMatrix (&result);
+}
+
+static PyNumberMethods matrix_as_number = {
   (binaryfunc)0,
   (binaryfunc)0,
-  (binaryfunc)pycairo_matrix_multiply,
+  (binaryfunc)matrix_multiply,
   (binaryfunc)0,
   (binaryfunc)0,
   (binaryfunc)0,
@@ -166,154 +182,177 @@ static PyNumberMethods pycairo_matrix_as_number = {
 };
 
 static PyObject *
-pycairo_matrix_translate(PyCairoMatrix *self, PyObject *args)
+matrix_repr (PycairoMatrix *o)
 {
-    double tx, ty;
-    cairo_matrix_t *other;
+    char buf[256];
 
-    if (!PyArg_ParseTuple(args, "dd:Matrix.translate", &tx, &ty))
-	return NULL;
-    
-    other = cairo_matrix_create();
-    if (!other)
-	return PyErr_NoMemory();
-
-    cairo_matrix_copy(other, self->matrix);
-    cairo_matrix_translate(other, tx, ty);
-    return pycairo_matrix_wrap(other);
+    PyOS_snprintf(buf, sizeof(buf), "cairo.Matrix(%g, %g, %g, %g, %g, %g)",
+		  o->matrix.xx, o->matrix.yx, 
+		  o->matrix.xy, o->matrix.yy, 
+		  o->matrix.x0, o->matrix.y0);
+    return PyString_FromString(buf);
 }
 
 static PyObject *
-pycairo_matrix_scale(PyCairoMatrix *self, PyObject *args)
+matrix_richcmp (PycairoMatrix *m1, PycairoMatrix *m2, int op)
 {
-    double sx, sy;
-    cairo_matrix_t *other;
+    int equal;
+    PyObject *ret;
+    cairo_matrix_t *mx1 = &m1->matrix;
+    cairo_matrix_t *mx2 = &m2->matrix;
 
-    if (!PyArg_ParseTuple(args, "dd:Matrix.scale", &sx, &sy))
-	return NULL;
-    
-    other = cairo_matrix_create();
-    if (!other)
-	return PyErr_NoMemory();
+    if (!PyObject_TypeCheck(m2, &PycairoMatrix_Type) ||
+	!(op == Py_EQ || op == Py_NE)) {
+	Py_INCREF(Py_NotImplemented);
+	return Py_NotImplemented;
+    }
 
-    cairo_matrix_copy(other, self->matrix);
-    cairo_matrix_scale(other, sx, sy);
-    return pycairo_matrix_wrap(other);
+    equal = mx1->xx == mx2->xx && mx1->yx == mx2->yx &&
+	mx1->xy == mx2->xy && mx1->yy == mx2->yy &&
+	mx1->x0 == mx2->x0 && mx1->y0 == mx2->y0;
+
+    if (op == Py_EQ)
+	ret = equal ? Py_True : Py_False;
+    else
+	ret = equal ? Py_False : Py_True;
+    Py_INCREF(ret);
+    return ret;
 }
 
 static PyObject *
-pycairo_matrix_rotate(PyCairoMatrix *self, PyObject *args)
+matrix_rotate (PycairoMatrix *o, PyObject *args)
 {
     double radians;
-    cairo_matrix_t *other;
 
     if (!PyArg_ParseTuple(args, "d:Matrix.rotate", &radians))
 	return NULL;
     
-    other = cairo_matrix_create();
-    if (!other)
-	return PyErr_NoMemory();
-
-    cairo_matrix_copy(other, self->matrix);
-    cairo_matrix_rotate(other, radians);
-    return pycairo_matrix_wrap(other);
+    cairo_matrix_rotate (&o->matrix, radians);
+    Py_RETURN_NONE;
 }
 
 static PyObject *
-pycairo_matrix_invert(PyCairoMatrix *self)
+matrix_scale (PycairoMatrix *o, PyObject *args)
 {
-    cairo_matrix_t *other;
+    double sx, sy;
 
-    other = cairo_matrix_create();
-    if (!other)
-	return PyErr_NoMemory();
-
-    cairo_matrix_copy(other, self->matrix);
-    if (pycairo_check_status(cairo_matrix_invert(other))) {
-	cairo_matrix_destroy(other);
+    if (!PyArg_ParseTuple(args, "dd:Matrix.scale", &sx, &sy))
 	return NULL;
-    }
-    return pycairo_matrix_wrap(other);
+    
+    cairo_matrix_scale (&o->matrix, sx, sy);
+    Py_RETURN_NONE;
 }
 
 static PyObject *
-pycairo_matrix_transform_distance(PyCairoMatrix *self, PyObject *args)
+matrix_translate (PycairoMatrix *o, PyObject *args)
+{
+    double tx, ty;
+
+    if (!PyArg_ParseTuple(args, "dd:Matrix.translate", &tx, &ty))
+	return NULL;
+    
+    cairo_matrix_translate (&o->matrix, tx, ty);
+    Py_RETURN_NONE;
+}
+
+static PyObject *
+matrix_transform_distance (PycairoMatrix *o, PyObject *args)
 {
     double dx, dy;
 
     if (!PyArg_ParseTuple(args, "dd:Matrix.transform_distance", &dx, &dy))
 	return NULL;
 
-    cairo_matrix_transform_distance(self->matrix, &dx, &dy);
+    cairo_matrix_transform_distance (&o->matrix, &dx, &dy);
     return Py_BuildValue("(dd)", dx, dy);
 }
 
 static PyObject *
-pycairo_matrix_transform_point(PyCairoMatrix *self, PyObject *args)
+matrix_transform_point (PycairoMatrix *o, PyObject *args)
 {
     double x, y;
 
     if (!PyArg_ParseTuple(args, "dd:Matrix.transform_point", &x, &y))
 	return NULL;
 
-    cairo_matrix_transform_point(self->matrix, &x, &y);
+    cairo_matrix_transform_point (&o->matrix, &x, &y);
     return Py_BuildValue("(dd)", x, y);
 }
 
-static PyMethodDef pycairo_matrix_methods[] = {
-    { "translate", (PyCFunction)pycairo_matrix_translate, METH_VARARGS },
-    { "scale", (PyCFunction)pycairo_matrix_scale, METH_VARARGS },
-    { "rotate", (PyCFunction)pycairo_matrix_rotate, METH_VARARGS },
-    { "invert", (PyCFunction)pycairo_matrix_invert, METH_VARARGS },
-    { "transform_distance", (PyCFunction)pycairo_matrix_transform_distance,
-      METH_VARARGS },
-    { "transform_point", (PyCFunction)pycairo_matrix_transform_point,
-      METH_VARARGS },
-    { NULL, NULL, 0 }
+
+static PyMethodDef matrix_methods[] = {
+    /* Do not need to wrap all cairo_matrix_init_*() functions
+     * C API Matrix constructors       Python equivalents
+     * cairo_matrix_init()             cairo.Matrix(xx,yx,xy,yy,x0,y0)
+     * cairo_matrix_init_identity()    cairo.Matrix()
+     * cairo_matrix_init_translate()   cairo.Matrix(x0=x0,y0=y0)
+     * cairo_matrix_init_scale()       cairo.Matrix(xx=xx,yy=yy)
+     * cairo_matrix_init_rotate()      cairo.Matrix.init_rotate(radians)
+     */
+    {"init_rotate", (PyCFunction)matrix_init_rotate,           
+                                                   METH_VARARGS | METH_CLASS },
+    {"invert",      (PyCFunction)matrix_invert,                METH_NOARGS },
+    {"rotate",      (PyCFunction)matrix_rotate,                METH_VARARGS },
+    {"scale",       (PyCFunction)matrix_scale,                 METH_VARARGS },
+    {"transform_distance",(PyCFunction)matrix_transform_distance,
+                                                               METH_VARARGS },
+    {"transform_point", (PyCFunction)matrix_transform_point,   METH_VARARGS },
+    {"translate",   (PyCFunction)matrix_translate,             METH_VARARGS },
+    {NULL, NULL, 0, NULL},
 };
 
-PyTypeObject PyCairoMatrix_Type = {
-    PyObject_HEAD_INIT(NULL)
+static PyGetSetDef matrix_getsets[] = {
+    {"xx",   (getter)matrix_get_xx},
+    {"yx",   (getter)matrix_get_yx},
+    {"xy",   (getter)matrix_get_xy},
+    {"yy",   (getter)matrix_get_yy},
+    {"x0",   (getter)matrix_get_x0},
+    {"y0",   (getter)matrix_get_y0},
+    {"value",(getter)matrix_get_value},
+    {NULL, (getter)0, (setter)0, NULL, NULL},
+};
+
+PyTypeObject PycairoMatrix_Type = {
+    PyObject_HEAD_INIT(&PyType_Type)
     0,                                  /* ob_size */
     "cairo.Matrix",                     /* tp_name */
-    sizeof(PyCairoMatrix),              /* tp_basicsize */
+    sizeof(PycairoMatrix),              /* tp_basicsize */
     0,                                  /* tp_itemsize */
-    /* methods */
-    (destructor)pycairo_matrix_dealloc, /* tp_dealloc */
-    (printfunc)0,                       /* tp_print */
-    (getattrfunc)0,                     /* tp_getattr */
-    (setattrfunc)0,                     /* tp_setattr */
-    (cmpfunc)0,                         /* tp_compare */
-    (reprfunc)pycairo_matrix_repr,      /* tp_repr */
-    &pycairo_matrix_as_number,          /* tp_as_number */
+    (destructor)matrix_dealloc,         /* tp_dealloc */
+    0,                                  /* tp_print */
+    0,                                  /* tp_getattr */
+    0,                                  /* tp_setattr */
+    0,                                  /* tp_compare */
+    (reprfunc)matrix_repr,              /* tp_repr */
+    &matrix_as_number,                  /* tp_as_number */
     0,                                  /* tp_as_sequence */
     0,                                  /* tp_as_mapping */
-    (hashfunc)0,                        /* tp_hash */
-    (ternaryfunc)0,                     /* tp_call */
-    (reprfunc)0,                        /* tp_str */
-    (getattrofunc)0,                    /* tp_getattro */
-    (setattrofunc)0,                    /* tp_setattro */
+    0,                                  /* tp_hash */
+    0,                                  /* tp_call */
+    0,                                  /* tp_str */
+    0,                                  /* tp_getattro */
+    0,                                  /* tp_setattro */
     0,                                  /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,                 /* tp_flags */
-    NULL, /* Documentation string */
-    (traverseproc)0,                    /* tp_traverse */
-    (inquiry)0,                         /* tp_clear */
-    (richcmpfunc)pycairo_matrix_richcmp, /* tp_richcompare */
+    NULL,                               /* tp_doc */
+    0,                                  /* tp_traverse */
+    0,                                  /* tp_clear */
+    (richcmpfunc)matrix_richcmp,        /* tp_richcompare */
     0,                                  /* tp_weaklistoffset */
-    (getiterfunc)0,                     /* tp_iter */
-    (iternextfunc)0,                    /* tp_iternext */
-    pycairo_matrix_methods,             /* tp_methods */
+    0,                                  /* tp_iter */
+    0,                                  /* tp_iternext */
+    matrix_methods,                     /* tp_methods */
     0,                                  /* tp_members */
-    0,                                  /* tp_getset */
-    (PyTypeObject *)0,                  /* tp_base */
-    (PyObject *)0,                      /* tp_dict */
+    matrix_getsets,                     /* tp_getset */
+    &PyBaseObject_Type,                 /* tp_base */
+    0,                                  /* tp_dict */
     0,                                  /* tp_descr_get */
     0,                                  /* tp_descr_set */
     0,                                  /* tp_dictoffset */
-    (initproc)pycairo_matrix_init,      /* tp_init */
-    (allocfunc)0,                       /* tp_alloc */
-    (newfunc)0,                         /* tp_new */
+    0,                                  /* tp_init */
+    0,                                  /* tp_alloc */
+    (newfunc)matrix_new,                /* tp_new */
     0,                                  /* tp_free */
-    (inquiry)0,                         /* tp_is_gc */
-    (PyObject *)0,                      /* tp_bases */
+    0,                                  /* tp_is_gc */
+    0,                                  /* tp_bases */
 };

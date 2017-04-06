@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-# TODO
-# draw frame round pic to show its borderline
-# Zoom-in/out toolbutton
+# Possible improvements:
+# - Zoom-in/out toolbutton
 
-
+from __future__ import division
 import os
+import sys
 
 import gtk
 import cairo
@@ -35,10 +35,15 @@ def fix_actions (actions, instance):
     retval = []
     
     for action in actions:
-        if len (action) >= 6:     # action[5] is the callcack function as a string
-            action = action[0:5] + (getattr (instance, action[5]),) + action[6:]
+        if len (action) >= 6: # action[5] is the callcack function as a string
+            action = action[0:5] + (getattr (instance, action[5]),) + \
+                     action[6:]
         retval += [action]
     return retval
+
+
+def gdkcolor_to_rgb (gdkcolor):
+    return gdkcolor.red/65535, gdkcolor.green/65535, gdkcolor.blue/65535
 
 
 class Window (gtk.Window):
@@ -48,10 +53,11 @@ class Window (gtk.Window):
             self.set_title (title)
         self.set_default_size(300, 200)
 
-        self.pixmap = None
+        self.af     = None
+        self.da     = None
 
-        vbox = gtk.VBox()
-        self.add (vbox)
+        self.vbox = gtk.VBox()
+        self.add (self.vbox)
 
         # create UIManager menus
         ag = gtk.ActionGroup ('WindowActions')
@@ -70,50 +76,79 @@ class Window (gtk.Window):
             path = '/MenuBar'
             menubar = self.ui.get_widget (path)
             if menubar:
-                vbox.pack_start (menubar, expand=False)
+                self.vbox.pack_start (menubar, expand=False)
             else:
                 print "Error: uimanager.get_widget('%s') failed" % path
 
         self.fileselect = MyFileChooserDialog(parent=self)
 
-        self.da = gtk.DrawingArea()
-        vbox.pack_start (self.da, expand=True)
-        def cb_expose_event (da, event, data=None):
-            if self.pixmap:
-                # center on screen
-                xdest = max (0, (da.allocation.width -da.svg_width)//2)
-                ydest = max (0, (da.allocation.height-da.svg_height)//2)
-                self.da.window.draw_drawable(self.style.bg_gc[gtk.STATE_NORMAL],
-                                             self.pixmap,
-                                             0, 0, xdest, ydest, -1, -1)
-        self.da.connect ('expose-event', cb_expose_event)
-            
+
+    def create_da (self):
+        """add AspectFrame and DrawingArea widgets
+        """
+        af = gtk.AspectFrame()
+        self.vbox.pack_start(af)
+        
+        da = gtk.DrawingArea()
+        af.add(da)
+        da.connect ('expose-event', self.cb_da_expose_event)
+        da.set_double_buffered(False)
+    
+        af.show_all()
+
+        da.realize()
+        self.rgb_bg = gdkcolor_to_rgb (da.style.bg[gtk.STATE_NORMAL])
+
+        self.af, self.da = af, da
+
+
+    def cb_da_expose_event (self, da, event, data=None):
+        width, height = da.allocation.width, da.allocation.height
+        pixmap = gtk.gdk.Pixmap (da.window, width, height)
+    
+        ctx = cairo.gtk.gdk_cairo_create (pixmap)
+    
+        # draw to pixmap
+        ctx.rectangle(0,0,width,height)
+        ctx.set_source_rgb(*self.rgb_bg)
+        ctx.fill()
+    
+        svg_width, svg_height = self.svg.get_size()
+        matrix = cairo.Matrix (xx=width/svg_width, yy=height/svg_height)
+        ctx.set_matrix (matrix)
+        self.svg.render (ctx)
+
+        # draw pixmap to gdk.window
+        da.window.draw_drawable(gtk.gdk.GC(da.window), pixmap, 0,0, 0,0, -1,-1)
+
 
     def cb_open (self, action, data=None):
         """Open svg file (if one is selected) and render to an off-screen
         pixmap
         """
         filename = self.fileselect.get_filename_from_user()
-        if filename == None:
-            return
+        if filename:
+            self.load_file (filename)
 
-        svg = cairo.svg.Context()
+
+    def load_file (self, filename):
+        """parse the svg file
+        """
+        self.svg = cairo.svg.Context()
         try:
-            svg.parse (filename)
-        except Exception, exc:
-            print exc
-            return
+            self.svg.parse (filename)
+        except cairo.svg.Error:
+            exc_type, exc_value = sys.exc_info()[:2] 
+            print >>sys.stderr, '%s: %s' % (exc_type, exc_value)
+
+        else:
+            if self.af is None:
+                self.create_da()
             
-        width, height = svg.size
-        self.da.svg_width, self.da.svg_height = width, height
-
-        ctx = cairo.Context()
-        self.pixmap = gtk.gdk.Pixmap (self.da.window, width, height)
-        self.pixmap.draw_rectangle (self.style.bg_gc[gtk.STATE_NORMAL], True, 0, 0, width, height)
-
-        cairo.gtk.set_target_drawable(ctx, self.pixmap)
-        svg.render (ctx)
-        self.da.queue_draw()
+            width, height = self.svg.get_size()
+            self.af.set (xalign=0.5, yalign=0.5,
+                         ratio=width/height, obey_child=False)
+            self.da.queue_draw()
 
 
     def cb_quit (self, action, data=None):  
@@ -132,7 +167,8 @@ class MyFileChooserDialog (gtk.FileChooserDialog):
                              gtk.STOCK_OPEN,   gtk.RESPONSE_OK),
                   backend = '',
                   path    = None):
-       super (MyFileChooserDialog, self).__init__ (title, parent, action, buttons, backend)
+       super (MyFileChooserDialog, self).__init__ (title, parent, action,
+                                                   buttons, backend)
 
        if path: self.path = path
        else:    self.path = os.getcwd() + os.sep
@@ -182,7 +218,14 @@ class MyFileChooserDialog (gtk.FileChooserDialog):
 
 
 if __name__ == '__main__':
+    filename = None
+    if len(sys.argv) == 2:
+        filename = sys.argv[1]
+    
     app = Window (title='SVGView')
     app.connect('destroy', gtk.main_quit)
+    if filename:
+        app.load_file (filename)
+    
     app.show_all()
     gtk.main()

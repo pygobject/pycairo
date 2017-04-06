@@ -1,8 +1,8 @@
 /* -*- mode: C; c-basic-offset: 4 -*- 
  *
- * PyCairo - Python bindings for Cairo
+ * Pycairo - Python bindings for cairo
  *
- * Copyright © 2003-2004 James Henstridge
+ * Copyright © 2003-2005 James Henstridge
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -26,19 +26,23 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY
  * OF ANY KIND, either express or implied. See the LGPL or the MPL for
  * the specific language governing rights and limitations.
- *
- * Contributor(s):
- *                 Maarten Breddels
  */
+
+#include <Python.h>
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 #include "pycairo-private.h"
 
+
+/* A module specific exception */
+static PyObject *CairoError = NULL;
+
 int
-pycairo_check_status(cairo_status_t status)
+Pycairo_Check_Status (cairo_status_t status)
 {
+    /* copy strings from cairo.c cairo_status_string() */
     switch (status) {
     case CAIRO_STATUS_SUCCESS:
 	return 0;
@@ -46,264 +50,172 @@ pycairo_check_status(cairo_status_t status)
 	PyErr_NoMemory();
 	return 1;
     case CAIRO_STATUS_INVALID_RESTORE:
-	PyErr_SetString(PyExc_RuntimeError, "Context.restore without "
-			"matching Context.save");
+	PyErr_SetString(CairoError, "Context.restore without matching "
+			"Context.save");
 	return 1;
     case CAIRO_STATUS_INVALID_POP_GROUP:
-	PyErr_SetString(PyExc_RuntimeError, "Context.pop_group without "
-			"matching Context.push_group");
+	PyErr_SetString(CairoError, "Context.pop_group without matching "
+			"Context.push_group");
 	return 1;
     case CAIRO_STATUS_NO_CURRENT_POINT:
-	PyErr_SetString(PyExc_ValueError, "no current point defined");
+	PyErr_SetString(CairoError, "no current point defined");
 	return 1;
     case CAIRO_STATUS_INVALID_MATRIX:
-	PyErr_SetString(PyExc_ValueError, "invalid matrix (not invertible)");
+	PyErr_SetString(CairoError, "invalid matrix (not invertible)");
 	return 1;
     case CAIRO_STATUS_NO_TARGET_SURFACE:
-	PyErr_SetString(PyExc_RuntimeError, "no target surface has been set");
+	PyErr_SetString(CairoError, "no target surface has been set");
 	return 1;
     case CAIRO_STATUS_NULL_POINTER:
-	PyErr_SetString(PyExc_RuntimeError, "NULL pointer");
+	PyErr_SetString(CairoError, "NULL pointer");
 	return 1;
     case CAIRO_STATUS_INVALID_STRING:
-	PyErr_SetString(PyExc_RuntimeError, "invalid string");
+	PyErr_SetString(CairoError, "input string not valid UTF-8");
+	return 1;
+    case CAIRO_STATUS_INVALID_PATH_DATA:
+	PyErr_SetString(CairoError, "invalid path data not valid");
+	return 1;
+    case CAIRO_STATUS_READ_ERROR:
+	PyErr_SetString(CairoError, "error while reading from input stream");
+	return 1;
+    case CAIRO_STATUS_WRITE_ERROR:
+	PyErr_SetString(CairoError, "error while writing to output stream");
+	return 1;
+    case CAIRO_STATUS_SURFACE_FINISHED:
+	PyErr_SetString(CairoError, "the target surface has been finished");
+	return 1;
+    case CAIRO_STATUS_SURFACE_TYPE_MISMATCH:
+	PyErr_SetString(CairoError, "the surface type is not appropriate for "
+			"the operation");
+	return 1;
+    case CAIRO_STATUS_BAD_NESTING:
+	PyErr_SetString(CairoError, "drawing operations interleaved for two "
+			"contexts for the same surface");
 	return 1;
     default:
-	PyErr_SetString(PyExc_RuntimeError, "other cairo error");
+	PyErr_SetString(CairoError, "<unknown error status>");
 	return 1;
     }
 }
 
-static PyObject *
-pycairo_image_surface_create_for_data(PyObject *self, PyObject *args)
-{
-    char *data;
-    cairo_format_t format;
-    int length, width, height, stride = -1;
-    cairo_surface_t *surface;
 
-    if (!PyArg_ParseTuple(args, "w#iii|i:surface_create_for_image",
-			  &data, &length, &format, &width, &height, &stride))
-	return NULL;
+/* C API.  Clients get at this via Pycairo_IMPORT, defined in pycairo.h.
+ */
+static Pycairo_CAPI_t CAPI = {
+    &PycairoContext_Type,  
+    &PycairoFontFace_Type, 
+    &PycairoMatrix_Type,   
+    &PycairoPath_Type,  
+    &PycairoPattern_Type,  
+    &PycairoScaledFont_Type,  
 
-    if (width <= 0) {
-	PyErr_SetString(PyExc_ValueError, "width must be positive");
-	return NULL;
-    }
-    if (height <= 0) {
-	PyErr_SetString(PyExc_ValueError, "height must be positive");
-	return NULL;
-    }
-    /* if stride is missing, calculate it from width */
-    if (stride < 0)
-	switch (format) {
-	case CAIRO_FORMAT_ARGB32:
-	    stride = width * 4;
-	    break;
-	case CAIRO_FORMAT_RGB24:
-	    stride = width * 3;
-	    break;
-	case CAIRO_FORMAT_A8:
-	    stride = width;
-	    break;
-	case CAIRO_FORMAT_A1:
-	    stride = (width + 1) / 8;
-	    break;
-	}
-    if (height * stride > length) {
-	PyErr_SetString(PyExc_TypeError, "buffer is not long enough");
-	return NULL;
-    }
+    &PycairoSurface_Type,  
+    &PycairoImageSurface_Type,  
+    &PycairoPDFSurface_Type,  
+    &PycairoPSSurface_Type,  
 
-    surface = cairo_image_surface_create_for_data(data, format,
-						  width, height, stride);
-    if (!surface)
-	return PyErr_NoMemory();
-    /* should get surface to hold reference to buffer ... */
+    PycairoContext_FromContext,
+    PycairoFontFace_FromFontFace,
+    PycairoMatrix_FromMatrix,
+    PycairoPath_FromPath,
+    PycairoPattern_FromPattern,
+    PycairoScaledFont_FromScaledFont,
 
-    return pycairo_surface_wrap(surface);
-}
+    PycairoSurface_FromSurface,
+    PycairoImageSurface_FromImageSurface,
+    PycairoPDFSurface_FromPDFSurface,
+    PycairoPSSurface_FromPSSurface,
 
-#ifdef CAIRO_HAS_PS_SURFACE
-static PyObject *
-pycairo_ps_surface_create(PyObject *self, PyObject *args)
-{
-    PyObject *file_object;
-    int width_inches, height_inches, x_pixels_per_inch, y_pixels_per_inch;
-    cairo_surface_t *surface;
-
-    if (!PyArg_ParseTuple(args, "O!iiii:ps_surface_create",
-			  &PyFile_Type, &file_object, &width_inches, &height_inches, &x_pixels_per_inch, &y_pixels_per_inch))
-	return NULL;
-    if (width_inches <= 0) {
-	PyErr_SetString(PyExc_ValueError, "width_inches must be positive");
-	return NULL;
-    }
-    if (height_inches <= 0) {
-	PyErr_SetString(PyExc_ValueError, "height_inches must be positive");
-	return NULL;
-    }
-    if (x_pixels_per_inch <= 0) {
-	PyErr_SetString(PyExc_ValueError, "x_pixels_per_inch must be positive");
-	return NULL;
-    }
-    if (y_pixels_per_inch <= 0) {
-	PyErr_SetString(PyExc_ValueError, "y_pixels_per_inch must be positive");
-	return NULL;
-    }
-    surface = cairo_ps_surface_create(PyFile_AsFile(file_object), width_inches, height_inches, x_pixels_per_inch, y_pixels_per_inch);
-    if (!surface)
-	return PyErr_NoMemory();
-
-    return pycairo_surface_wrap(surface);
-}
-#endif /* CAIRO_HAS_PS_SURFACE */
-
-#ifdef CAIRO_HAS_PDF_SURFACE
-static PyObject *
-pycairo_pdf_surface_create(PyObject *self, PyObject *args)
-{
-    PyObject *file_object;
-    int width_inches, height_inches, x_pixels_per_inch, y_pixels_per_inch;
-    cairo_surface_t *surface;
-
-    if (!PyArg_ParseTuple(args, "O!iiii:pdf_surface_create",
-			  &PyFile_Type, &file_object, &width_inches, &height_inches, &x_pixels_per_inch, &y_pixels_per_inch))
-	return NULL;
-    if (width_inches <= 0) {
-	PyErr_SetString(PyExc_ValueError, "width_inches must be positive");
-	return NULL;
-    }
-    if (height_inches <= 0) {
-	PyErr_SetString(PyExc_ValueError, "height_inches must be positive");
-	return NULL;
-    }
-    if (x_pixels_per_inch <= 0) {
-	PyErr_SetString(PyExc_ValueError, "x_pixels_per_inch must be positive");
-	return NULL;
-    }
-    if (y_pixels_per_inch <= 0) {
-	PyErr_SetString(PyExc_ValueError, "y_pixels_per_inch must be positive");
-	return NULL;
-    }
-    surface = cairo_pdf_surface_create(PyFile_AsFile(file_object), width_inches, height_inches, x_pixels_per_inch, y_pixels_per_inch);
-    if (!surface)
-	return PyErr_NoMemory();
-
-    return pycairo_surface_wrap(surface);
-}
-#endif /* CAIRO_HAS_PDF_SURFACE */
-
-#ifdef CAIRO_HAS_PNG_SURFACE
-static PyObject *
-pycairo_png_surface_create(PyObject *self, PyObject *args)
-{
-    PyObject *file_object;
-    cairo_format_t format;
-    int width, height;
-    cairo_surface_t *surface;
-
-    if (!PyArg_ParseTuple(args, "O!iii:png_surface_create",
-			  &PyFile_Type, &file_object, &format, &width, &height))
-	return NULL;
-
-    if (width <= 0) {
-	PyErr_SetString(PyExc_ValueError, "width must be positive");
-	return NULL;
-    }
-    if (height <= 0) {
-	PyErr_SetString(PyExc_ValueError, "height must be positive");
-	return NULL;
-    }
-
-    surface = cairo_png_surface_create(PyFile_AsFile(file_object), format, width, height);
-    if (!surface)
-	return PyErr_NoMemory();
-
-    return pycairo_surface_wrap(surface);
-}
-#endif /* CAIRO_HAS_PNG_SURFACE */
-
-
-static PyMethodDef cairo_functions[] = {
-    { "image_surface_create_for_data", (PyCFunction)pycairo_image_surface_create_for_data, METH_VARARGS, "" },
-#ifdef CAIRO_HAS_PDF_SURFACE
-    { "pdf_surface_create", (PyCFunction)pycairo_pdf_surface_create, METH_VARARGS, "" },
-#endif
-#ifdef CAIRO_HAS_PNG_SURFACE
-    { "png_surface_create", (PyCFunction)pycairo_png_surface_create, METH_VARARGS, "" },
-#endif
-#ifdef CAIRO_HAS_PS_SURFACE
-    { "ps_surface_create", (PyCFunction)pycairo_ps_surface_create, METH_VARARGS, "" },
-#endif
-    /* this is the old function name, should use image_surface_create_for_data */
-    { "surface_create_for_image", (PyCFunction)pycairo_image_surface_create_for_data, METH_VARARGS, "this is the old function name, should use image_surface_create_for_data" },
-    { NULL, NULL, 0 }
-};
-
-static struct _PyCairo_FunctionStruct api = {
-    pycairo_check_status,
-    &PyCairoMatrix_Type,
-    pycairo_matrix_wrap,
-    &PyCairoSurface_Type,
-    pycairo_surface_wrap,
-    &PyCairoFont_Type,
-    pycairo_font_wrap,
-    &PyCairoContext_Type,
-    pycairo_context_wrap,
-    &PyCairoPattern_Type,
-    pycairo_pattern_wrap,
+    Pycairo_Check_Status,
 };
 
 DL_EXPORT(void)
 init_cairo(void)
 {
-    PyObject *mod;
+    PyObject *m;
 
-#define INIT_TYPE(tp) \
-    if (!tp.ob_type) tp.ob_type = &PyType_Type; \
-    if (!tp.tp_alloc) tp.tp_alloc = PyType_GenericAlloc; \
-    if (!tp.tp_new) tp.tp_new = PyType_GenericNew; \
-    if (PyType_Ready(&tp) < 0) \
+    if (PyType_Ready(&PycairoContext_Type) < 0)
+        return;
+    if (PyType_Ready(&PycairoFontFace_Type) < 0)
+        return;
+    if (PyType_Ready(&PycairoMatrix_Type) < 0)
+        return;
+    if (PyType_Ready(&PycairoPath_Type) < 0)
+	return;
+    if (PyType_Ready(&PycairoPattern_Type) < 0)
+        return;
+    if (PyType_Ready(&PycairoScaledFont_Type) < 0)
         return;
 
-    INIT_TYPE(PyCairoMatrix_Type);
-    INIT_TYPE(PyCairoSurface_Type);
-    INIT_TYPE(PyCairoPattern_Type);
-    INIT_TYPE(PyCairoFont_Type);
-    INIT_TYPE(PyCairoContext_Type);
+    if (PyType_Ready(&PycairoSurface_Type) < 0)
+        return;
+    if (PyType_Ready(&PycairoImageSurface_Type) < 0)
+        return;
+    if (PyType_Ready(&PycairoPDFSurface_Type) < 0)
+        return;
+    if (PyType_Ready(&PycairoPSSurface_Type) < 0)
+        return;
 
-#undef INIT_TYPE
+    m = Py_InitModule("cairo._cairo", NULL);
 
-    mod = Py_InitModule("cairo._cairo", cairo_functions);
+    Py_INCREF(&PycairoContext_Type);
+    PyModule_AddObject(m, "Context", (PyObject *)&PycairoContext_Type);
+    Py_INCREF(&PycairoFontFace_Type);
+    PyModule_AddObject(m, "FontFace",(PyObject *)&PycairoFontFace_Type);
+    Py_INCREF(&PycairoMatrix_Type);
+    PyModule_AddObject(m, "Matrix",  (PyObject *)&PycairoMatrix_Type);
+    Py_INCREF(&PycairoPath_Type);
+    /* Don't add Path object since it is not accessed directly as 'cairo.Path'
+     * PyModule_AddObject(m, "Path", (PyObject *)&PycairoPath_Type);
+     */
+    Py_INCREF(&PycairoPattern_Type);
+    PyModule_AddObject(m, "Pattern", (PyObject *)&PycairoPattern_Type);
+    Py_INCREF(&PycairoScaledFont_Type);
+    PyModule_AddObject(m, "ScaledFont", (PyObject *)&PycairoScaledFont_Type);
 
-    PyModule_AddObject(mod, "Matrix",  (PyObject *)&PyCairoMatrix_Type);
-    PyModule_AddObject(mod, "Surface", (PyObject *)&PyCairoSurface_Type);
-    PyModule_AddObject(mod, "Pattern", (PyObject *)&PyCairoPattern_Type);
-    PyModule_AddObject(mod, "Font", (PyObject *)&PyCairoFont_Type);
-    PyModule_AddObject(mod, "Context", (PyObject *)&PyCairoContext_Type);
+    Py_INCREF(&PycairoSurface_Type);
+    PyModule_AddObject(m, "Surface", (PyObject *)&PycairoSurface_Type);
+    Py_INCREF(&PycairoImageSurface_Type);
+    PyModule_AddObject(m, "ImageSurface", 
+		       (PyObject *)&PycairoImageSurface_Type);
+    Py_INCREF(&PycairoPDFSurface_Type);
+    PyModule_AddObject(m, "PDFSurface", (PyObject *)&PycairoPDFSurface_Type);
+    Py_INCREF(&PycairoPSSurface_Type);
+    PyModule_AddObject(m, "PSSurface", (PyObject *)&PycairoPSSurface_Type);
 
-    PyModule_AddObject(mod, "_PyCairo_API",
-		       PyCObject_FromVoidPtr(&api, NULL));
+    PyModule_AddObject(m, "CAPI", PyCObject_FromVoidPtr(&CAPI, NULL));
+
+    /* Add 'cairo.Error' to the module */
+    if (CairoError == NULL) {
+	CairoError = PyErr_NewException("cairo.Error", NULL, NULL);
+	if (CairoError == NULL)
+	    return;
+    }
+    Py_INCREF(CairoError);
+    if (PyModule_AddObject(m, "Error", CairoError) < 0)
+	return;
 
     /* constants */
-#define CONSTANT(x) PyModule_AddIntConstant(mod, #x, CAIRO_##x)
+#define CONSTANT(x) PyModule_AddIntConstant(m, #x, CAIRO_##x)
     CONSTANT(FORMAT_ARGB32);
     CONSTANT(FORMAT_RGB24);
     CONSTANT(FORMAT_A8);
     CONSTANT(FORMAT_A1);
 
     CONSTANT(OPERATOR_CLEAR);
-    CONSTANT(OPERATOR_SRC);
-    CONSTANT(OPERATOR_DST);
+
+    CONSTANT(OPERATOR_SOURCE);
     CONSTANT(OPERATOR_OVER);
-    CONSTANT(OPERATOR_OVER_REVERSE);
     CONSTANT(OPERATOR_IN);
-    CONSTANT(OPERATOR_IN_REVERSE);
     CONSTANT(OPERATOR_OUT);
-    CONSTANT(OPERATOR_OUT_REVERSE);
     CONSTANT(OPERATOR_ATOP);
-    CONSTANT(OPERATOR_ATOP_REVERSE);
+
+    CONSTANT(OPERATOR_DEST);
+    CONSTANT(OPERATOR_DEST_OVER);
+    CONSTANT(OPERATOR_DEST_IN);
+    CONSTANT(OPERATOR_DEST_OUT);
+    CONSTANT(OPERATOR_DEST_ATOP);
+
     CONSTANT(OPERATOR_XOR);
     CONSTANT(OPERATOR_ADD);
     CONSTANT(OPERATOR_SATURATE);
@@ -336,6 +248,10 @@ init_cairo(void)
     CONSTANT(EXTEND_NONE);
     CONSTANT(EXTEND_REPEAT);
     CONSTANT(EXTEND_REFLECT);
-#undef CONSTANT
 
+    CONSTANT(PATH_MOVE_TO);
+    CONSTANT(PATH_LINE_TO);
+    CONSTANT(PATH_CURVE_TO);
+    CONSTANT(PATH_CLOSE_PATH);
+#undef CONSTANT
 }

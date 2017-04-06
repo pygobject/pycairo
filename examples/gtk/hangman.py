@@ -56,7 +56,7 @@ def guess_letter(widget, event):
         widget.queue_draw()
 
 def expose_event(widget, event):
-    width = widget.allocation.width
+    width  = widget.allocation.width
     height = widget.allocation.height
 
     if width < height:
@@ -64,189 +64,197 @@ def expose_event(widget, event):
     else:
         size = height
 
-    cr = cairo.Context()
-    cairo.gtk.set_target_drawable(cr, widget.window)
+    pixmap = gtk.gdk.Pixmap (widget.window, width, height)
+    
+    ctx = cairo.gtk.gdk_cairo_create(pixmap)
+    
+    # set the background
+    ctx.set_source_rgb(0.7,0.7,0.7)
+    ctx.rectangle(0,0,width, height)
+    ctx.fill()
 
-    cr.translate ((width - size) / 2, (height - size) / 2)
-
-    cr.scale(size / 150.0, size / 160.0)
+    ctx.translate ((width - size) / 2, (height - size) / 2)
+    ctx.scale(size / 150.0, size / 160.0)
 
     def man_hung():
         return len(letters_guessed_wrong) == body_parts
 
-    cr.scale_font(10)
-    cr.set_rgb_color(0,0,0)
+    ctx.set_font_size(10)
+    ctx.set_source_rgb(0,0,0)
     for idxLetter in range(len(word_chosen)):
         #print "Examining letter: " + word_chosen[idxLetter]
         if word_chosen[idxLetter].lower() in letters_guessed_right or man_hung():
             if idxLetter == 0:
-                cr.move_to(0, 150)
-                cr.show_text(word_chosen[idxLetter].upper())
+                ctx.move_to(0, 150)
+                ctx.show_text(word_chosen[idxLetter].upper())
             else:
-                cr.move_to(idxLetter * 15, 150)
-                cr.show_text(word_chosen[idxLetter].lower())
+                ctx.move_to(idxLetter * 15, 150)
+                ctx.show_text(word_chosen[idxLetter].lower())
         else:
-            cr.move_to(idxLetter * 15, 150)
-            cr.show_text('_')
+            ctx.move_to(idxLetter * 15, 150)
+            ctx.show_text('_')
             
     # Draw Letters Guessed
 
-    cr.move_to(0, 160)
-    cr.set_rgb_color(0, 0, 0)
-    cr.show_text(letters_guessed)
+    ctx.move_to(0, 160)
+    ctx.set_source_rgb(0, 0, 0)
+    ctx.show_text(letters_guessed)
 
     # Draw noose
 
-    cr.move_to(100, 12.5)
-    cr.line_to(100, 5)
-    cr.line_to(130, 5)
-    cr.line_to(130, 100)
-    cr.set_rgb_color(0, 0, 0)
-    cr.stroke()
+    ctx.move_to(100, 12.5)
+    ctx.line_to(100, 5)
+    ctx.line_to(130, 5)
+    ctx.line_to(130, 100)
+    ctx.set_source_rgb(0, 0, 0)
+    ctx.stroke()
 
     # Draw base fill color
 
-    cr.move_to(130, 100)
-    cr.line_to(130, 140)
-    cr.line_to(40, 140)
-    cr.line_to(40, 130)
-    cr.line_to(50, 130)
-    cr.line_to(50, 122)
-    cr.line_to(60, 122)
-    cr.line_to(60, 114)
-    cr.line_to(70, 114)
-    cr.line_to(70, 106)
-    cr.line_to(130, 106)
-    cr.set_rgb_color(.4, .2, .1)
-    cr.fill()
+    ctx.move_to(130, 100)
+    ctx.line_to(130, 140)
+    ctx.line_to(40, 140)
+    ctx.line_to(40, 130)
+    ctx.line_to(50, 130)
+    ctx.line_to(50, 122)
+    ctx.line_to(60, 122)
+    ctx.line_to(60, 114)
+    ctx.line_to(70, 114)
+    ctx.line_to(70, 106)
+    ctx.line_to(130, 106)
+    ctx.set_source_rgb(.4, .2, .1)
+    ctx.fill()
 
     # Draw base outline color
 
-    cr.move_to(130, 100)
-    cr.line_to(130, 140)
-    cr.line_to(40, 140)
+    ctx.move_to(130, 100)
+    ctx.line_to(130, 140)
+    ctx.line_to(40, 140)
 
     # Draw 1st(lowest) stair
 
-    cr.line_to(40, 130)
-    cr.line_to(50, 130)
-    cr.line_to(130, 130)
-    cr.set_rgb_color(0, 0, 0)
-    cr.stroke()
+    ctx.line_to(40, 130)
+    ctx.line_to(50, 130)
+    ctx.line_to(130, 130)
+    ctx.set_source_rgb(0, 0, 0)
+    ctx.stroke()
     
     # Draw 2nd stair
 
-    cr.move_to(50, 130)
-    cr.line_to(50, 121)
-    cr.line_to(60, 121)
-    cr.line_to(130, 121)
-    cr.stroke()
+    ctx.move_to(50, 130)
+    ctx.line_to(50, 121)
+    ctx.line_to(60, 121)
+    ctx.line_to(130, 121)
+    ctx.stroke()
     
     # Draw 3rd stair
 
-    cr.move_to(60, 121)
-    cr.line_to(60, 113)
-    cr.line_to(70, 113)
-    cr.line_to(130, 113)
-    cr.stroke()
+    ctx.move_to(60, 121)
+    ctx.line_to(60, 113)
+    ctx.line_to(70, 113)
+    ctx.line_to(130, 113)
+    ctx.stroke()
     
     # Draw 4th(top) stair
         
-    cr.move_to(70, 113)
-    cr.line_to(70, 105)
-    cr.line_to(130, 105)
-    cr.stroke()
+    ctx.move_to(70, 113)
+    ctx.line_to(70, 105)
+    ctx.line_to(130, 105)
+    ctx.stroke()
 
     # Draw Head
 
     if len(letters_guessed_wrong) > 0:
-        cr.move_to(107.5, 20)
-        cr.arc(100, 20, 7.5, 0, 2*pi)
-        cr.set_line_width(1)
-        cr.stroke()
+        ctx.move_to(107.5, 20)
+        ctx.arc(100, 20, 7.5, 0, 2*pi)
+        ctx.set_line_width(1)
+        ctx.stroke()
 
         # Draw Eye 1
 
-        cr.move_to(104, 17)
-        cr.arc(103, 17, 1, 0, 2*pi)
-        cr.move_to(103.1, 17)
-        cr.arc(103, 17, .1, 0, 2*pi)
+        ctx.move_to(104, 17)
+        ctx.arc(103, 17, 1, 0, 2*pi)
+        ctx.move_to(103.1, 17)
+        ctx.arc(103, 17, .1, 0, 2*pi)
 
         # Draw Eye 2
 
-        cr.move_to(98, 17)
-        cr.arc(97, 17, 1, 0, 2*pi)
-        cr.move_to(97.1, 17)
-        cr.arc(97, 17, .1, 0, 2*pi)
+        ctx.move_to(98, 17)
+        ctx.arc(97, 17, 1, 0, 2*pi)
+        ctx.move_to(97.1, 17)
+        ctx.arc(97, 17, .1, 0, 2*pi)
 
         # Draw Nose
 
-        cr.move_to(100.5, 19)
-        cr.line_to(99.5, 21)
-        cr.line_to(100.5, 21)
+        ctx.move_to(100.5, 19)
+        ctx.line_to(99.5, 21)
+        ctx.line_to(100.5, 21)
     
         # Draw Mouth
 
         if len(letters_guessed_wrong) < 6:
-            cr.move_to(97, 23)
-            cr.curve_to(97, 23, 100, 27.5, 103, 23)
-            cr.set_line_width(.5)
-            cr.stroke()
+            ctx.move_to(97, 23)
+            ctx.curve_to(97, 23, 100, 27.5, 103, 23)
+            ctx.set_line_width(.5)
+            ctx.stroke()
         else:
-            cr.move_to(100.5, 24)
-            cr.arc(100, 24, .5, 0, 2*pi)
-            cr.set_line_width(.5)
-            cr.stroke()        
+            ctx.move_to(100.5, 24)
+            ctx.arc(100, 24, .5, 0, 2*pi)
+            ctx.set_line_width(.5)
+            ctx.stroke()        
 
-    cr.set_rgb_color(0, 0, 0)
-    cr.set_line_width(1)
+    ctx.set_source_rgb(0, 0, 0)
+    ctx.set_line_width(1)
 
     # Draw Body
 
     if len(letters_guessed_wrong) > 1:
-        cr.move_to(100, 27.5)
-        cr.line_to(100, 70)
-        cr.stroke()
+        ctx.move_to(100, 27.5)
+        ctx.line_to(100, 70)
+        ctx.stroke()
 
     # Draw Arm 1
 
     if len(letters_guessed_wrong) > 2:
-        cr.move_to(100, 35)
-        cr.line_to(110, 50)
-        cr.stroke()
+        ctx.move_to(100, 35)
+        ctx.line_to(110, 50)
+        ctx.stroke()
 
     # Draw Arm 2
 
     if len(letters_guessed_wrong) > 3:
-        cr.move_to(100, 35)
-        cr.line_to(90, 50)
-        cr.stroke()
+        ctx.move_to(100, 35)
+        ctx.line_to(90, 50)
+        ctx.stroke()
 
     # Draw Leg 1
 
     if len(letters_guessed_wrong) > 4:
-        cr.move_to(100, 70)
-        cr.line_to(112, 95)
-        cr.stroke()
+        ctx.move_to(100, 70)
+        ctx.line_to(112, 95)
+        ctx.stroke()
         
     # Draw Leg 2
 
     if len(letters_guessed_wrong) > 5:
-        cr.move_to(100, 70)
-        cr.line_to(88, 95)
-        cr.stroke()
+        ctx.move_to(100, 70)
+        ctx.line_to(88, 95)
+        ctx.stroke()
+
+    # draw pixmap to gdk.window
+    gc = gtk.gdk.GC(widget.window)
+    widget.window.draw_drawable(gc, pixmap, 0,0, 0,0, -1,-1)        
+
 
 win = gtk.Window()
+win.connect('destroy', gtk.main_quit)
+win.connect('key_press_event', guess_letter)
 win.set_title('Kevin\'s Cairo Demo')
 
 drawingarea = gtk.DrawingArea()
-drawingarea.set_size_request(300,320)
 win.add(drawingarea)
-
-win.show_all()
-
-win.connect('destroy', gtk.main_quit)
-win.connect('key_press_event', guess_letter)
 drawingarea.connect('expose_event', expose_event)
-
+drawingarea.set_size_request(300,320)
+    
+win.show_all()
 gtk.main()

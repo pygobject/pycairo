@@ -4,8 +4,11 @@ EXTRA_DIST = \
   NOTES \
   COPYING \
   COPYING-LGPL-2.1 \
-  COPYING-MPL-1.1
+  COPYING-MPL-1.1 \
+  pycairo.pc.in
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = pycairo.pc
 
 # release targets from cairo/Makefile.am
 # Some custom targets to make it easier to release things.

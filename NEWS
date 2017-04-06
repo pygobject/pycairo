@@ -1,7 +1,35 @@
+Snapshot 0.5.0 (2005-05-20 Steve Chaplin <steve1097@yahoo.com.au>)
+==================================================================
+This version has many changes which update Pycairo to the new cairo API. The 
+change list is not duplicated here, instead see the cairo/NEWS file for full 
+details of all these API changes.
+
+Pycairo method names that were different from the underlying cairo function 
+names have been changed to make Pycairo more closely follow cairo and so
+enable the cairo documentation to be used for writing Pycairo programs.
+NOTES has been updated to list the differences between the C API and the
+Pycairo API.
+
+Context.copy_path() has been implemented, it returns a Path instance which
+supports the iterator protocol.
+
+Python 2.3 is now required.
+
+New examples:
+examples/warpedtext.py 
+	shows usage of the Path iterator
+
+examples/cairo_snippets/
+	shows many of the 'cairo-demo/cairo_snippets' examples
+
+examples/gtk/png_view.py
+	example using cairo.ImageSurface.create_from_png()
+
+
 Snapshot 0.4.0 (2005-03-10 Steve Chaplin <steve1097@yahoo.com.au>)
 ==================================================================
 
-New Cairo bindings:
+New cairo bindings:
 	cairo_font_extents
 
 Bindings removed:
@@ -13,17 +41,17 @@ New examples:
 
 Other:
 	Changed version numbering to correspond directly with the Cairo
-	version PyCairo was developed to work with. So, for example,
-	PyCairo version 0.4.0 represents the PyCairo version that has been 
+	version Pycairo was developed to work with. So, for example,
+	Pycairo version 0.4.0 represents the Pycairo version that has been 
 	developed and tested with Cairo 0.4.0.
 
 Snapshot 0.1.4 (2005-01-12 Steve Chaplin <steve1097@yahoo.com.au>)
 ===================================================================
-The PyCairo license has changed so that it is now dual-licensed under the LGPL
+The Pycairo license has changed so that it is now dual-licensed under the LGPL
 and the MPL, the same as Cairo itself. For details see the COPYING file as
 well as COPYING-LGPL-2.1 and COPYING-MPL-1.1.
 
-New Cairo bindings:
+New cairo bindings:
 	cairo_pdf_surface_create
 	cairo_set_target_pdf
 
@@ -35,7 +63,7 @@ New libsvg-cairo bindings:
 
 Other:
 	Added --without-pygtk configure option.
-	Renamed the PyCairo API _new() functions to _wrap() to allow _new() to 
+	Renamed the Pycairo API _new() functions to _wrap() to allow _new() to 
 	be used for python __new__ functions.
 	New examples: svg2png.py and svgview.py.
 

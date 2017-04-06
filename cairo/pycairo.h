@@ -1,8 +1,8 @@
 /* -*- mode: C; c-basic-offset: 4 -*- 
  *
- * PyCairo - Python bindings for Cairo
+ * Pycairo - Python bindings for cairo
  *
- * Copyright © 2003-2004 James Henstridge
+ * Copyright © 2003-2005 James Henstridge
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -26,97 +26,130 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY
  * OF ANY KIND, either express or implied. See the LGPL or the MPL for
  * the specific language governing rights and limitations.
- *
- * Contributor(s):
- *
  */
 
 #ifndef _PYCAIRO_H_
 #define _PYCAIRO_H_
 
 #include <Python.h>
-#include <cairo.h>
-#include <cairo-pdf.h>
-#include <cairo-png.h>
-#include <cairo-ps.h>
 
-typedef struct {
-    PyObject_HEAD
-    cairo_matrix_t *matrix;
-} PyCairoMatrix;
+#include <cairo.h>
+
 
 typedef struct {
     PyObject_HEAD
     cairo_t *ctx;
-} PyCairoContext;
+    PyObject *base; /* base object used to create context, or NULL */
+} PycairoContext;
 
 typedef struct {
     PyObject_HEAD
-    cairo_surface_t *surface;
-} PyCairoSurface;
+    cairo_font_face_t *font_face;
+} PycairoFontFace;
+
+typedef struct {
+    PyObject_HEAD
+    cairo_matrix_t matrix;
+} PycairoMatrix;
+
+typedef struct {
+    PyObject_HEAD
+    cairo_path_t *path;
+} PycairoPath;
 
 typedef struct {
     PyObject_HEAD
     cairo_pattern_t *pattern;
-} PyCairoPattern;
+} PycairoPattern;
 
 typedef struct {
     PyObject_HEAD
-    cairo_font_t *font;
-} PyCairoFont;
+    cairo_scaled_font_t *scaled_font;
+} PycairoScaledFont;
 
-struct _PyCairo_FunctionStruct {
+typedef struct {
+    PyObject_HEAD
+    cairo_surface_t *surface;
+    PyObject *base; /* base object used to create surface, or NULL */
+} PycairoSurface;
+
+#define PycairoImageSurface PycairoSurface
+#define PycairoPDFSurface   PycairoSurface
+#define PycairoPSSurface    PycairoSurface
+
+/* Define structure for C API. */
+typedef struct {
+    /* type objects */
+    PyTypeObject *Context_Type;
+    PyTypeObject *FontFace_Type;
+    PyTypeObject *Matrix_Type;
+    PyTypeObject *Path_Type;
+    PyTypeObject *Pattern_Type;
+    PyTypeObject *ScaledFont_Type;
+
+    PyTypeObject *Surface_Type;
+    PyTypeObject *ImageSurface_Type;
+    PyTypeObject *PDFSurface_Type;
+    PyTypeObject *PSSurface_Type;
+
+    /* constructors */
+    PyObject *(*Context_FromContext)(cairo_t *ctx, PyObject *base);
+    PyObject *(*FontFace_FromFontFace)(cairo_font_face_t *font_face);
+    PyObject *(*Matrix_FromMatrix)(const cairo_matrix_t *matrix);
+    PyObject *(*Path_FromPath)(cairo_path_t *path);
+    PyObject *(*Pattern_FromPattern)(cairo_pattern_t *pattern);
+    PyObject *(*ScaledFont_FromScaledFont)(cairo_scaled_font_t *scaled_font);
+
+    PyObject *(*Surface_FromSurface)(cairo_surface_t *surface, PyObject *base);
+    PyObject *(*ImageSurface_FromImageSurface)(cairo_surface_t *surface, 
+					       PyObject *base);
+    PyObject *(*PDFSurface_FromPDFSurface)(cairo_surface_t *surface, 
+					   PyObject *base);
+    PyObject *(*PSSurface_FromPSSurface)(cairo_surface_t *surface, 
+					 PyObject *base);
+
+    /* misc functions */
     int (* check_status)(cairo_status_t status);
-    PyTypeObject *matrix_type;
-    PyObject *(* matrix_wrap)(cairo_matrix_t *matrix);
-    PyTypeObject *surface_type;
-    PyObject *(* surface_wrap)(cairo_surface_t *surface);
-    PyTypeObject *font_type;
-    PyObject *(* font_wrap)(cairo_font_t *font);
-    PyTypeObject *context_type;
-    PyObject *(* context_wrap)(cairo_t *ctx);
-    PyTypeObject *pattern_type;
-    PyObject *(* pattern_wrap)(cairo_pattern_t *pattern);
-};
+} Pycairo_CAPI_t;
+
 
 #ifndef _INSIDE_PYCAIRO_
 
-#if defined(NO_IMPORT) || defined(NO_IMPORT_PYCAIRO)
-extern struct _PyCairo_FunctionStruct *_PyCairo_API;
-#else
-struct _PyCairo_FunctionStruct *_PyCairo_API;
-#endif
+/* Macros for accessing the C API */
+#define PycairoContext_Type         *(Pycairo_CAPI->Context_Type)
+#define PycairoFontFace_Type        *(Pycairo_CAPI->Fontface_Type)
+#define PycairoMatrix_Type          *(Pycairo_CAPI->Matrix_Type)
+#define PycairoPattern_Type         *(Pycairo_CAPI->Pattern_Type)
+#define PycairoScaledFont_Type      *(Pycairo_CAPI->ScaledFont_Type)
 
-#define pycairo_check_status (_PyCairo_API->check_status)
-#define PyCairoMatrix_Type  *(_PyCairo_API->matrix_type)
-#define pycairo_matrix_wrap  (_PyCairo_API->matrix_wrap)
-#define PyCairoSurface_Type *(_PyCairo_API->surface_type)
-#define pycairo_surface_wrap (_PyCairo_API->surface_wrap)
-#define PyCairoFont_Type    *(_PyCairo_API->font_type)
-#define pycairo_font_wrap    (_PyCairo_API->font_wrap)
-#define PyCairoContext_Type *(_PyCairo_API->context_type)
-#define pycairo_context_wrap (_PyCairo_API->context_wrap)
-#define PyCairoPattern_Type *(_PyCairo_API->pattern_type)
-#define pycairo_pattern_wrap (_PyCairo_API->pattern_wrap)
+#define PycairoSurface_Type         *(Pycairo_CAPI->Surface_Type)
+#define PycairoImageSurface_Type    *(Pycairo_CAPI->ImageSurface_Type)
+#define PycairoPDFSurface_Type      *(Pycairo_CAPI->PDFSurface_Type)
 
-#define init_pycairo() { \
-    PyObject *pycairo = PyImport_ImportModule("cairo._cairo"); \
-    if (pycairo != NULL) { \
-        PyObject *module_dict = PyModule_GetDict(pycairo); \
-        PyObject *cobject = PyDict_GetItemString(module_dict,"_PyCairo_API"); \
-        if (PyCObject_Check(cobject)) \
-            _PyCairo_API = (struct _PyCairo_FunctionStruct *) \
-                PyCObject_AsVoidPtr(cobject); \
-        else { \
-            PyErr_SetString(PyExc_RuntimeError, \
-                            "could not find _PyCairo_API object"); \
-            return; \
-        } \
-    } else { \
-        return; \
-    } \
-}
+#define PycairoContext_FromContext   (Pycairo_CAPI->Context_FromContext)
+#define PycairoFontFace_FromFontFace (Pycairo_CAPI->Fontface_FromFontFace)
+#define PycairoMatrix_FromMatrix     (Pycairo_CAPI->Matrix_FromMatrix)
+#define PycairoPattern_FromPattern   (Pycairo_CAPI->Pattern_FromPattern)
+#define PycairoScaledFont_FromScaledFont \
+        (Pycairo_CAPI->ScaledFont_FromScaledFont)
 
-#endif
+#define PycairoSurface_FromSurface   (Pycairo_CAPI->Surface_FromSurface)
+#define PycairoImageSurface_FromImageSurface \
+        (Pycairo_CAPI->ImageSurface_FromImageSurface)
+#define PycairoPDFSurface_FromPDFSurface \
+        (Pycairo_CAPI->PDFSurface_FromPDFSurface)
 
-#endif
+#define Pycairo_Check_Status         (Pycairo_CAPI->Pycheck_Check_Status)
+
+
+/* To access the Pycairo C API, edit the client module file to:
+ * 1) Add the following line to define a global variable for the C API
+ *    static Pycairo_CAPI_t *Pycairo_CAPI;
+ * 2) Add 'Pycairo_IMPORT;' to the init<module> function
+ */
+#define Pycairo_IMPORT \
+        Pycairo_CAPI = (Pycairo_CAPI_t*) PyCObject_Import("cairo", "CAPI")
+
+#endif /* ifndef _INSIDE_PYCAIRO_ */
+
+#endif /* ifndef _PYCAIRO_H_ */

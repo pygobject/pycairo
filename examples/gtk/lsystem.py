@@ -29,9 +29,9 @@ class lindenmayer:
 
         drawable.clear()
 
-        ctx = cairo.Context()
-        cairo.gtk.set_target_drawable(ctx, drawable)
-        ctx.set_rgb_color(0, 0, 0)
+        ctx = cairo.gtk.gdk_cairo_create(drawable)        
+        
+        ctx.set_source_rgb(0, 0, 0)
 
         ctx.set_line_width(self.SIZE / 4)
         ctx.set_tolerance(0.1)
@@ -55,15 +55,8 @@ def line(ctx, len):
 def rotate(ctx, deg):
     ctx.rotate( 2*3.141592653589793*deg/360.0  )
 
-def main():
-    win = gtk.Window()
-    win.connect('destroy', lambda x: gtk.main_quit())
-    win.set_title('Cairo Lindenmayer System')
-    win.set_default_size(600, 600)
-
-    drawingarea = gtk.DrawingArea()
+def lin_setup():
     cls = lindenmayer()
-
     ################# SETUP LSYSTEM HERE ################
 
     ### Generic stuff ###
@@ -83,12 +76,10 @@ def main():
     cls.addProd('f','f-f+f+f-f')
     cls.THETA = 90
 
-
     ###### Kock Snowflake ######
 
 #    cls.addProd('f','f-f++f-f')
 #    cls.THETA = 60
-
 
     ######## Peano Curve ########
 #    cls.addProd('x', 'xfyfx+f+yfxfy-f-xfyfx')
@@ -96,7 +87,6 @@ def main():
 #    cls.addProd('f', 'f')
 #    cls.THETA = 90
 #    cls.str = 'y'
-
 
     ###### the plant ######
     ## doesn't seem to work ... .save & .restore messed up ##
@@ -116,12 +106,22 @@ def main():
     cls.iterate(4)
 
     ################ DONE SETUP ###############
+    return cls
 
-    drawingarea.connect('expose_event', cls.expose)
+def main():
+    win = gtk.Window()
+    win.connect('destroy', lambda x: gtk.main_quit())
+    win.set_title('Cairo Lindenmayer System')
+    win.set_default_size(600, 600)
 
+    cls = lin_setup()
+
+    drawingarea = gtk.DrawingArea()
     win.add(drawingarea)
-    win.show_all()
+    drawingarea.connect('expose_event', cls.expose)
+    drawingarea.set_double_buffered(False)
 
+    win.show_all()
     gtk.main()
 
 if __name__ == '__main__':

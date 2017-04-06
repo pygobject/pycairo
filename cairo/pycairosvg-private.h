@@ -1,8 +1,8 @@
 /* -*- mode: C; c-basic-offset: 4 -*- 
  *
- * PyCairo - Python bindings for Cairo
+ * Pycairo - Python bindings for cairo
  *
- * Copyright © 2003-2004 Steve Chaplin
+ * Copyright © 2003-2005 Steve Chaplin
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -26,9 +26,6 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY
  * OF ANY KIND, either express or implied. See the LGPL or the MPL for
  * the specific language governing rights and limitations.
- *
- * Contributor(s):
- *                 Steve Chaplin
  */
 
 #ifndef _PYCAIROSVG_PRIVATE_H_
@@ -39,8 +36,26 @@
 #endif
 
 #define _INSIDE_PYCAIROSVG_
-#include <svg-cairo.h>
+#include <Python.h> 
 
-extern PyTypeObject PyCairoSVGContext_Type;
+#include "pycairosvg.h"
 
-#endif
+
+extern PyTypeObject PycairoSVGContext_Type;
+
+/* useful macros from Python 2.4 */
+#if PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION < 4
+#  define Py_RETURN_NONE return Py_INCREF(Py_None), Py_None
+#  define Py_RETURN_TRUE return Py_INCREF(Py_True), Py_True
+#  define Py_RETURN_FALSE return Py_INCREF(Py_False), Py_False
+#  define Py_CLEAR(op)				\
+        do {                            	\
+                if (op) {			\
+                        PyObject *tmp = (PyObject *)(op);	\
+                        (op) = NULL;		\
+                        Py_DECREF(tmp);		\
+                }				\
+        } while (0)
+#endif /* PY_MAJOR_VERSION */
+
+#endif  /* _PYCAIROSVG_PRIVATE_H_ */

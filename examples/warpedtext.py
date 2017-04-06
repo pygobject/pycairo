@@ -3,90 +3,83 @@
 import cairo
 import math
 
-class PathWarp(object):
-	def __init__(self, function, ctx):
-		self.function = function
-		self.ctx = ctx
+def warpPath(ctx, function):
+    first = True
 
-	def lineto(self, x, y):
-		x, y = self.function(x, y)
-		self.ctx.line_to(x, y)
+    for type, points in ctx.copy_path():
+        if type == cairo.PATH_MOVE_TO:
+            if first:
+                ctx.new_path()
+                first = False
+            x, y = function(*points)
+            ctx.move_to(x, y)
+	
+        elif type == cairo.PATH_LINE_TO:
+            x, y = function(*points)
+            ctx.line_to(x, y)
+		
+        elif type == cairo.PATH_CURVE_TO:
+            x1, y1, x2, y2, x3, y3 = points
+            x1, y1 = function(x1, y1)
+            x2, y2 = function(x2, y2)
+            x3, y3 = function(x3, y3)
+            ctx.curve_to(x1, y1, x2, y2, x3, y3)
+		
+        elif type == cairo.PATH_CLOSE_PATH:
+            ctx.close_path()
 
-	def moveto(self, x, y):
-		if self.first:
-			self.ctx.new_path()
-			self.first = False
-		x, y = self.function(x, y)
-		self.ctx.move_to(x, y)
+def spiral(x, y):
+    theta0 = -math.pi * 3 / 4
+    theta = x / Width * math.pi * 2 + theta0
+    radius = y + 200 - x/7
+    xnew = radius*math.cos(theta)
+    ynew = radius*math.sin(-theta)
+    return xnew + Width/2, ynew + Height/2
 
-	def curveto(self, x1, y1, x2, y2, x3, y3):
-		x1, y1 = self.function(x1, y1)
-		x2, y2 = self.function(x2, y2)
-		x3, y3 = self.function(x3, y3)
-		self.ctx.curve_to(x1, y1, x2, y2, x3, y3)
-
-	def closepath(self):
-		self.ctx.close_path()
-
-	def warpPath(self):
-		self.first = True
-		self.ctx.current_path(self.moveto, self.lineto, self.curveto, self.closepath)
+def curl(x, y):
+    xn = x - Textwidth/2
+    #yn = y - Textheight/2
+    xnew = xn
+    ynew = y + xn ** 3 / ((Textwidth/2)**3) * 70
+    return xnew + Width/2, ynew + Height*2/5
 
 
-WIDTH, HEIGHT = 512, 512
-file = open("warpedtext.png", "wb")
-
-ctx = cairo.Context()
-ctx.set_target_png(file, cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
-ctx.identity_matrix()
-
-solidpattern = ctx.pattern
+Width, Height = 512, 512
+surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, Width, Height)
+ctx = cairo.Context(surface)
+solidpattern = ctx.get_source()
 
 # background
-pat = cairo.Pattern(x0=0.0, y0=0.0, x1=0, y1=HEIGHT)
-pat.add_color_stop (1, 0, 0, 0, 1)
-pat.add_color_stop (0, 1, 1, 1, 1)
+pat = cairo.Pattern.create_linear(0.0, 0.0, 0, Height)
+pat.add_color_stop_rgba (1, 0, 0, 0, 1)
+pat.add_color_stop_rgba (0, 1, 1, 1, 1)
 
-ctx.rectangle (0,0,WIDTH,HEIGHT)
-ctx.set_pattern (pat)
+ctx.rectangle (0,0,Width,Height)
+ctx.set_source (pat)
 ctx.fill ()
 
 # foreground
-ctx.set_pattern (solidpattern)
-ctx.set_rgb_color(1,1,1)
+ctx.set_source (solidpattern)
+ctx.set_source_rgb (1,1,1)
+
+ctx.select_font_face("Sans")
+ctx.set_font_size(80)
 
 # spiral text
-ctx.scale_font(80)
+ctx.new_path()
 ctx.move_to(0, 0)
 ctx.text_path("pycairo - " + "spam " * 5)
-def spiral(x, y):
-	theta0 = -math.pi * 3 / 4
-	theta = x / WIDTH * math.pi * 2 + theta0
-	radius = y + 200 - x/7
-	xnew = radius*math.cos(theta)
-	ynew = radius*math.sin(-theta)
-	return xnew + WIDTH/2, ynew + HEIGHT/2
-warp = PathWarp(spiral, ctx)
-warp.warpPath()
+warpPath(ctx, spiral)
 ctx.fill()
-ctx.new_path()
 
 # curly text
+ctx.new_path()
 ctx.move_to(0, 0)
-ctx.set_rgb_color(0.3, 0.3, 0.3)
+ctx.set_source_rgb(0.3, 0.3, 0.3)
 text = "I am curly :)"
 ctx.text_path(text)
-textwidth, textheight = ctx.text_extents(text)[2:4]
-def curl(x, y):
-	xn = x - textwidth/2
-	yn = y - textheight/2
-	xnew = xn
-	ynew = y + xn ** 3 / ((textwidth/2)**3) * 70
-	return xnew + WIDTH/2, ynew + HEIGHT*2/5
-warp = PathWarp(curl, ctx)
-warp.warpPath()
+Textwidth, Textheight = ctx.text_extents(text)[2:4]
+warpPath(ctx, curl)
 ctx.fill()
 
-
-ctx.show_page()
-
+surface.write_to_png("warpedtext.png")

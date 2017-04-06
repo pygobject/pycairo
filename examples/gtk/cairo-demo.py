@@ -80,14 +80,13 @@ def stroke_shapes(ctx, x, y):
 
 def expose(drawingarea, event):
     drawable = drawingarea.window
-    width = drawingarea.allocation.width
+    width  = drawingarea.allocation.width
     height = drawingarea.allocation.height
 
     drawable.clear()
 
-    ctx = cairo.Context()
-    cairo.gtk.set_target_drawable(ctx, drawable)
-    ctx.set_rgb_color(0, 0, 0)
+    ctx = cairo.gtk.gdk_cairo_create(drawable)
+    ctx.set_source_rgb(0, 0, 0)
 
     ctx.set_line_width(SIZE / 4)
     ctx.set_tolerance(0.1)
@@ -109,7 +108,7 @@ def expose(drawingarea, event):
 
     ctx.set_line_join(cairo.LINE_JOIN_BEVEL)
     fill_shapes(ctx, 0, 15*SIZE)
-    ctx.set_rgb_color(1,0,0)
+    ctx.set_source_rgb(1,0,0)
     stroke_shapes(ctx, 0, 15*SIZE)
 
 def main():
@@ -119,11 +118,11 @@ def main():
     win.set_default_size(450, 550)
 
     drawingarea = gtk.DrawingArea()
-    drawingarea.connect('expose_event', expose)
-
     win.add(drawingarea)
+    drawingarea.connect('expose_event', expose)
+    drawingarea.set_double_buffered(False)
+    
     win.show_all()
-
     gtk.main()
 
 if __name__ == '__main__':

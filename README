@@ -1,4 +1,4 @@
-PyCairo - Python bindings for Cairo
+Pycairo - Python bindings for cairo
 http://cairographics.org
 
 Compiling
@@ -7,16 +7,21 @@ See the INSTALL document for build instructions.
 
 Dependencies
 ------------
-    cairo  		>= 0.4.0
-    Python 		>= 2.2  
+    cairo  		>= 0.5.0
+    Python 		>= 2.3
     libsvg-cairo	optional >= 0.1.4
     Numeric Python	optional
     PyGTK		optional >= 1.99.16
 
 Mailing List
 ------------
-If you have trouble with Cairo or PyCairo or you have some ideas for how it
-could be improved, please feel free to send a message to
-cairo@cairographics.org
+If you have some ideas for how cairo or Pycairo could be improved, please feel
+free to send a message to cairo@cairographics.org
 
 	http://cairographics.org/cgi-bin/mailman/listinfo/cairo
+
+Bugzilla
+--------
+If you find a bug in cairo or Pycairo, please submit a bugreport to for cairo
+to
+	https://bugs.freedesktop.org/

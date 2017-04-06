@@ -1,0 +1,8 @@
+prefix=@prefix@
+
+Name: Pycairo
+Description: Python bindings for cairo
+Version: @VERSION@
+Requires: cairo
+Cflags: -I@includedir@/pycairo
+Libs:

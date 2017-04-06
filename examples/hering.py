@@ -13,7 +13,7 @@ def draw_hering (ctx, width, height):
     MAX_THETA = .80 * pi * 2
     THETA_INC = 2.0 * MAX_THETA / (LINES-1)
 
-    ctx.set_rgb_color (0, 0, 0)
+    ctx.set_source_rgb (0, 0, 0)
     ctx.set_line_width (2.0)
 
     ctx.save()
@@ -31,7 +31,7 @@ def draw_hering (ctx, width, height):
     ctx.restore()
 
     ctx.set_line_width (6)
-    ctx.set_rgb_color (1, 0, 0)
+    ctx.set_source_rgb (1, 0, 0)
 
     ctx.move_to (width / 4.0, 0)
     ctx.rel_line_to (0, height)
@@ -42,18 +42,13 @@ def draw_hering (ctx, width, height):
     ctx.stroke()
 
 
-try:
-    fileObject = file('hering.png', 'wb')
-except IOError, exc:
-    raise SystemExit("%s: %s" % (exc.filename, exc.strerror))
-
-ctx = cairo.Context()
-ctx.set_target_png (fileObject, cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
+surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
+ctx = cairo.Context(surface)
 
 ctx.rectangle (0, 0, WIDTH, HEIGHT)
-ctx.set_rgb_color (1, 1, 1)
+ctx.set_source_rgb (1, 1, 1)
 ctx.fill()
 
 draw_hering (ctx, WIDTH, HEIGHT)
 
-ctx.show_page()
+surface.write_to_png('hering.png')

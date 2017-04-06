@@ -3,12 +3,12 @@ AC_PREREQ(2.54)
 
 # the pycairo version number
 m4_define(pycairo_major_version, 0)
-m4_define(pycairo_minor_version, 4)
+m4_define(pycairo_minor_version, 5)
 m4_define(pycairo_micro_version, 0)
 m4_define(pycairo_version, pycairo_major_version.pycairo_minor_version.pycairo_micro_version)
 
 # versions of packages we require
-m4_define(cairo_required_version,    0.4.0)
+m4_define(cairo_required_version,    0.5.0)
 m4_define(gtk_required_version,      2.0.0)
 m4_define(pygtk_required_version,    1.99.16)
 m4_define(libsvg_cairo_required_version, 0.1.5)
@@ -38,7 +38,7 @@ ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
-AM_PATH_PYTHON(2.2)
+AM_PATH_PYTHON(2.3)
 
 AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
 
@@ -56,7 +56,7 @@ if test x"$with_pygtk" = xno; then
   with_pygtk=false
 else
   PKG_CHECK_MODULES(CAIRO_GTK,
-    [gtk+-2.0 >= gtk_required_version dnl
+    [gtk+-2.0 >= gtk_required_version
     pygtk-2.0 >= pygtk_required_version],
     [with_pygtk=true], [with_pygtk=false])
   if test -n "$export_dynamic"; then
@@ -87,26 +87,50 @@ fi
 AM_CONDITIONAL(HAVE_LIBSVG_CAIRO, $have_libsvg_cairo)
 
 
-# add debugging options ...
+# add gcc debugging options
 changequote(,)dnl
 if test "x$GCC" = xyes; then
+  case " $CFLAGS " in
+  *[\	\ ]-std=c99[\	\ ]*) ;;
+  *[\	\ ]-std=c9x[\	\ ]*) ;;
+  *) CFLAGS="$CFLAGS -std=c99" ;;
+  esac
+
   case " $CFLAGS " in
   *[\	\ ]-Wall[\	\ ]*) ;;
   *) CFLAGS="$CFLAGS -Wall" ;;
   esac
-
-  case " $CFLAGS " in
-  *[\	\ ]-std=c9x[\	\ ]*) ;;
-  *) CFLAGS="$CFLAGS -std=c9x" ;;
-  esac
 fi
 changequote([,])dnl
 
-AC_CONFIG_FILES(
-  Makefile
-  cairo/__init__.py
-  cairo/Makefile
-  examples/Makefile)
+case $GCC in
+yes)
+  # code using Py_True, Py_False will receive 
+  # "warning: dereferencing type-punned pointer will break strict-aliasing rules"
+  # -fno-strict-aliasing (as used in Python build) switches warnings off
+    AC_MSG_CHECKING(whether $CC accepts -fno-strict-aliasing)
+     ac_save_cc="$CC"
+     CC="$CC -fno-strict-aliasing"
+     AC_TRY_RUN([int main() { return 0; }],
+     ac_cv_no_strict_aliasing_ok=yes,
+     ac_cv_no_strict_aliasing_ok=no,
+     ac_cv_no_strict_aliasing_ok=no)
+     CC="$ac_save_cc"
+    AC_MSG_RESULT($ac_cv_no_strict_aliasing_ok)
+    if test $ac_cv_no_strict_aliasing_ok = yes
+    then
+      CFLAGS="$CFLAGS -fno-strict-aliasing"
+    fi
+esac
+
+AC_CONFIG_FILES([
+Makefile
+pycairo.pc
+cairo/__init__.py
+cairo/Makefile
+examples/Makefile
+])
+
 AC_OUTPUT
 
 echo "
@@ -115,6 +139,6 @@ Installation prefix             ${prefix}
 
 Additional modules:
 	build cairo.gtk   ?	${with_pygtk}
-	build cairo.numpy ?	${have_numpy}
 	build cairo.svg   ?     ${have_libsvg_cairo}
+	build Numeric support?  ${have_numpy}
 "

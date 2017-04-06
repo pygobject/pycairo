@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+"""Based on gtk+/test/testcairo.c
+"""
 
 from __future__ import division
 import math
@@ -10,134 +12,105 @@ import cairo.gtk
 
 
 def oval_path(ctx, xc, yc, xr, yr):
-    matrix = cairo.Matrix ()
+    ctx.save()
 
     ctx.translate (xc, yc)
     ctx.scale (1.0, yr / xr)
     ctx.move_to (xr, 0.0)
-    ctx.arc (  0, 0,
-               xr,
-               0, 2 * math.pi)
+    ctx.arc (0, 0, xr, 0, 2 * math.pi)
     ctx.close_path ()
 
-    ctx.set_matrix (matrix)
+    ctx.restore()
     
 def fill_checks(ctx, x, y, width, height):
-    ctx.save()
-
     CHECK_SIZE = 32
-    check = ctx.target_surface.create_similar(cairo.FORMAT_RGB24,
-                                              2*CHECK_SIZE, 2*CHECK_SIZE)
-    check.set_repeat(1)
 
-    ctx.save()
-    ctx.set_target_surface(check)
-    ctx.set_operator(cairo.OPERATOR_SRC)
+    ctx.rectangle (x, y, width, height)
+    ctx.set_source_rgb (0.4, 0.4, 0.4)
+    ctx.fill ()
 
-    ctx.set_rgb_color(0.4, 0.4, 0.4)
-    
-    ctx.rectangle(0, 0, 2*CHECK_SIZE, 2*CHECK_SIZE)
-    ctx.fill()
+    # Only works for CHECK_SIZE a power of 2
+    for j in range (x & -CHECK_SIZE, height, CHECK_SIZE):
+        for i in range (y & -CHECK_SIZE, width, CHECK_SIZE):
+            if ((i / CHECK_SIZE + j / CHECK_SIZE) % 2 == 0):
+                ctx.rectangle (i, j, CHECK_SIZE, CHECK_SIZE)
 
-    ctx.set_rgb_color(0.7, 0.7, 0.7)
-    
-    ctx.rectangle(x, y, CHECK_SIZE, CHECK_SIZE)
-    ctx.fill()
-    ctx.rectangle(x+CHECK_SIZE, y+CHECK_SIZE, CHECK_SIZE, CHECK_SIZE)
-    ctx.fill()
+    ctx.set_source_rgb (0.7, 0.7, 0.7)
+    ctx.fill ()
 
-    ctx.restore()
-
-    check_pattern = cairo.Pattern (surface=check)
-    ctx.set_pattern(check_pattern)
-    ctx.rectangle(0, 0, width, height)
-    ctx.fill()
-
-    ctx.restore()
-    
-
-def draw_3circles(ctx, xc, yc, radius):
+def draw_3circles(ctx, xc, yc, radius, alpha):
     subradius = radius * (2 / 3. - 0.1)
 
-    ctx.set_rgb_color(1, 0, 0)
+    ctx.set_source_rgba(1, 0, 0, alpha)
     oval_path(ctx,
               xc + radius / 3. * math.cos(math.pi * 0.5),
               yc - radius / 3. * math.sin(math.pi * 0.5),
               subradius, subradius)
     ctx.fill()
 
-    ctx.set_rgb_color(0, 1, 0)
+    ctx.set_source_rgba(0, 1, 0, alpha)
     oval_path(ctx,
               xc + radius / 3. * math.cos(math.pi * (0.5 + 2/.3)),
               yc - radius / 3. * math.sin(math.pi * (0.5 + 2/.3)),
               subradius, subradius)
     ctx.fill()
 
-    ctx.set_rgb_color(0, 0, 1)
+    ctx.set_source_rgba(0, 0, 1, alpha)
     oval_path(ctx,
               xc + radius / 3. * math.cos(math.pi * (0.5 + 4/.3)),
               yc - radius / 3. * math.sin(math.pi * (0.5 + 4/.3)),
               subradius, subradius)
     ctx.fill()
 
-def expose(drawingarea, event):
-    # a bug is highlighted when the window is obscured - the next expose event
-    # does not redraw the window properly.
-    # If you draw to a gdk.Pixmap first the problem does not appear
-    drawable = drawingarea.window
-    width = drawingarea.allocation.width
-    height = drawingarea.allocation.height
-
+def draw (ctx, width, height):
     radius = 0.5 * min(width, height) - 10
     xc = width / 2.
     yc = height / 2.
-
-    ctx = cairo.Context()
-    cairo.gtk.set_target_drawable(ctx, drawable)
-    surface = ctx.target_surface
-
-    overlay = surface.create_similar(cairo.FORMAT_ARGB32, width,height)
-    punch   = surface.create_similar(cairo.FORMAT_A8,     width,height)
-    circles = surface.create_similar(cairo.FORMAT_ARGB32, width,height)
+    
+    target  = ctx.get_target()
+    overlay = target.create_similar(cairo.FORMAT_ARGB32, width, height)
+    punch   = target.create_similar(cairo.FORMAT_A8,     width, height)
+    circles = target.create_similar(cairo.FORMAT_ARGB32, width, height)
 
     fill_checks(ctx, 0, 0, width, height)
 
-    ctx.save()
-    ctx.set_target_surface(overlay)
-
     # Draw a black circle on the overlay
-    ctx.set_rgb_color(0, 0, 0)
-    oval_path(ctx, xc, yc, radius, radius)
-    ctx.fill()
-
-    ctx.save()
-    ctx.set_target_surface(punch)
+    overlay_cr = cairo.Context (overlay)
+    overlay_cr.set_source_rgb (0, 0, 0)
+    oval_path (overlay_cr, xc, yc, radius, radius)
+    overlay_cr.fill()
 
     # Draw 3 circles to the punch surface, then cut
     # that out of the main circle in the overlay
-    draw_3circles(ctx, xc, yc, radius)
+    punch_cr = cairo.Context (punch)
+    draw_3circles (punch_cr, xc, yc, radius, 1.0)
+
+    overlay_cr.set_operator (cairo.OPERATOR_DEST_OUT)
+    overlay_cr.set_source_surface (punch, 0, 0)
+    overlay_cr.paint()
+
+    # Now draw the 3 circles in a subgroup again
+    # at half intensity, and use OperatorAdd to join up
+    # without seams.
+    circles_cr = cairo.Context (circles)
+  
+    circles_cr.set_operator (cairo.OPERATOR_OVER)
+    draw_3circles (circles_cr, xc, yc, radius, 0.5)
+
+    overlay_cr.set_operator (cairo.OPERATOR_ADD)
+    overlay_cr.set_source_surface (circles, 0, 0)
+    overlay_cr.paint()
+
+    ctx.set_source_surface (overlay, 0, 0)
+    ctx.paint()
     
-    ctx.restore()
+def expose(drawingarea, event):
+    ctx = cairo.gtk.gdk_cairo_create(drawingarea.window)
 
-    ctx.set_operator(cairo.OPERATOR_OUT_REVERSE)
-    ctx.show_surface(punch, width, height)
+    draw (ctx, drawingarea.allocation.width, drawingarea.allocation.height)
+                                         
+    return False
 
-    ctx.save()
-
-    ctx.set_target_surface(circles)
-    ctx.set_alpha(0.5)
-    ctx.set_operator(cairo.OPERATOR_OVER)
-    draw_3circles(ctx, xc, yc, radius)
-    
-    ctx.restore()
-
-    ctx.set_operator(cairo.OPERATOR_ADD)
-    ctx.show_surface(circles, width, height)
-
-    ctx.restore()
-
-    ctx.show_surface(overlay, width, height)
-    
 def main():
     win = gtk.Window()
     win.connect('destroy', gtk.main_quit)
@@ -145,11 +118,11 @@ def main():
     win.set_default_size(400, 400)
 
     drawingarea = gtk.DrawingArea()
-    drawingarea.connect('expose_event', expose)
-
     win.add(drawingarea)
+    drawingarea.connect('expose_event', expose)
+    drawingarea.set_double_buffered(False)
+    
     win.show_all()
-
     gtk.main()
 
 if __name__ == '__main__':
