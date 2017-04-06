@@ -1,4 +1,35 @@
-/* -*- mode: C; c-basic-offset: 4 -*- */
+/* -*- mode: C; c-basic-offset: 4 -*- 
+ *
+ * PyCairo - Python bindings for Cairo
+ *
+ * Copyright © 2003-2004 James Henstridge
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it either under the terms of the GNU Lesser General Public
+ * License version 2.1 as published by the Free Software Foundation
+ * (the "LGPL") or, at your option, under the terms of the Mozilla
+ * Public License Version 1.1 (the "MPL"). If you do not alter this
+ * notice, a recipient may use your version of this file under either
+ * the MPL or the LGPL.
+ *
+ * You should have received a copy of the LGPL along with this library
+ * in the file COPYING-LGPL-2.1; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the MPL along with this library
+ * in the file COPYING-MPL-1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License
+ * Version 1.1 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY
+ * OF ANY KIND, either express or implied. See the LGPL or the MPL for
+ * the specific language governing rights and limitations.
+ *
+ * Contributor(s):
+ *
+ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -6,7 +37,7 @@
 #include "pycairo-private.h"
 
 PyObject *
-pycairo_matrix_new(cairo_matrix_t *matrix)
+pycairo_matrix_wrap(cairo_matrix_t *matrix)
 {
     PyCairoMatrix *self;
 
@@ -79,7 +110,7 @@ pycairo_matrix_richcmp(PyCairoMatrix *self, PyCairoMatrix *other, int op)
     if (!PyObject_TypeCheck(other, &PyCairoMatrix_Type) ||
 	!(op == Py_EQ || op == Py_NE)) {
 	Py_INCREF(Py_NotImplemented);
-	return Py_None;
+	return Py_NotImplemented;
     }
 
     cairo_matrix_get_affine(self->matrix, &a1, &b1, &c1, &d1, &tx1, &ty1);
@@ -105,7 +136,7 @@ pycairo_matrix_multiply(PyCairoMatrix *self, PyCairoMatrix *other)
 	return PyErr_NoMemory();
 
     cairo_matrix_multiply(result, self->matrix, other->matrix);
-    return pycairo_matrix_new(result);
+    return pycairo_matrix_wrap(result);
 }
 
 static PyNumberMethods pycairo_matrix_as_number = {
@@ -149,7 +180,7 @@ pycairo_matrix_translate(PyCairoMatrix *self, PyObject *args)
 
     cairo_matrix_copy(other, self->matrix);
     cairo_matrix_translate(other, tx, ty);
-    return pycairo_matrix_new(other);
+    return pycairo_matrix_wrap(other);
 }
 
 static PyObject *
@@ -167,7 +198,7 @@ pycairo_matrix_scale(PyCairoMatrix *self, PyObject *args)
 
     cairo_matrix_copy(other, self->matrix);
     cairo_matrix_scale(other, sx, sy);
-    return pycairo_matrix_new(other);
+    return pycairo_matrix_wrap(other);
 }
 
 static PyObject *
@@ -185,7 +216,7 @@ pycairo_matrix_rotate(PyCairoMatrix *self, PyObject *args)
 
     cairo_matrix_copy(other, self->matrix);
     cairo_matrix_rotate(other, radians);
-    return pycairo_matrix_new(other);
+    return pycairo_matrix_wrap(other);
 }
 
 static PyObject *
@@ -202,7 +233,7 @@ pycairo_matrix_invert(PyCairoMatrix *self)
 	cairo_matrix_destroy(other);
 	return NULL;
     }
-    return pycairo_matrix_new(other);
+    return pycairo_matrix_wrap(other);
 }
 
 static PyObject *

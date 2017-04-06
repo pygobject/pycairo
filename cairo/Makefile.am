@@ -12,15 +12,17 @@ _cairo_la_LDFLAGS = -module -avoid-version -export-symbols-regex init_cairo
 _cairo_la_LIBADD = $(CAIRO_LIBS)
 _cairo_la_SOURCES = \
   pycairo.h \
-  pycairo-private.h \
-  pycairo-matrix.c \
-  pycairo-surface.c \
-  pycairo-pattern.c \
-  pycairo-font.c \
   pycairo-context.c \
+  pycairo-font.c \
+  pycairo-matrix.c \
+  pycairo-misc.h \
+  pycairo-pattern.c \
+  pycairo-private.h \
+  pycairo-surface.c \
+  pycairosvg-private.h \
   cairomodule.c
 
-if HAVE_GTK
+if WITH_PYGTK
 pycairoexec_LTLIBRARIES += gtk.la
 endif
 gtk_la_LDFLAGS = -module -avoid-version -export-symbols-regex initgtk
@@ -36,3 +38,11 @@ numpy_la_LIBADD = $(CAIRO_LIBS)
 numpy_la_SOURCES = \
   caironumpymodule.c
 
+if HAVE_LIBSVG_CAIRO
+pycairoexec_LTLIBRARIES += svg.la
+svg_la_LDFLAGS = -module -avoid-version -export-symbols-regex initsvg
+svg_la_LIBADD  = $(CAIRO_LIBS) $(LIBSVG_CAIRO_LIBS)
+svg_la_SOURCES = \
+  pycairosvg-context.c \
+  cairosvgmodule.c
+endif

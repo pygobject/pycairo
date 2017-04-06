@@ -1,4 +1,36 @@
-/* -*- mode: C; c-basic-offset: 4 -*- */
+/* -*- mode: C; c-basic-offset: 4 -*- 
+ *
+ * PyCairo - Python bindings for Cairo
+ *
+ * Copyright © 2003-2004 James Henstridge
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it either under the terms of the GNU Lesser General Public
+ * License version 2.1 as published by the Free Software Foundation
+ * (the "LGPL") or, at your option, under the terms of the Mozilla
+ * Public License Version 1.1 (the "MPL"). If you do not alter this
+ * notice, a recipient may use your version of this file under either
+ * the MPL or the LGPL.
+ *
+ * You should have received a copy of the LGPL along with this library
+ * in the file COPYING-LGPL-2.1; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the MPL along with this library
+ * in the file COPYING-MPL-1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License
+ * Version 1.1 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY
+ * OF ANY KIND, either express or implied. See the LGPL or the MPL for
+ * the specific language governing rights and limitations.
+ *
+ * Contributor(s):
+ *                 Maarten Breddels
+ */
+
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -29,6 +61,9 @@ pycairo_check_status(cairo_status_t status)
 	return 1;
     case CAIRO_STATUS_NO_TARGET_SURFACE:
 	PyErr_SetString(PyExc_RuntimeError, "no target surface has been set");
+	return 1;
+    case CAIRO_STATUS_NULL_POINTER:
+	PyErr_SetString(PyExc_RuntimeError, "NULL pointer");
 	return 1;
     default:
 	PyErr_SetString(PyExc_RuntimeError, "other cairo error");
@@ -83,7 +118,7 @@ pycairo_image_surface_create_for_data(PyObject *self, PyObject *args)
 	return PyErr_NoMemory();
     /* should get surface to hold reference to buffer ... */
 
-    return pycairo_surface_new(surface);
+    return pycairo_surface_wrap(surface);
 }
 
 #ifdef CAIRO_HAS_PS_SURFACE
@@ -117,9 +152,44 @@ pycairo_ps_surface_create(PyObject *self, PyObject *args)
     if (!surface)
 	return PyErr_NoMemory();
 
-    return pycairo_surface_new(surface);
+    return pycairo_surface_wrap(surface);
 }
 #endif /* CAIRO_HAS_PS_SURFACE */
+
+#ifdef CAIRO_HAS_PDF_SURFACE
+static PyObject *
+pycairo_pdf_surface_create(PyObject *self, PyObject *args)
+{
+    PyObject *file_object;
+    int width_inches, height_inches, x_pixels_per_inch, y_pixels_per_inch;
+    cairo_surface_t *surface;
+
+    if (!PyArg_ParseTuple(args, "O!iiii:pdf_surface_create",
+			  &PyFile_Type, &file_object, &width_inches, &height_inches, &x_pixels_per_inch, &y_pixels_per_inch))
+	return NULL;
+    if (width_inches <= 0) {
+	PyErr_SetString(PyExc_ValueError, "width_inches must be positive");
+	return NULL;
+    }
+    if (height_inches <= 0) {
+	PyErr_SetString(PyExc_ValueError, "height_inches must be positive");
+	return NULL;
+    }
+    if (x_pixels_per_inch <= 0) {
+	PyErr_SetString(PyExc_ValueError, "x_pixels_per_inch must be positive");
+	return NULL;
+    }
+    if (y_pixels_per_inch <= 0) {
+	PyErr_SetString(PyExc_ValueError, "y_pixels_per_inch must be positive");
+	return NULL;
+    }
+    surface = cairo_pdf_surface_create(PyFile_AsFile(file_object), width_inches, height_inches, x_pixels_per_inch, y_pixels_per_inch);
+    if (!surface)
+	return PyErr_NoMemory();
+
+    return pycairo_surface_wrap(surface);
+}
+#endif /* CAIRO_HAS_PDF_SURFACE */
 
 #ifdef CAIRO_HAS_PNG_SURFACE
 static PyObject *
@@ -147,35 +217,35 @@ pycairo_png_surface_create(PyObject *self, PyObject *args)
     if (!surface)
 	return PyErr_NoMemory();
 
-    return pycairo_surface_new(surface);
+    return pycairo_surface_wrap(surface);
 }
 #endif /* CAIRO_HAS_PNG_SURFACE */
 
 
 static PyMethodDef cairo_functions[] = {
-    /* this is the old function name, should use image_surface_create_for_data */
-    { "surface_create_for_image", (PyCFunction)pycairo_image_surface_create_for_data, METH_VARARGS, "this is the old function name, should use image_surface_create_for_data" },
     { "image_surface_create_for_data", (PyCFunction)pycairo_image_surface_create_for_data, METH_VARARGS, "" },
-
-#ifdef CAIRO_HAS_PS_SURFACE
-    { "ps_surface_create", (PyCFunction)pycairo_ps_surface_create, METH_VARARGS, "" },
+#ifdef CAIRO_HAS_PDF_SURFACE
+    { "pdf_surface_create", (PyCFunction)pycairo_pdf_surface_create, METH_VARARGS, "" },
 #endif
-
 #ifdef CAIRO_HAS_PNG_SURFACE
     { "png_surface_create", (PyCFunction)pycairo_png_surface_create, METH_VARARGS, "" },
 #endif
-
+#ifdef CAIRO_HAS_PS_SURFACE
+    { "ps_surface_create", (PyCFunction)pycairo_ps_surface_create, METH_VARARGS, "" },
+#endif
+    /* this is the old function name, should use image_surface_create_for_data */
+    { "surface_create_for_image", (PyCFunction)pycairo_image_surface_create_for_data, METH_VARARGS, "this is the old function name, should use image_surface_create_for_data" },
     { NULL, NULL, 0 }
 };
 
 static struct _PyCairo_FunctionStruct api = {
     pycairo_check_status,
     &PyCairoMatrix_Type,
-    pycairo_matrix_new,
+    pycairo_matrix_wrap,
     &PyCairoSurface_Type,
-    pycairo_surface_new,
+    pycairo_surface_wrap,
     &PyCairoFont_Type,
-    pycairo_font_new,
+    pycairo_font_wrap,
     &PyCairoContext_Type,
     pycairo_context_wrap,
     &PyCairoPattern_Type,

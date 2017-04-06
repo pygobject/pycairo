@@ -1,13 +1,21 @@
 SUBDIRS = cairo
 
 EXTRA_DIST = \
+  NOTES \
+  COPYING \
+  COPYING-LGPL-2.1 \
+  COPYING-MPL-1.1 \
   examples/cairo-demo.py \
   examples/cairo-knockout.py \
+  examples/context-subclass.py \
   examples/gradient.py \
   examples/hering.py \
   examples/lsystem.py \
   examples/spiral.py \
-  examples/text.py 
+  examples/svg2png.py \
+  examples/svgview.py \
+  examples/text.py \
+  examples/warpedtext.py
 
 #snap:
 #	$(MAKE) dist distdir=$(PACKAGE)-SNAP-`date +"%Y%m%d"`

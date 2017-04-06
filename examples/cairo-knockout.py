@@ -11,7 +11,6 @@ import cairo.gtk
 
 def oval_path(ctx, xc, yc, xr, yr):
     matrix = cairo.Matrix ()
-    #cairo_current_matrix (cr, matrix);
 
     ctx.translate (xc, yc)
     ctx.scale (1.0, yr / xr)
@@ -82,6 +81,9 @@ def draw_3circles(ctx, xc, yc, radius):
     ctx.fill()
 
 def expose(drawingarea, event):
+    # a bug is highlighted when the window is obscured - the next expose event
+    # does not redraw the window properly.
+    # If you draw to a gdk.Pixmap first the problem does not appear
     drawable = drawingarea.window
     width = drawingarea.allocation.width
     height = drawingarea.allocation.height

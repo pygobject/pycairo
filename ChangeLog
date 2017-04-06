@@ -1,3 +1,131 @@
+=== PyCairo snapshot 0.1.4 ===
+2005-01-12  Steve Chaplin  <steve1097@yahoo.com.au>
+	
+	* configure.ac: Increment pycairo version to 0.1.4
+
+	* Makefile.am (EXTRA_DIST): add examples/svg2png.py and
+	  examples/svgview.py
+
+	* NEWS: add notes for 0.1.4 snapshot
+	
+	* README: add version numbers required for libsvg-cairo and pygtk
+
+	* RELEASING: move 'make distcheck' (step 2) to after step 5
+
+2005-01-12  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/cairomodule.c (pycairo_pdf_surface_create): new wrapper
+	* cairo/pycairo-context.c (pycairo_set_target_pdf): new wrapper
+	* examples/cairo-knockout.py: add comment noting expose event bug
+	* examples/text.py: increase window height so "Hello World" is not
+	clipped
+
+2004-12-28  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/Makefile.am: Change HAVE_GTK to WITH_PYGTK
+	* configure.ac: add --without-pygtk option
+	* README: add './configure --without-pygtk' example
+
+2004-12-14  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* README: added notes to describe compiling and how to avoid PYTHONPATH
+	problems
+	* configure.ac: report the 'prefix' at the end of configure
+
+2004-12-10  Steve Chaplin  <steve1097@yahoo.com.au>
+	
+	Add libsvg-cairo support
+	* configure.ac: add checks for libsvg-cairo
+	* cairo/Makefile.am: add libsvg-cairo support
+
+	New files
+	* cairo/cairosvgmodule.c: 
+	* cairo/pycairosvg-context.c: 
+	* cairo/pycairo-misc.h: 
+	* cairo/pycairosvg-private.h: 
+	* examples/svg2png.py: 	
+	* examples/svgview.py: 
+
+2004-12-10  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/cairogtkmodule.c: 
+	* cairo/cairomodule.c: 
+	* cairo/caironumpymodule.c (surface_create_for_array): 
+	* cairo/pycairo-font.c: 
+	* cairo/pycairo-context.c: 
+	* cairo/pycairo.h:
+	* cairo/pycairo-matrix.c: 
+	* cairo/pycairo-pattern.c: 
+	* cairo/pycairo-private.h: 
+	* cairo/pycairo-surface.c: 
+	change _new() functions to _wrap() to allow _new() to be used for
+	python __new__ functions.
+
+2004-12-06  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo-pattern.c (pycairo_pattern_init): remove a commented
+	out line
+
+	* cairo/pycairo-surface.c (pycairo_surface_set_repeat),
+	(pycairo_surface_get_matrix, pycairo_surface_set_filter):
+	add status check
+
+2004-12-05  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo-context.c: remove the "#if 0" section
+
+2004-12-04  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/cairomodule.c (pycairo_check_status): Add
+	CAIRO_STATUS_NULL_POINTER
+
+2004-12-01  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo-private.h: define Py_RETURN_NONE, Py_RETURN_TRUE,
+	Py_RETURN_FALSE, Py_CLEAR if using python < 2.4
+
+	* cairo/pycairo-matrix.c (pycairo_matrix_richcmp): return 
+	Py_NotImplemented instead of Py_None
+
+	* cairo/pycairo-context.c: 
+	* cairo/pycairo-font.c (pycairo_font_set_transform): 
+	* cairo/pycairo-pattern.c: 
+	* cairo/pycairo-surface.c: 
+	change all occurences of "Py_INCREF(Py_None); return Py_None;" 
+	to "Py_RETURN_NONE;"
+
+2004-12-01  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/cairogtkmodule.c: 
+	* cairo/cairomodule.c: 
+	* cairo/caironumpymodule.c: 
+	* cairo/pycairo-context.c: 
+	* cairo/pycairo-font.c: 
+	* cairo/pycairo.h: 
+	* cairo/pycairo-matrix.c: 
+	* cairo/pycairo-pattern.c: 
+	* cairo/pycairo-private.h: 
+	* cairo/pycairo-surface.c: Added header comments referencing the LGPL
+	and MPL licenses.	
+
+2004-11-30  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* COPYING: Changed to reference LGPL and MPL
+	* COPYING-LGPL-2.1, COPYING-MPL-1.1: new files
+	* Makefile.am (EXTRA_DIST): add COPYING*
+
+2004-11-28  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* Makefile.am (EXTRA_DIST): add NOTES, examples/context-subclass.py,
+        examples/warpedtext.py
+	
+	* NEWS: remove notes for Snapshot 0.1.2 - the snapshot was not
+	completed and released, 0.1.3 is the first snapshot.
+
+	* configure.ac: define VERSION_INFO
+	* cairo/__init__.py.in (version_info): use VERSION_INFO from 
+	configure.ac
+
 2004-11-24  Carl Worth  <cworth@cworth.org>
 
 	* Makefile.am (RELEASE_UPLOAD_DIR): Update directory due to

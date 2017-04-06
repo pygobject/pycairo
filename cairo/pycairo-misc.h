@@ -2,7 +2,7 @@
  *
  * PyCairo - Python bindings for Cairo
  *
- * Copyright © 2003-2004 James Henstridge
+ * Copyright © 2003-2004 Steve Chaplin
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -28,33 +28,24 @@
  * the specific language governing rights and limitations.
  *
  * Contributor(s):
- *
+ *                 Steve Chaplin
  */
 
-#ifndef _PYCAIRO_PRIVATE_H_
-#define _PYCAIRO_PRIVATE_H_
+#ifndef _PYCAIRO_MISC_H_
+#define _PYCAIRO_MISC_H_
 
-#ifdef _PYCAIRO_H_
-#  error "don't include pycairo.h and pycairo-private.h together"
-#endif
+#if PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION < 4
+#  define Py_RETURN_NONE return Py_INCREF(Py_None), Py_None
+#  define Py_RETURN_TRUE return Py_INCREF(Py_True), Py_True
+#  define Py_RETURN_FALSE return Py_INCREF(Py_False), Py_False
+#  define Py_CLEAR(op)				\
+        do {                            	\
+                if (op) {			\
+                        PyObject *tmp = (PyObject *)(op);	\
+                        (op) = NULL;		\
+                        Py_DECREF(tmp);		\
+                }				\
+        } while (0)
+#endif /* PY_MAJOR_VERSION */
 
-#define _INSIDE_PYCAIRO_
-#include "pycairo.h"
-
-
-extern PyTypeObject PyCairoMatrix_Type;
-extern PyTypeObject PyCairoContext_Type;
-extern PyTypeObject PyCairoSurface_Type;
-extern PyTypeObject PyCairoPattern_Type;
-extern PyTypeObject PyCairoFont_Type;
-
-int       pycairo_check_status(cairo_status_t status);
-
-/* takes ownership of reference */
-PyObject *pycairo_matrix_wrap(cairo_matrix_t *matrix);
-PyObject *pycairo_context_wrap(cairo_t *ctx);
-PyObject *pycairo_surface_wrap(cairo_surface_t *surface);
-PyObject *pycairo_pattern_wrap(cairo_pattern_t *pattern);
-PyObject *pycairo_font_wrap(cairo_font_t *font);
-
-#endif /* _PYCAIRO_PRIVATE_H_ */
+#endif /* _PYCAIRO_MISC_H_ */

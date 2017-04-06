@@ -1,9 +1,41 @@
-/* -*- mode: C; c-basic-offset: 4 -*- */
+/* -*- mode: C; c-basic-offset: 4 -*- 
+ *
+ * PyCairo - Python bindings for Cairo
+ *
+ * Copyright © 2004 Steve Chaplin
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it either under the terms of the GNU Lesser General Public
+ * License version 2.1 as published by the Free Software Foundation
+ * (the "LGPL") or, at your option, under the terms of the Mozilla
+ * Public License Version 1.1 (the "MPL"). If you do not alter this
+ * notice, a recipient may use your version of this file under either
+ * the MPL or the LGPL.
+ *
+ * You should have received a copy of the LGPL along with this library
+ * in the file COPYING-LGPL-2.1; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the MPL along with this library
+ * in the file COPYING-MPL-1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License
+ * Version 1.1 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY
+ * OF ANY KIND, either express or implied. See the LGPL or the MPL for
+ * the specific language governing rights and limitations.
+ *
+ * Contributor(s):
+ *	           Maarten Breddels
+ */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 #include "pycairo-private.h"
+#include "pycairo-misc.h"
 
 
 /* wrap an existing cairo_pattern_t in a PyCairoPattern object */
@@ -85,10 +117,7 @@ pycairo_pattern_init(PyCairoPattern *self, PyObject *args, PyObject *kwargs)
 	PyErr_SetString(PyExc_RuntimeError, "could not create pattern");
 	return -1;
     }
-
-    /*cairo_pattern_reference(pattern);*/
     self->pattern = pattern;
-
     return 0;
 }
 
@@ -106,9 +135,7 @@ pycairo_pattern_add_color_stop(PyCairoPattern *self, PyObject *args)
 					   blue, alpha);
     if (pycairo_check_status(status))
 	return NULL;
-
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_RETURN_NONE;
 }
 
 static PyObject *
@@ -122,8 +149,7 @@ pycairo_pattern_set_matrix(PyCairoPattern *self, PyObject *args)
 
     /* always returns status = success */
     cairo_pattern_set_matrix(self->pattern, matrix->matrix);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_RETURN_NONE;
 }
 
 static PyObject *
@@ -136,8 +162,7 @@ pycairo_pattern_set_extend(PyCairoPattern *self, PyObject *args)
  
     /* always returns status = success */
     cairo_pattern_set_extend(self->pattern, extend);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_RETURN_NONE;
 }
  
 static PyObject *
@@ -150,8 +175,7 @@ pycairo_pattern_set_filter(PyCairoPattern *self, PyObject *args)
 
     /* always returns status = success */
     cairo_pattern_set_filter(self->pattern, filter);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_RETURN_NONE;
 }
  
 static PyObject *
@@ -165,7 +189,7 @@ pycairo_pattern_get_matrix(PyCairoPattern *self)
 
     /* always returns status = success */
     cairo_pattern_get_matrix(self->pattern, matrix);
-    return pycairo_matrix_new(matrix);
+    return pycairo_matrix_wrap(matrix);
 }
 
 static PyObject *
@@ -184,16 +208,16 @@ pycairo_pattern_get_filter(PyCairoPattern *self)
 static PyMethodDef pycairo_pattern_methods[] = {
     { "add_color_stop", (PyCFunction)pycairo_pattern_add_color_stop, 
       METH_VARARGS },
-    { "set_matrix", (PyCFunction)pycairo_pattern_set_matrix, METH_VARARGS },
     { "set_extend", (PyCFunction)pycairo_pattern_set_extend, METH_VARARGS },
     { "set_filter", (PyCFunction)pycairo_pattern_set_filter, METH_VARARGS },
+    { "set_matrix", (PyCFunction)pycairo_pattern_set_matrix, METH_VARARGS },
     { NULL, NULL, 0 }
 };
 
 static PyGetSetDef pycairo_pattern_getsets[] = {
-    { "matrix", (getter)pycairo_pattern_get_matrix, (setter)0 },
     { "extend", (getter)pycairo_pattern_get_extend, (setter)0 },
     { "filter", (getter)pycairo_pattern_get_filter, (setter)0 },
+    { "matrix", (getter)pycairo_pattern_get_matrix, (setter)0 },
     { NULL, (getter)0, (setter)0 }
 };
 

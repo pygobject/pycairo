@@ -1,0 +1,17 @@
+Some interesting points about these bindings:
+
+* provides an OO interface to Cairo, using Python 2.2 new style classes.
+
+* treat cairo.Matrix objects as immutable.  The wrappers for things like
+cairo_matrix_invert() return a new object, leaving the existing matrix
+unchanged.
+
+* cairo_status() is called to check the status of cairo_t operations, and
+raise exceptions as appropriate.
+
+* Can be used as a base for other Python extensions.  Will be important when
+wrapping other libraries that depend on cairo
+
+* Includes a simple extension with functions for creating cairo.Surface
+objects from GdkWindows or GdkPixbufs.  This makes it possible to use the
+bindings with PyGTK.

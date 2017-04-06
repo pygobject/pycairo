@@ -2,7 +2,7 @@
  *
  * PyCairo - Python bindings for Cairo
  *
- * Copyright © 2003-2004 James Henstridge
+ * Copyright © 2003-2004 Steve Chaplin
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -28,33 +28,51 @@
  * the specific language governing rights and limitations.
  *
  * Contributor(s):
- *
+ *                 Steve Chaplin
  */
 
-#ifndef _PYCAIRO_PRIVATE_H_
-#define _PYCAIRO_PRIVATE_H_
+#include <Python.h>
 
-#ifdef _PYCAIRO_H_
-#  error "don't include pycairo.h and pycairo-private.h together"
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
 #endif
 
-#define _INSIDE_PYCAIRO_
+#include "pycairosvg-private.h"
 #include "pycairo.h"
 
 
-extern PyTypeObject PyCairoMatrix_Type;
-extern PyTypeObject PyCairoContext_Type;
-extern PyTypeObject PyCairoSurface_Type;
-extern PyTypeObject PyCairoPattern_Type;
-extern PyTypeObject PyCairoFont_Type;
+/* cairo.svg module
+ * - no module methods
+ * - one module type: cairo.svg.Context()
+*/
 
-int       pycairo_check_status(cairo_status_t status);
 
-/* takes ownership of reference */
-PyObject *pycairo_matrix_wrap(cairo_matrix_t *matrix);
-PyObject *pycairo_context_wrap(cairo_t *ctx);
-PyObject *pycairo_surface_wrap(cairo_surface_t *surface);
-PyObject *pycairo_pattern_wrap(cairo_pattern_t *pattern);
-PyObject *pycairo_font_wrap(cairo_font_t *font);
+static PyMethodDef svg_methods[] = {
+    {NULL},
+};
 
-#endif /* _PYCAIRO_PRIVATE_H_ */
+
+PyDoc_STRVAR(svg_doc,
+"libsvg-cairo bindings."
+);
+
+#ifndef PyMODINIT_FUNC	/* declarations for DLL import/export */
+#define PyMODINIT_FUNC void
+#endif
+PyMODINIT_FUNC
+initsvg (void)
+{
+    PyObject* mod;
+
+    if (PyType_Ready(&PyCairoSVGContext_Type) < 0)
+        return;
+
+    mod = Py_InitModule3 ("cairo.svg", svg_methods, svg_doc);
+    if (mod == NULL)
+	return;
+
+    init_pycairo();
+
+    Py_INCREF(&PyCairoSVGContext_Type);
+    PyModule_AddObject(mod, "Context", (PyObject *)&PyCairoSVGContext_Type);
+}

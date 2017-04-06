@@ -33,7 +33,7 @@ win = gtk.Window()
 win.set_title('Cairo Demo')
 
 drawingarea = gtk.DrawingArea()
-drawingarea.set_size_request(400,100)
+drawingarea.set_size_request(400,150)
 win.add(drawingarea)
 
 win.show_all()
