@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-
-import Numeric
+"""test ImageSurface.create_for_array()
+"""
 
 import cairo
+import Numeric
 
-# create an array
 array = Numeric.zeros((80,80,4), Numeric.UInt8)
 for i in range(80):
     for j in range(80):
@@ -15,5 +15,4 @@ for i in range(80):
 
 surface = cairo.ImageSurface.create_for_array(array)
 ctx = cairo.Context(surface)
-
-surface.write_to_png('cairo_image_surface_create_for_array.png')
+surface.write_to_png('isurface_create_for_array.png')

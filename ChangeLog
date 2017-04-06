@@ -1,3 +1,66 @@
+=== Pycairo 1.2.0 ===
+2006-07-03  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* configure.ac:
+	* NEWS:
+	* README:
+	* setup.py:
+	update for pycairo 1.2.0
+
+	* cairo/pycairo-surface.c (image_surface_to_rgba): rename to
+	image_surface_get_data_as_rgba
+
+2006-07-01  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* configure.ac : fix problem where Numeric was not being detected.
+	require cairo 1.2.0
+
+	* cairo/cairomodule.c : add cairo.FORMAT_RGB16_565
+
+	* cairo/pycairo-surface.c (image_surface_create_for_data):
+	add support for CAIRO_FORMAT_RGB16_565
+	(xlib_surface_get_height, xlib_surface_get_width): new bindings
+
+2006-06-26  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* INSTALL: Remove obsolete notes about RGBA patch
+
+	* configure.ac : remove the check for the
+	cairo_image_surface_get_data() patch.
+
+	* cairo/pycairo-surface.c: remove "#ifdef HAVE_GETDATA" which is no
+	longer needed now that we have the new functions
+	cairo_image_surface_get_date/height/stride.
+
+2006-06-25  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* configure.ac: increase required cairo version to 1.1.8
+
+	* cairo/pycairo-surface.c (surface_get_content)
+	(image_surface_get_format, image_surface_get_stride):
+	Add new bindings.
+	(image_surface_get_height, image_surface_get_width)
+	(xlib_surface_get_depth):
+	use PyInt_FromLong instead of Py_BuildValue.
+
+2006-06-22  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/pycairo-surface.c (image_surface_create_from_png): rewrite to
+	be consistent with the method used for surface_write_to_png.
+
+2006-06-11  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/pycairo-surface.c (pdf_surface_set_dpi, ps_surface_set_dpi)
+	(svg_surface_set_dpi): delete and replace with the new function
+	surface_set_fallback_resolution, fixes #7180.
+
+	* cairo/pycairo-surface.c (image_surface_create_for_data):
+	* cairo/pycairo-pattern.c (PycairoPattern_FromPattern): use
+	PyErr_SetString instead of ASSERT_NOT_REACHED.
+
+	* cairo/pycairo-private.h: delete ASSERT_NOT_REACHED as its no longer
+	used
+
 === Pycairo 1.1.6 ===
 2006-05-29  Steve Chaplin  <steve1097 # yahoo.com.au>
 
@@ -12,7 +75,7 @@
 	* README : increase required cairo version to 1.1.6
 
 	* autogen.sh : update by using a (slightly modified) copy of the cairo
-	autogen.sh, fixes bug #7048.
+	autogen.sh, fixes #7048.
 
 2006-05-28  Steve Chaplin  <steve1097 # yahoo.com.au>
 
@@ -194,7 +257,7 @@
 	(font_options_set_hint_metrics, font_options_set_hint_style)
 	(font_options_set_subpixel_order):
 	new bindings, applied patch from raulir, with some changes,
-	fixes bug #5689.
+	fixes #5689.
 
 2006-01-22  Steve Chaplin  <steve1097 # yahoo.com.au>
 
@@ -202,7 +265,7 @@
 	(pycairo_select_font_face, pycairo_show_text, pycairo_text_extents)
 	(pycairo_text_path):
 	allow the string argument to be a unicode or string object, and convert
-	to UTF-8 encoding, fixes bug #5654.
+	to UTF-8 encoding, fixes #5654.
 
 2006-01-20  Steve Chaplin  <steve1097 # yahoo.com.au>
 
@@ -226,7 +289,7 @@
 2006-01-17  Steve Chaplin  <steve1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (image_surface_create_for_data): for
-	CAIRO_FORMAT_RGB24 set stride = width * 4 (not 3), fixes bug #5633
+	CAIRO_FORMAT_RGB24 set stride = width * 4 (not 3), fixes #5633
 
 2005-12-16  Steve Chaplin  <steve1097 # yahoo.com.au>
 
@@ -579,8 +642,7 @@
 2005-07-25  Steve Chaplin  <steve1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (image_surface_create_from_png): update to
-	accept a file object. (it requires a cairo version which fixes bug
-	#3863)
+	accept a file object. (it requires a cairo version which fixes #3863)
 
 	* NOTES : Add note showing cairo.ImageSurface.create_from_png()
 	accepting a file object argument.

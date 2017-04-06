@@ -25,20 +25,3 @@ pycairo is now supported directly by PyGTK.
 To disable PyGTK support use
 
     $ ./configure --without-pygtk
-
-
-Enabling RGBA output (optional)
---------------------
-An experimental patch is provided which enables RGBA output from a
-cairo.ImageSurface.
-It can be used, for example, to transfer cairo images into PIL.
-
-1) Apply the 'get_data' patch to cairo
- $ cd cairo/src
- $ patch < [path_to pycairo/patch.cairo-image-surface.c]
- $ patch < [path_to pycairo/patch.cairo.h]
-
-2) Install cairo
-3) Install pycairo
-
-see test/to_rgba.py for example uses of 'surface.to_rgba()'

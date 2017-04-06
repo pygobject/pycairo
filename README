@@ -7,7 +7,7 @@ See the INSTALL document for build instructions.
 
 Dependencies
 ------------
-    cairo  		>= 1.1.6
+    cairo  		>= 1.2.0
     Python 		>= 2.3
 
 

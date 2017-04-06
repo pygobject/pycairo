@@ -73,7 +73,8 @@ PycairoPattern_FromPattern (cairo_pattern_t *pattern)
 	type = &PycairoRadialGradient_Type;
 	break;
     default:
-	ASSERT_NOT_REACHED;
+	PyErr_SetString(CairoError, "Unsupported Pattern type");
+	return NULL;
     }
 
     o = type->tp_alloc(type, 0);

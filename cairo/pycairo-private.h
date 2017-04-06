@@ -116,10 +116,4 @@ int Pycairo_Check_Status (cairo_status_t status);
         } while (0)
 #endif /* PY_MAJOR_VERSION */
 
-#define ASSERT_NOT_REACHED		\
-do {					\
-    static const int NOT_REACHED = 0;	\
-    assert (NOT_REACHED);		\
-} while (0)
-
 #endif /* _PYCAIRO_PRIVATE_H_ */

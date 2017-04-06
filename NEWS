@@ -1,3 +1,22 @@
+Overview of changes from pycairo 1.1.6 to pycairo 1.2.0
+=======================================================
+General changes:
+Pycairo has been updated to work with cairo 1.2.0.
+
+New methods:
+    Surface.set_fallback_resolution
+    Surface_get_content
+    ImageSurface_get_format
+    Image_surface_get_stride
+
+Deleted methods:
+    PDFSurface.set_dpi, PSSurface.set_dpi, SVGSurface.set_dpi
+     - replaced by Surface.set_fallback_resolution
+
+Other changes:
+    cairo.FORMAT_RGB16_565 added
+
+
 Overview of changes from pycairo 1.0.2 to pycairo 1.1.6
 =======================================================
 General changes:
