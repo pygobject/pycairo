@@ -13,7 +13,7 @@ import cairo.gtk
 from snippets import snip_list, snippet_normalize, snippet_set_bg_svg
 
 Width, Height = 400, 400
-    
+
 
 def gdkcolor_to_rgb (gdkcolor):
     return gdkcolor.red/65535, gdkcolor.green/65535, gdkcolor.blue/65535
@@ -27,7 +27,6 @@ class Window (gtk.Window):
 
         self.da = gtk.DrawingArea()
         self.da.connect('expose-event', self.da_expose_event)
-        self.da.set_double_buffered(False)
 
         def put_in_frame (widget):
             frame = gtk.Frame (label=None)
@@ -47,7 +46,7 @@ class Window (gtk.Window):
 
         sl = self.create_snippet_list()
         hpaned.pack1 (put_in_frame (sl), True, True)
-        
+
         hpaned.pack2 (put_in_frame (self.da), True, True)
         self.da.set_size_request (int(Width/2), int(Height/2))
 
@@ -55,9 +54,9 @@ class Window (gtk.Window):
         self._bg_rgb = gdkcolor_to_rgb (self.da.style.bg[gtk.STATE_NORMAL])
 
         # set focus to snippet list
-        sl.get_child().grab_focus()        
-        
-        
+        sl.get_child().grab_focus()
+
+
     def da_expose_event (self, da, event, data=None):
         width  = da.allocation.width
         height = da.allocation.height
@@ -69,11 +68,11 @@ class Window (gtk.Window):
         cr.rectangle(0, 0, width, height)
         cr.fill()
         cr.set_source_rgb (0,0,0) # reset black
-        
+
         try:
             exec (self.snippet_str, globals(), locals())
         except:
-            exc_type, exc_value = sys.exc_info()[:2] 
+            exc_type, exc_value = sys.exc_info()[:2]
             print exc_type, exc_value
 
         return True
@@ -89,7 +88,7 @@ class Window (gtk.Window):
         sw.add (text_view)
         # set a fixed width font, so any tabs line up
         text_view.modify_font(pango.FontDescription ("Fixed"))
-        
+
         self.text_buffer = text_view.get_buffer()
 
         return sw
@@ -113,14 +112,14 @@ class Window (gtk.Window):
 
     def create_snippet_list (self):
         sw = gtk.ScrolledWindow()
-        sw.set_property ('shadow-type', gtk.SHADOW_IN)        
+        sw.set_property ('shadow-type', gtk.SHADOW_IN)
         sw.set_policy (hscrollbar_policy=gtk.POLICY_NEVER,
                        vscrollbar_policy=gtk.POLICY_AUTOMATIC)
 
         model = gtk.ListStore (str,)
         for row in snip_list:
             model.append (row=(row,))
-    
+
         tree_view = gtk.TreeView (model)
         sw.add (tree_view)
         tree_view.set_property ('headers-visible', False)
@@ -134,7 +133,7 @@ class Window (gtk.Window):
         cr = gtk.CellRendererText()
         tvc = gtk.TreeViewColumn (None, cr, text=0)
         tree_view.append_column (tvc)
-        
+
         tselection.select_path(0,) # select first item
 
         return sw

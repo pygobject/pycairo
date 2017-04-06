@@ -1,3 +1,64 @@
+=== Pycairo 0.9.0 ===
+2005-08-10  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* configure.ac: increment pycairo and cairo to 0.9.0
+
+	* README : increment required cairo version to 0.9.0
+
+	* NEWS: update for 0.9.0 release
+
+	* setup.py : increment pycairo version to 0.9.0
+
+2005-08-10  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/cairogtkmodule.c (surface_create_for_pixbuf): delete function
+	- its not much use since cairo's and gdk's image formats are different.
+
+2005-08-09  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* examples/gtk/cairo-demo.py :
+	* examples/gtk/cairo-knockout.py :
+	* examples/gtk/lsystem.py :
+	* examples/gtk/png_view.py :
+	* examples/gtk/text.py :
+	* examples/cairo_snippets/snippets_gtk.py :
+	enable double buffering
+
+2005-08-09  Bertram Felgenhauer <int-e@gmx.de>
+
+ 	* cairo/cairogtkmodule.c (gdk_cairo_create): Query windows for
+ 	backbuffers to make double buffering work.
+
+2005-08-09  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo-context.c (pycairo_set_antialias)
+	(pycairo_get_antialias): new wrappers
+
+	* cairo/cairomodule.c (init_cairo): add the four cairo.ANTIALIAS_*
+	constants
+
+	* NOTES : list surface.mark_dirty (x=0, y=0, width=-1, height=-1)
+	showing default arguments
+
+	* cairo/pycairo-surface.c (surface_mark_dirty, surface_flush): new
+	wrappers
+
+2005-08-08  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* NEWS : change titles to "Overview of changes from pycairo x.x.x to
+	pycairo y.y.y" and remove my email address.
+
+	* cairo/pycairo-context.c (pycairo_get_font_face): update since
+	cairo_get_font_face no longer returns NULL on error.
+
+2005-08-08  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* README : Add link to pycairo home page
+
+2005-08-02  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* NEWS: updated for 0.6.0
+
 === Pycairo 0.6.0 ===
 2005-08-01  Steve Chaplin  <steve1097@yahoo.com.au>
 
@@ -13,7 +74,7 @@
 	(pycairo_set_font_options): new wrappers
 	(pycairo_get_target): use new error checking code
 
-	* cairo/pycairo-surface.c (image_surface_create_from_png): 
+	* cairo/pycairo-surface.c (image_surface_create_from_png):
 	improve error message for case when fopen() fails, fix a compiler
 	warning.
 	(surface_get_font_options): new wrapper
@@ -23,9 +84,9 @@
 
 2005-08-01  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/cairogtkmodule.c (surface_create_for_pixbuf): 
-	* cairo/pycairo-font.c: 
-	* cairo/pycairo-surface.c: 
+	* cairo/cairogtkmodule.c (surface_create_for_pixbuf):
+	* cairo/pycairo-font.c:
+	* cairo/pycairo-surface.c:
 	update to use new font and surface error objects
 
 2005-07-29  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
@@ -43,7 +104,7 @@
 2005-07-25  Steve Chaplin  <steve1097@yahoo.com.au>
 
 	* cairo/pycairo-surface.c (image_surface_create_from_png): update to
-	accept a file object. (it requires a cairo version which fixes bug 
+	accept a file object. (it requires a cairo version which fixes bug
 	#3863)
 
 	* NOTES : Add note showing cairo.ImageSurface.create_from_png()
@@ -64,10 +125,10 @@
 
 2005-07-23  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* NOTES : 
-	* cairo/cairomodule.c: 
-	* cairo/pycairo.h: 
-	* cairo/pycairo-private.h: 
+	* NOTES :
+	* cairo/cairomodule.c:
+	* cairo/pycairo.h:
+	* cairo/pycairo-private.h:
 	* cairo/pycairo-font.c : add support for cairo_font_options_t
 	by creating cairo.FontOptions class (overwrites previous commit)
 
@@ -83,7 +144,7 @@
 
 	* configure.ac: optionally require GTK+ >= 2.2.0, PyGTK >= 2.2.0
 	since gdk_drawable_get_screen() is a GTK+ 2.2 function
-	
+
 	* README : note that optional PyGTK support requires PyGTK >= 2.2.0
 
 2005-07-21  Malcolm Tredinnick <malcolm@commsecure.com.au>
@@ -102,8 +163,8 @@
 
 2005-07-01  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* examples/cairo_snippets/snippets_gtk.py : 
-	update to use the 'shadow-type' property to draw a border round the 
+	* examples/cairo_snippets/snippets_gtk.py :
+	update to use the 'shadow-type' property to draw a border round the
 	ScrolledWindows
 
 2005-06-24  Steve Chaplin  <steve1097@yahoo.com.au>
@@ -111,7 +172,7 @@
 	* Makefile.am (EXTRA_DIST): add setup.py
 
 2005-06-23  Steve Chaplin  <steve1097@yahoo.com.au>
-	
+
 	* cairo/Makefile.am: install __init__.py to
 	$prefix/lib64/site-packages/cairo on 64-bit systems. Fixes #3587
 
@@ -142,10 +203,10 @@
 	* examples/gtk/hangman.py :
 	* examples/gtk/lsystem.py : change Cairo to cairo
 
-	* examples/cairo_snippets/snippets_pdf.py: 
-	* examples/cairo_snippets/snippets_png.py: 
-	* examples/cairo_snippets/snippets_ps.py: 
-	use cairo.HAS_PDF_SURFACE, cairo.HAS_PNG_FUNCTIONS, 
+	* examples/cairo_snippets/snippets_pdf.py:
+	* examples/cairo_snippets/snippets_png.py:
+	* examples/cairo_snippets/snippets_ps.py:
+	use cairo.HAS_PDF_SURFACE, cairo.HAS_PNG_FUNCTIONS,
 	cairo.HAS_PS_SURFACE to check cairo supports the required surfaces.
 
 2005-06-20  Steve Chaplin  <steve1097@yahoo.com.au>
@@ -153,44 +214,44 @@
         Fixes for compiler warnings:
 	* cairo/pycairo-surface.c (image_surface_create_for_array): cast
 	array->data to (unsigned char *)
-	
-	* cairo/cairosvgmodule.c (pycairosvg_get_size): change int to unsigned 
+
+	* cairo/cairosvgmodule.c (pycairosvg_get_size): change int to unsigned
 	int width, height
 
 2005-06-20  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* examples/cairo_snippets/snippets_gtk.py: move select_path() to below 
+	* examples/cairo_snippets/snippets_gtk.py: move select_path() to below
 	append_column() to fix problem with initial path not being set.
 
 2005-06-20  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/pycairo-private.h: remove unnecessary 
+	* cairo/pycairo-private.h: remove unnecessary
 	'extern PyObject *CairoError;'
 
 2005-06-16  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* configure.ac: increase optional libsvg-cairo version from 0.1.5 to 
+	* configure.ac: increase optional libsvg-cairo version from 0.1.5 to
 	0.1.6
 
 2005-06-15  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* examples/cairo_snippets/snippets_ps.py: 
-	* examples/cairo_snippets/snippets_pdf.py: 
+	* examples/cairo_snippets/snippets_ps.py:
+	* examples/cairo_snippets/snippets_pdf.py:
 	change width, height to width_in_points, height_in_points
 
 2005-06-14  Steve Chaplin  <steve1097@yahoo.com.au>
-	
-	* cairo/pycairo-context.c (PycairoContext_FromContext, pycairo_new): 
-	* cairo/cairogtkmodule.c (pygdk_cairo_create): 
+
+	* cairo/pycairo-context.c (PycairoContext_FromContext, pycairo_new):
+	* cairo/cairogtkmodule.c (pygdk_cairo_create):
 	update to use cairo_t error objects
 
 2005-06-14  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/pycairo-pattern.c: 
-	* cairo/pycairo-context.c (pycairo_get_source): 
+	* cairo/pycairo-pattern.c:
+	* cairo/pycairo-context.c (pycairo_get_source):
 	update to use cairo_pattern_t error objects
 
-	* cairo/pycairo-path.c (PycairoPath_FromPath): 
+	* cairo/pycairo-path.c (PycairoPath_FromPath):
 	* cairo/pycairo-context.c (pycairo_copy_path, pycairo_copy_path_flat):
 	update to use cairo_path_t error objects
 
@@ -200,25 +261,25 @@
 
 2005-06-02  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/cairomodule.c (Pycairo_Check_Status): use 
+	* cairo/cairomodule.c (Pycairo_Check_Status): use
 	cairo_status_to_string to simplify this function
 
 2005-06-01  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/pycairo-surface.c (PycairoSurface_FromSurface): 
+	* cairo/pycairo-surface.c (PycairoSurface_FromSurface):
 	add type argument, like PycairoContext_FromContext
 
-	* cairo/cairomodule.c: 
-	* cairo/cairogtkmodule.c: 
-	* cairo/pycairo.h: 
-	* cairo/pycairo-private.h: 
+	* cairo/cairomodule.c:
+	* cairo/cairogtkmodule.c:
+	* cairo/pycairo.h:
+	* cairo/pycairo-private.h:
 	update to new PycairoSurface_FromSurface API
 
-	* cairo/pycairo-surface.c : 
+	* cairo/pycairo-surface.c :
 	Update to new PycairoSurface_FromSurface API.
 	Delete PycairoImageSurface_FromImageSurface,
 	PycairoPDFSurface_FromPDFSurface, PycairoPSSurface_FromPSSurface,
-	PycairoWin32Surface_FromWin32Surface which are replaced by the new 
+	PycairoWin32Surface_FromWin32Surface which are replaced by the new
 	PycairoSurface_FromSurface
 
 2005-06-01  Gustavo J. A. M. Carneiro  <gjc@gnome.org>
@@ -231,17 +292,17 @@
 	instantiation of a subclass of cairo.Context.
 
 2005-05-31  Steve Chaplin  <steve1097@yahoo.com.au>
-	
+
 	* cairo/cairomodule.c (init_cairo): correct CAIRO_HAS_PNG_SURFACE
 	to CAIRO_HAS_PNG_FUNCTIONS
 
 2005-05-30  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/cairomodule.c : add cairo features cairo.HAS_WIN32_SURFACE, 
+	* cairo/cairomodule.c : add cairo features cairo.HAS_WIN32_SURFACE,
 	cairo.HAS_PS_SURFACE etc
 
-	* cairo/pycairo-private.h: 
-	* cairo/pycairo.h: 
+	* cairo/pycairo-private.h:
+	* cairo/pycairo.h:
 	add more PS/PDF/WIN32 preprocessor checks
 
 2005-05-29  Steve Chaplin  <steve1097@yahoo.com.au>
@@ -259,27 +320,27 @@
 	* README : update to mention the pycairo product in bugzilla
 
 2005-05-29  Steve Chaplin  <steve1097@yahoo.com.au>
-	
-	* cairo/cairomodule.c: 
-	* cairo/pycairo.h: 
-	* cairo/pycairo-private.h: 
-	* cairo/pycairo-surface.c: 
-	add Win32Surface, conditionally compile all PS/PDF code, contributed 
+
+	* cairo/cairomodule.c:
+	* cairo/pycairo.h:
+	* cairo/pycairo-private.h:
+	* cairo/pycairo-surface.c:
+	add Win32Surface, conditionally compile all PS/PDF code, contributed
 	by Niki Spahiev.
 	Change the C API struct back to (type, constructor) pairs to make
 	preprocessor macros simpler.
 
 2005-05-27  Gustavo J. A. M. Carneiro  <gjc@gnome.org>
- 
+
  	* cairo/cairogtkmodule.c (gdk_cairo_create): Don't define
  	gdk_cairo_create if compiling against gtk+ 2.8 API.
- 
+
  	* configure.ac : Define HAVE_GTK28 if gtk+ > 2.7 is found.
 
 2005-05-26  Steve Chaplin  <steve1097@yahoo.com.au>
-	
-	* cairo/Makefile.am (AM_CPPFLAGS): Delete AM_CPPFLAGS (it uses 
-	unnecessary GTK flags to compile the cairo module) and use module 
+
+	* cairo/Makefile.am (AM_CPPFLAGS): Delete AM_CPPFLAGS (it uses
+	unnecessary GTK flags to compile the cairo module) and use module
 	specific _CPPFLAGS instead
 
 2005-05-25  Steve Chaplin  <steve1097@yahoo.com.au>
@@ -311,18 +372,18 @@
 
 	* examples/svg/svgview.py : update exception handling
 
-	* examples/cairo_snippets/snippets/libsvg.py: 
-	* examples/cairo_snippets/snippets/__init__.py (snippet_set_bg_svg): 
+	* examples/cairo_snippets/snippets/libsvg.py:
+	* examples/cairo_snippets/snippets/__init__.py (snippet_set_bg_svg):
 	update svg_cr.size to svg_cr.get_size()
 
 2005-05-20  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* examples/svg/svg2png.py: 
-	* examples/svg/svgview.py : 
+	* examples/svg/svg2png.py:
+	* examples/svg/svgview.py :
 	update to new API
 
-	* cairo/cairomodule.c (init_cairo): 
-	* cairo/pycairo.h : 
+	* cairo/cairomodule.c (init_cairo):
+	* cairo/pycairo.h :
 	rename cairo.pycairo_CAPI to cairo.CAPI
 
 	* cairo/cairosvgmodule.c : add cairo.svg.Error exception.
@@ -337,19 +398,19 @@
 
 	* cairo/pycairo-matrix.c : tidy up
 
-	* cairo/pycairo-pattern.c : 
+	* cairo/pycairo-pattern.c :
 	(pattern_add_color_stop_rgb): fix error with number of arguments
 
 	* examples/cairo_snippets/snippets_ps.py: new file
 	* examples/cairo_snippets/snippets_gtk.py : update to new API
-	
-	* cairo/cairomodule.c: 
-	* cairo/pycairo.h: 	
-	* cairo/pycairo-private.h: 
+
+	* cairo/cairomodule.c:
+	* cairo/pycairo.h:
+	* cairo/pycairo-private.h:
 	* cairo/pycairo-surface.c:
 	Restore support for PSSurface
 
-	* cairo/pycairo-font.c : 
+	* cairo/pycairo-font.c :
 	* cairo/pycairo-surface.c: move object construction from __init__
 	to __new__.
 
@@ -357,43 +418,43 @@
 
 2005-05-19  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/cairogtkmodule.c (_gdk_cairo_create): update for new 
+	* cairo/cairogtkmodule.c (_gdk_cairo_create): update for new
 	xlib_surface API
 
-	* examples/gtk/png_view.py : 
-	* examples/gtk/cairo-knockout.py : 
-	* examples/cairo_snippets/snippets/clip_image.py : 
-	* examples/cairo_snippets/snippets/image.py: 
-	* examples/cairo_snippets/snippets/imagepattern.py: 
+	* examples/gtk/png_view.py :
+	* examples/gtk/cairo-knockout.py :
+	* examples/cairo_snippets/snippets/clip_image.py :
+	* examples/cairo_snippets/snippets/image.py:
+	* examples/cairo_snippets/snippets/imagepattern.py:
 	update to new API
 
-	* cairo/pycairo-private.h: 
-	* cairo/cairomodule.c: 
+	* cairo/pycairo-private.h:
+	* cairo/cairomodule.c:
 	add cairo.Error - a module specific Exception
 
-	* cairo/pycairo-surface.c: 
-	* cairo/pycairo-context.c: 
-	Change implementation for functions listed below from attributes to 
+	* cairo/pycairo-surface.c:
+	* cairo/pycairo-context.c:
+	Change implementation for functions listed below from attributes to
 	methods in order to correspond directly with the C API.
 	cairo_fill_extents, cairo_font_extents, cairo_get_current_point,
 	cairo_stroke_extents, cairo_get_target.
 	cairo_image_surface_get_width, cairo_image_surface_get_height
 
-	* cairo/pycairo-context.c: move __init__ code into __new__	
-	
+	* cairo/pycairo-context.c: move __init__ code into __new__
+
 	* cairo/pycairo-surface.c:
-	* cairo/pycairo-private.h: 
+	* cairo/pycairo-private.h:
 	* cairo/pycairo-pattern.c:
 	* cairo/pycairo-matrix.c:
 	* cairo/pycairo.h:
-	* cairo/pycairo-font.c: 
-	* cairo/cairomodule.c: 
-	* cairo/pycairo-context.c: 
-	rename Pycairo_check_status to Pycairo_Check_Status (as suggested 
+	* cairo/pycairo-font.c:
+	* cairo/cairomodule.c:
+	* cairo/pycairo-context.c:
+	rename Pycairo_check_status to Pycairo_Check_Status (as suggested
 	by PEP-7 Style Guide)
 
 	* examples/context-subclass.py:
-	* examples/Makefile.am: 
+	* examples/Makefile.am:
 	delete context-subclass.py since there are problems subclassing
 	cairo types (see cairo docs Appendix A)
 
@@ -404,109 +465,109 @@
 	* cairo/pycairo-font.c (PycairoScaledFont_FromScaledFont): add
 	destroy call if object creation fails
 	(scaled_font_new): move __init__ code into __new__, delete __init__
-	(font_face_init): new function that warns FontFace cannot be 
+	(font_face_init): new function that warns FontFace cannot be
 	instantiated
 
 2005-05-17  Steve Chaplin  <steve1097@yahoo.com.au>
-	
-	* cairo/Makefile.am : 
-	* cairo/pycairo-misc.h: 
-	* cairo/pycairo-private.h: 
-	* cairo/pycairosvg-private.h: 
+
+	* cairo/Makefile.am :
+	* cairo/pycairo-misc.h:
+	* cairo/pycairo-private.h:
+	* cairo/pycairosvg-private.h:
 	move contents of pycairo-misc.h into pycairo-private.h and
 	pycairosvg-private.h, delete pycairo-misc.h
 
-	* cairo/pycairo-surface.c: 
+	* cairo/pycairo-surface.c:
 	* cairo/pycairo.h:
-	* cairo/pycairo-font.c: 
-	* cairo/pycairo-context.c: 
-	* cairo/cairosvgmodule.c: 
-	* cairo/cairogtkmodule.c: 
+	* cairo/pycairo-font.c:
+	* cairo/pycairo-context.c:
+	* cairo/cairosvgmodule.c:
+	* cairo/cairogtkmodule.c:
 	reformat code to be a max of 80 columns wide
 
 	* cairo/pycairo-surface.c (pdf_surface_init): update for
 	cairo_pdf_surface_create() taking a filename not a file object.
 	(pdf_surface_set_dpi): new wrapper
-	
+
 	* examples/cairo_snippets/snippets_pdf.py : update to new API
 
 2005-05-17  Steve Chaplin  <steve1097@yahoo.com.au>
 
 	* cairo/cairogtkmodule.c (gdk_cairo_create, surface_create_for_pixbuf):
-	* cairo/pycairo-context.c (PycairoContext_FromContext): 
-	* cairo/pycairo-font.c (PycairoFontFace_FromFontFace): 
-	* cairo/pycairo-matrix.c (PycairoMatrix_FromMatrix): 
-	* cairo/pycairo-path.c (PycairoPath_FromPath): 
-	* cairo/pycairo-pattern.c (PycairoPattern_FromPattern): 
-	* cairo/pycairo-surface.c (PycairoSurface_FromSurface): 
+	* cairo/pycairo-context.c (PycairoContext_FromContext):
+	* cairo/pycairo-font.c (PycairoFontFace_FromFontFace):
+	* cairo/pycairo-matrix.c (PycairoMatrix_FromMatrix):
+	* cairo/pycairo-path.c (PycairoPath_FromPath):
+	* cairo/pycairo-pattern.c (PycairoPattern_FromPattern):
+	* cairo/pycairo-surface.c (PycairoSurface_FromSurface):
 	Change Pycairo<Object>_From<Object> functions so they unref arg1
 	if Python object creation fails
 
 2005-05-16  Steve Chaplin  <steve1097@yahoo.com.au>
-	
-	* cairo/Makefile.am (_cairo_la_SOURCES): 
+
+	* cairo/Makefile.am (_cairo_la_SOURCES):
 	add pycairosvg.h and pycairosvg-private.h
 
 	* configure.ac : use [...] for AC_CONFIG_FILES
 
 	* autogen.sh : change PyCairo to Pycairo
-	
+
 	* cairo/cairogtkmodule.c: update to use new cairo-xlib functions
 
-	* examples/gtk/cairo-demo.py (expose): 
-	* examples/gtk/cairo-knockout.py (expose): 
-	* examples/gtk/hangman.py (expose_event): 
-	* examples/gtk/lsystem.py (lindenmayer.expose): 
-	* examples/gtk/png_view.py (expose_event): 
-	* examples/gtk/text.py (expose_event): 
+	* examples/gtk/cairo-demo.py (expose):
+	* examples/gtk/cairo-knockout.py (expose):
+	* examples/gtk/hangman.py (expose_event):
+	* examples/gtk/lsystem.py (lindenmayer.expose):
+	* examples/gtk/png_view.py (expose_event):
+	* examples/gtk/text.py (expose_event):
 	update to use cairo.gtk.gdk_cairo_create()
 
-	* examples/cairo_snippets/snippets/curve_rectangle.py: 
-	* examples/cairo_snippets/snippets/fill_and_stroke.py: 
-	* examples/cairo_snippets/snippets/fill_and_stroke2.py: 
-	* examples/cairo_snippets/snippets/text.py: 
+	* examples/cairo_snippets/snippets/curve_rectangle.py:
+	* examples/cairo_snippets/snippets/fill_and_stroke.py:
+	* examples/cairo_snippets/snippets/fill_and_stroke2.py:
+	* examples/cairo_snippets/snippets/text.py:
 	update to use fill_preserve()
 
-	* examples/cairo_snippets/snippets/clip_image.py: 
-	* examples/cairo_snippets/snippets/image.py: 
-	* examples/cairo_snippets/snippets/imagepattern.py: 
+	* examples/cairo_snippets/snippets/clip_image.py:
+	* examples/cairo_snippets/snippets/image.py:
+	* examples/cairo_snippets/snippets/imagepattern.py:
 	new snippets
 
 	* examples/cairo_snippets/snippets/clip.py: remove new_path()
 	since clip() no longer consumes the path
 
-	* examples/cairo_snippets/snippets_gtk.py (Window.put_in_frame): 
+	* examples/cairo_snippets/snippets_gtk.py (Window.put_in_frame):
 	set focus to snippet list
 
-	* examples/cairo_snippets/snippets_pdf.py: 
-	* cairo/pycairo-surface.c (pdf_surface_init): 
+	* examples/cairo_snippets/snippets_pdf.py:
+	* cairo/pycairo-surface.c (pdf_surface_init):
 	update for new cairo_pdf_surface_create definition
 
-	* cairo/cairosvgmodule.c (_status_error): 
+	* cairo/cairosvgmodule.c (_status_error):
 	rename to Pycairosvg_check_status
 
 2005-05-14  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/cairomodule.c: 
-	* cairo/pycairo-font.c: 
-	* cairo/pycairo-matrix.c: 
-	* cairo/pycairo-pattern.c: 
-	* cairo/pycairo-surface.c: 
+	* cairo/cairomodule.c:
+	* cairo/pycairo-font.c:
+	* cairo/pycairo-matrix.c:
+	* cairo/pycairo-pattern.c:
+	* cairo/pycairo-surface.c:
 	#include Python.h, as first include
 
 	* cairo/cairogtkmodule.c: give error if cairo-xlib.h not found
 
 2005-05-14  Steve Chaplin  <steve1097@yahoo.com.au>
-	* cairo/pycairosvg-private.h: 
-	* cairo/pycairo-private.h: 
-	* cairo/pycairo-misc.h: 
-	* cairo/pycairo.h: 
+	* cairo/pycairosvg-private.h:
+	* cairo/pycairo-private.h:
+	* cairo/pycairo-misc.h:
+	* cairo/pycairo.h:
 	ensure Python.h is always the first include
 
-	* examples/cairo_snippets/snippets/operator_atop_reverse.py: 
-	* examples/cairo_snippets/snippets/operator_in_reverse.py: 
-	* examples/cairo_snippets/snippets/operator_out_reverse.py: 
-	* examples/cairo_snippets/snippets/operator_over_reverse.py: 
+	* examples/cairo_snippets/snippets/operator_atop_reverse.py:
+	* examples/cairo_snippets/snippets/operator_in_reverse.py:
+	* examples/cairo_snippets/snippets/operator_out_reverse.py:
+	* examples/cairo_snippets/snippets/operator_over_reverse.py:
 	change operator names to match recent cairo changes
 
 	* cairo/Makefile.am (svg_la_SOURCES): remove pycairosvg-context.c
@@ -516,8 +577,8 @@
 
 	* cairo/pycairosvg.h: new file
 
-	* cairo/cairosvgmodule.c: 
-	* examples/svg/svgview.py: 
+	* cairo/cairosvgmodule.c:
+	* examples/svg/svgview.py:
 	* examples/svg/svg2png.py: update to new API
 
 	* cairo/pycairo-path.c: retabify type struct
@@ -526,61 +587,61 @@
 	cairo_status_string()
 
 2005-05-12  Steve Chaplin  <steve1097@yahoo.com.au>
-	* cairo/pycairo-context.c: 
-	* cairo/pycairo-surface.c: 
-	* cairo/pycairo-pattern.c: 
-	* cairo/pycairo-matrix.c: 
-	* cairo/pycairo-font.c: 
+	* cairo/pycairo-context.c:
+	* cairo/pycairo-surface.c:
+	* cairo/pycairo-pattern.c:
+	* cairo/pycairo-matrix.c:
+	* cairo/pycairo-font.c:
 	Tidy up the getset and method structures.
 	Change attribute access for read/write attributes from
 	.<attr>/set_<attr>() to get_<attr>()/set_<attr>()
 
-	* examples/warpedtext.py: 
+	* examples/warpedtext.py:
 	update to new API
 
 2005-05-11  Steve Chaplin  <steve1097@yahoo.com.au>
-	* examples/gtk/cairo-knockout.py : update to new API 
+	* examples/gtk/cairo-knockout.py : update to new API
 
 	* cairo/pycairo-context.c (pycairo_get_font_matrix): update to match
 	new prototype
 
 2005-05-10  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/cairomodule.c: 
-	* cairo/pycairo.h: 
-	* cairo/pycairo-font.c: 
-	* cairo/pycairo-private.h: 
+	* cairo/cairomodule.c:
+	* cairo/pycairo.h:
+	* cairo/pycairo-font.c:
+	* cairo/pycairo-private.h:
 	add new type PycairoScaledFont
 
 	* cairo/pycairo-path.c: delete PyPath_Check macro and use
 	PyObject_TypeCheck instead
 
-	* cairo/pycairo-context.c (pycairo_set_font_face): 
+	* cairo/pycairo-context.c (pycairo_set_font_face):
 	allow None as set_font_face arg
 
 	* cairo/pycairo-matrix.c: add comment describing matrix constructors
 	which are not needed in a Python binding
 	(matrix_init_rotate): new wrapper
-	
+
 2005-05-10  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/pycairo-surface.c: 
-	* cairo/pycairo-private.h: 
-	* cairo/pycairo-pattern.c: 
+	* cairo/pycairo-surface.c:
+	* cairo/pycairo-private.h:
+	* cairo/pycairo-pattern.c:
 	* cairo/pycairo.h:
-	* cairo/pycairo-context.c: 
+	* cairo/pycairo-context.c:
 	* cairo/cairomodule.c:
-	rename pycairo_check_status to Pycairo_check_status - public functions 
+	rename pycairo_check_status to Pycairo_check_status - public functions
 	should start with 'Py'
 
 	* configure.ac : change the deprecated '-std=c9x' flag to '-std=c99'
 
 	* cairo/pycairo.h:
-	* cairo/pycairo-private.h: 
-	* cairo/cairomodule.c: 
+	* cairo/pycairo-private.h:
+	* cairo/cairomodule.c:
 	add PycairoImageSurface_Type support
 
-	* cairo/cairogtkmodule.c (surface_create_for_pixbuf): 
+	* cairo/cairogtkmodule.c (surface_create_for_pixbuf):
 	change call to PycairoSurface_FromSurface()
 	to PycairoImageSurface_FromImageSurface()
 
@@ -598,50 +659,50 @@
 
 	* cairo/pycairo-path.c : new file to implement PyCairoPath
 
-	* cairo/Makefile.am: 
-	* cairo/cairomodule.c: 
-	* cairo/pycairo-private.h: 
+	* cairo/Makefile.am:
+	* cairo/cairomodule.c:
+	* cairo/pycairo-private.h:
 	* cairo/pycairo.h: add support for PycairoPath
 
 	* cairo/pycairo-context.c (pycairo_copy_path): new wrapper
 
-	* AUTHORS: 
-	* NEWS: 
-	* pycairo.pc.in : 
-	* cairo/cairogtkmodule.c: 
-	* cairo/cairomodule.c: 
-	* cairo/cairosvgmodule.c: 
-	* cairo/pycairo-context.c: 
-	* cairo/pycairo-font.c: 
-	* cairo/pycairo.h: 
-	* cairo/pycairo-matrix.c: 
-	* cairo/pycairo-misc.h: 
-	* cairo/pycairo-pattern.c: 
-	* cairo/pycairo-private.h: 
-	* cairo/pycairo-surface.c: 
-	* cairo/pycairosvg-context.c: 
-	* cairo/pycairosvg-private.h: 
+	* AUTHORS:
+	* NEWS:
+	* pycairo.pc.in :
+	* cairo/cairogtkmodule.c:
+	* cairo/cairomodule.c:
+	* cairo/cairosvgmodule.c:
+	* cairo/pycairo-context.c:
+	* cairo/pycairo-font.c:
+	* cairo/pycairo.h:
+	* cairo/pycairo-matrix.c:
+	* cairo/pycairo-misc.h:
+	* cairo/pycairo-pattern.c:
+	* cairo/pycairo-private.h:
+	* cairo/pycairo-surface.c:
+	* cairo/pycairosvg-context.c:
+	* cairo/pycairosvg-private.h:
 	rename Cairo to cairo, and PyCairo to Pycairo
 	move Contributors from *.c into AUTHORS
 
-	* cairo/cairogtkmodule.c (_gdk_drawable_create_cairo_context): 
+	* cairo/cairogtkmodule.c (_gdk_drawable_create_cairo_context):
 	simplify
 
-	* examples/gtk/cairo-knockout.py: 
+	* examples/gtk/cairo-knockout.py:
 	started updating to new API
 
 	* NOTES: update to match current Pycairo features
 
 2005-05-09  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/pycairo-private.h: 
-	* cairo/pycairo.h: 
+	* cairo/pycairo-private.h:
+	* cairo/pycairo.h:
 	add 'base' field to PyCairoContext
 	add 'base' arg to PyCairoContext_FromContext
 
 	* cairo/cairomodule.c: remove cairo_functions (it was empty)
 	(init_cairo): add CAIRO_PATH_* constants
-	
+
 	* cairo/cairogtkmodule.c (initgtk):  check mod return value
 	Delete:
 	   surface_create_for_drawable
@@ -652,47 +713,47 @@
 	   _gdk_drawable_create_cairo_context
 	   create_cairo_context
 
-	* cairo/pycairo-pattern.c: 
+	* cairo/pycairo-pattern.c:
 	* cairo/pycairo-matrix.c: disable subclassing, due to problem mentioned
 	in the 'Memory Management' section of Appendix A.
 
 	* cairo/pycairo-context.c (pycairo_get_target): new wrapper
 	(pycairo_get_rgb_color): remove
 
-	* cairo/pycairo-context.c: 
-	* cairo/pycairo-surface.c: 
-	* cairo/pycairo-pattern.c: 
-	* cairo/pycairo-font.c: 
+	* cairo/pycairo-context.c:
+	* cairo/pycairo-surface.c:
+	* cairo/pycairo-pattern.c:
+	* cairo/pycairo-font.c:
 	add comments about destroy/reference methods not being wrapped
 
 	* configure.ac : change message to report 'build Numeric support'
 	and not 'build cairo.numpy'
 
-	* examples/cairo_snippets/snippets_png.py: 
-	* examples/cairo_snippets/snippets_pdf.py: 
+	* examples/cairo_snippets/snippets_png.py:
+	* examples/cairo_snippets/snippets_pdf.py:
 	update to new cairo API
 
-	* examples/gtk/cairo-demo.py (expose): 
-	* examples/gtk/cairo-knockout.py (expose): 
-	* examples/gtk/hangman.py (expose_event): 
-	* examples/gtk/lsystem.py (lindenmayer.expose): 
-	* examples/gtk/png_view.py (expose_event): 
-	* examples/gtk/text.py (expose_event): 
-	* examples/cairo_snippets/snippets_gtk.py : 
+	* examples/gtk/cairo-demo.py (expose):
+	* examples/gtk/cairo-knockout.py (expose):
+	* examples/gtk/hangman.py (expose_event):
+	* examples/gtk/lsystem.py (lindenmayer.expose):
+	* examples/gtk/png_view.py (expose_event):
+	* examples/gtk/text.py (expose_event):
+	* examples/cairo_snippets/snippets_gtk.py :
 	update to new cairo API
 	update to use cairo.gtk.create_cairo_context()
 
 2005-05-07  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* examples/context-subclass.py : 
-	* examples/gradient.py : 
-	* examples/hering.py : 
-	* examples/spiral.py : 
-	* examples/warpedtext.py : 
+	* examples/context-subclass.py :
+	* examples/gradient.py :
+	* examples/hering.py :
+	* examples/spiral.py :
+	* examples/warpedtext.py :
 	update to use new API (warpedtext needs a replacement for get_path)
 
-	* cairo/pycairo-context.c: 
-	* cairo/pycairo-surface.c: 
+	* cairo/pycairo-context.c:
+	* cairo/pycairo-surface.c:
 	Eliminate deprecated functions
 	        cairo_copy
 		cairo_get_path
@@ -702,58 +763,58 @@
 		cairo_surface_get_matrix
 		cairo_surface_set_filter
 		cairo_surface_get_filter
-	
+
 	* cairo/cairomodule.c (init_cairo): update OPERATOR_* to match cairo
 	changes
 
 	Port to use new cairo_create interface.
 	* cairo/pycairo-context.c (pycairo_init): update cairo_create() to
 	take a cairo_surface_t
-	* cairo/cairogtkmodule.c (set_target_drawable): 
+	* cairo/cairogtkmodule.c (set_target_drawable):
 	delete
-	* cairo/pycairo-context.c (pycairo_set_target_pdf): 
-	(pycairo_set_target_surface, pycairo_get_target_surface): 
+	* cairo/pycairo-context.c (pycairo_set_target_pdf):
+	(pycairo_set_target_surface, pycairo_get_target_surface):
 	delete
 
 	* cairo/pycairo-context.c (pycairo_paint_with_alpha): new wrapper
 
 2005-05-06  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/pycairosvg-context.c: 
-	* cairo/pycairo-surface.c: 
-	* cairo/pycairo-pattern.c: 
-	* cairo/pycairo-matrix.c: 
-	* cairo/pycairo-font.c: 
-	* cairo/pycairo-context.c: 
-	* cairo/cairogtkmodule.c: 
+	* cairo/pycairosvg-context.c:
+	* cairo/pycairo-surface.c:
+	* cairo/pycairo-pattern.c:
+	* cairo/pycairo-matrix.c:
+	* cairo/pycairo-font.c:
+	* cairo/pycairo-context.c:
+	* cairo/cairogtkmodule.c:
 	remove 'include "pycairo-misc.h"'
 
-	* cairo/pycairo-private.h: 
-	* cairo/pycairosvg-private.h: 
+	* cairo/pycairo-private.h:
+	* cairo/pycairosvg-private.h:
 	include "pycairo-misc.h"
 
 	* cairo/cairomodule.c (init_cairo): Py_INCREF each type
 
-	* cairo/cairogtkmodule.c: 
-	* cairo/cairosvgmodule.c: 
+	* cairo/cairogtkmodule.c:
+	* cairo/cairosvgmodule.c:
 	remove init_pycairo() and add PyCairo_IMPORT
 
-	* cairo/pycairo.h 
+	* cairo/pycairo.h
 	renamed _PyCairo_FunctionStruct function names to match the real names.
 	Use C API export method copied from the datetime module (new in Python
 	2.3)
 
 2005-05-06  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/pycairo-context.c (pycairo_get_target_surface): 
-	* cairo/pycairo-surface.c (surface_create_similar): 
+	* cairo/pycairo-context.c (pycairo_get_target_surface):
+	* cairo/pycairo-surface.c (surface_create_similar):
 	add comment about use of PyCairoSurface_FromSurface()
 
 	* README : spell cairo with lowercase c; add note about bugzilla
-	
+
 2005-05-05  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* examples/cairo_snippets/snippets_png.py (snippet_do_png): 
+	* examples/cairo_snippets/snippets_png.py (snippet_do_png):
 	small update - add 'else' to try-except clause
 
 	* examples/gtk/png_view.py (expose_event): update to new API
@@ -761,17 +822,17 @@
 2005-05-04  Steve Chaplin  <steve1097@yahoo.com.au>
 
 	* cairo/pycairo-context.c (pycairo_show_surface): remove
-	(pycairo_set_target_ps): remove	
+	(pycairo_set_target_ps): remove
 	(pycairo_set_source_surface): new wrapper
-	
+
 	* cairo/pycairo-matrix.c (PyCairoMatrix_FromMatrix): simplify
 
 2005-05-03  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/pycairo-context.c (pycairo_mask, pycairo_mask_surface): 
+	* cairo/pycairo-context.c (pycairo_mask, pycairo_mask_surface):
 	new wrappers
 
-	* cairo/cairomodule.c (pycairo_check_status): add 
+	* cairo/cairomodule.c (pycairo_check_status): add
 	CAIRO_STATUS_BAD_NESTING
 
 2005-05-02  Steve Chaplin  <steve1097@yahoo.com.au>
@@ -781,90 +842,90 @@
 
 	* examples/gtk/cairo-knockout.py :
 	* test/cairo_image_surface_create_for_array.py :
-	update to use new API	
+	update to use new API
 
 	* test/test.test: use os.path.join
-	
+
 	* pycairo.pc.in : new file
 
-	* configure.ac : 
-	* Makefile.am : 
+	* configure.ac :
+	* Makefile.am :
 	add support for the pkgconfig file pycairo.pc
 
-	* cairo/Makefile.am : 
+	* cairo/Makefile.am :
 	add support for installing pycairo.h
 
 	* examples/spiral.py : change from generating PS to PNG
 
-	* cairo/pycairo.h: 
+	* cairo/pycairo.h:
 	* cairo/cairomodule.c (pycairo_ps_surface_create): remove support for
 	PS backend - the C API is currently broken
 
 2005-04-29  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* examples/svg/svg2png.py: 
+	* examples/svg/svg2png.py:
 	* examples/svg/svgview.py : update to use new API
 
 	* test/test.test: update to check exit value of each script
 
 2005-04-29  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* examples/cairo_snippets/snippets_pdf.py: 
+	* examples/cairo_snippets/snippets_pdf.py:
 	change scale factor from 96 to 72
 
-	* cairo/pycairo-context.c (pycairo_set_font_size): 
+	* cairo/pycairo-context.c (pycairo_set_font_size):
 	change 'scale' to 'size'
 
 2005-04-28  Steve Chaplin  <steve1097@yahoo.com.au>
 
 	* examples/gtk/png_view.py : update to new png API
 
-	* cairo/pycairo-surface.c (image_surface_create_from_png): fix 
+	* cairo/pycairo-surface.c (image_surface_create_from_png): fix
 	incorrect PyArg_ParseTuple argument
 
 	* cairo/pycairo-context.c: add missing fill_preserve and clip_preserve
 	items to the methods array.
-	
+
 2005-04-27  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/pycairo.h : 
-	* cairo/pycairo-private.h: 
-	* cairo/pycairo-surface.c : 
+	* cairo/pycairo.h :
+	* cairo/pycairo-private.h:
+	* cairo/pycairo-surface.c :
 	Add definitions for PyCairoPDFSurface
 
-	* cairo/cairomodule.c (pycairo_pdf_surface_create): delete - it has 
+	* cairo/cairomodule.c (pycairo_pdf_surface_create): delete - it has
 	beed replaced by PDFSurface (a surface type with its own constructor)
 
 	* examples/cairo_snippets/snippets_png.py: updated
 	* examples/cairo_snippets/snippets_pdf.py: new file
 
-	* cairo/pycairo-context.c (pycairo_stroke_preserve) 
-	(pycairo_fill_preserve, pycairo_clip_preserve): 
+	* cairo/pycairo-context.c (pycairo_stroke_preserve)
+	(pycairo_fill_preserve, pycairo_clip_preserve):
 	new wrappers
 
 2005-04-27  Steve Chaplin  <steve1097@yahoo.com.au>
-	
-	* cairo/pycairo-surface.c (surface_write_png): 
+
+	* cairo/pycairo-surface.c (surface_write_png):
 	rename to surface_write_to_png
 	(image_surface_get_height, (image_surface_get_width): new wrappers
 
-	* examples/context-subclass.py : 
-	* examples/gradient.py : 
-	* examples/hering.py : 
-	* examples/warpedtext.py : 
-	* examples/cairo_snippets/snippets_png.py : 
+	* examples/context-subclass.py :
+	* examples/gradient.py :
+	* examples/hering.py :
+	* examples/warpedtext.py :
+	* examples/cairo_snippets/snippets_png.py :
 	update to use new png API
-	
+
 2005-04-25  Steve Chaplin  <steve1097@yahoo.com.au>
 
 	* cairo/pycairo.h: remove cairo-png.h include.
 	Add 'ifdef CAIRO_HAS_PDF_SURFACE / CAIRO_HAS_PS_SURFACE' around their
-	respective header file includes	
+	respective header file includes
 
 	* cairo/pycairo-surface.c (image_surface_create_for_png): rename to
 	image_surface_create_from_png to track cairo change
 	(surface_write_png): change arg from file object to filename
-	(image_surface_create_from_png): change args from fileobject, width, 
+	(image_surface_create_from_png): change args from fileobject, width,
 	height to filename
 
 2005-04-20  Steve Chaplin  <steve1097@yahoo.com.au>
@@ -887,20 +948,20 @@
 
 2005-04-15  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* examples/cairo_snippets/snippets/curve_rectangle.py: 
-	* examples/cairo_snippets/snippets/curve_to.py: 
-	* examples/cairo_snippets/snippets/fill_and_stroke.py: 
-	* examples/cairo_snippets/snippets/fill_and_stroke2.py: 
-	* examples/cairo_snippets/snippets/gradient.py: 
-	* examples/cairo_snippets/snippets/set_line_cap.py: 
-	* examples/cairo_snippets/snippets/text.py: 
-	* examples/cairo_snippets/snippets/text_align_center.py: 
-	* examples/cairo_snippets/snippets/text_extents.py: 
+	* examples/cairo_snippets/snippets/curve_rectangle.py:
+	* examples/cairo_snippets/snippets/curve_to.py:
+	* examples/cairo_snippets/snippets/fill_and_stroke.py:
+	* examples/cairo_snippets/snippets/fill_and_stroke2.py:
+	* examples/cairo_snippets/snippets/gradient.py:
+	* examples/cairo_snippets/snippets/set_line_cap.py:
+	* examples/cairo_snippets/snippets/text.py:
+	* examples/cairo_snippets/snippets/text_align_center.py:
+	* examples/cairo_snippets/snippets/text_extents.py:
 	updated to new API
-	
+
 2005-04-15  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/pycairo-context.c: rename, add, delete functions to follow 
+	* cairo/pycairo-context.c: rename, add, delete functions to follow
 	recent cairo changes:
 	pycairo_set_pattern   -> pycairo_set_source
 	pycairo_get_pattern   -> pycairo_get_source
@@ -908,32 +969,32 @@
 	                         pycairo_set_source_rgba
 	pycairo_set_alpha     ->
 	pycairo_get_alpha     ->
-	
+
 	* cairo/pycairo-pattern.c: rename
 	pycairo_pattern_add_color_stop -> pycairo_pattern_add_color_stop_rgba
 	and add:
 	pycairo_pattern_add_color_stop_rgb
 
-	* examples/context-subclass.py: 
-	* examples/gradient.py: 
-	* examples/hering.py: 
-	* examples/spiral.py: 
-	* examples/warpedtext.py: 
-	* examples/cairo_snippets/snippets_gtk.py: 
-	* examples/cairo_snippets/snippets/arc.py: 
-	* examples/cairo_snippets/snippets/arc_negative.py: 
-	* examples/cairo_snippets/snippets/clip.py: 
-	* examples/gtk/cairo-demo.py: 
-	* examples/gtk/hangman.py: 
-	* examples/gtk/lsystem.py: 
-	* examples/gtk/text.py: 
+	* examples/context-subclass.py:
+	* examples/gradient.py:
+	* examples/hering.py:
+	* examples/spiral.py:
+	* examples/warpedtext.py:
+	* examples/cairo_snippets/snippets_gtk.py:
+	* examples/cairo_snippets/snippets/arc.py:
+	* examples/cairo_snippets/snippets/arc_negative.py:
+	* examples/cairo_snippets/snippets/clip.py:
+	* examples/gtk/cairo-demo.py:
+	* examples/gtk/hangman.py:
+	* examples/gtk/lsystem.py:
+	* examples/gtk/text.py:
 	update to work with the above changes
-	
+
 2005-04-14  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/pycairo-surface.c (image_surface_create_for_array): new 
+	* cairo/pycairo-surface.c (image_surface_create_for_array): new
 	constructor, to replace caironumpymodule.c
-	
+
 	* cairo/caironumpymodule.c (surface_create_for_array): delete file
 	- its functionality is replaced by change above
 
@@ -943,48 +1004,48 @@
 
 	* NOTES: added note about new ImageSurface
 
-	* cairo/cairomodule.c: 
-	* cairo/pycairo.h: 
-	* cairo/pycairo-private.h: 
-	* cairo/pycairo-surface.c: 
+	* cairo/cairomodule.c:
+	* cairo/pycairo.h:
+	* cairo/pycairo-private.h:
+	* cairo/pycairo-surface.c:
 	add new class - ImageSurface
 
-	* examples/context-subclass.py: 
-	* examples/gradient.py: 
-	* examples/hering.py: 
-	* examples/warpedtext.py: 
-	* examples/gtk/png_view.py: 
-	* examples/cairo_snippets/snippets_png.py: 
+	* examples/context-subclass.py:
+	* examples/gradient.py:
+	* examples/hering.py:
+	* examples/warpedtext.py:
+	* examples/gtk/png_view.py:
+	* examples/cairo_snippets/snippets_png.py:
 	update to use ImageSurface instead of Surface
 
 2005-04-14  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/cairomodule.c: 
-	* cairo/pycairo-context.c: 
+	* cairo/cairomodule.c:
+	* cairo/pycairo-context.c:
 	* cairo/pycairo-font.c:
-	* cairo/pycairo.h: 
-	* cairo/pycairo-private.h: 
+	* cairo/pycairo.h:
+	* cairo/pycairo-private.h:
 	rename pycairo_font_wrap to PyCairoFontFace_FromFontFace,
-	rename PyCairoFont_Type to PyCairoFontface_Type 
+	rename PyCairoFont_Type to PyCairoFontface_Type
 
 2005-04-14  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/cairomodule.c: 
-	* cairo/pycairo.h: 
-	* cairo/pycairo-private.h: 
-	* cairo/pycairo-context.c : 
+	* cairo/cairomodule.c:
+	* cairo/pycairo.h:
+	* cairo/pycairo-private.h:
+	* cairo/pycairo-context.c :
 	rename pycairo_context_wrap to PyCairoContext_FromContext
-	
+
 	* cairo/pycairo-surface.c (surface_finish): remove comment about
 	cairo_surface_finish() bug which has now been fixed
 
 2005-04-13  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/cairomodule.c: 
+	* cairo/cairomodule.c:
 	* cairo/pycairo-context.c:
-	* cairo/pycairo-pattern.c: 
-	* cairo/pycairo.h: 
-	* cairo/pycairo-private.h: 
+	* cairo/pycairo-pattern.c:
+	* cairo/pycairo.h:
+	* cairo/pycairo-private.h:
 	rename pycairo_pattern_wrap to PyCairoPattern_FromPattern
 
 2005-04-13  Steve Chaplin  <steve1097@yahoo.com.au>
@@ -992,48 +1053,48 @@
 	* cairo/pycairo-surface.c (surface_create_for_data): disable, since
 	a reference to the buffer needs to be added
 
-	* cairo/cairogtkmodule.c: 
-	* cairo/cairomodule.c : 
-	* cairo/caironumpymodule.c : 
-	* cairo/pycairo-context.c : 
-	* cairo/pycairo.h : 
-	* cairo/pycairo-private.h : 
-	* cairo/pycairo-surface.c : 
+	* cairo/cairogtkmodule.c:
+	* cairo/cairomodule.c :
+	* cairo/caironumpymodule.c :
+	* cairo/pycairo-context.c :
+	* cairo/pycairo.h :
+	* cairo/pycairo-private.h :
+	* cairo/pycairo-surface.c :
 	rename pycairo_surface_wrap to PyCairoSurface_FromSurface
 
-	* cairo/pycairo-private.h (PyCairoMatrix_FromMatrix): 
+	* cairo/pycairo-private.h (PyCairoMatrix_FromMatrix):
 	change cairo_matrix_t *matrix to const cairo_matrix_t *matrix
 
-	* cairo/pycairo-matrix.c (PyCairoMatrix_FromMatrix): 
+	* cairo/pycairo-matrix.c (PyCairoMatrix_FromMatrix):
 	simplify method of copying struct data,
 	change cairo_matrix_t *matrix to const cairo_matrix_t *matrix
 
 2005-04-12  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/cairomodule.c: 
-	* cairo/pycairo.h: 
-	* cairo/pycairo-matrix.c : 
-	* cairo/pycairo-private.h: 
-	* cairo/pycairo-surface.c : 
+	* cairo/cairomodule.c:
+	* cairo/pycairo.h:
+	* cairo/pycairo-matrix.c :
+	* cairo/pycairo-private.h:
+	* cairo/pycairo-surface.c :
 	rename pycairo_matrix_wrap to PyCairoMatrix_FromMatrix
 
-	* cairo/pycairo-matrix.c : 
+	* cairo/pycairo-matrix.c :
 	PyCairoMatrix *self; -> PyCairoMatrix *m;
-	drop 'pycairo_' prefix from all static function names. 
+	drop 'pycairo_' prefix from all static function names.
 	PyCairoMatrix_Type remove casts for 0 values
-	
-	* cairo/pycairo-surface.c : 
+
+	* cairo/pycairo-surface.c :
 	PyCairoSurface *self; -> PyCairoSurface *s;
 
 2005-04-12  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/pycairo-surface.c: 
-	drop 'pycairo_' prefix from all static function names. 
+	* cairo/pycairo-surface.c:
+	drop 'pycairo_' prefix from all static function names.
 	PyCairoSurface_Type remove casts for 0 values
 
-	* examples/cairo_snippets/snippets/text.py: 
-	* examples/cairo_snippets/snippets/text_align_center.py: 
-	* examples/cairo_snippets/snippets/text_extents.py: 
+	* examples/cairo_snippets/snippets/text.py:
+	* examples/cairo_snippets/snippets/text_align_center.py:
+	* examples/cairo_snippets/snippets/text_extents.py:
 	use select_font_face() and set_font_size()
 
 2005-04-10  Steve Chaplin  <steve1097@yahoo.com.au>
@@ -1048,22 +1109,22 @@
 
 	* cairo/pycairo-private.h: add second arg to pycairo_surface_wrap
 
-	* cairo/pycairo.h: add second arg to pycairo_surface_wrap, add 'base' 
+	* cairo/pycairo.h: add second arg to pycairo_surface_wrap, add 'base'
 	field to PyCairoSurface
 
-	* cairo/pycairo-context.c (pycairo_get_target_surface): 
+	* cairo/pycairo-context.c (pycairo_get_target_surface):
 	* cairo/pycairo-surface.c (pycairo_surface_create_similar):
-	* cairo/cairomodule.c (pycairo_pdf_surface_create): 
-	(pycairo_ps_surface_create): 
+	* cairo/cairomodule.c (pycairo_pdf_surface_create):
+	(pycairo_ps_surface_create):
 	* cairo/cairogtkmodule.c (surface_create_for_drawable)
-	(surface_create_for_pixbuf, surface_create_for_pixmap) 
-	(surface_create_for_pixmap_with_visual) 
-	(surface_create_for_window_with_visual): 
+	(surface_create_for_pixbuf, surface_create_for_pixmap)
+	(surface_create_for_pixmap_with_visual)
+	(surface_create_for_window_with_visual):
 	* cairo/caironumpymodule.c (surface_create_for_array):
 	update to use new pycairo_surface_wrap
 
 	* cairo/cairomodule.c (pycairo_png_surface_create): delete
-	
+
 	* cairo/pycairo-surface.c (pycairo_surface_finish): new wrapper
 
 2005-04-09  Steve Chaplin  <steve1097@yahoo.com.au>
@@ -1074,9 +1135,9 @@
 
 2005-04-09  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/pycairo-pattern.c (pycairo_pattern_set_matrix): 
+	* cairo/pycairo-pattern.c (pycairo_pattern_set_matrix):
 	change matrix->matrix to &matrix->matrix
-	
+
 2005-04-09  Steve Chaplin  <steve1097@yahoo.com.au>
 
 	* examples/gtk/hangman.py : change scale_font to set_font_size
@@ -1099,20 +1160,20 @@
 	* cairo/pycairo.h: PyCairoMatrix: change cairo_matrix_t *matrix to
 	cairo_matrix_t matrix
 
-	* cairo/pycairo-context.c (pycairo_transform, pycairo_set_matrix) 
-	(pycairo_set_font_matrix, pycairo_identity_matrix): 
+	* cairo/pycairo-context.c (pycairo_transform, pycairo_set_matrix)
+	(pycairo_set_font_matrix, pycairo_identity_matrix):
 	update matrix references to match change in pycairo.h
 
 	* cairo/pycairo-matrix.c (pycairo_matrix_repr):
 	(pycairo_matrix_richcmp): remove cairo_matrix_get_affine
 	(pycairo_matrix_multiply): remove cairo_matrix_create
-	(pycairo_matrix_invert): 
-	(pycairo_matrix_rotate): 
-	(pycairo_matrix_scale): 
+	(pycairo_matrix_invert):
+	(pycairo_matrix_rotate):
+	(pycairo_matrix_scale):
 	(pycairo_matrix_translate):
 	remove cairo_matrix_create and return Py_NONE, not a matrix
 
-	* cairo/pycairo-surface.c (pycairo_surface_get_matrix): 
+	* cairo/pycairo-surface.c (pycairo_surface_get_matrix):
 	remove cairo_matrix_create
 	(pycairo_surface_set_matrix): updated matrix reference
 
@@ -1121,12 +1182,12 @@
 	* examples/warpedtext.py : change select_font to select_font_face,
 	change scale_font to set_font_size
 
-	* cairo/pycairo-private.h: 
+	* cairo/pycairo-private.h:
 	* cairo/pycairo.h: change cairo_font_t to cairo_font_face_t
 
 	* cairo/pycairo-context.c (pycairo_set_font): rename to
 	pycairo_set_font_face
-	(pycairo_get_font): rename to pycairo_get_font_face	
+	(pycairo_get_font): rename to pycairo_get_font_face
 	(pycairo_get_font_extents): rename to pycairo_font_extents,
 	remove matrix arg
 	(pycairo_select_font): rename to pycairo_select_font_face
@@ -1138,7 +1199,7 @@
 	cairo_font_t to cairo_font_face_t
 
 	* cairo/pycairo-matrix.c : add comments to note deprecated functions
-	(pycairo_matrix_init): replace cairo_matrix_set_affine() with 
+	(pycairo_matrix_init): replace cairo_matrix_set_affine() with
 	cairo_matrix_init()
 
 2005-04-07  Steve Chaplin  <steve1097@yahoo.com.au>
@@ -1146,7 +1207,7 @@
 	* examples/warpedtext.py : call select_font() to fix problem where
 	text_extents width==0
 
-	* examples/cairo_snippets/snippets_png.py: 
+	* examples/cairo_snippets/snippets_png.py:
 	add silent mode for testing
 
 	* examples/cairo_snippets/snippets_gtk.py: add horizontal scrollbar
@@ -1155,7 +1216,7 @@
 	* test/test.test: add test to run png snippets
 
 	* cairo/pycairo-context.c (pycairo_text_extents)
-	(pycairo_show_text, pycairo_text_path): 
+	(pycairo_show_text, pycairo_text_path):
 	change unsigned char* to char* to match cairo changes
 
 2005-04-07  Steve Chaplin  <steve1097@yahoo.com.au>
@@ -1164,22 +1225,22 @@
 
 2005-04-06  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* examples/cairo_snippets/snippets_png.py 
+	* examples/cairo_snippets/snippets_png.py
 	* examples/cairo_snippets/snippets_gtk.py : new examples
 	* examples/cairo_snippets/c_to_python.py : change '.cairo' C snippets
 	to python
 
 	* examples/cairo_snippets/snippets/* : python snippets
 	* examples/cairo_snippets/data/* : snippet data
-	
-	* cairo/pycairo-surface.c (pycairo_surface_create_for_data): 
+
+	* cairo/pycairo-surface.c (pycairo_surface_create_for_data):
 	add cast to unsigned char *
 
 	* cairo/pycairo-context.c (pycairo_default_matrix): delete
 
 2005-04-05  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/pycairo-surface.c (pycairo_surface_create_for_png): new 
+	* cairo/pycairo-surface.c (pycairo_surface_create_for_png): new
 	constructor
 
 	* examples/gtk/png_view.py : new example
@@ -1191,12 +1252,12 @@
 2005-04-04  Steve Chaplin  <steve1097@yahoo.com.au>
 
 	* cairo/pycairo-pattern.c (pycairo_pattern_create_for_surface)
-	(pycairo_pattern_create_linear, pycairo_pattern_create_radial): 
+	(pycairo_pattern_create_linear, pycairo_pattern_create_radial):
 	update to handle case when ParseTuple fails
 
-	* cairo/cairomodule.c (pycairo_image_surface_create_for_data): 
+	* cairo/cairomodule.c (pycairo_image_surface_create_for_data):
 	remove module function, replace with ...
-	* cairo/pycairo-surface.c (pycairo_surface_create_for_data): 
+	* cairo/pycairo-surface.c (pycairo_surface_create_for_data):
 	add new alternative constructor
 
 2005-04-04  Steve Chaplin  <steve1097@yahoo.com.au>
@@ -1204,28 +1265,28 @@
 	* configure.ac : require Python 2.3 so we can use METH_CLASS for
 	classmethods
 
-	* README : note Python 2.3 is required 
+	* README : note Python 2.3 is required
 
 	* cairo/pycairo-pattern.c (pycairo_pattern_create_for_surface)
-	(pycairo_pattern_create_linear, pycairo_pattern_create_radial): 
+	(pycairo_pattern_create_linear, pycairo_pattern_create_radial):
 	new alternative constructors
 	(pycairo_pattern_new, pycairo_pattern_init): delete old constructor
 
-	* examples/gradient.py 
+	* examples/gradient.py
 	* examples/warpedtext.py
-	* examples/gtk/cairo-knockout.py : update to use new pattern 
+	* examples/gtk/cairo-knockout.py : update to use new pattern
 	constructors
-	
+
 2005-03-30  Steve Chaplin  <steve1097@yahoo.com.au>
 
 	* cairo/pycairo-surface.c (pycairo_surface_write_png): new wrapper
 
 	* cairo/pycairo-context.c (pycairo_set_target_png): remove
 
-	* examples/context-subclass.py 
+	* examples/context-subclass.py
 	* examples/gradient.py
 	* examples/hering.py
-	* examples/warpedtext.py: update to use surface.write_png()	
+	* examples/warpedtext.py: update to use surface.write_png()
 
 2005-03-25  Steve Chaplin  <steve1097@yahoo.com.au>
 
@@ -1290,7 +1351,7 @@
 	* cairo/pycairo-context.c (pycairo_set_target_pdf): temporary disable -
 	prototype has changed.
 
-	* cairo/cairogtkmodule.c (set_target_drawable): replace 
+	* cairo/cairogtkmodule.c (set_target_drawable): replace
 	cairo_translate() with cairo_surface_set_device_offset()
 
 	* cairo/pycairo-surface.c (pycairo_surface_set_device_offset): new
@@ -1301,7 +1362,7 @@
 	* cairo/cairogtkmodule.c (surface_create_for_pixmap): auto determine
 	cairo format from pixmap depth
 
-	* cairo/pycairo-context.c (pycairo_get_pattern): don't check for 
+	* cairo/pycairo-context.c (pycairo_get_pattern): don't check for
 	pattern == NULL, since cairo_t always has a source pattern
 	(pycairo_get_path): correct the function name string
 
@@ -1335,7 +1396,7 @@
 
 	* cairo/cairomodule.c: remove 'surface_create_for_image' (it was
 	an alias to cairo_image_surface_create_for_data)
-	
+
 	* cairo/caironumpymodule.c (surface_create_for_array): rename
 	cairo_surface_create_for_image() to
 	cairo_image_surface_create_for_data()
@@ -1353,13 +1414,13 @@
 
 2005-03-10  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/cairomodule.c (pycairo_check_status): add 
+	* cairo/cairomodule.c (pycairo_check_status): add
 	CAIRO_STATUS_INVALID_STRING
 
 	* cairo/pycairo-context.c (pycairo_current_font): if !font display
 	error message
 
-	* cairo/pycairo-font.c (pycairo_font_set_transform) 
+	* cairo/pycairo-font.c (pycairo_font_set_transform)
 	(pycairo_font_current_transform): remove the (already commented out)
 	functions.
 	(cairo_font_extents): new wrapper
@@ -1376,10 +1437,10 @@
 
 2005-03-02  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/pycairo.h: 
+	* cairo/pycairo.h:
 	* cairo/cairogtkmodule.c: move '#include <cairo-xlib.h>' from pycairo.h
 	to cairogtkmodule.c - the only place where its needed. Remove the
-	'#ifdef CAIRO_HAS_XLIB_SURFACE' since its already in cairo-xlib.h 
+	'#ifdef CAIRO_HAS_XLIB_SURFACE' since its already in cairo-xlib.h
 
 2005-03-02  Steve Chaplin  <steve1097@yahoo.com.au>
 
@@ -1402,7 +1463,7 @@
 	* examples: move gtk examples (cairo-demo.py, cairo-knockout.py,
 	lsystem.py, text.py) to their own subdirectory examples/gtk
 	* examples/Makefile.am (EXTRA_DIST): update paths to gtk examples
-	
+
 2005-02-05  Steve Chaplin  <steve1097@yahoo.com.au>
 
 	* INSTALL: new file
@@ -1428,14 +1489,14 @@
 	* cairo/pycairo.h: Track split-up of cairo.h.
 
 2005-01-12  Steve Chaplin  <steve1097@yahoo.com.au>
-	
+
 	* configure.ac: Increment pycairo version to 0.1.4
 
 	* Makefile.am (EXTRA_DIST): add examples/svg2png.py and
 	  examples/svgview.py
 
 	* NEWS: add notes for 0.1.4 snapshot
-	
+
 	* README: add version numbers required for libsvg-cairo and pygtk
 
 	* RELEASING: move 'make distcheck' (step 2) to after step 5
@@ -1461,31 +1522,31 @@
 	* configure.ac: report the 'prefix' at the end of configure
 
 2004-12-10  Steve Chaplin  <steve1097@yahoo.com.au>
-	
+
 	Add libsvg-cairo support
 	* configure.ac: add checks for libsvg-cairo
 	* cairo/Makefile.am: add libsvg-cairo support
 
 	New files
-	* cairo/cairosvgmodule.c: 
-	* cairo/pycairosvg-context.c: 
-	* cairo/pycairo-misc.h: 
-	* cairo/pycairosvg-private.h: 
-	* examples/svg2png.py: 	
-	* examples/svgview.py: 
+	* cairo/cairosvgmodule.c:
+	* cairo/pycairosvg-context.c:
+	* cairo/pycairo-misc.h:
+	* cairo/pycairosvg-private.h:
+	* examples/svg2png.py:
+	* examples/svgview.py:
 
 2004-12-10  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/cairogtkmodule.c: 
-	* cairo/cairomodule.c: 
-	* cairo/caironumpymodule.c (surface_create_for_array): 
-	* cairo/pycairo-font.c: 
-	* cairo/pycairo-context.c: 
+	* cairo/cairogtkmodule.c:
+	* cairo/cairomodule.c:
+	* cairo/caironumpymodule.c (surface_create_for_array):
+	* cairo/pycairo-font.c:
+	* cairo/pycairo-context.c:
 	* cairo/pycairo.h:
-	* cairo/pycairo-matrix.c: 
-	* cairo/pycairo-pattern.c: 
-	* cairo/pycairo-private.h: 
-	* cairo/pycairo-surface.c: 
+	* cairo/pycairo-matrix.c:
+	* cairo/pycairo-pattern.c:
+	* cairo/pycairo-private.h:
+	* cairo/pycairo-surface.c:
 	change _new() functions to _wrap() to allow _new() to be used for
 	python __new__ functions.
 
@@ -1512,29 +1573,29 @@
 	* cairo/pycairo-private.h: define Py_RETURN_NONE, Py_RETURN_TRUE,
 	Py_RETURN_FALSE, Py_CLEAR if using python < 2.4
 
-	* cairo/pycairo-matrix.c (pycairo_matrix_richcmp): return 
+	* cairo/pycairo-matrix.c (pycairo_matrix_richcmp): return
 	Py_NotImplemented instead of Py_None
 
-	* cairo/pycairo-context.c: 
-	* cairo/pycairo-font.c (pycairo_font_set_transform): 
-	* cairo/pycairo-pattern.c: 
-	* cairo/pycairo-surface.c: 
-	change all occurences of "Py_INCREF(Py_None); return Py_None;" 
+	* cairo/pycairo-context.c:
+	* cairo/pycairo-font.c (pycairo_font_set_transform):
+	* cairo/pycairo-pattern.c:
+	* cairo/pycairo-surface.c:
+	change all occurences of "Py_INCREF(Py_None); return Py_None;"
 	to "Py_RETURN_NONE;"
 
 2004-12-01  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/cairogtkmodule.c: 
-	* cairo/cairomodule.c: 
-	* cairo/caironumpymodule.c: 
-	* cairo/pycairo-context.c: 
-	* cairo/pycairo-font.c: 
-	* cairo/pycairo.h: 
-	* cairo/pycairo-matrix.c: 
-	* cairo/pycairo-pattern.c: 
-	* cairo/pycairo-private.h: 
+	* cairo/cairogtkmodule.c:
+	* cairo/cairomodule.c:
+	* cairo/caironumpymodule.c:
+	* cairo/pycairo-context.c:
+	* cairo/pycairo-font.c:
+	* cairo/pycairo.h:
+	* cairo/pycairo-matrix.c:
+	* cairo/pycairo-pattern.c:
+	* cairo/pycairo-private.h:
 	* cairo/pycairo-surface.c: Added header comments referencing the LGPL
-	and MPL licenses.	
+	and MPL licenses.
 
 2004-11-30  Steve Chaplin  <steve1097@yahoo.com.au>
 
@@ -1546,12 +1607,12 @@
 
 	* Makefile.am (EXTRA_DIST): add NOTES, examples/context-subclass.py,
         examples/warpedtext.py
-	
+
 	* NEWS: remove notes for Snapshot 0.1.2 - the snapshot was not
 	completed and released, 0.1.3 is the first snapshot.
 
 	* configure.ac: define VERSION_INFO
-	* cairo/__init__.py.in (version_info): use VERSION_INFO from 
+	* cairo/__init__.py.in (version_info): use VERSION_INFO from
 	configure.ac
 
 2004-11-24  Carl Worth  <cworth@cworth.org>
@@ -1568,11 +1629,11 @@
 
 2004-11-23  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/pycairo-context.c (pycairo_context_new): rename to 
+	* cairo/pycairo-context.c (pycairo_context_new): rename to
 	pycairo_context_wrap to avoid confusion with the Context.__new__
 	method
-	(pycairo_init): rename to pycairo_new, ignore any args/kwds, add to 
-	tp_new slot - to prevent Context.__init__ being overridden and 
+	(pycairo_init): rename to pycairo_new, ignore any args/kwds, add to
+	tp_new slot - to prevent Context.__init__ being overridden and
 	cairo_create() not being called
 	* cairo/pycairo.h (pycairo_context_wrap): rename
 	pycairo_context_new to pycairo_context_wrap
@@ -1589,23 +1650,23 @@
 	(pycairo_show_text): remove the second check of cairo status
 
 	* examples/context-subclass.py: new example showing Context subclassing
-	
+
 	* NOTES: new file describing some features of the bindings
 
 2004-11-15  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* cairo/pycairo-context.c (pycairo_current_path) 
+	* cairo/pycairo-context.c (pycairo_current_path)
 	(pycairo_current_path_flat): new wrappers
 	* examples/warpedtext.py: new example using cairo_current_path
 
 	Changes submitted by Maarten Breddels <dmon@xs4all.nl>
-	
+
 2004-11-14  Steve Chaplin  <steve1097@yahoo.com.au>
 
 	* cairo/cairomodule.c (pycairo_surface_create_for_image): rename to
 	pycairo_image_surface_create_for_data
 	(pycairo_png_surface_create, pycairo_ps_surface_create): add wrappers
-	(init_cairo): add new constants FILTER_GAUSSIAN, EXTEND_NONE, 
+	(init_cairo): add new constants FILTER_GAUSSIAN, EXTEND_NONE,
 	EXTEND_REPEAT, EXTEND_REFLECT
 
 	* cairo/pycairo-context.c (pycairo_in_stroke, pycairo_in_fill)
@@ -1617,20 +1678,20 @@
 	(pycairo_pattern_get_matrix, pycairo_pattern_get_extend)
 	(pycairo_pattern_get_filter): new wrappers
 
-	* cairo/pycairo-surface.c (pycairo_surface_get_matrix): Change from 
+	* cairo/pycairo-surface.c (pycairo_surface_get_matrix): Change from
 	being a method to being an attribute.
 	(pycairo_surface_get_filter): new wrapper
 
 	* cairo/pycairo.h: additions for pattern
 
 	Changes submitted by Maarten Breddels <dmon@xs4all.nl>
-	
+
 2004-11-14  Steve Chaplin  <steve1097@yahoo.com.au>
 
         Preparation for making the first snapshot release:
 	* AUTHORS: Add myself
 	* configure.ac: Add automake version check
-	* Makefile.am: Remove automake version check. Add all the examples to 
+	* Makefile.am: Remove automake version check. Add all the examples to
 	EXTRA_DIST. Add release targets, copied from cairo.
 	* NEWS: Added info about the first snapshot
 	* README: Updated
@@ -1640,10 +1701,10 @@
 	an error.
 	(pycairo_pattern_wrap): new function
 	* cairo/pycairo-private.h: new declaration pattern_wrap()
-	
+
 2004-11-13  Steve Chaplin  <steve1097@yahoo.com.au>
 
-	* configure.ac: 
+	* configure.ac:
 	* cairo/__init__.py.in: Add support for version numbers.
 
 2004-11-11  Steve Chaplin  <steve1097@yahoo.com.au>
@@ -1667,7 +1728,7 @@
 	* examples/cairo-knockout.py: Bring up-to-date with latest
 	cairo-knockout.c. Now uses cairo_arc rather than custom arc
 	approximation, and now uses new cairo.set_pattern.
-	
+
 	* cairo/pycairo.h: Add declaration for struct PyCairoPattern.
 
 	* cairo/pycairo-context.c (pycairo_set_pattern): Re-enable
@@ -1679,7 +1740,7 @@
 
 2004-11-02  Carl Worth  <cworth@cworth.org>
 
-	* examples/spiral.py: 	
+	* examples/spiral.py:
 	* examples/hering.py: New examples from Steve Chaplin to
 	demonstrate PNG and PS output.
 
@@ -1805,4 +1866,3 @@
 
 	* cairo/pycairo-context.c (pycairo_current_target_surface): add
 	wrapper.
-

@@ -21,7 +21,7 @@ def oval_path(ctx, xc, yc, xr, yr):
     ctx.close_path ()
 
     ctx.restore()
-    
+
 def fill_checks(ctx, x, y, width, height):
     CHECK_SIZE = 32
 
@@ -66,7 +66,7 @@ def draw (ctx, width, height):
     radius = 0.5 * min(width, height) - 10
     xc = width / 2.
     yc = height / 2.
-    
+
     target  = ctx.get_target()
     overlay = target.create_similar(cairo.CONTENT_COLOR_ALPHA, width, height)
     punch   = target.create_similar(cairo.CONTENT_ALPHA, width, height)
@@ -93,7 +93,7 @@ def draw (ctx, width, height):
     # at half intensity, and use OperatorAdd to join up
     # without seams.
     circles_cr = cairo.Context (circles)
-  
+
     circles_cr.set_operator (cairo.OPERATOR_OVER)
     draw_3circles (circles_cr, xc, yc, radius, 0.5)
 
@@ -103,12 +103,12 @@ def draw (ctx, width, height):
 
     ctx.set_source_surface (overlay, 0, 0)
     ctx.paint()
-    
+
 def expose(drawingarea, event):
     ctx = cairo.gtk.gdk_cairo_create(drawingarea.window)
 
     draw (ctx, drawingarea.allocation.width, drawingarea.allocation.height)
-                                         
+
     return False
 
 def main():
@@ -120,8 +120,7 @@ def main():
     drawingarea = gtk.DrawingArea()
     win.add(drawingarea)
     drawingarea.connect('expose_event', expose)
-    drawingarea.set_double_buffered(False)
-    
+
     win.show_all()
     gtk.main()
 

@@ -32,8 +32,8 @@ _cairo = Extension(name = 'cairo._cairo',
             libraries = get_libs('cairo'),
         )
 
-setup( name = "pycairo", 
-    version = "0.6.0",
+setup( name = "pycairo",
+    version = "0.9.0",
     description = "python interface for cairo",
 
     packages = ['cairo'],

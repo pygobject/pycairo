@@ -10,7 +10,7 @@ import cairo.gtk
 
 def expose_event(widget, event, surface):
     widget.window.clear()
-    
+
     ctx = cairo.gtk.gdk_cairo_create(widget.window)
     ctx.set_source_surface(surface, 0,0)
     ctx.paint()
@@ -32,7 +32,6 @@ drawingarea = gtk.DrawingArea()
 win.add(drawingarea)
 drawingarea.connect('expose_event', expose_event, surface)
 drawingarea.set_size_request(Width,Height)
-drawingarea.set_double_buffered(False)
-    
+
 win.show_all()
 gtk.main()

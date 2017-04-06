@@ -29,8 +29,8 @@ class lindenmayer:
 
         drawable.clear()
 
-        ctx = cairo.gtk.gdk_cairo_create(drawable)        
-        
+        ctx = cairo.gtk.gdk_cairo_create(drawable)
+
         ctx.set_source_rgb(0, 0, 0)
 
         ctx.set_line_width(self.SIZE / 4)
@@ -119,7 +119,6 @@ def main():
     drawingarea = gtk.DrawingArea()
     win.add(drawingarea)
     drawingarea.connect('expose_event', cls.expose)
-    drawingarea.set_double_buffered(False)
 
     win.show_all()
     gtk.main()

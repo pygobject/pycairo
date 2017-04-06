@@ -119,8 +119,7 @@ def main():
     drawingarea = gtk.DrawingArea()
     win.add(drawingarea)
     drawingarea.connect('expose_event', expose)
-    drawingarea.set_double_buffered(False)
-    
+
     win.show_all()
     gtk.main()
 

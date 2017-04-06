@@ -36,8 +36,8 @@ C functions which take a cairo object, for example
 become methods of the corresponding pycairo object, for example
     Context.fill_preserve (self)
 
-cairo_reference(), cairo_destroy(), cairo_surface_reference(), 
-cairo_surface_destroy() etc are not required - Pycairo handles cairo object 
+cairo_reference(), cairo_destroy(), cairo_surface_reference(),
+cairo_surface_destroy() etc are not required - Pycairo handles cairo object
 construction and destruction.
 
 The Pycairo classes are listed below showing just the differences to the C API.
@@ -47,7 +47,7 @@ See the 'examples' directory for Pycairo examples.
 
 cairo.Context
 -------------
-C : cr = cairo_create (surface);	    
+C : cr = cairo_create (surface);
 Py: ctx = cairo.Context (surface)
 
 C : cairo_set_dash (cairo_t *cr, double *dashes, int ndash, double offset);
@@ -62,7 +62,7 @@ ctx.set_source_surface(surface, x=0.0, y=0.0)
 
 cairo.FontFace
 --------------
-ff = cairo.FontFace() # does not work, FontFace cannot be instantiated 
+ff = cairo.FontFace() # does not work, FontFace cannot be instantiated
                       # directly, instead use
 ff = Context.get_font_face()
 
@@ -143,10 +143,13 @@ Py: surface = cairo.ImageSurface (format, width, height)
               # create a surface from a Numerical Python array
 
 
-C:  surface = cairo_pdf_surface_create (filename, width_in_points, 
+C:  surface = cairo_pdf_surface_create (filename, width_in_points,
 				        height_in_points);
-    surface = cairo_ps_surface_create (filename, width_in_points, 
+    surface = cairo_ps_surface_create (filename, width_in_points,
 			               height_in_points);
 
 Py: surface = cairo.PDFSurface (filename, width_in_points, height_in_points)
     surface = cairo.PSSurface (filename, width_in_points, height_in_points)
+
+Methods supporting default argument values:
+surface.mark_dirty (x=0, y=0, width=-1, height=-1)

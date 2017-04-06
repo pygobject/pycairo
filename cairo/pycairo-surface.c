@@ -1,4 +1,4 @@
-/* -*- mode: C; c-basic-offset: 4 -*- 
+/* -*- mode: C; c-basic-offset: 4 -*-
  *
  * Pycairo - Python bindings for cairo
  *
@@ -53,12 +53,12 @@
  *        meaning a base cairo.Surface type, or it can be a subclass of
  *        cairo.Surface.
  * base - the base object used to create the context, or NULL.
- *        it is referenced to keep it alive while the cairo_surface_t is 
+ *        it is referenced to keep it alive while the cairo_surface_t is
  *        being used
  * Return value: New reference or NULL on failure
  */
 PyObject *
-PycairoSurface_FromSurface (cairo_surface_t *surface, PyTypeObject *type, 
+PycairoSurface_FromSurface (cairo_surface_t *surface, PyTypeObject *type,
 			    PyObject *base)
 {
     PyObject *o;
@@ -120,7 +120,7 @@ surface_create_similar (PycairoSurface *o, PyObject *args)
 			   &content, &width, &height))
 	return NULL;
 
-    surface = cairo_surface_create_similar (o->surface, content, 
+    surface = cairo_surface_create_similar (o->surface, content,
 					    width, height);
     /* bug #2765 - "How do we identify surface types?"
      * should pass surface type as arg2
@@ -140,6 +140,16 @@ surface_finish (PycairoSurface *o)
 }
 
 static PyObject *
+surface_flush (PycairoSurface *o)
+{
+    cairo_surface_flush (o->surface);
+
+    if (Pycairo_Check_Status (cairo_surface_status(o->surface)))
+	return NULL;
+    Py_RETURN_NONE;
+}
+
+static PyObject *
 surface_get_font_options (PycairoSurface *o)
 {
     cairo_font_options_t *options = cairo_font_options_create();
@@ -150,11 +160,29 @@ surface_get_font_options (PycairoSurface *o)
 }
 
 static PyObject *
+surface_mark_dirty (PycairoSurface *o, PyObject *args, PyObject *kwds)
+{
+    static char *kwlist[] = {"x", "y", "width", "height", NULL};
+    int x = 0, y = 0, width = -1, height = -1;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwds,
+				     "|iiii:Surface.mark_dirty", kwlist,
+				     &x, &y, &width, &height))
+	return NULL;
+
+    cairo_surface_mark_dirty_rectangle (o->surface, x, y, width, height);
+
+    if (Pycairo_Check_Status (cairo_surface_status(o->surface)))
+	return NULL;
+    Py_RETURN_NONE;
+}
+
+static PyObject *
 surface_set_device_offset (PycairoSurface *o, PyObject *args)
 {
     double x_offset, y_offset;
 
-    if (!PyArg_ParseTuple (args, "dd:Surface.set_device_offset", 
+    if (!PyArg_ParseTuple (args, "dd:Surface.set_device_offset",
 			   &x_offset, &y_offset))
 	return NULL;
 
@@ -189,8 +217,10 @@ static PyMethodDef surface_methods[] = {
      */
     {"create_similar", (PyCFunction)surface_create_similar,    METH_VARARGS },
     {"finish",         (PyCFunction)surface_finish,            METH_NOARGS },
+    {"flush",          (PyCFunction)surface_flush,             METH_NOARGS },
     {"get_font_options",(PyCFunction)surface_get_font_options, METH_NOARGS },
-    {"set_device_offset",(PyCFunction)surface_set_device_offset, 
+    {"mark_dirty",     (PyCFunction)surface_mark_dirty,        METH_KEYWORDS },
+    {"set_device_offset",(PyCFunction)surface_set_device_offset,
                                                                 METH_VARARGS },
 #ifdef CAIRO_HAS_PNG_FUNCTIONS
     {"write_to_png",   (PyCFunction)surface_write_to_png,      METH_VARARGS },
@@ -324,12 +354,12 @@ image_surface_create_for_array (PyTypeObject *type, PyObject *args)
 	return NULL;
     }
     surface = cairo_image_surface_create_for_data(
-		                          (unsigned char *) array->data, 
+		                          (unsigned char *) array->data,
 					  format,
 					  array->dimensions[1],
 					  array->dimensions[0],
 					  array->strides[0]);
-    return PycairoSurface_FromSurface(surface, &PycairoImageSurface_Type, 
+    return PycairoSurface_FromSurface(surface, &PycairoImageSurface_Type,
 				      (PyObject *)array);
 }
 #endif /* HAVE_NUMPY */
@@ -379,7 +409,7 @@ image_surface_create_for_data (PyTypeObject *type, PyObject *args)
 
     surface = cairo_image_surface_create_for_data
 	((unsigned char *)data, format, width, height, stride);
-    return PycairoSurface_FromSurface(surface, &PycairoImageSurface_Type, 
+    return PycairoSurface_FromSurface(surface, &PycairoImageSurface_Type,
 				      NULL);
     /* FIXME: get surface to hold a reference to buffer */
 }
@@ -387,7 +417,7 @@ image_surface_create_for_data (PyTypeObject *type, PyObject *args)
 
 
 #ifdef CAIRO_HAS_PNG_FUNCTIONS
-static cairo_status_t 
+static cairo_status_t
 pycairo_read_func (void *closure, unsigned char *data, unsigned int length)
 {
     if (fread (data, 1, (size_t) length, (FILE *)closure) != length)
@@ -413,18 +443,18 @@ image_surface_create_from_png (PyTypeObject *type, PyObject *o)
 	fp = PyFile_AsFile(o);
 
     } else {
-	PyErr_SetString(PyExc_TypeError, 
+	PyErr_SetString(PyExc_TypeError,
 			"ImageSurface.create_from_png takes one argument "
 			"which must be a filename (str) or file object");
 	return NULL;
     }
 
-    surface = cairo_image_surface_create_from_png_stream (pycairo_read_func, 
+    surface = cairo_image_surface_create_from_png_stream (pycairo_read_func,
 							  fp);
     if (PyObject_TypeCheck (o, &PyBaseString_Type))
 	fclose (fp);
 
-    return PycairoSurface_FromSurface (surface, &PycairoImageSurface_Type, 
+    return PycairoSurface_FromSurface (surface, &PycairoImageSurface_Type,
 				       NULL);
 }
 #endif /* CAIRO_HAS_PNG_FUNCTIONS */
@@ -444,15 +474,15 @@ image_surface_get_width (PycairoImageSurface *o)
 
 static PyMethodDef image_surface_methods[] = {
 #ifdef HAVE_NUMPY
-    {"create_for_array",(PyCFunction)image_surface_create_for_array, 
+    {"create_for_array",(PyCFunction)image_surface_create_for_array,
                                                    METH_VARARGS | METH_CLASS },
 #endif
 #if 0
-    {"create_for_data",(PyCFunction)image_surface_create_for_data, 
+    {"create_for_data",(PyCFunction)image_surface_create_for_data,
                                                    METH_VARARGS | METH_CLASS },
 #endif
 #ifdef CAIRO_HAS_PNG_FUNCTIONS
-    {"create_from_png", (PyCFunction)image_surface_create_from_png, 
+    {"create_from_png", (PyCFunction)image_surface_create_from_png,
                                                    METH_O | METH_CLASS },
 #endif
     {"get_height",    (PyCFunction)image_surface_get_height,      METH_NOARGS},
@@ -525,7 +555,7 @@ pdf_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 
     o = type->tp_alloc(type, 0);
     if (o) {
-	surface = cairo_pdf_surface_create (filename, width_in_points, 
+	surface = cairo_pdf_surface_create (filename, width_in_points,
 					    height_in_points);
 	if (Pycairo_Check_Status (cairo_surface_status (surface))) {
 	    cairo_surface_destroy (surface);
@@ -618,7 +648,7 @@ ps_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 
     o = type->tp_alloc(type, 0);
     if (o) {
-	surface = cairo_ps_surface_create (filename, width_in_points, 
+	surface = cairo_ps_surface_create (filename, width_in_points,
 					   height_in_points);
 	if (Pycairo_Check_Status (cairo_surface_status (surface))) {
 	    cairo_surface_destroy (surface);
@@ -776,7 +806,7 @@ PyTypeObject PycairoWin32Surface_Type = {
 #ifdef HAVE_NUMPY
 /* load the Numeric Python module
  * Return 1 if Numeric is available,
- *        0 and set exception if it is not. 
+ *        0 and set exception if it is not.
  *
  * copied from pygtk
  */

@@ -1,4 +1,4 @@
-/* -*- mode: C; c-basic-offset: 4 -*- 
+/* -*- mode: C; c-basic-offset: 4 -*-
  *
  * Pycairo - Python bindings for cairo
  *
@@ -96,7 +96,7 @@ pycairo_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
     PyObject *o;
     PycairoSurface *s;
 
-    if (!PyArg_ParseTuple(args, "O!:Context.__new__", 
+    if (!PyArg_ParseTuple(args, "O!:Context.__new__",
 			  &PycairoSurface_Type, &s))
 	return NULL;
 
@@ -118,7 +118,7 @@ pycairo_append_path (PycairoContext *o, PyObject *args)
 {
     PycairoPath *p;
 
-    if (!PyArg_ParseTuple(args, "O!:Context.append_path", 
+    if (!PyArg_ParseTuple(args, "O!:Context.append_path",
 			  &PycairoPath_Type, &p))
 	return NULL;
 
@@ -240,7 +240,7 @@ pycairo_device_to_user_distance (PycairoContext *o, PyObject *args)
 {
     double dx, dy;
 
-    if (!PyArg_ParseTuple (args, "dd:Context.device_to_user_distance", 
+    if (!PyArg_ParseTuple (args, "dd:Context.device_to_user_distance",
 			   &dx, &dy))
 	return NULL;
 
@@ -286,8 +286,14 @@ pycairo_font_extents (PycairoContext *o)
     cairo_font_extents (o->ctx, &e);
     if (Pycairo_Check_Status (cairo_status (o->ctx)))
 	return NULL;
-    return Py_BuildValue("(ddddd)", e.ascent, e.descent, e.height, 
+    return Py_BuildValue("(ddddd)", e.ascent, e.descent, e.height,
 			 e.max_x_advance, e.max_y_advance);
+}
+
+static PyObject *
+pycairo_get_antialias (PycairoContext *o)
+{
+    return PyInt_FromLong (cairo_get_antialias (o->ctx));
 }
 
 static PyObject *
@@ -308,11 +314,6 @@ static PyObject *
 pycairo_get_font_face (PycairoContext *o)
 {
     cairo_font_face_t *font_face = cairo_get_font_face (o->ctx);
-    /* remove this block when cairo_get_font_face returns _cairo_font_face_nil;*/
-    if (!font_face) { 
-	Pycairo_Check_Status (cairo_status (o->ctx));
-	return NULL;
-    }
     cairo_font_face_reference (font_face);
     return PycairoFontFace_FromFontFace (font_face);
 }
@@ -473,7 +474,7 @@ pycairo_mask_surface (PycairoContext *o, PyObject *args)
     PycairoSurface *s;
     double surface_x = 0.0, surface_y = 0.0;
 
-    if (!PyArg_ParseTuple (args, "O!|dd:Context.mask_surface", 
+    if (!PyArg_ParseTuple (args, "O!|dd:Context.mask_surface",
 			   &PycairoSurface_Type, &s, &surface_x, &surface_y))
 	return NULL;
 
@@ -660,6 +661,20 @@ pycairo_select_font_face (PycairoContext *o, PyObject *args)
 }
 
 static PyObject *
+pycairo_set_antialias (PycairoContext *o, PyObject *args)
+{
+    cairo_antialias_t antialias = CAIRO_ANTIALIAS_DEFAULT;
+
+    if (!PyArg_ParseTuple(args, "|i:Context.set_antialias", &antialias))
+	return NULL;
+
+    cairo_set_antialias (o->ctx, antialias);
+    if (Pycairo_Check_Status (cairo_status (o->ctx)))
+	return NULL;
+    Py_RETURN_NONE;
+}
+
+static PyObject *
 pycairo_set_dash (PycairoContext *o, PyObject *args)
 {
     double *dashes, offset = 0;
@@ -669,7 +684,7 @@ pycairo_set_dash (PycairoContext *o, PyObject *args)
     if (!PyArg_ParseTuple (args, "O|d:Context.set_dash", &py_dashes, &offset))
 	return NULL;
 
-    py_dashes = PySequence_Fast (py_dashes, 
+    py_dashes = PySequence_Fast (py_dashes,
 				 "first argument must be a sequence");
     if (!py_dashes)
 	return NULL;
@@ -995,8 +1010,8 @@ pycairo_text_extents (PycairoContext *o, PyObject *args)
     cairo_text_extents (o->ctx, utf8, &extents);
     if (Pycairo_Check_Status (cairo_status (o->ctx)))
 	return NULL;
-    return Py_BuildValue("(dddddd)", extents.x_bearing, extents.y_bearing, 
-			 extents.width, extents.height, extents.x_advance, 
+    return Py_BuildValue("(dddddd)", extents.x_bearing, extents.y_bearing,
+			 extents.width, extents.height, extents.x_advance,
 			 extents.y_advance);
 }
 
@@ -1062,7 +1077,7 @@ pycairo_user_to_device_distance (PycairoContext *o, PyObject *args)
 {
     double dx, dy;
 
-    if (!PyArg_ParseTuple (args, "dd:Context.user_to_device_distance", 
+    if (!PyArg_ParseTuple (args, "dd:Context.user_to_device_distance",
 		 	  &dx, &dy))
 	return NULL;
 
@@ -1100,6 +1115,7 @@ static PyMethodDef pycairo_methods[] = {
     {"fill_extents",    (PyCFunction)pycairo_fill_extents,   METH_NOARGS},
     {"fill_preserve",   (PyCFunction)pycairo_fill_preserve,  METH_NOARGS},
     {"font_extents",    (PyCFunction)pycairo_font_extents,   METH_NOARGS},
+    {"get_antialias",   (PyCFunction)pycairo_get_antialias,  METH_NOARGS},
     {"get_fill_rule",   (PyCFunction)pycairo_get_fill_rule,  METH_NOARGS},
     {"get_font_face",   (PyCFunction)pycairo_get_font_face,  METH_NOARGS},
     {"get_font_matrix", (PyCFunction)pycairo_get_font_matrix,METH_NOARGS},
@@ -1136,6 +1152,7 @@ static PyMethodDef pycairo_methods[] = {
     {"save",            (PyCFunction)pycairo_save,           METH_NOARGS},
     {"scale",           (PyCFunction)pycairo_scale,          METH_VARARGS},
     {"select_font_face",(PyCFunction)pycairo_select_font_face,METH_VARARGS},
+    {"set_antialias",   (PyCFunction)pycairo_set_antialias,  METH_VARARGS},
     {"set_dash",        (PyCFunction)pycairo_set_dash,       METH_VARARGS},
     {"set_fill_rule",   (PyCFunction)pycairo_set_fill_rule,  METH_VARARGS},
     {"set_font_face",   (PyCFunction)pycairo_set_font_face,  METH_O},
@@ -1151,7 +1168,7 @@ static PyMethodDef pycairo_methods[] = {
     {"set_source",      (PyCFunction)pycairo_set_source,     METH_VARARGS},
     {"set_source_rgb",  (PyCFunction)pycairo_set_source_rgb, METH_VARARGS},
     {"set_source_rgba", (PyCFunction)pycairo_set_source_rgba,METH_VARARGS},
-    {"set_source_surface",(PyCFunction)pycairo_set_source_surface,  
+    {"set_source_surface",(PyCFunction)pycairo_set_source_surface,
                                                              METH_VARARGS},
     {"set_tolerance",   (PyCFunction)pycairo_set_tolerance,  METH_VARARGS},
     /* show_glyphs - undocumented */

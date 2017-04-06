@@ -1,5 +1,5 @@
 Pycairo - Python bindings for cairo
-http://cairographics.org
+http://www.cairographics.org/pycairo
 
 Compiling
 ---------
@@ -7,7 +7,7 @@ See the INSTALL document for build instructions.
 
 Dependencies
 ------------
-    cairo  		>= 0.6.0
+    cairo  		>= 0.9.0
     Python 		>= 2.3
     libsvg-cairo	optional >= 0.1.6
     Numeric Python	optional

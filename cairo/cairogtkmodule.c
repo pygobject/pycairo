@@ -1,4 +1,4 @@
-/* -*- mode: C; c-basic-offset: 4 -*- 
+/* -*- mode: C; c-basic-offset: 4 -*-
  *
  * Pycairo - Python bindings for cairo
  *
@@ -49,68 +49,42 @@ static Pycairo_CAPI_t *Pycairo_CAPI;
 
 static PyTypeObject *_PyGdkDrawable_Type;
 #define PyGdkDrawable_Type (*_PyGdkDrawable_Type)
-static PyTypeObject *_PyGdkPixbuf_Type;
-#define PyGdkPixbuf_Type (*_PyGdkPixbuf_Type)
-
-static PyObject *
-surface_create_for_pixbuf(PyObject *self, PyObject *args)
-{
-    PyGObject *py_pixbuf;
-    GdkPixbuf *gdk_pixbuf;
-    cairo_surface_t *surface;
-
-    if (!PyArg_ParseTuple(args, "O!:surface_create_for_pixbuf",
-			  &PyGdkPixbuf_Type, &py_pixbuf))
-	return NULL;
-
-    gdk_pixbuf = GDK_PIXBUF(py_pixbuf->obj);
-
-    /* this is the only format that matches cairo's image format.
-     * GdkPixbuf uses RGBA, while Cairo uses ARGB, so we can't handle
-     * pixbufs with alpha. */
-    if (gdk_pixbuf_get_colorspace(gdk_pixbuf) != GDK_COLORSPACE_RGB ||
-	gdk_pixbuf_get_bits_per_sample(gdk_pixbuf) != 8 ||
-	gdk_pixbuf_get_n_channels(gdk_pixbuf) != 4) {
-	PyErr_SetString(PyExc_ValueError,
-			"can only create a surface from a 24-bit RGB pixbuf "
-			"(ie. no alpha)");
-	return NULL;
-    }
-    surface = cairo_image_surface_create_for_data
-	(gdk_pixbuf_get_pixels(gdk_pixbuf),
-	 CAIRO_FORMAT_RGB24,
-	 gdk_pixbuf_get_width(gdk_pixbuf),
-	 gdk_pixbuf_get_height(gdk_pixbuf),
-	 gdk_pixbuf_get_rowstride(gdk_pixbuf));
-    return PycairoSurface_FromSurface (surface, &PycairoImageSurface_Type,
-				       (PyObject *)py_pixbuf);
-}
 
 #ifndef HAVE_GTK28
 /* copied from gtk+/gdk/gdkcairo.c and gtk+/gdk/x11/gdkdrawable-x11.c
  * gdk_cairo_create() will be available in gtk 2.8
  */
 static cairo_t *
-gdk_cairo_create (GdkDrawable *drawable)
+gdk_cairo_create (GdkDrawable *target)
 {
     int width, height;
-    cairo_t *cr = NULL;
-    cairo_surface_t *surface = NULL;
-    GdkVisual *visual = gdk_drawable_get_visual (drawable);
+    int x_off=0, y_off=0;
+    cairo_t *cr;
+    cairo_surface_t *surface;
+    GdkDrawable *drawable = target;
+    GdkVisual *visual;
 
+    if (GDK_IS_WINDOW(target)) {
+        /* query the window's backbuffer if it has one */
+	GdkWindow *window = GDK_WINDOW(target);
+	gdk_window_get_internal_paint_info (window,
+					    &drawable, &x_off, &y_off);
+    }
+    visual = gdk_drawable_get_visual (drawable);
     gdk_drawable_get_size (drawable, &width, &height);
-    if (visual) 
+
+    if (visual) {
 	surface = cairo_xlib_surface_create (GDK_DRAWABLE_XDISPLAY (drawable),
 					     GDK_DRAWABLE_XID (drawable),
 					     GDK_VISUAL_XVISUAL (visual),
 					     width, height);
-    else if (gdk_drawable_get_depth (drawable) == 1)
-	surface = cairo_xlib_surface_create_for_bitmap 
+    } else if (gdk_drawable_get_depth (drawable) == 1) {
+	surface = cairo_xlib_surface_create_for_bitmap
 	    (GDK_PIXMAP_XDISPLAY (drawable),
 	     GDK_PIXMAP_XID (drawable),
 	     GDK_SCREEN_XSCREEN (gdk_drawable_get_screen (drawable)),
 	     width, height);
-    else {
+    } else {
 	g_warning ("Using Cairo rendering requires the drawable argument to\n"
 		   "have a specified colormap. All windows have a colormap,\n"
 		   "however, pixmaps only have colormap by default if they\n"
@@ -119,10 +93,9 @@ gdk_cairo_create (GdkDrawable *drawable)
 		   "gdk_drawable_set_colormap");
 	return NULL;
     }
-    if (surface) {
-	cr = cairo_create (surface);
-	cairo_surface_destroy (surface);
-    }
+    cairo_surface_set_device_offset (surface, -x_off, -y_off);
+    cr = cairo_create (surface);
+    cairo_surface_destroy (surface);
     return cr;
 }
 #endif
@@ -144,8 +117,6 @@ pygdk_cairo_create(PyObject *self, PyObject *args)
 
 static PyMethodDef cairogtk_functions[] = {
     { "gdk_cairo_create", (PyCFunction)pygdk_cairo_create,     METH_VARARGS },
-    { "surface_create_for_pixbuf", 
-      (PyCFunction)surface_create_for_pixbuf,                  METH_VARARGS },
     { NULL, NULL, 0 }
 };
 
@@ -163,8 +134,6 @@ initgtk(void)
     mod = PyImport_ImportModule("gtk.gdk");
     if (!mod)
 	return;
-    _PyGdkDrawable_Type = (PyTypeObject *)PyObject_GetAttrString(mod, 
+    _PyGdkDrawable_Type = (PyTypeObject *)PyObject_GetAttrString(mod,
 								 "Drawable");
-    _PyGdkPixbuf_Type   = (PyTypeObject *)PyObject_GetAttrString(mod, 
-								 "Pixbuf");
 }
