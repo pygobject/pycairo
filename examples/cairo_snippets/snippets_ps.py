@@ -32,7 +32,7 @@ def do_snippet (snippet):
         execfile ('snippets/%s.py' % snippet, globals(), locals())
     except:
         exc_type, exc_value = sys.exc_info()[:2] 
-        print exc_type, exc_value
+        print >> sys.stderr, exc_type, exc_value
     else:
         cr.restore()
         cr.show_page()

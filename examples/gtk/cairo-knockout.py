@@ -68,9 +68,9 @@ def draw (ctx, width, height):
     yc = height / 2.
     
     target  = ctx.get_target()
-    overlay = target.create_similar(cairo.FORMAT_ARGB32, width, height)
-    punch   = target.create_similar(cairo.FORMAT_A8,     width, height)
-    circles = target.create_similar(cairo.FORMAT_ARGB32, width, height)
+    overlay = target.create_similar(cairo.CONTENT_COLOR_ALPHA, width, height)
+    punch   = target.create_similar(cairo.CONTENT_ALPHA, width, height)
+    circles = target.create_similar(cairo.CONTENT_COLOR_ALPHA, width, height)
 
     fill_checks(ctx, 0, 0, width, height)
 

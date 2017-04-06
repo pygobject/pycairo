@@ -308,7 +308,8 @@ static PyObject *
 pycairo_get_font_face (PycairoContext *o)
 {
     cairo_font_face_t *font_face = cairo_get_font_face (o->ctx);
-    if (!font_face) {
+    /* remove this block when cairo_get_font_face returns _cairo_font_face_nil;*/
+    if (!font_face) { 
 	Pycairo_Check_Status (cairo_status (o->ctx));
 	return NULL;
     }
@@ -322,6 +323,16 @@ pycairo_get_font_matrix (PycairoContext *o)
     cairo_matrix_t matrix;
     cairo_get_font_matrix (o->ctx, &matrix);
     return PycairoMatrix_FromMatrix (&matrix);
+}
+
+static PyObject *
+pycairo_get_font_options (PycairoContext *o)
+{
+    cairo_font_options_t *options = cairo_font_options_create();
+
+    cairo_get_font_options (o->ctx, options);
+    /* there is no reference fn */
+    return PycairoFontOptions_FromFontOptions (options);
 }
 
 static PyObject *
@@ -374,10 +385,6 @@ static PyObject *
 pycairo_get_target (PycairoContext *o)
 {
     cairo_surface_t *surface = cairo_get_target (o->ctx);
-    if (!surface) {
-	Pycairo_Check_Status (cairo_status (o->ctx));
-	return NULL;
-    }
     cairo_surface_reference (surface);
     /* bug #2765 - "How do we identify surface types?"
      * should pass surface type as arg2
@@ -718,20 +725,6 @@ pycairo_set_font_matrix (PycairoContext *o, PyObject *args)
 }
 
 static PyObject *
-pycairo_set_font_size (PycairoContext *o, PyObject *args)
-{
-    double size;
-
-    if (!PyArg_ParseTuple (args, "d:Context.set_font_size", &size))
-	return NULL;
-
-    cairo_set_font_size (o->ctx, size);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
-    Py_RETURN_NONE;
-}
-
-static PyObject *
 pycairo_set_font_face (PycairoContext *o, PyObject *obj)
 {
     if (PyObject_TypeCheck(obj, &PycairoFontFace_Type))
@@ -745,6 +738,35 @@ pycairo_set_font_face (PycairoContext *o, PyObject *obj)
 	return NULL;
     }
 
+    if (Pycairo_Check_Status (cairo_status (o->ctx)))
+	return NULL;
+    Py_RETURN_NONE;
+}
+
+static PyObject *
+pycairo_set_font_options (PycairoContext *o, PyObject *args)
+{
+    PycairoFontOptions *options;
+
+    if (!PyArg_ParseTuple (args, "O!:Context.set_font_options",
+			   &PycairoFontOptions_Type, &options))
+	return NULL;
+
+    cairo_set_font_options (o->ctx, options->font_options);
+    if (Pycairo_Check_Status (cairo_status (o->ctx)))
+	return NULL;
+    Py_RETURN_NONE;
+}
+
+static PyObject *
+pycairo_set_font_size (PycairoContext *o, PyObject *args)
+{
+    double size;
+
+    if (!PyArg_ParseTuple (args, "d:Context.set_font_size", &size))
+	return NULL;
+
+    cairo_set_font_size (o->ctx, size);
     if (Pycairo_Check_Status (cairo_status (o->ctx)))
 	return NULL;
     Py_RETURN_NONE;
@@ -1081,6 +1103,7 @@ static PyMethodDef pycairo_methods[] = {
     {"get_fill_rule",   (PyCFunction)pycairo_get_fill_rule,  METH_NOARGS},
     {"get_font_face",   (PyCFunction)pycairo_get_font_face,  METH_NOARGS},
     {"get_font_matrix", (PyCFunction)pycairo_get_font_matrix,METH_NOARGS},
+    {"get_font_options",(PyCFunction)pycairo_get_font_options,METH_NOARGS},
     {"get_line_cap",    (PyCFunction)pycairo_get_line_cap,   METH_NOARGS},
     {"get_line_join",   (PyCFunction)pycairo_get_line_join,  METH_NOARGS},
     {"get_line_width",  (PyCFunction)pycairo_get_line_width, METH_NOARGS},
@@ -1117,6 +1140,7 @@ static PyMethodDef pycairo_methods[] = {
     {"set_fill_rule",   (PyCFunction)pycairo_set_fill_rule,  METH_VARARGS},
     {"set_font_face",   (PyCFunction)pycairo_set_font_face,  METH_O},
     {"set_font_matrix", (PyCFunction)pycairo_set_font_matrix,METH_VARARGS},
+    {"set_font_options",(PyCFunction)pycairo_set_font_options,METH_VARARGS},
     {"set_font_size",   (PyCFunction)pycairo_set_font_size,  METH_VARARGS},
     {"set_line_cap",    (PyCFunction)pycairo_set_line_cap,   METH_VARARGS},
     {"set_line_join",   (PyCFunction)pycairo_set_line_join,  METH_VARARGS},

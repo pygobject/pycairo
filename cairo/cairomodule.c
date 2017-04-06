@@ -51,6 +51,10 @@ Pycairo_Check_Status (cairo_status_t status)
     case CAIRO_STATUS_NO_MEMORY:
 	PyErr_NoMemory();
 	break;
+    case CAIRO_STATUS_READ_ERROR:
+    case CAIRO_STATUS_WRITE_ERROR:
+	PyErr_SetString(PyExc_IOError, cairo_status_to_string (status));
+	break;
     case CAIRO_STATUS_INVALID_RESTORE:
 	PyErr_SetString(CairoError, "Context.restore without matching "
 			"Context.save");
@@ -71,6 +75,7 @@ Pycairo_Check_Status (cairo_status_t status)
 static Pycairo_CAPI_t CAPI = {
     &PycairoContext_Type,      PycairoContext_FromContext,
     &PycairoFontFace_Type,     PycairoFontFace_FromFontFace,
+    &PycairoFontOptions_Type,  PycairoFontOptions_FromFontOptions,
     &PycairoMatrix_Type,       PycairoMatrix_FromMatrix,
     &PycairoPath_Type,         PycairoPath_FromPath,
     &PycairoPattern_Type,      PycairoPattern_FromPattern,
@@ -107,6 +112,8 @@ init_cairo(void)
         return;
     if (PyType_Ready(&PycairoFontFace_Type) < 0)
         return;
+    if (PyType_Ready(&PycairoFontOptions_Type) < 0)
+        return;
     if (PyType_Ready(&PycairoMatrix_Type) < 0)
         return;
     if (PyType_Ready(&PycairoPath_Type) < 0)
@@ -139,6 +146,8 @@ init_cairo(void)
     PyModule_AddObject(m, "Context", (PyObject *)&PycairoContext_Type);
     Py_INCREF(&PycairoFontFace_Type);
     PyModule_AddObject(m, "FontFace",(PyObject *)&PycairoFontFace_Type);
+    Py_INCREF(&PycairoFontOptions_Type);
+    PyModule_AddObject(m, "FontOptions",(PyObject *)&PycairoFontOptions_Type);
     Py_INCREF(&PycairoMatrix_Type);
     PyModule_AddObject(m, "Matrix",  (PyObject *)&PycairoMatrix_Type);
     Py_INCREF(&PycairoPath_Type);
@@ -246,6 +255,10 @@ init_cairo(void)
     CONSTANT(FORMAT_RGB24);
     CONSTANT(FORMAT_A8);
     CONSTANT(FORMAT_A1);
+
+    CONSTANT(CONTENT_COLOR);
+    CONSTANT(CONTENT_ALPHA);
+    CONSTANT(CONTENT_COLOR_ALPHA);
 
     CONSTANT(OPERATOR_CLEAR);
 

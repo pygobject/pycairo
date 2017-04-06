@@ -49,6 +49,11 @@ typedef struct {
 
 typedef struct {
     PyObject_HEAD
+    cairo_font_options_t *font_options;
+} PycairoFontOptions;
+
+typedef struct {
+    PyObject_HEAD
     cairo_matrix_t matrix;
 } PycairoMatrix;
 
@@ -89,6 +94,9 @@ typedef struct {
 				     PyObject *base);
     PyTypeObject *FontFace_Type;
     PyObject *(*FontFace_FromFontFace)(cairo_font_face_t *font_face);
+    PyTypeObject *FontOptions_Type;
+    PyObject *(*FontOptions_FromFontOptions)(
+                                       cairo_font_options_t *font_options);
     PyTypeObject *Matrix_Type;
     PyObject *(*Matrix_FromMatrix)(const cairo_matrix_t *matrix);
     PyTypeObject *Path_Type;
@@ -116,8 +124,11 @@ typedef struct {
 /* Macros for accessing the C API */
 #define PycairoContext_Type         *(Pycairo_CAPI->Context_Type)
 #define PycairoContext_FromContext   (Pycairo_CAPI->Context_FromContext)
-#define PycairoFontFace_Type        *(Pycairo_CAPI->Fontface_Type)
-#define PycairoFontFace_FromFontFace (Pycairo_CAPI->Fontface_FromFontFace)
+#define PycairoFontFace_Type        *(Pycairo_CAPI->FontFace_Type)
+#define PycairoFontFace_FromFontFace (Pycairo_CAPI->FontFace_FromFontFace)
+#define PycairoFontOptions_Type     *(Pycairo_CAPI->FontOptions_Type)
+#define PycairoFontOptions_FromFontOptions \
+                                    (Pycairo_CAPI->FontOptions_FromFontOptions)
 #define PycairoMatrix_Type          *(Pycairo_CAPI->Matrix_Type)
 #define PycairoMatrix_FromMatrix     (Pycairo_CAPI->Matrix_FromMatrix)
 #define PycairoPath_Type            *(Pycairo_CAPI->Path_Type)
@@ -126,7 +137,7 @@ typedef struct {
 #define PycairoPattern_FromPattern   (Pycairo_CAPI->Pattern_FromPattern)
 #define PycairoScaledFont_Type      *(Pycairo_CAPI->ScaledFont_Type)
 #define PycairoScaledFont_FromScaledFont \
-        (Pycairo_CAPI->ScaledFont_FromScaledFont)
+                                     (Pycairo_CAPI->ScaledFont_FromScaledFont)
 
 #define PycairoSurface_Type         *(Pycairo_CAPI->Surface_Type)
 #define PycairoImageSurface_Type    *(Pycairo_CAPI->ImageSurface_Type)

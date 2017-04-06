@@ -1,11 +1,12 @@
-SUBDIRS = cairo examples
+SUBDIRS = cairo examples test
 
 EXTRA_DIST = \
-  NOTES \
   COPYING \
   COPYING-LGPL-2.1 \
   COPYING-MPL-1.1 \
-  pycairo.pc.in
+  NOTES \
+  pycairo.pc.in \
+  setup.py
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = pycairo.pc

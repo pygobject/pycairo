@@ -81,6 +81,7 @@ class Window (gtk.Window):
 
     def create_text_view (self):
         sw = gtk.ScrolledWindow()
+        sw.set_property ('shadow-type', gtk.SHADOW_IN)
         sw.set_policy (hscrollbar_policy=gtk.POLICY_AUTOMATIC,
                        vscrollbar_policy=gtk.POLICY_AUTOMATIC)
 
@@ -112,6 +113,7 @@ class Window (gtk.Window):
 
     def create_snippet_list (self):
         sw = gtk.ScrolledWindow()
+        sw.set_property ('shadow-type', gtk.SHADOW_IN)        
         sw.set_policy (hscrollbar_policy=gtk.POLICY_NEVER,
                        vscrollbar_policy=gtk.POLICY_AUTOMATIC)
 

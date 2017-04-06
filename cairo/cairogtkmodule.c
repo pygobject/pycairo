@@ -82,15 +82,13 @@ surface_create_for_pixbuf(PyObject *self, PyObject *args)
 	 gdk_pixbuf_get_width(gdk_pixbuf),
 	 gdk_pixbuf_get_height(gdk_pixbuf),
 	 gdk_pixbuf_get_rowstride(gdk_pixbuf));
-    if (!surface)
-	return PyErr_NoMemory();
     return PycairoSurface_FromSurface (surface, &PycairoImageSurface_Type,
 				       (PyObject *)py_pixbuf);
 }
 
 #ifndef HAVE_GTK28
 /* copied from gtk+/gdk/gdkcairo.c and gtk+/gdk/x11/gdkdrawable-x11.c
- * gdk_cairo_create() should be available in gtk 2.8
+ * gdk_cairo_create() will be available in gtk 2.8
  */
 static cairo_t *
 gdk_cairo_create (GdkDrawable *drawable)
@@ -110,6 +108,7 @@ gdk_cairo_create (GdkDrawable *drawable)
 	surface = cairo_xlib_surface_create_for_bitmap 
 	    (GDK_PIXMAP_XDISPLAY (drawable),
 	     GDK_PIXMAP_XID (drawable),
+	     GDK_SCREEN_XSCREEN (gdk_drawable_get_screen (drawable)),
 	     width, height);
     else {
 	g_warning ("Using Cairo rendering requires the drawable argument to\n"
@@ -128,7 +127,7 @@ gdk_cairo_create (GdkDrawable *drawable)
 }
 #endif
 
-/* gdk.cairo_create() should be available in pygtk 2.8 */
+/* gdk.cairo_create() will be available in pygtk 2.8 */
 static PyObject *
 pygdk_cairo_create(PyObject *self, PyObject *args)
 {
@@ -160,7 +159,6 @@ initgtk(void)
 
     Pycairo_IMPORT;
 
-    /* strange way to access the pygtk C API, why not PyGTK_IMPORT ? */
     init_pygtk();
     mod = PyImport_ImportModule("gtk.gdk");
     if (!mod)

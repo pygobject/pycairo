@@ -48,6 +48,10 @@ PyObject *PycairoContext_FromContext (cairo_t *ctx, PyTypeObject *type,
 extern PyTypeObject PycairoFontFace_Type;
 PyObject *PycairoFontFace_FromFontFace (cairo_font_face_t *font_face);
 
+extern PyTypeObject PycairoFontOptions_Type;
+PyObject *PycairoFontOptions_FromFontOptions (
+                                          cairo_font_options_t *font_options);
+
 extern PyTypeObject PycairoMatrix_Type;
 PyObject *PycairoMatrix_FromMatrix (const cairo_matrix_t *matrix);
 

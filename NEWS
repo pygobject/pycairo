@@ -1,4 +1,25 @@
-Snapshot 0.5.1 (2005-05-20 Steve Chaplin <steve1097@yahoo.com.au>)
+Snapshot 0.6.0 (2005-08-01 Steve Chaplin <steve1097@yahoo.com.au>)
+==================================================================
+Changes since 0.5.1:
+
+General changes:
+ Pycairo has been updated to work with cairo 0.6.0, including using cairo's new
+ error handling scheme.
+
+New features:
+ cairo.CONTENT_COLOR, cairo.ALPHA, cairo.COLOR_ALPHA have been added for 
+ working with surfaces.
+
+ A new class cairo.FontOptions has been added.
+
+ cairo.ImageSurface.create_from_png() now accepts a filename string or a file
+ object
+
+ New wrapper functions have been added for cairo_get_font_options, 
+ cairo_set_font_options and cairo_surface_get_font_options.
+
+
+Snapshot 0.5.1 (2005-06-22 Steve Chaplin <steve1097@yahoo.com.au>)
 ==================================================================
 Changes since 0.5.0:
 New features:

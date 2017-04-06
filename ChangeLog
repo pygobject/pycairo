@@ -1,3 +1,127 @@
+=== Pycairo 0.6.0 ===
+2005-08-01  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* configure.ac: increment pycairo and cairo to 0.6.0
+
+	* README : increment required cairo version to 0.6.0
+
+	* setup.py : increment pycairo version to 0.6.0
+
+2005-08-01  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo-context.c (pycairo_get_font_options)
+	(pycairo_set_font_options): new wrappers
+	(pycairo_get_target): use new error checking code
+
+	* cairo/pycairo-surface.c (image_surface_create_from_png): 
+	improve error message for case when fopen() fails, fix a compiler
+	warning.
+	(surface_get_font_options): new wrapper
+
+	* cairo/cairomodule.c (Pycairo_Check_Status): map
+	CAIRO_STATUS_READ_ERROR and CAIRO_STATUS_WRITE_ERROR onto IOError
+
+2005-08-01  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/cairogtkmodule.c (surface_create_for_pixbuf): 
+	* cairo/pycairo-font.c: 
+	* cairo/pycairo-surface.c: 
+	update to use new font and surface error objects
+
+2005-07-29  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* cairo/pycairo-surface.c (surface_finish): Do not use the
+	cairo_surface_finish() return value to check for error status,
+	instead use cairo_surface_status().
+
+	* cairo/pycairo-font.c (scaled_font_extents): Do not use the
+	cairo_scaled_font_extents() return value to check for error
+	status, instead use cairo_scaled_font_status().
+
+	* configure.ac: Really add test/Makefile to AC_CONFIG_FILES>
+
+2005-07-25  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo-surface.c (image_surface_create_from_png): update to
+	accept a file object. (it requires a cairo version which fixes bug 
+	#3863)
+
+	* NOTES : Add note showing cairo.ImageSurface.create_from_png()
+	accepting a file object argument.
+
+2005-07-24  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* examples/gtk/cairo-knockout.py (draw): update create_similar() to
+	use cairo.CONTENT_ args
+
+2005-07-24  Steve Chaplin  <steve1097@yahoo.com.au>
+
+        Update so the tests get added to each snapshot
+	* configure.ac : add test/Makefile to AC_CONFIG_FILES
+	* Makefile.am (SUBDIRS): add test
+	* test/.cvsignore: add new file
+	* test/Makefile.am : add new file
+
+2005-07-23  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* NOTES : 
+	* cairo/cairomodule.c: 
+	* cairo/pycairo.h: 
+	* cairo/pycairo-private.h: 
+	* cairo/pycairo-font.c : add support for cairo_font_options_t
+	by creating cairo.FontOptions class (overwrites previous commit)
+
+2005-07-22  Carl Worth  <cworth@cworth.org>
+
+	* cairo/pycairo-font.c: (scaled_font_new): Add new
+	cairo_font_options argument now needed in call to
+	cairo_scaled_font_create.
+
+2005-07-22  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/cairogtkmodule.c : update/delete a few comments
+
+	* configure.ac: optionally require GTK+ >= 2.2.0, PyGTK >= 2.2.0
+	since gdk_drawable_get_screen() is a GTK+ 2.2 function
+	
+	* README : note that optional PyGTK support requires PyGTK >= 2.2.0
+
+2005-07-21  Malcolm Tredinnick <malcolm@commsecure.com.au>
+
+	* cairo/cairogtkmodule.c: track recent changes in cairo
+	-- specifically, cairo_xlib_surface_create_for_bitmap -- in the
+	case where gtk-2.7/2.8 is not available.
+
+2005-07-12  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo-surface.c (surface_create_similar): track cairo change
+	- change cairo_format_t to cairo_content_t
+
+	* cairo/cairomodule.c (init_cairo): add the constants
+	cairo.CONTENT_COLOR/ALPHA/COLOR_ALPHA
+
+2005-07-01  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* examples/cairo_snippets/snippets_gtk.py : 
+	update to use the 'shadow-type' property to draw a border round the 
+	ScrolledWindows
+
+2005-06-24  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* Makefile.am (EXTRA_DIST): add setup.py
+
+2005-06-23  Steve Chaplin  <steve1097@yahoo.com.au>
+	
+	* cairo/Makefile.am: install __init__.py to
+	$prefix/lib64/site-packages/cairo on 64-bit systems. Fixes #3587
+
+2005-06-22  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* README : update to note new versions of cairo, libsvg-cairo
+	required
+
+	* RELEASING: note to increment version numbers in README
+
 === Pycairo 0.5.1 ===
 2005-06-22  Steve Chaplin  <steve1097@yahoo.com.au>
 

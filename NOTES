@@ -67,6 +67,12 @@ ff = cairo.FontFace() # does not work, FontFace cannot be instantiated
 ff = Context.get_font_face()
 
 
+cairo.FontOptions
+-----------------
+C : fo = cairo_font_options_create();
+Py: fo = cairo.FontOptions()
+
+
 cairo.Matrix
 ------------
 C : cairo_matrix_init (cairo_matrix_t *matrix, xx, yx, xy, yy, x0, y0);
@@ -127,10 +133,12 @@ Surfaces are implemented in a class hierarchy:
 
 C : surface = cairo_image_surface_create (format, width, height);
     surface = cairo_image_surface_create_from_png (filename);
+    surface = cairo_image_surface_create_from_png_stream (read_func, closure);
     not available
 
 Py: surface = cairo.ImageSurface (format, width, height)
     surface = cairo.ImageSurface.create_from_png (filename)
+    surface = cairo.ImageSurface.create_from_png (file_object)
     surface = cairo.ImageSurface.create_for_array (array)
               # create a surface from a Numerical Python array
 

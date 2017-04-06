@@ -3,14 +3,14 @@ AC_PREREQ(2.54)
 
 # the pycairo version number
 m4_define(pycairo_major_version, 0)
-m4_define(pycairo_minor_version, 5)
-m4_define(pycairo_micro_version, 1)
+m4_define(pycairo_minor_version, 6)
+m4_define(pycairo_micro_version, 0)
 m4_define(pycairo_version, pycairo_major_version.pycairo_minor_version.pycairo_micro_version)
 
 # versions of packages we require
-m4_define(cairo_required_version,    0.5.1)
-m4_define(gtk_required_version,      2.0.0)
-m4_define(pygtk_required_version,    1.99.16)
+m4_define(cairo_required_version,    0.6.0)
+m4_define(gtk_required_version,      2.2.0)
+m4_define(pygtk_required_version,    2.2.0)
 m4_define(libsvg_cairo_required_version, 0.1.6)
 
 AC_INIT(pycairo, pycairo_version)
@@ -146,6 +146,7 @@ pycairo.pc
 cairo/__init__.py
 cairo/Makefile
 examples/Makefile
+test/Makefile
 ])
 
 AC_OUTPUT
