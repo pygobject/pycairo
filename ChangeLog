@@ -1,5 +1,66 @@
+=== Pycairo 1.8.2 ===
+2009-01-15  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* NEWS: update news for 1.8.2 release
+
+	* configure.ac:
+	* cairo/cairomodule.c:
+	* README:
+	* setup.py:
+	Increase pycairo version to 1.8.2, require cairo 1.8.2
+
+	* doc/reference/surfaces.rst: update docs
+
+2009-01-09  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* AUTHORS:
+	* ChangeLog: correct misspelling of my email address.
+
+2009-01-07  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* doc/reference/context.rst: add line for
+	Context.set_scaled_font()
+
+	* cairo/pycairo-context.c (pycairo_set_scaled_font):
+	add new wrapper for Context.set_scaled_font()
+
+2009-01-01 Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* cairo/pycairo-surface.c (svg_surface_new):
+	Remove ALLOW_THREADS from all cairo stream functions.
+	#19287.
+
+	* INSTALL: remove reference to the method
+        ImageSurface.create_for_array() - it no longer exists.
+
+	* doc/README: update with web address of pycairo docs
+
+	* doc/conf.py: update docs to version 1.8.1
+	* doc/c-api.rst:
+	* doc/reference/context.rst:
+	* doc/reference/index.rst:
+	* doc/reference/surfaces.rst:
+	modify titles
+
+2008-12-27  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* doc/reference/matrix.rst: update matrix multiply docs.
+
+	* cairo/pycairo-matrix.c (matrix_multiply):
+	Change 'cairo.Matrix * cairo.Matrix' to be consistent with standard
+	matrix multiplication.
+	Add cairo.Matrix.multiply() to wrap cairo_matrix_multiply()
+	Fixes #19221, patch by Pietro Battiston
+
+2008-12-15  Steven Chaplin  <stevech1097 # yahoo.com.au>
+
+	* configure.ac:
+	* cairo/cairomodule.c:
+	* setup.py:
+	increment version to 1.8.1
+
 === Pycairo 1.8.0 ===
-2008-12-15  Steven Chaplin  <steve1097 # yahoo.com.au>
+2008-12-15  Steven Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac:
 	* cairo/cairomodule.c:
@@ -8,13 +69,13 @@
 
 	* NEWS: update for the 1.8.0 release
 
-2008-12-15  Steven Chaplin  <steve1097 # yahoo.com.au>
+2008-12-15  Steven Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-pattern.c (surface_pattern_get_surface): return the
 	PycairoSurface used to create the PycairoSurfacePattern, instead of
 	creating a new PycairoSurface.
 
-2008-12-10  Steven Chaplin  <steve1097 # yahoo.com.au>
+2008-12-10  Steven Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-private.h:
 	* cairo/pycairo.h (struct): add 'base' field for PycairoPattern
@@ -28,7 +89,7 @@
 
 	* cairo/pycairo-surface.c: update PycairoSurface_FromSurface comment.
 
-2008-12-10  Steven Chaplin  <steve1097 # yahoo.com.au>
+2008-12-10  Steven Chaplin  <stevech1097 # yahoo.com.au>
 	* RELEASING: add doc generating notes
 
 	* configure.ac: add 'doc/Makefile' to AC_CONFIG_FILES.
@@ -80,7 +141,7 @@
 	* examples/cairo_snippets/snippets_gtk.py:
 	update so it can be run from outside its directory
 
-2008-11-25  Steven Chaplin  <steve1097 # yahoo.com.au>
+2008-11-25  Steven Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c:
 	* cairo/pycairo-surface.c:
@@ -100,11 +161,11 @@
 	* cairo/pycairo-surface.c:
 	use CAIRO_HAS_IMAGE_SURFACE
 
-2008-09-09  Steven Chaplin  <steve1097 # yahoo.com.au>
+2008-09-09  Steven Chaplin  <stevech1097 # yahoo.com.au>
 
 	* NEWS: fix pycairo version number error
 
-2008-09-01  Steven Chaplin  <steve1097 # yahoo.com.au>
+2008-09-01  Steven Chaplin  <stevech1097 # yahoo.com.au>
 
 	* setup.py (pycairo_version):
 	* cairo/cairomodule.c:
@@ -117,7 +178,7 @@
 	Pattern/Surface type, patch by Owen Taylor.
 
 === Pycairo 1.6.4 ===
-2008-07-17  Steven Chaplin  <steve1097 # yahoo.com.au>
+2008-07-17  Steven Chaplin  <stevech1097 # yahoo.com.au>
 
 	* NEWS: update for 1.6.4 release
 
@@ -126,7 +187,7 @@
 	* configure.ac:
 	update pycairo version to 1.6.4
 
-2008-07-17  Steven Chaplin  <steve1097 # yahoo.com.au>
+2008-07-17  Steven Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/cairo_snippets/snippets/ellipse.py (path_ellipse): Update
 	so line-width is a constant width in device-space not user-space
@@ -136,12 +197,12 @@
 	* test/Makefile.am (EXTRA_DIST)
 	* test/pygame-test1.py, test/pygame-test2.py : Add new tests
 
-2008-07-17  Steven Chaplin  <steve1097 # yahoo.com.au>
+2008-07-17  Steven Chaplin  <stevech1097 # yahoo.com.au>
 
 	* setup.py (pkg_config_version_check): apply patch (modified) from
 	Kirill Smelkov to fix #16112.
 
-2008-05-12  Steven Chaplin  <steve1097 # yahoo.com.au>
+2008-05-12  Steven Chaplin  <stevech1097 # yahoo.com.au>
 
 	* test/isurface_create_for_data1.py:
 	* test/isurface_create_for_data2.py:
@@ -166,7 +227,7 @@
 
 	* cairo/pycairo-private.h: remove code used for Python < 2.5
 
-2008-05-08  Steven Chaplin  <steve1097 # yahoo.com.au>
+2008-05-08  Steven Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c: add new constants cairo.PS_LEVEL_2 and
 	cairo.PS_LEVEL_3
@@ -175,7 +236,7 @@
 	Add some new cairo 1.6.4 API - apply patch (with some changes)
 	from Tom Hughes to fix #15618.
 
-2007-12-13  Steven Chaplin  <steve1097 # yahoo.com.au>
+2007-12-13  Steven Chaplin  <stevech1097 # yahoo.com.au>
 
 	* setup.py (pycairo_version):
 	* cairo/cairomodule.c:
@@ -183,7 +244,7 @@
 	Increment pycairo version to 1.4.13
 
 === Pycairo 1.4.12 ===
-2007-12-13  Steven Chaplin  <steve1097 # yahoo.com.au>
+2007-12-13  Steven Chaplin  <stevech1097 # yahoo.com.au>
 
 	* NEWS: update for version 1.4.12
 
@@ -201,7 +262,7 @@
 	* setup.py (pycairo_version):
 	Require cairo 1.4.12
 
-2007-12-12  Steven Chaplin  <steve1097 # yahoo.com.au>
+2007-12-12  Steven Chaplin  <stevech1097 # yahoo.com.au>
 
 	* FAQ: new file
 
@@ -211,7 +272,7 @@
 
 	* test/test.py (_test): Remove line checking for Python < 2.4
 
-2007-12-11  Steven Chaplin  <steve1097 # yahoo.com.au>
+2007-12-11  Steven Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c (pycairo_dealloc):
 	* cairo/pycairo-pattern.c (pattern_dealloc):
@@ -227,25 +288,25 @@
 	- its not a good 'default' since it caused the subclassing problem
 	fixed above.
 
-2007-12-02  Steven Chaplin  <steve1097 # yahoo.com.au>
+2007-12-02  Steven Chaplin  <stevech1097 # yahoo.com.au>
 
 	* acinclude.m4 : Fix #13460 by applying the patch from Sebastien
 	Bacher,	and rearranging a couple of lines.
 
-2007-11-20  Steven Chaplin  <steve1097 # yahoo.com.au>
+2007-11-20  Steven Chaplin  <stevech1097 # yahoo.com.au>
 
 	* setup.py: update to use subprocess, and require Python 2.4
 
 	* cairo/pycairo-matrix.c (matrix_as_number): fix a compiler warning.
 
-2007-04-06  Steve Chaplin  <steve1097 # yahoo.com.au>
+2007-04-06  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac (AC_PROG_LIBTOOL): Add version number required (as a
 	comment) for use by autogen.sh
 	* autogen.sh: Synchronize with the new cairo autogen.sh - to update
 	version checking for automake. Fixes #10006
 
-2007-03-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2007-03-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac:
 	* cairo/cairomodule.c:
@@ -253,11 +314,11 @@
 	increase pycairo version to 1.4.1
 
 === Pycairo 1.4.0 ===
-2007-03-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2007-03-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 	* README:
 	* NEWS: update for version 1.4.0
 
-2007-03-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2007-03-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac:
 	* setup.py:
@@ -266,7 +327,7 @@
 
 	* cairo/pycairo-context.c (pycairo_get_scaled_font): new binding
 
-2007-01-21  Steve Chaplin  <steve1097 # yahoo.com.au>
+2007-01-21  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c (pycairo_get_dash)
 	(pycairo_copy_clip_rectangles, pycairo_get_dash_count):
@@ -276,7 +337,7 @@
 	* setup.py:
 	Set pycairo version to 1.3.11, require cairo 1.3.12
 
-2007-01-17  Steve Chaplin  <steve1097 # yahoo.com.au>
+2007-01-17  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* README:
 	* NOTES:
@@ -288,7 +349,7 @@
 	* test/isurface_create_for_array.py: delete file
 	* test/Makefile.am (EXTRA_DIST): remove isurface_create_for_array.py
 
-2007-01-16  Steve Chaplin  <steve1097 # yahoo.com.au>
+2007-01-16  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c:
 	* cairo/pycairo-context.c:
@@ -300,13 +361,13 @@
 	* cairo/pycairo-surface.c:
         Add support for Py_ssize_t from Python 2.5
 
-2007-01-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2007-01-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c (_PyGlyphs_AsGlyphs): new utility function
 	used by the pycairo_glyph_extents, pycairo_glyph_path and
 	pycairo_show_glyphs.
 
-2007-01-13  Steve Chaplin  <steve1097 # yahoo.com.au>
+2007-01-13  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c (pycairo_show_glyphs, pycairo_glyph_path)
 	(pycairo_glyph_extents): new bindings.
@@ -316,7 +377,7 @@
 
 	* examples/Makefile.am : add glyph_path.py, show_glyphs.py
 
-2007-01-08  Steve Chaplin  <steve1097 # yahoo.com.au>
+2007-01-08  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-private.h add RETURN_NULL_IF_CAIRO_SCALED_FONT_ERROR
 	and RETURN_NULL_IF_CAIRO_FONT_OPTIONS_ERROR
@@ -334,7 +395,7 @@
 	* cairo/pycairo-context.c (pycairo_copy_clip_rectangles): tidy up the
 	loop.
 
-2006-12-28  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-12-28  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c:
 	* cairo/pycairo-private.h: Move RETURN_NULL_IF_*_STATUS_ERROR macros
@@ -353,23 +414,23 @@
 	* cairo/pycairo-context.c (pycairo_copy_clip_rectangles): new binding
 	(pycairo_new): use PycairoContext_FromContext
 
-2006-12-28  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-12-28  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c (pycairo_get_dash): Add new bindings.
 	(pycairo_set_dash): update to be consistent with pycairo_get_dash
 
-2006-12-28  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-12-28  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c: increment pycairo version to 1.3.1
 
-2006-12-28  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-12-28  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-pattern.c (surface_pattern_get_surface)
 	(linear_gradient_get_linear_points)
 	(radial_gradient_get_radial_circles):
 	Add new bindings.
 
-2006-12-28  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-12-28  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (PycairoSurface_FromSurface): update the
 	comment to list all surfaces supported.
@@ -378,7 +439,7 @@
 	'*_new' constructors.
 	(solid_pattern_get_rgba): Add new bindings.
 
-2006-12-27  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-12-27  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac:
 	* setup.py (pycairo_version):
@@ -388,7 +449,7 @@
 	(pycairo_get_dash_count):
 	Add new bindings
 
-2006-12-21  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-12-21  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairogtkmodule.c: remove file
 	Remove the cairo.gtk module (pygtk 2.7.0 onwards has cairo support
@@ -410,7 +471,7 @@
 	* examples/cairo_snippets/snippets_gtk.py:
 	Update examples to run without using the cairo.gtk module
 
-2006-12-21  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-12-21  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c: remove unused #include <stdint.h>
 
@@ -419,7 +480,7 @@
 	Make declarations at top of the block - changes to downgrade from C99
 	to ANSI/ISO standard C, patch from Akihiko Hayashi, fixes bug #8910.
 
-2006-11-27  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-11-27  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac:
 	* cairo/cairomodule.c:
@@ -427,7 +488,7 @@
 	increment pycairo version to 1.2.7
 
 === Pycairo 1.2.6 ===
-2006-11-27  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-11-27  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac :
 	* cairo/cairomodule.c :
@@ -437,14 +498,14 @@
 
 	* NEWS: list changes for 1.2.6
 
-2006-11-27  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-11-27  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: replace AC_HELP_STRING with AS_HELP_STRING
 
 	* test/isurface_get_data.py : update to use numpy to write to the
 	surface.
 
-2006-11-20  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-11-20  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (image_surface_get_data_as_rgba): Delete
 	method (at request of Carl Worth) since language bindings should not
@@ -454,7 +515,7 @@
 
 	* test/Makefile.am (EXTRA_DIST): remove isurface_get_data_as_rgba.py
 
-2006-11-20  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-11-20  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (image_surface_buffer_getreadbuf)
 	(image_surface_buffer_getwritebuf, image_surface_buffer_getsegcount):
@@ -480,7 +541,7 @@
 	* cairo/cairomodule.c (init_cairo): Initialize
 	PycairoPathiter_Type.tp_iter.
 
-2006-08-21  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-08-21  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* RELEASING: update step 8.
 
@@ -490,7 +551,7 @@
 	increment version to 1.2.3
 
 === Pycairo 1.2.2 ===
-2006-08-21  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-08-21  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/Makefile.am (pycairoexec_PYTHON): remove 'nodist_' from
 	__init__.py
@@ -501,18 +562,18 @@
 
 	* configure.ac: increment pycairo to 1.2.2, and require cairo 1.2.2.
 
-2006-08-19  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-08-19  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* INSTALL: add notes for new install method.
 
 	* setup.py : install pycairo.h and pycairo.pc files.
 
-2006-08-17  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-08-17  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* setup.py: update so 'python setup.py install' can be used as an
 	alternative install method.
 
-2006-08-16  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-08-16  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/__init__.py: add new file
 	* cairo/__init__.py.in: remove file
@@ -523,19 +584,19 @@
 	move version and version_info module attributes from __init__.py to
 	cairomodule.c
 
-2006-08-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-08-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* NOTES : update to note surface creation supports file-like objects.
 
 	* INSTALL: update
 
-2006-08-07  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-08-07  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/Makefile.am:
 	* examples/cairo_snippets/snippets/gradient_mask.py:
 	Add new snippet	copied from Michael Urman's cairo tutorial.
 
-2006-08-04  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-08-04  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	Remove the cairo.svg module because
 	1) Cairo does not include SVG parsing, so this module does not belong
@@ -576,16 +637,16 @@
 	* examples/svg/svgconvert.py
 	* examples/svg/svgview.py
 
-2006-07-19  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-07-19  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* README : Update to match info at http://www.cairographics.org/pycairo
 
-2006-07-03  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-07-03  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: increment to version 1.2.1
 
 === Pycairo 1.2.0 ===
-2006-07-03  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-07-03  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac:
 	* NEWS:
@@ -596,7 +657,7 @@
 	* cairo/pycairo-surface.c (image_surface_to_rgba): rename to
 	image_surface_get_data_as_rgba
 
-2006-07-01  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-07-01  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac : fix problem where Numeric was not being detected.
 	require cairo 1.2.0
@@ -607,7 +668,7 @@
 	add support for CAIRO_FORMAT_RGB16_565
 	(xlib_surface_get_height, xlib_surface_get_width): new bindings
 
-2006-06-26  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-06-26  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* INSTALL: Remove obsolete notes about RGBA patch
 
@@ -618,7 +679,7 @@
 	longer needed now that we have the new functions
 	cairo_image_surface_get_date/height/stride.
 
-2006-06-25  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-06-25  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: increase required cairo version to 1.1.8
 
@@ -629,12 +690,12 @@
 	(xlib_surface_get_depth):
 	use PyInt_FromLong instead of Py_BuildValue.
 
-2006-06-22  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-06-22  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (image_surface_create_from_png): rewrite to
 	be consistent with the method used for surface_write_to_png.
 
-2006-06-11  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-06-11  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (pdf_surface_set_dpi, ps_surface_set_dpi)
 	(svg_surface_set_dpi): delete and replace with the new function
@@ -648,7 +709,7 @@
 	used
 
 === Pycairo 1.1.6 ===
-2006-05-29  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-05-29  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-pattern.c (PycairoPattern_FromPattern): fix a compiler
 	warning.
@@ -663,7 +724,7 @@
 	* autogen.sh : update by using a (slightly modified) copy of the cairo
 	autogen.sh, fixes #7048.
 
-2006-05-28  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-05-28  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/cairo_snippets/snippets_pdf.py (do_snippet):
 	* examples/cairo_snippets/snippets_ps.py (do_snippet):
@@ -680,7 +741,7 @@
 	* cairo/pycairo-surface.c (ps_surface_new, pdf_surface_new)
 	(svg_surface_new): update to support file and file-like objects.
 
-2006-05-26  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-05-26  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (surface_write_to_png): For a filename
 	argument use cairo_surface_write_to_png instead of
@@ -688,12 +749,12 @@
 	Combine the two sections of code which handle a file object and a
 	file-like object.
 
-2006-05-17  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-05-17  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c: add new binding for
 	cairo_pdf_surface_set_size
 
-2006-05-16  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-05-16  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c: add new bindings for
 	cairo_surface_get_device_offset
@@ -701,7 +762,7 @@
 
 	* cairo/pycairo-context.c: add new binding for cairo_get_group_target
 
-2006-05-15  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-05-15  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: require cairo 1.1.6
 
@@ -714,13 +775,13 @@
 	* examples/cairo_snippets/snippets/group.py: new snippet
 	* examples/Makefile.am (EXTRA_DIST): add group.py
 
-2006-05-13  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-05-13  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c : add new bindings for
 	cairo_ps_surface_dsc_begin_page_setup
 	cairo_ps_surface_dsc_begin_setup
 
-2006-05-07  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-05-07  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: require cairo 1.1.4
 
@@ -730,7 +791,7 @@
 
 	* NOTES: Add XlibSurface
 
-2006-05-01  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-05-01  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c:
 	* cairo/pycairo-private.h:
@@ -744,7 +805,7 @@
 	* cairo/pycairo-surface.c (PycairoSurface_FromSurface): Raise exception
 	for unsupported surfaces. Add support for XlibSurface.
 
-2006-04-30  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-04-30  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c (pycairo_get_source, pycairo_get_target):
 	rearrange functions.
@@ -754,14 +815,14 @@
 	when there is no error, whereas the old code made 2 function
 	calls.
 
-2006-04-29  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-04-29  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/Makefile.am (EXTRA_DIST):
 	add cairo_snippets/snippets/ellipse.py
 
 	* configure.ac: require automake 1.9 and autoconf 2.59
 
-2006-04-29  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-04-29  Steve Chaplin  <stevech1097 # yahoo.com.au>
 	* cairo/pycairo-context.c (__PyBaseString_AsUTF8): Remove 'static' so
 	function can be used from other files.
 	(pycairo_new_sub_path): new wrapper for cairo_new_sub_path.
@@ -771,7 +832,7 @@
 	* cairo/pycairo-font.c:
 	add new wrapper for cairo_scaled_font_text_extents
 
-2006-04-29  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-04-29  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-font.c:
 	add new wrapper for cairo_scaled_font_get_font_face
@@ -786,7 +847,7 @@
        	 cairo_scaled_font_get_type
 	do not need to be exposed in a language binding.
 
-2006-04-29  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-04-29  Steve Chaplin  <stevech1097 # yahoo.com.au>
 	* examples/cairo_snippets/snippets/ellipse.py: add new snippet
 
 	* README : Note that cairo 1.1.2 is required. Add notes deprecating
@@ -794,7 +855,7 @@
 
 	* configure.ac: require cairo 1.1.2
 
-2006-04-25  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-04-25  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (PycairoSurface_FromSurface): remove type
 	argument and use cairo_surface_get_type() instead.
@@ -810,7 +871,7 @@
 	* cairo/pycairo-surface.c (PycairoSurface_FromSurface): use
 	ASSERT_NOT_REACHED
 
-2006-03-04  Steve Chaplin <steve1097 # yahoo.com.au>
+2006-03-04  Steve Chaplin <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-pattern.c (PycairoPattern_FromPattern): remove type
 	argument and use cairo_pattern_get_type() instead.
@@ -820,17 +881,17 @@
 	* cairo/pycairo.h:
 	update to use the modified PycairoPattern_FromPattern().
 
-2006-03-04  Steve Chaplin <steve1097 # yahoo.com.au>
+2006-03-04  Steve Chaplin <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-font.c:
 	* cairo/pycairo-pattern.c:
 	make the boolean comparisons explicit.
 
-2006-03-04  Steve Chaplin <steve1097 # yahoo.com.au>
+2006-03-04  Steve Chaplin <stevech1097 # yahoo.com.au>
 
 	* AUTHORS: change my email address
 
-2006-01-23  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-01-23  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo.h: add missing SVGSurface_Type to Pycairo_CAPI_t
 
@@ -845,7 +906,7 @@
 	new bindings, applied patch from raulir, with some changes,
 	fixes #5689.
 
-2006-01-22  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-01-22  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c (__PyBaseString_AsUTF8): new function.
 	(pycairo_select_font_face, pycairo_show_text, pycairo_text_extents)
@@ -853,7 +914,7 @@
 	allow the string argument to be a unicode or string object, and convert
 	to UTF-8 encoding, fixes #5654.
 
-2006-01-20  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-01-20  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/cairo_snippets/snippets_gtk.py (Window.put_in_frame):
 	delete unused self._bg_rgb
@@ -866,18 +927,18 @@
 	* examples/gtk/cairo-demo.py (expose): remove unused da.allocation
 	* examples/gtk/cairo-knockout.py (expose): simplify
 
-2006-01-20  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-01-20  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/cairo_snippets/snippets/__init__.py: whitespace changes
 	* examples/cairo_snippets/snippets_gtk.py: remove code to draw a
 	rectangular background - its not needed.
 
-2006-01-17  Steve Chaplin  <steve1097 # yahoo.com.au>
+2006-01-17  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (image_surface_create_for_data): for
 	CAIRO_FORMAT_RGB24 set stride = width * 4 (not 3), fixes #5633
 
-2005-12-16  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-12-16  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (image_surface_create_from_png): update
 	ImageSurface.create_from_png(f) so that 'f' can be a file-like object
@@ -885,7 +946,7 @@
 
 	* NOTES : update notes for ImageSurface.create_from_png()
 
-2005-12-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-12-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c :
 	* cairo/pycairo.h:
@@ -900,7 +961,7 @@
 	* NOTES : update cairo.Surface section to show that SVGSurface is now
 	supported
 
-2005-12-12  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-12-12  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/svg/svgconvert.py : New file - convert SVG files to
 	PDF, PNG or PS, uses patch from Aldo Nicolas Bruno.
@@ -908,12 +969,12 @@
 	* examples/Makefile.am (EXTRA_DIST): add svgconvert.py, delete
 	svg2png.py
 
-2005-11-10  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-11-10  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: change AC_INIT to point to pycairo (not cairo)
 	bugzilla. Remove the redundant automake conditional HAVE_NUMPY.
 
-2005-10-17  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-10-17  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* INSTALL: add notes for installing get_data patch
 
@@ -927,23 +988,23 @@
 
 	* cairo/pycairo-surface.c (image_surface_to_rgba): new function
 
-2005-10-12  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-10-12  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (surface_write_to_png): add support for
 	StringIO and cStringIO objects.
 
 	* NOTES : update notes for surface.write_to_png()
 
-2005-10-11  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-10-11  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* RELEASING: update step 4 - check for uncommitted changes.
 
-2005-10-11  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-10-11  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: Increment pycairo version to 1.0.3
 
 === Pycairo 1.0.2 ===
-2005-10-11  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-10-11  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* NEWS: update for 1.0.2
 
@@ -951,7 +1012,7 @@
 	* README :
 	* configure.ac: Increment pycairo version to 1.0.2, require cairo 1.0.2
 
-2005-10-03  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-10-03  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-matrix.c (matrix_get_xx, matrix_get_yx, matrix_get_xy)
 	(matrix_get_yy, matrix_get_x0, matrix_get_y0, matrix_get_value):
@@ -961,14 +1022,14 @@
 
 	* NOTES : update cairo.Matrix notes
 
-2005-09-28  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-09-28  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* NOTES : add note for cairo.ImageSurface.create_for_data()
 
 	* cairo/pycairo-surface.c (pycairo_read_func, pycairo_write_func):
 	rename to _read_func and _write_func
 
-2005-09-22  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-09-22  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* test/cairo_image_surface_create_for_data.py : rename to
 	test/for_data1.py:
@@ -976,7 +1037,7 @@
 	* test/for_data3.py: add new test using numarray
 	* test/Makefile.am (EXTRA_DIST): add/update filenames
 
-2005-09-22  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-09-22  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* test/cairo_image_surface_create_for_data.py : update
 
@@ -985,33 +1046,33 @@
 	(pycairo_write_func): add 'const' to 'unsigned char *data' to fix
 	compiler warning.
 
-2005-09-11  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-09-11  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* INSTALL: explain that cairo.gtk is not built if pygtk >= 2.7.0 is
 	detected.
 
-2005-09-05  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-09-05  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* README : note that libsvg-cairo, Numeric, and PyGTK are NOT required,
 	but are supported if detected.
 
-2005-09-05  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-09-05  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* NOTES :
 	* cairo/pycairo-context.c (pycairo_set_source_rgba): Let alpha be
 	a default argument, ctx.set_source_rgba (r, g, b, a=1.0)
 
-2005-09-01  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-09-01  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: inrcease pycairo version to 1.0.1
 
 === Pycairo 1.0.0 ===
-2005-08-30  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-30  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac:
 	* Makefile.am : fix errors introduced by previous commit
 
-2005-08-30  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-30  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* Makefile.am : update to follow (some of) the new cairo release
 	procedures
@@ -1025,7 +1086,7 @@
 
 	* RELEASING: updated procedure
 
-2005-08-29  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-29  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/gradient.py :
 	* examples/warpedtext.py:
@@ -1041,12 +1102,12 @@
 	* cairo/pycairo-private.h:
 	* cairo/pycairo-pattern.c : rewrite as a hierarchy of Pattern types
 
-2005-08-29  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-29  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/svg/svgview.py :
 	update to work with pygtk >= 2.7.0, create an SVG Widget
 
-2005-08-29  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-29  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/cairo_snippets/snippets_pdf.py :
 	* examples/cairo_snippets/snippets_ps.py: cleanup whitespace
@@ -1060,7 +1121,7 @@
 	* examples/gtk/text.py :
 	update to work with pygtk >= 2.7.0
 
-2005-08-25  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-25  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: require cairo 1.0.0
 
@@ -1069,7 +1130,7 @@
 
 	* NOTES : add note listing surface.write_to_png (file_object)
 
-2005-08-22  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-22  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: require cairo 0.9.3
 
@@ -1080,7 +1141,7 @@
 
 	* NOTES: update to show the cairo_version() functions
 
-2005-08-19  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-19  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c (init_cairo):
 	* cairo/cairosvgmodule.c:
@@ -1094,7 +1155,7 @@
 	structures and initialise the .tp_base field at runtime - fixes
 	problems reported by some compilers.
 
-2005-08-18  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-18  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairosvgmodule.c:
 	* cairo/pycairo-context.c:
@@ -1106,7 +1167,7 @@
 	change PyObject_HEAD_INIT(&PyType_Type) to PyObject_HEAD_INIT(NULL)
 	to fix problems reported by some compilers
 
-2005-08-12  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-12  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairogtkmodule.c (gdk_cairo_create): rename to
 	_gdk_cairo_create and remove the "#ifndef HAVE_GTK28" check
@@ -1114,16 +1175,16 @@
 	* configure.ac : delete HAVE_GTK28 check. If pygtk > 2.7 do not
 	compile cairo.gtk (use pygtk instead)
 
-2005-08-12  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-12  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* RELEASING: add new step #9 - post message to python-announce-list
 
-2005-08-11  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-11  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* NOTES: update the cairo.gtk note
 
 === Pycairo 0.9.0 ===
-2005-08-10  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-10  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: increment pycairo and cairo to 0.9.0
 
@@ -1133,12 +1194,12 @@
 
 	* setup.py : increment pycairo version to 0.9.0
 
-2005-08-10  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-10  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairogtkmodule.c (surface_create_for_pixbuf): delete function
 	- its not much use since cairo's and gdk's image formats are different.
 
-2005-08-09  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-09  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/gtk/cairo-demo.py :
 	* examples/gtk/cairo-knockout.py :
@@ -1153,7 +1214,7 @@
  	* cairo/cairogtkmodule.c (gdk_cairo_create): Query windows for
  	backbuffers to make double buffering work.
 
-2005-08-09  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-09  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c (pycairo_set_antialias)
 	(pycairo_get_antialias): new wrappers
@@ -1167,7 +1228,7 @@
 	* cairo/pycairo-surface.c (surface_mark_dirty, surface_flush): new
 	wrappers
 
-2005-08-08  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-08  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* NEWS : change titles to "Overview of changes from pycairo x.x.x to
 	pycairo y.y.y" and remove my email address.
@@ -1175,16 +1236,16 @@
 	* cairo/pycairo-context.c (pycairo_get_font_face): update since
 	cairo_get_font_face no longer returns NULL on error.
 
-2005-08-08  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-08  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* README : Add link to pycairo home page
 
-2005-08-02  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-02  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* NEWS: updated for 0.6.0
 
 === Pycairo 0.6.0 ===
-2005-08-01  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-01  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: increment pycairo and cairo to 0.6.0
 
@@ -1192,7 +1253,7 @@
 
 	* setup.py : increment pycairo version to 0.6.0
 
-2005-08-01  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-01  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c (pycairo_get_font_options)
 	(pycairo_set_font_options): new wrappers
@@ -1206,7 +1267,7 @@
 	* cairo/cairomodule.c (Pycairo_Check_Status): map
 	CAIRO_STATUS_READ_ERROR and CAIRO_STATUS_WRITE_ERROR onto IOError
 
-2005-08-01  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-08-01  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairogtkmodule.c (surface_create_for_pixbuf):
 	* cairo/pycairo-font.c:
@@ -1225,7 +1286,7 @@
 
 	* configure.ac: Really add test/Makefile to AC_CONFIG_FILES>
 
-2005-07-25  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-07-25  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (image_surface_create_from_png): update to
 	accept a file object. (it requires a cairo version which fixes #3863)
@@ -1233,12 +1294,12 @@
 	* NOTES : Add note showing cairo.ImageSurface.create_from_png()
 	accepting a file object argument.
 
-2005-07-24  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-07-24  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/gtk/cairo-knockout.py (draw): update create_similar() to
 	use cairo.CONTENT_ args
 
-2005-07-24  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-07-24  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
         Update so the tests get added to each snapshot
 	* configure.ac : add test/Makefile to AC_CONFIG_FILES
@@ -1246,7 +1307,7 @@
 	* test/.cvsignore: add new file
 	* test/Makefile.am : add new file
 
-2005-07-23  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-07-23  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* NOTES :
 	* cairo/cairomodule.c:
@@ -1261,7 +1322,7 @@
 	cairo_font_options argument now needed in call to
 	cairo_scaled_font_create.
 
-2005-07-22  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-07-22  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairogtkmodule.c : update/delete a few comments
 
@@ -1276,7 +1337,7 @@
 	-- specifically, cairo_xlib_surface_create_for_bitmap -- in the
 	case where gtk-2.7/2.8 is not available.
 
-2005-07-12  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-07-12  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (surface_create_similar): track cairo change
 	- change cairo_format_t to cairo_content_t
@@ -1284,22 +1345,22 @@
 	* cairo/cairomodule.c (init_cairo): add the constants
 	cairo.CONTENT_COLOR/ALPHA/COLOR_ALPHA
 
-2005-07-01  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-07-01  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/cairo_snippets/snippets_gtk.py :
 	update to use the 'shadow-type' property to draw a border round the
 	ScrolledWindows
 
-2005-06-24  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-06-24  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* Makefile.am (EXTRA_DIST): add setup.py
 
-2005-06-23  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-06-23  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/Makefile.am: install __init__.py to
 	$prefix/lib64/site-packages/cairo on 64-bit systems. Fixes #3587
 
-2005-06-22  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-06-22  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* README : update to note new versions of cairo, libsvg-cairo
 	required
@@ -1307,7 +1368,7 @@
 	* RELEASING: note to increment version numbers in README
 
 === Pycairo 0.5.1 ===
-2005-06-22  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-06-22  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* RELEASING: add note about setup.py version
 
@@ -1318,7 +1379,7 @@
 
 	* NOTES : add Win32Surface
 
-2005-06-22  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-06-22  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/gtk/text.py :
 	* examples/gtk/cairo-demo.py : don't set window title (use the default)
@@ -1332,7 +1393,7 @@
 	use cairo.HAS_PDF_SURFACE, cairo.HAS_PNG_FUNCTIONS,
 	cairo.HAS_PS_SURFACE to check cairo supports the required surfaces.
 
-2005-06-20  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-06-20  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
         Fixes for compiler warnings:
 	* cairo/pycairo-surface.c (image_surface_create_for_array): cast
@@ -1341,34 +1402,34 @@
 	* cairo/cairosvgmodule.c (pycairosvg_get_size): change int to unsigned
 	int width, height
 
-2005-06-20  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-06-20  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/cairo_snippets/snippets_gtk.py: move select_path() to below
 	append_column() to fix problem with initial path not being set.
 
-2005-06-20  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-06-20  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-private.h: remove unnecessary
 	'extern PyObject *CairoError;'
 
-2005-06-16  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-06-16  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: increase optional libsvg-cairo version from 0.1.5 to
 	0.1.6
 
-2005-06-15  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-06-15  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/cairo_snippets/snippets_ps.py:
 	* examples/cairo_snippets/snippets_pdf.py:
 	change width, height to width_in_points, height_in_points
 
-2005-06-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-06-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c (PycairoContext_FromContext, pycairo_new):
 	* cairo/cairogtkmodule.c (pygdk_cairo_create):
 	update to use cairo_t error objects
 
-2005-06-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-06-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-pattern.c:
 	* cairo/pycairo-context.c (pycairo_get_source):
@@ -1378,16 +1439,16 @@
 	* cairo/pycairo-context.c (pycairo_copy_path, pycairo_copy_path_flat):
 	update to use cairo_path_t error objects
 
-2005-06-06  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-06-06  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo.h (PycairoContext_GET): add new macro. Fixes #3469
 
-2005-06-02  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-06-02  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c (Pycairo_Check_Status): use
 	cairo_status_to_string to simplify this function
 
-2005-06-01  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-06-01  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (PycairoSurface_FromSurface):
 	add type argument, like PycairoContext_FromContext
@@ -1414,12 +1475,12 @@
 	(PycairoContext_FromContext): Add a third parameter that allows
 	instantiation of a subclass of cairo.Context.
 
-2005-05-31  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-31  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c (init_cairo): correct CAIRO_HAS_PNG_SURFACE
 	to CAIRO_HAS_PNG_FUNCTIONS
 
-2005-05-30  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-30  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c : add cairo features cairo.HAS_WIN32_SURFACE,
 	cairo.HAS_PS_SURFACE etc
@@ -1428,7 +1489,7 @@
 	* cairo/pycairo.h:
 	add more PS/PDF/WIN32 preprocessor checks
 
-2005-05-29  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-29  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/Makefile.am : change svg target to use LIBSVG_CAIRO (not CAIRO)
 	LIBS and CFLAGS
@@ -1442,7 +1503,7 @@
 
 	* README : update to mention the pycairo product in bugzilla
 
-2005-05-29  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-29  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c:
 	* cairo/pycairo.h:
@@ -1460,29 +1521,29 @@
 
  	* configure.ac : Define HAVE_GTK28 if gtk+ > 2.7 is found.
 
-2005-05-26  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-26  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/Makefile.am (AM_CPPFLAGS): Delete AM_CPPFLAGS (it uses
 	unnecessary GTK flags to compile the cairo module) and use module
 	specific _CPPFLAGS instead
 
-2005-05-25  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-25  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* setup.py: new file, contributed by Niki Spahiev
 
-2005-05-25  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-25  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c: update method table to hold the correct
 	values for cairo_mask, cairo_mask_surface and cairo_stroke_preserve
 
-2005-05-24  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-24  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo.h : fix mismatch with Check_Status (reported by Owen
 	Taylor).
 	Add Path and PSSurface C API functions and macros.
 
 === Pycairo 0.5.0 ===
-2005-05-20  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-20  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	Pycairo 0.5.0 release changes:
 	* README : update required cairo version
@@ -1499,7 +1560,7 @@
 	* examples/cairo_snippets/snippets/__init__.py (snippet_set_bg_svg):
 	update svg_cr.size to svg_cr.get_size()
 
-2005-05-20  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-20  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/svg/svg2png.py:
 	* examples/svg/svgview.py :
@@ -1539,7 +1600,7 @@
 
 	* NOTES: update
 
-2005-05-19  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-19  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairogtkmodule.c (_gdk_cairo_create): update for new
 	xlib_surface API
@@ -1581,7 +1642,7 @@
 	delete context-subclass.py since there are problems subclassing
 	cairo types (see cairo docs Appendix A)
 
-2005-05-18  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-18  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/cairo_snippets/snippets_pdf.py (do_snippet): update
 
@@ -1591,7 +1652,7 @@
 	(font_face_init): new function that warns FontFace cannot be
 	instantiated
 
-2005-05-17  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-17  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/Makefile.am :
 	* cairo/pycairo-misc.h:
@@ -1614,7 +1675,7 @@
 
 	* examples/cairo_snippets/snippets_pdf.py : update to new API
 
-2005-05-17  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-17  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairogtkmodule.c (gdk_cairo_create, surface_create_for_pixbuf):
 	* cairo/pycairo-context.c (PycairoContext_FromContext):
@@ -1626,7 +1687,7 @@
 	Change Pycairo<Object>_From<Object> functions so they unref arg1
 	if Python object creation fails
 
-2005-05-16  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-16  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/Makefile.am (_cairo_la_SOURCES):
 	add pycairosvg.h and pycairosvg-private.h
@@ -1669,7 +1730,7 @@
 	* cairo/cairosvgmodule.c (_status_error):
 	rename to Pycairosvg_check_status
 
-2005-05-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c:
 	* cairo/pycairo-font.c:
@@ -1680,7 +1741,7 @@
 
 	* cairo/cairogtkmodule.c: give error if cairo-xlib.h not found
 
-2005-05-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 	* cairo/pycairosvg-private.h:
 	* cairo/pycairo-private.h:
 	* cairo/pycairo-misc.h:
@@ -1709,7 +1770,7 @@
 	* cairo/pycairo-context.c: add comments for cairo_status() and
 	cairo_status_string()
 
-2005-05-12  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-12  Steve Chaplin  <stevech1097 # yahoo.com.au>
 	* cairo/pycairo-context.c:
 	* cairo/pycairo-surface.c:
 	* cairo/pycairo-pattern.c:
@@ -1722,13 +1783,13 @@
 	* examples/warpedtext.py:
 	update to new API
 
-2005-05-11  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-11  Steve Chaplin  <stevech1097 # yahoo.com.au>
 	* examples/gtk/cairo-knockout.py : update to new API
 
 	* cairo/pycairo-context.c (pycairo_get_font_matrix): update to match
 	new prototype
 
-2005-05-10  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-10  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c:
 	* cairo/pycairo.h:
@@ -1746,7 +1807,7 @@
 	which are not needed in a Python binding
 	(matrix_init_rotate): new wrapper
 
-2005-05-10  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-10  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c:
 	* cairo/pycairo-private.h:
@@ -1776,7 +1837,7 @@
 	* cairo/pycairo-context.c (pycairo_append_path)
 	(pycairo_copy_path_flat): new wrappers
 
-2005-05-09  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-09  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/warpedtext.py : updated to use copy_path()
 
@@ -1816,7 +1877,7 @@
 
 	* NOTES: update to match current Pycairo features
 
-2005-05-09  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-09  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-private.h:
 	* cairo/pycairo.h:
@@ -1866,7 +1927,7 @@
 	update to new cairo API
 	update to use cairo.gtk.create_cairo_context()
 
-2005-05-07  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-07  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/context-subclass.py :
 	* examples/gradient.py :
@@ -1901,7 +1962,7 @@
 
 	* cairo/pycairo-context.c (pycairo_paint_with_alpha): new wrapper
 
-2005-05-06  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-06  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairosvg-context.c:
 	* cairo/pycairo-surface.c:
@@ -1927,7 +1988,7 @@
 	Use C API export method copied from the datetime module (new in Python
 	2.3)
 
-2005-05-06  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-06  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c (pycairo_get_target_surface):
 	* cairo/pycairo-surface.c (surface_create_similar):
@@ -1935,14 +1996,14 @@
 
 	* README : spell cairo with lowercase c; add note about bugzilla
 
-2005-05-05  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-05  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/cairo_snippets/snippets_png.py (snippet_do_png):
 	small update - add 'else' to try-except clause
 
 	* examples/gtk/png_view.py (expose_event): update to new API
 
-2005-05-04  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-04  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c (pycairo_show_surface): remove
 	(pycairo_set_target_ps): remove
@@ -1950,7 +2011,7 @@
 
 	* cairo/pycairo-matrix.c (PyCairoMatrix_FromMatrix): simplify
 
-2005-05-03  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-03  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c (pycairo_mask, pycairo_mask_surface):
 	new wrappers
@@ -1958,7 +2019,7 @@
 	* cairo/cairomodule.c (pycairo_check_status): add
 	CAIRO_STATUS_BAD_NESTING
 
-2005-05-02  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-05-02  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c (pycairo_check_status): add
 	CAIRO_STATUS_READ_ERROR and CAIRO_STATUS_SURFACE_TYPE_MISMATCH
@@ -1984,14 +2045,14 @@
 	* cairo/cairomodule.c (pycairo_ps_surface_create): remove support for
 	PS backend - the C API is currently broken
 
-2005-04-29  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-29  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/svg/svg2png.py:
 	* examples/svg/svgview.py : update to use new API
 
 	* test/test.test: update to check exit value of each script
 
-2005-04-29  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-29  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/cairo_snippets/snippets_pdf.py:
 	change scale factor from 96 to 72
@@ -1999,7 +2060,7 @@
 	* cairo/pycairo-context.c (pycairo_set_font_size):
 	change 'scale' to 'size'
 
-2005-04-28  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-28  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/gtk/png_view.py : update to new png API
 
@@ -2009,7 +2070,7 @@
 	* cairo/pycairo-context.c: add missing fill_preserve and clip_preserve
 	items to the methods array.
 
-2005-04-27  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-27  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo.h :
 	* cairo/pycairo-private.h:
@@ -2026,7 +2087,7 @@
 	(pycairo_fill_preserve, pycairo_clip_preserve):
 	new wrappers
 
-2005-04-27  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-27  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (surface_write_png):
 	rename to surface_write_to_png
@@ -2039,7 +2100,7 @@
 	* examples/cairo_snippets/snippets_png.py :
 	update to use new png API
 
-2005-04-25  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-25  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo.h: remove cairo-png.h include.
 	Add 'ifdef CAIRO_HAS_PDF_SURFACE / CAIRO_HAS_PS_SURFACE' around their
@@ -2051,16 +2112,16 @@
 	(image_surface_create_from_png): change args from fileobject, width,
 	height to filename
 
-2005-04-20  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-20  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/cairo_snippets/snippets: finish updating snippets to use the
 	new API
 
-2005-04-20  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-20  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c (pycairo_paint): new wrapper
 
-2005-04-18  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-18  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-matrix.c: add matrix_get_* functions to access
 	cairo_matrix_t data
@@ -2069,7 +2130,7 @@
 	function
 	(pycairo_get_font_matrix): new wrapper
 
-2005-04-15  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-15  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/cairo_snippets/snippets/curve_rectangle.py:
 	* examples/cairo_snippets/snippets/curve_to.py:
@@ -2082,7 +2143,7 @@
 	* examples/cairo_snippets/snippets/text_extents.py:
 	updated to new API
 
-2005-04-15  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-15  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c: rename, add, delete functions to follow
 	recent cairo changes:
@@ -2113,7 +2174,7 @@
 	* examples/gtk/text.py:
 	update to work with the above changes
 
-2005-04-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (image_surface_create_for_array): new
 	constructor, to replace caironumpymodule.c
@@ -2123,7 +2184,7 @@
 
 	* cairo/Makefile.am: delete HAVE_NUMPY section
 
-2005-04-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* NOTES: added note about new ImageSurface
 
@@ -2141,7 +2202,7 @@
 	* examples/cairo_snippets/snippets_png.py:
 	update to use ImageSurface instead of Surface
 
-2005-04-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c:
 	* cairo/pycairo-context.c:
@@ -2151,7 +2212,7 @@
 	rename pycairo_font_wrap to PyCairoFontFace_FromFontFace,
 	rename PyCairoFont_Type to PyCairoFontface_Type
 
-2005-04-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c:
 	* cairo/pycairo.h:
@@ -2162,7 +2223,7 @@
 	* cairo/pycairo-surface.c (surface_finish): remove comment about
 	cairo_surface_finish() bug which has now been fixed
 
-2005-04-13  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-13  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c:
 	* cairo/pycairo-context.c:
@@ -2171,7 +2232,7 @@
 	* cairo/pycairo-private.h:
 	rename pycairo_pattern_wrap to PyCairoPattern_FromPattern
 
-2005-04-13  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-13  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (surface_create_for_data): disable, since
 	a reference to the buffer needs to be added
@@ -2192,7 +2253,7 @@
 	simplify method of copying struct data,
 	change cairo_matrix_t *matrix to const cairo_matrix_t *matrix
 
-2005-04-12  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-12  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c:
 	* cairo/pycairo.h:
@@ -2209,7 +2270,7 @@
 	* cairo/pycairo-surface.c :
 	PyCairoSurface *self; -> PyCairoSurface *s;
 
-2005-04-12  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-12  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c:
 	drop 'pycairo_' prefix from all static function names.
@@ -2220,7 +2281,7 @@
 	* examples/cairo_snippets/snippets/text_extents.py:
 	use select_font_face() and set_font_size()
 
-2005-04-10  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-10  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-pattern.c (pycairo_pattern_get_matrix): remove
 	 cairo_matrix_create
@@ -2250,24 +2311,24 @@
 
 	* cairo/pycairo-surface.c (pycairo_surface_finish): new wrapper
 
-2005-04-09  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-09  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-font.c (pycairo_font_extents): delete - its no longer
 	a cairo_font_t method, its a a cairo_t method, and is already in
 	pycairo-context.c
 
-2005-04-09  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-09  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-pattern.c (pycairo_pattern_set_matrix):
 	change matrix->matrix to &matrix->matrix
 
-2005-04-09  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-09  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/gtk/hangman.py : change scale_font to set_font_size
 	* examples/gtk/text.py :  change scale_font to set_font_size, change
 	change select_font to select_font_face
 
-2005-04-09  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-09  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* test/test.py : add python 2.4 check
 
@@ -2276,7 +2337,7 @@
 	* configure.ac: Remove 'dnl' in middle of PKG_CHECK_MODULES call
 	which causes configure-time errors.
 
-2005-04-08  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-08  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* NOTES: remove notes on the old matrix implementation
 
@@ -2300,7 +2361,7 @@
 	remove cairo_matrix_create
 	(pycairo_surface_set_matrix): updated matrix reference
 
-2005-04-08  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-08  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/warpedtext.py : change select_font to select_font_face,
 	change scale_font to set_font_size
@@ -2325,7 +2386,7 @@
 	(pycairo_matrix_init): replace cairo_matrix_set_affine() with
 	cairo_matrix_init()
 
-2005-04-07  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-07  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/warpedtext.py : call select_font() to fix problem where
 	text_extents width==0
@@ -2342,11 +2403,11 @@
 	(pycairo_show_text, pycairo_text_path):
 	change unsigned char* to char* to match cairo changes
 
-2005-04-07  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-07  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/cairo_snippets/snippets_gtk.py : fix problem with M_PI
 
-2005-04-06  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-06  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/cairo_snippets/snippets_png.py
 	* examples/cairo_snippets/snippets_gtk.py : new examples
@@ -2361,18 +2422,18 @@
 
 	* cairo/pycairo-context.c (pycairo_default_matrix): delete
 
-2005-04-05  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-05  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (pycairo_surface_create_for_png): new
 	constructor
 
 	* examples/gtk/png_view.py : new example
 
-2005-04-05  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-05  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* test/cairo_image_create_for_data.py : new test
 
-2005-04-04  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-04  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-pattern.c (pycairo_pattern_create_for_surface)
 	(pycairo_pattern_create_linear, pycairo_pattern_create_radial):
@@ -2383,7 +2444,7 @@
 	* cairo/pycairo-surface.c (pycairo_surface_create_for_data):
 	add new alternative constructor
 
-2005-04-04  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-04-04  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac : require Python 2.3 so we can use METH_CLASS for
 	classmethods
@@ -2400,7 +2461,7 @@
 	* examples/gtk/cairo-knockout.py : update to use new pattern
 	constructors
 
-2005-03-30  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-30  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (pycairo_surface_write_png): new wrapper
 
@@ -2411,11 +2472,11 @@
 	* examples/hering.py
 	* examples/warpedtext.py: update to use surface.write_png()
 
-2005-03-25  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-25  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairosvg-context.c: add comments for missing functions
 
-2005-03-22  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-22  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c: Rename functions:
 	cairo_concat_matrix		-> cairo_transform
@@ -2425,19 +2486,19 @@
 	cairo_inverse_transform_distance-> cairo_device_to_user_distance
 	cairo_init_clip			-> cairo_reset_clip
 
-2005-03-20  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-20  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/svg/svgview.py: allow filename to be passed as an argument
 	to the program.
 
-2005-03-20  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-20  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c (pycairo_surface_init): add Surface.__init__
 	to wrap  cairo_image_surface_create()
 
 	* examples/svg/svgview.py: scale svg image to fit the window size
 
-2005-03-19  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-19  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/gtk/cairo-knockout.py, examples/gtk/cairo-demo.py,
 	* examples/gtk/lsystem.py, examples/gtk/text.py:
@@ -2448,7 +2509,7 @@
 	* examples/gtk/hangman.py: write to a pixmap first (double-buffered)
 	to avoid window flicker when resizing.
 
-2005-03-19  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-19  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-font.c (pycairo_font_extents): fix error
 	where matrix should have been py_matrix->matrix
@@ -2463,12 +2524,12 @@
 	(surface_create_for_window_with_visual): call
 	cairo_xlib_surface_set_size() for maximum efficiency
 
-2005-03-18  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-18  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac (CFLAGS): use -fno-strict-aliasing with gcc, if
 	available
 
-2005-03-18  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-18  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c (pycairo_pdf_surface_create),
 	* cairo/pycairo-context.c (pycairo_set_target_pdf): temporary disable -
@@ -2480,7 +2541,7 @@
 	* cairo/pycairo-surface.c (pycairo_surface_set_device_offset): new
 	wrapper
 
-2005-03-18  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-18  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairogtkmodule.c (surface_create_for_pixmap): auto determine
 	cairo format from pixmap depth
@@ -2489,17 +2550,17 @@
 	pattern == NULL, since cairo_t always has a source pattern
 	(pycairo_get_path): correct the function name string
 
-2005-03-16  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-16  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairogtkmodule.c (surface_create_for_pixmap),
 	(surface_create_for_pixmap_with_visual),
 	(surface_create_for_window_with_visual): new wrappers
 
-2005-03-15  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-15  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-surface.c: add comment for missing functions
 
-2005-03-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c: change cairo_current_* to
 	cairo_get_*
@@ -2507,7 +2568,7 @@
 	* examples/warpedtext.py (PathWarp.warpPath): change
 	current_path to get_path
 
-2005-03-12  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-12  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairogtkmodule.c (surface_create_for_pixbuf):  rename
 	cairo_surface_create_for_image() to
@@ -2515,7 +2576,7 @@
 
 	* test/test.py, test/test.test: new files
 
-2005-03-12  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-12  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c: remove 'surface_create_for_image' (it was
 	an alias to cairo_image_surface_create_for_data)
@@ -2528,14 +2589,14 @@
 	svg_functions
 
 === Pycairo 0.4.0 ===
-2005-03-10  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-10  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: require cairo >= 0.4.0
 	increase pycairo version to 0.4.0
 
 	* README: note cairo >= 0.4.0 is required
 
-2005-03-10  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-10  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c (pycairo_check_status): add
 	CAIRO_STATUS_INVALID_STRING
@@ -2548,24 +2609,24 @@
 	functions.
 	(cairo_font_extents): new wrapper
 
-2005-03-08  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-08  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/gtk/hangman.py: new example moved over from
 	cairo-demo/python/, updated to remove DeprecationWarnings.
 	* examples/Makefile.am (EXTRA_DIST): add hangman.py
 
-2005-03-02  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-02  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo.h: include cairo-pdf.h
 
-2005-03-02  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-02  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo.h:
 	* cairo/cairogtkmodule.c: move '#include <cairo-xlib.h>' from pycairo.h
 	to cairogtkmodule.c - the only place where its needed. Remove the
 	'#ifdef CAIRO_HAS_XLIB_SURFACE' since its already in cairo-xlib.h
 
-2005-03-02  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-03-02  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: increase libsvg_cairo_required_version to 0.1.5
 	* examples/Makefile.am (EXTRA_DIST): change paths so that svg examples
@@ -2579,7 +2640,7 @@
 	* autogen.sh: Call all autotool commands through environment
 	variables. Thanks to Rui Lopes.
 
-2005-02-16  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-02-16  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: add examples/Makefile to AC_CONFIG_FILES (omitted from
 	last commit)
@@ -2587,7 +2648,7 @@
 	lsystem.py, text.py) to their own subdirectory examples/gtk
 	* examples/Makefile.am (EXTRA_DIST): update paths to gtk examples
 
-2005-02-05  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-02-05  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* INSTALL: new file
 	* README: move install notes to INSTALL; add reference to the mailing
@@ -2597,7 +2658,7 @@
 	* examples/Makefile.am: new file with EXTRA_DIST listing examples/*.py
 	* configure.ac: add examples/Makefile to AC_CONFIG_FILES
 
-2005-01-26  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-01-26  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: require Cairo 0.3.0
 
@@ -2611,7 +2672,7 @@
 
 	* cairo/pycairo.h: Track split-up of cairo.h.
 
-2005-01-12  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-01-12  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: Increment pycairo version to 0.1.4
 
@@ -2624,7 +2685,7 @@
 
 	* RELEASING: move 'make distcheck' (step 2) to after step 5
 
-2005-01-12  Steve Chaplin  <steve1097 # yahoo.com.au>
+2005-01-12  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c (pycairo_pdf_surface_create): new wrapper
 	* cairo/pycairo-context.c (pycairo_set_target_pdf): new wrapper
@@ -2632,19 +2693,19 @@
 	* examples/text.py: increase window height so "Hello World" is not
 	clipped
 
-2004-12-28  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-12-28  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/Makefile.am: Change HAVE_GTK to WITH_PYGTK
 	* configure.ac: add --without-pygtk option
 	* README: add './configure --without-pygtk' example
 
-2004-12-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-12-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* README: added notes to describe compiling and how to avoid PYTHONPATH
 	problems
 	* configure.ac: report the 'prefix' at the end of configure
 
-2004-12-10  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-12-10  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	Add libsvg-cairo support
 	* configure.ac: add checks for libsvg-cairo
@@ -2658,7 +2719,7 @@
 	* examples/svg2png.py:
 	* examples/svgview.py:
 
-2004-12-10  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-12-10  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairogtkmodule.c:
 	* cairo/cairomodule.c:
@@ -2673,7 +2734,7 @@
 	change _new() functions to _wrap() to allow _new() to be used for
 	python __new__ functions.
 
-2004-12-06  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-12-06  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-pattern.c (pycairo_pattern_init): remove a commented
 	out line
@@ -2682,16 +2743,16 @@
 	(pycairo_surface_get_matrix, pycairo_surface_set_filter):
 	add status check
 
-2004-12-05  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-12-05  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c: remove the "#if 0" section
 
-2004-12-04  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-12-04  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c (pycairo_check_status): Add
 	CAIRO_STATUS_NULL_POINTER
 
-2004-12-01  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-12-01  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-private.h: define Py_RETURN_NONE, Py_RETURN_TRUE,
 	Py_RETURN_FALSE, Py_CLEAR if using python < 2.4
@@ -2706,7 +2767,7 @@
 	change all occurences of "Py_INCREF(Py_None); return Py_None;"
 	to "Py_RETURN_NONE;"
 
-2004-12-01  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-12-01  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairogtkmodule.c:
 	* cairo/cairomodule.c:
@@ -2720,13 +2781,13 @@
 	* cairo/pycairo-surface.c: Added header comments referencing the LGPL
 	and MPL licenses.
 
-2004-11-30  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-11-30  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* COPYING: Changed to reference LGPL and MPL
 	* COPYING-LGPL-2.1, COPYING-MPL-1.1: new files
 	* Makefile.am (EXTRA_DIST): add COPYING*
 
-2004-11-28  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-11-28  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* Makefile.am (EXTRA_DIST): add NOTES, examples/context-subclass.py,
         examples/warpedtext.py
@@ -2750,7 +2811,7 @@
 	* RELEASING: Some cleanups since copying this file over from
 	cairo, (mostly s/cairo/pycairo/)
 
-2004-11-23  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-11-23  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c (pycairo_context_new): rename to
 	pycairo_context_wrap to avoid confusion with the Context.__new__
@@ -2764,7 +2825,7 @@
 	* cairo/cairomodule.c: same
 	* acinclude.m4: quote AM_CHECK_PYMOD to silence warning message
 
-2004-11-15  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-11-15  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c: make Context subclassable
 	(pycairo_current_font_extents): new wrapper
@@ -2776,7 +2837,7 @@
 
 	* NOTES: new file describing some features of the bindings
 
-2004-11-15  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-11-15  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/pycairo-context.c (pycairo_current_path)
 	(pycairo_current_path_flat): new wrappers
@@ -2784,7 +2845,7 @@
 
 	Changes submitted by Maarten Breddels <dmon@xs4all.nl>
 
-2004-11-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-11-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* cairo/cairomodule.c (pycairo_surface_create_for_image): rename to
 	pycairo_image_surface_create_for_data
@@ -2809,7 +2870,7 @@
 
 	Changes submitted by Maarten Breddels <dmon@xs4all.nl>
 
-2004-11-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-11-14  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
         Preparation for making the first snapshot release:
 	* AUTHORS: Add myself
@@ -2825,19 +2886,19 @@
 	(pycairo_pattern_wrap): new function
 	* cairo/pycairo-private.h: new declaration pattern_wrap()
 
-2004-11-13  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-11-13  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac:
 	* cairo/__init__.py.in: Add support for version numbers.
 
-2004-11-11  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-11-11  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* examples/cairo-demo.py: Move the missing 6th row into view.
 	* examples/hering.py: Remove unnecessary fileObject.close()
 	* examples/spiral.py: Simplify - draw to a bounded-box instead of
 	drawing the whole page.
 
-2004-11-09  Steve Chaplin  <steve1097 # yahoo.com.au>
+2004-11-09  Steve Chaplin  <stevech1097 # yahoo.com.au>
 
 	* configure.ac: After configure runs show which modules will be
 	compiled. Raise cairo required version to 0.2.0. Raise autoconf

@@ -6,8 +6,8 @@ import distutils.file_util as fut
 import subprocess
 import sys
 
-pycairo_version        = '1.8.0'
-cairo_version_required = '1.8.0'
+pycairo_version        = '1.8.2'
+cairo_version_required = '1.8.2'
 
 def call(command):
     pipe = subprocess.Popen(command, shell=True,

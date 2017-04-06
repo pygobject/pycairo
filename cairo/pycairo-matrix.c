@@ -99,11 +99,27 @@ matrix_invert (PycairoMatrix *o)
     Py_RETURN_NONE;
 }
 
+/* cairo_matrix_multiply */
 static PyObject *
-matrix_multiply (PycairoMatrix *o, PycairoMatrix *o2)
+matrix_multiply (PycairoMatrix *o, PyObject *args)
+{
+    PycairoMatrix *mx2;
+
+    if (!PyArg_ParseTuple(args, "O!:Matrix.multiply",
+			  &PycairoMatrix_Type, &mx2))
+	return NULL;
+
+    cairo_matrix_t result;
+    cairo_matrix_multiply (&result, &o->matrix, &mx2->matrix);
+    return PycairoMatrix_FromMatrix (&result);
+}
+
+/* standard matrix multiply, for use by '*' operator */
+static PyObject *
+matrix_operator_multiply (PycairoMatrix *o, PycairoMatrix *o2)
 {
     cairo_matrix_t result;
-    cairo_matrix_multiply (&result, &o->matrix, &o2->matrix);
+    cairo_matrix_multiply (&result, &o2->matrix, &o->matrix);
     return PycairoMatrix_FromMatrix (&result);
 }
 
@@ -230,7 +246,7 @@ matrix_item (PycairoMatrix *o, Py_ssize_t i)
 static PyNumberMethods matrix_as_number = {
   (binaryfunc)0,   /*nb_add*/
   (binaryfunc)0,   /*nb_subtract*/
-  (binaryfunc)matrix_multiply, 	/*nb_multiply*/
+  (binaryfunc)matrix_operator_multiply,  /*nb_multiply*/
   (binaryfunc)0,   /*nb_divide*/
   (binaryfunc)0,   /*nb_remainder*/
   (binaryfunc)0,   /*nb_divmod*/
@@ -293,6 +309,7 @@ static PyMethodDef matrix_methods[] = {
     {"init_rotate", (PyCFunction)matrix_init_rotate,
                                                    METH_VARARGS | METH_CLASS },
     {"invert",      (PyCFunction)matrix_invert,                METH_NOARGS },
+    {"multiply",    (PyCFunction)matrix_multiply,              METH_VARARGS },
     {"rotate",      (PyCFunction)matrix_rotate,                METH_VARARGS },
     {"scale",       (PyCFunction)matrix_scale,                 METH_VARARGS },
     {"transform_distance",(PyCFunction)matrix_transform_distance,

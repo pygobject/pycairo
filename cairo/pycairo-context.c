@@ -1108,6 +1108,19 @@ pycairo_set_operator(PycairoContext *o, PyObject *args)
 }
 
 static PyObject *
+pycairo_set_scaled_font(PycairoContext *o, PyObject *args)
+{
+    PycairoScaledFont *f;
+    if (!PyArg_ParseTuple( args, "O!:Context.set_scaled_font",
+                           &PycairoScaledFont_Type, &f))
+        return NULL;
+
+    cairo_set_scaled_font(o->ctx, f->scaled_font);
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
+    Py_RETURN_NONE;
+}
+
+static PyObject *
 pycairo_set_source (PycairoContext *o, PyObject *args)
 {
     PycairoPattern *p;
@@ -1439,7 +1452,7 @@ static PyMethodDef pycairo_methods[] = {
     {"set_matrix",      (PyCFunction)pycairo_set_matrix,       METH_VARARGS},
     {"set_miter_limit", (PyCFunction)pycairo_set_miter_limit,  METH_VARARGS},
     {"set_operator",    (PyCFunction)pycairo_set_operator,     METH_VARARGS},
-    /* set_scaled_font - not implemented yet */
+    {"set_scaled_font", (PyCFunction)pycairo_set_scaled_font,  METH_VARARGS},
     {"set_source",      (PyCFunction)pycairo_set_source,       METH_VARARGS},
     {"set_source_rgb",  (PyCFunction)pycairo_set_source_rgb,   METH_VARARGS},
     {"set_source_rgba", (PyCFunction)pycairo_set_source_rgba,  METH_VARARGS},

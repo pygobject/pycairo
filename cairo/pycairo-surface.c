@@ -310,10 +310,10 @@ surface_write_to_png (PycairoSurface *o, PyObject *file)
 	    return NULL;
 	}
 	Py_DECREF(writer);
-	Py_BEGIN_ALLOW_THREADS
+	/*Py_BEGIN_ALLOW_THREADS*/ /*seg faults reported*/
 	status = cairo_surface_write_to_png_stream (o->surface, _write_func,
 						    file);
-	Py_END_ALLOW_THREADS
+	/*Py_END_ALLOW_THREADS*/
     }
     RETURN_NULL_IF_CAIRO_ERROR(status);
     Py_RETURN_NONE;
@@ -505,9 +505,9 @@ image_surface_create_from_png (PyTypeObject *type, PyObject *file)
     }
     Py_DECREF(reader);
 
-    Py_BEGIN_ALLOW_THREADS
+    /*Py_BEGIN_ALLOW_THREADS*/ /*seg faults reported*/
     is = cairo_image_surface_create_from_png_stream (_read_func, file);
-    Py_END_ALLOW_THREADS
+    /*Py_END_ALLOW_THREADS*/
     return PycairoSurface_FromSurface (is, NULL);
 }
 #endif /* CAIRO_HAS_PNG_FUNCTIONS */
@@ -712,10 +712,10 @@ pdf_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
     }
     Py_DECREF(writer);
 
-    Py_BEGIN_ALLOW_THREADS
+    /*Py_BEGIN_ALLOW_THREADS*/ /*seg faults reported*/
     sfc = cairo_pdf_surface_create_for_stream (_write_func, file,
 					       width_in_points, height_in_points);
-    Py_END_ALLOW_THREADS
+    /*Py_END_ALLOW_THREADS*/
     return PycairoSurface_FromSurface (sfc, file);
 }
 
@@ -818,10 +818,10 @@ ps_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
     }
     Py_DECREF(writer);
 
-    Py_BEGIN_ALLOW_THREADS
+    /*Py_BEGIN_ALLOW_THREADS*/ /*seg faults reported*/
     sfc = cairo_ps_surface_create_for_stream (_write_func, file,
 					width_in_points, height_in_points);
-    Py_END_ALLOW_THREADS
+    /*Py_END_ALLOW_THREADS*/
     return PycairoSurface_FromSurface (sfc, file);
 }
 
@@ -1010,10 +1010,10 @@ svg_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
     }
     Py_DECREF(writer);
 
-    Py_BEGIN_ALLOW_THREADS
+    /*Py_BEGIN_ALLOW_THREADS*/ /*seg faults reported*/
     sfc = cairo_svg_surface_create_for_stream (_write_func, file,
 					 width_in_points, height_in_points);
-    Py_END_ALLOW_THREADS
+    /*Py_END_ALLOW_THREADS*/
     return PycairoSurface_FromSurface (sfc, file);
 }
 

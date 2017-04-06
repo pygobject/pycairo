@@ -1,8 +1,8 @@
 .. _reference_index:
 
-***************************
-Reference (unfinished docs)
-***************************
+**********************
+Reference (incomplete)
+**********************
 
 .. toctree::
    :maxdepth: 2

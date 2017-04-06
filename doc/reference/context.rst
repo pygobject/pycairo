@@ -1,8 +1,8 @@
 .. _context:
 
-*******************************
-Cairo Context (incomplete docs)
-*******************************
+**************************
+Cairo Context (incomplete)
+**************************
 
 .. comment block
    example reST:
@@ -184,6 +184,8 @@ class Context()
    .. method:: set_miter_limit()
 
    .. method:: set_operator()
+
+   .. method:: set_scaled_font()
 
    .. method:: set_source()
 

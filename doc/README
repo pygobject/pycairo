@@ -5,8 +5,7 @@ This directory contains the reStructuredText (reST) sources to the Pycairo
 documentation.
 
 Options for accessing pycairo documentation:
-1. Read the documentation online at http://cairographics.org
-   - is not available yet, but it should be there eventually.
+1. Read the documentation online at http://cairographics.org/documentation/pycairo/
 
 2. Download the latest 'pycairo-x.x.x-docs-html.tar.gz' prebuilt documents
 from http://www.cairographics.org/releases/. Uncompress the docs and point

@@ -1,3 +1,23 @@
+Overview of changes from pycairo 1.8.0 to pycairo 1.8.2
+=======================================================
+
+Pycairo 1.8.0 resulted in crashes for some applications using threads. So
+upgrading to 1.8.2 is recommended for threaded applications.
+
+Bug Fixes: #19287: Threading support results in crashes in cairo.ImageSurface
+
+New Methods:
+    Context.set_scaled_font
+
+API Changes:
+    Matrix multiplication:
+    old code: matrix3 = matrix1 * matrix2
+    new equivalent code: matrix3 = matrix1.multiply(matrix2)
+    matrix3 = matrix1 * matrix2
+    is now equivalent to matrix3 = matrix2.multiply(matrix1)
+    which is consistent with standard matrix multiplication.
+
+
 Overview of changes from pycairo 1.6.4 to pycairo 1.8.0
 =======================================================
 General Changes:

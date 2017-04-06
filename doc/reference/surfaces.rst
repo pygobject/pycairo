@@ -1,8 +1,8 @@
 .. _surfaces:
 
-**************************
-Surfaces (incomplete docs)
-**************************
+*********************
+Surfaces (incomplete)
+*********************
 
 cairo.Surface is the abstract type representing all different drawing targets
 that cairo can render to. The actual drawings are performed using a
@@ -136,28 +136,76 @@ derive. It cannot be instantiated directly.
       Any cached clip set on the *Surface* will be reset by this function, to
       make sure that future cairo calls have the clip set that they expect.
 
-   .. method:: set_device_offset()
+   .. method:: set_device_offset(x_offset, y_offset)
 
-   .. method:: set_fallback_resolution()
+      :param x_offset: the offset in the X direction, in device units
+      :type x_offset: float
+      :param y_offset: the offset in the Y direction, in device units
+      :type y_offset: float
+
+      Sets an offset that is added to the device coordinates determined by the
+      CTM when drawing to *Surface*. One use case for this function is when we
+      want to create a *Surface* that redirects drawing for a portion of an
+      onscreen surface to an offscreen surface in a way that is completely
+      invisible to the user of the cairo API. Setting a transformation via
+      :meth:`Context.translate` isn't sufficient to do this, since functions
+      like :meth:`Context.device_to_user` will expose the hidden offset.
+
+      Note that the offset affects drawing to the surface as well as using the
+      surface in a source pattern.
+
+   .. method:: set_fallback_resolution(x_pixels_per_inch, y_pixels_per_inch)
+
+      :param x_pixels_per_inch: horizontal setting for pixels per inch
+      :type x_pixels_per_inch: float
+      :param y_pixels_per_inch: vertical setting for pixels per inch
+      :type y_pixels_per_inch: float
+
+      Set the horizontal and vertical resolution for image fallbacks.
+
+      When certain operations aren't supported natively by a backend, cairo
+      will fallback by rendering operations to an image and then overlaying
+      that image onto the output. For backends that are natively
+      vector-oriented, this function can be used to set the resolution used
+      for these image fallbacks, (larger values will result in more detailed
+      images, but also larger file sizes).
+
+      Some examples of natively vector-oriented backends are the ps, pdf, and
+      svg backends.
+
+      For backends that are natively raster-oriented, image fallbacks are
+      still possible, but they are always performed at the native device
+      resolution. So this function has no effect on those backends.
+
+      Note: The fallback resolution only takes effect at the time of
+      completing a page (with :meth:`Context.show_page` or
+      :meth:`Context.copy_page`) so there is currently no way to have more
+      than one fallback resolution in effect on a single page.
+
+      The default fallback resoultion is 300 pixels per inch in both
+      dimensions.
+
+      Since: 1.2
 
    .. method:: show_page()
 
-   .. method:: write_to_png()
+      Emits and clears the current page for backends that support multiple
+      pages. Use :meth:`.copy_page` if you don't want to clear the page.
 
+      There is a convenience function for this that takes a
+      :meth:`Context.show_page`.
 
-.. comment
- C:  cairo_surface_write_to_png (surface, filename);
-     cairo_surface_write_to_png_stream (surface, write_func, closure);
+      Since: 1.6
 
- Py: surface.write_to_png (f)
-       where 'f' is a filename, a file object, or a file-like object (an object
-       that has a "write" method, for example StringIO, cStringIO)
+   .. method:: write_to_png(fobj)
 
- Py: surface = cairo.PDFSurface (f, width_in_points, height_in_points)
-     surface = cairo.PSSurface  (f, width_in_points, height_in_points)
-     surface = cairo.SVGSurface (f, width_in_points, height_in_points)
-     where 'f' is a filename, a file object, or a file-like object
+      :param fobj: the file to write to
+      :type fobj: str, file or file-like object
+      :raises: *MemoryError* if memory could not be allocated for the operation
 
+               *IOError* if an I/O error occurs while attempting to write the file
+
+      Writes the contents of *Surface* to *fobj* as a PNG image.
 
 
 class ImageSurface(:class:`Surface`)
@@ -203,11 +251,9 @@ class PDFSurface(:class:`Surface`)
 .. comment
  C:  surface = cairo_pdf_surface_create (filename, width_in_points,
  				        height_in_points);
-     surface = cairo_ps_surface_create (filename, width_in_points,
- 			               height_in_points);
-     surface = cairo_svg_surface_create (filename, width_in_points,
- 				        height_in_points);
-..
+ Py: surface = cairo.PDFSurface (f, width_in_points, height_in_points)
+     where 'f' is a filename, a file object, or a file-like object
+
 
    .. method:: set_size()
 
@@ -216,6 +262,12 @@ class PSSurface(:class:`Surface`)
 =================================
 
 .. class:: PSSurface
+
+.. comment
+ C:  surface = cairo_ps_surface_create (filename, width_in_points,
+ 			               height_in_points);
+ Py: surface = cairo.PSSurface  (f, width_in_points, height_in_points)
+     where 'f' is a filename, a file object, or a file-like object
 
    .. method:: dsc_begin_page_setup()
 
@@ -239,6 +291,13 @@ class SVGSurface(:class:`Surface`)
 
 .. class:: SVGSurface
 
+.. comment
+ Py: surface = cairo.SVGSurface (f, width_in_points, height_in_points)
+     where 'f' is a filename, a file object, or a file-like object
+
+ C:  surface = cairo_svg_surface_create (filename, width_in_points,
+ 				        height_in_points);
+..
 
 
 class Win32Surface(:class:`Surface`)

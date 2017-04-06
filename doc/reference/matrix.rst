@@ -28,6 +28,8 @@ To read the values from a *Matrix*::
 To multiply two matrices::
 
   matrix3 = matrix1 * matrix2
+  # Note: This operation is consistent with standard matrix multiplication
+  # and is equivalent to matrix3 = matrix2.multiply(matrix1)
 
 To compare two matrices::
 
@@ -94,6 +96,20 @@ For more information on matrix transformation see http://www.cairographics.org/m
       transformation matrices have inverses; if the matrix collapses points
       together (it is *degenerate*), then it has no inverse and this function
       will fail.
+
+
+   .. method:: multiply(matrix2)
+
+      :param matrix2: a second matrix
+      :type matrix2: cairo.Matrix
+      :returns: a new *Matrix*
+
+      Multiplies the affine transformations in *Matrix* and *matrix2*
+      together. The effect of the resulting transformation is to first apply
+      the transformation in *Matrix* to the coordinates and then apply the
+      transformation in *matrix2* to the coordinates.
+
+      It is allowable for result to be identical to either *Matrix* or *matrix2*.
 
 
    .. method:: rotate(radians)
