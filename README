@@ -1,0 +1,10 @@
+PyCairo - Python bindings for Cairo
+http://cairographics.org
+
+Dependencies
+------------
+	cairo  0.2.0 or higher
+	Python 2.2   or higher
+
+Also, additional modules are compiled if pygtk and/or Numeric Python are 
+detected.

@@ -1,0 +1,252 @@
+2004-11-24  Carl Worth  <cworth@cworth.org>
+
+	* Makefile.am (RELEASE_UPLOAD_DIR): Update directory due to
+	filesystem reorganization from server rebuild.
+
+	* NEWS: Add notes for 0.1.3 snapshot.
+
+	* configure.ac: Increment pycairo version to 0.1.3.
+
+	* RELEASING: Some cleanups since copying this file over from
+	cairo, (mostly s/cairo/pycairo/)
+
+2004-11-23  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo-context.c (pycairo_context_new): rename to 
+	pycairo_context_wrap to avoid confusion with the Context.__new__
+	method
+	(pycairo_init): rename to pycairo_new, ignore any args/kwds, add to 
+	tp_new slot - to prevent Context.__init__ being overridden and 
+	cairo_create() not being called
+	* cairo/pycairo.h (pycairo_context_wrap): rename
+	pycairo_context_new to pycairo_context_wrap
+	* cairo/pycairo-private.h (pycairo_font_new): same
+	* cairo/cairomodule.c: same
+	* acinclude.m4: quote AM_CHECK_PYMOD to silence warning message
+
+2004-11-15  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo-context.c: make Context subclassable
+	(pycairo_current_font_extents): new wrapper
+	(pycairo_fill_extents, pycairo_stroke_extents): remove the unnecessary
+ 	x1,y1,x2,y2 args and change from a method to an attribute
+	(pycairo_show_text): remove the second check of cairo status
+
+	* examples/context-subclass.py: new example showing Context subclassing
+	
+	* NOTES: new file describing some features of the bindings
+
+2004-11-15  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo-context.c (pycairo_current_path) 
+	(pycairo_current_path_flat): new wrappers
+	* examples/warpedtext.py: new example using cairo_current_path
+
+	Changes submitted by Maarten Breddels <dmon@xs4all.nl>
+	
+2004-11-14  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/cairomodule.c (pycairo_surface_create_for_image): rename to
+	pycairo_image_surface_create_for_data
+	(pycairo_png_surface_create, pycairo_ps_surface_create): add wrappers
+	(init_cairo): add new constants FILTER_GAUSSIAN, EXTEND_NONE, 
+	EXTEND_REPEAT, EXTEND_REFLECT
+
+	* cairo/pycairo-context.c (pycairo_in_stroke, pycairo_in_fill)
+	(pycairo_stroke_extents, pycairo_fill_extents, pycairo_init_clip)
+	(pycairo_current_pattern, pycairo_text_path): new wrappers
+
+	* cairo/pycairo-pattern.c (pycairo_pattern_set_matrix)
+	(pycairo_pattern_set_extend, pycairo_pattern_set_filter)
+	(pycairo_pattern_get_matrix, pycairo_pattern_get_extend)
+	(pycairo_pattern_get_filter): new wrappers
+
+	* cairo/pycairo-surface.c (pycairo_surface_get_matrix): Change from 
+	being a method to being an attribute.
+	(pycairo_surface_get_filter): new wrapper
+
+	* cairo/pycairo.h: additions for pattern
+
+	Changes submitted by Maarten Breddels <dmon@xs4all.nl>
+	
+2004-11-14  Steve Chaplin  <steve1097@yahoo.com.au>
+
+        Preparation for making the first snapshot release:
+	* AUTHORS: Add myself
+	* configure.ac: Add automake version check
+	* Makefile.am: Remove automake version check. Add all the examples to 
+	EXTRA_DIST. Add release targets, copied from cairo.
+	* NEWS: Added info about the first snapshot
+	* README: Updated
+	* RELEASING: New file, copied from cairo.
+	* cairo/Makefile.am: Rename INCLUDES to AM_CPPFLAGS
+	* cairo/pycairo-pattern.c (pycairo_pattern_init): Add 'return -1' after
+	an error.
+	(pycairo_pattern_wrap): new function
+	* cairo/pycairo-private.h: new declaration pattern_wrap()
+	
+2004-11-13  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* configure.ac: 
+	* cairo/__init__.py.in: Add support for version numbers.
+
+2004-11-11  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* examples/cairo-demo.py: Move the missing 6th row into view.
+	* examples/hering.py: Remove unnecessary fileObject.close()
+	* examples/spiral.py: Simplify - draw to a bounded-box instead of
+	drawing the whole page.
+
+2004-11-09  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* configure.ac: After configure runs show which modules will be
+	compiled. Raise cairo required version to 0.2.0. Raise autoconf
+	required version to 2.54.
+
+2004-11-04  Carl Worth  <cworth@cworth.org>
+
+	Fixes for set_pattern from Steve Chaplin
+	<stevech1097@yahoo.com.au>:
+
+	* examples/cairo-knockout.py: Bring up-to-date with latest
+	cairo-knockout.c. Now uses cairo_arc rather than custom arc
+	approximation, and now uses new cairo.set_pattern.
+	
+	* cairo/pycairo.h: Add declaration for struct PyCairoPattern.
+
+	* cairo/pycairo-context.c (pycairo_set_pattern): Re-enable
+	pycairo_set_pattern now that it uses PyCairoPattern_Type.
+
+	* cairo/cairomodule.c (init_cairo): Add PyCairoPattern_Type
+
+	* cairo/pycairo-pattern.c: New file to bind to cairo_pattern_t.
+
+2004-11-02  Carl Worth  <cworth@cworth.org>
+
+	* examples/spiral.py: 	
+	* examples/hering.py: New examples from Steve Chaplin to
+	demonstrate PNG and PS output.
+
+	* cairo/pycairo-context.c (pycairo_set_target_ps)
+	(pycairo_set_target_png): Fixes from Steve Chaplin.
+	(pycairo_set_pattern): Disable set_pattern as this wrapper is
+	currently broken.
+	(pycairo_methods): Fix binding of copy_page.
+
+	* cairo/Makefile.am (gtk_la_LIBADD): Add CAIRO_LIBS which was
+	mistakenly dropped in a recent change.
+
+2004-11-01  Carl Worth  <cworth@cworth.org>
+
+	* cairo/pycairo-context.c (pycairo_set_target_ps)
+	(pycairo_set_target_png, pycairo_copy_page, pycairo_show_page):
+	Add missing functions. Thanks to Steve Chaplin
+	<stevech1097@yahoo.com.au>.
+
+	* cairo/Makefile.am (INCLUDES): Add CAIRO_CFLAGS so that things
+	compile even without pygtk.
+
+	* configure.ac: Don't re-do cairo pkg-config check when checking
+	for gtk.
+
+	* autogen.sh: If user has not set AUTOMAKE, then just use automake
+	rather than automake-1.7.
+
+2004-08-23  Øyvind Kolås <pippin@freedesktop.org>
+
+	* cairo/gtkcairomodule.c: cairo-xlib.h -> cairo.h
+
+2004-04-29  Carl Worth  <cworth@isi.edu>
+
+	* examples/text.py (expose_event): Hook up text_extents now that
+	it is working.
+
+	* cairo/pycairo-context.c (pycairo_text_extents): Hook up the text
+	extents code, (it hadn't been working in cairo some time ago).
+
+2003-11-14  Carl Worth  <cworth@east.isi.edu>
+
+	* examples/cairo-demo.py: Add #! magic.
+
+	* examples/cairo-knockout.py: Add #! magic.
+
+	* examples/text.py: Fixed to not call cairo.text_extents since
+	cairo_text_extents is not currently working.
+
+	* cairo/pycairo-surface.c: Removed calls to
+	cairo_surface_create_similar_solid which no longer exists in
+	cairo.
+
+	* cairo/cairomodule.c (init_cairo): Removed DISJOINT/CONJOINT
+	operators that are no longer in cairo.
+
+2003-10-28  James Henstridge  <james@daa.com.au>
+
+	* cairo/pycairo-context.c (pycairo_set_font): wrap function.
+	(pycairo_current_font): add accessor.
+
+	* cairo/pycairo-font.c: wrapper for Cairo font type.
+
+	* cairo/pycairo-context.c (pycairo_select_font): update to new
+	signature.
+	(pycairo_transform_font): update to new signature.
+	(pycairo_context_new): release context if wrapper could not be
+	created.
+
+2003-10-09  James Henstridge  <james@daa.com.au>
+
+	* cairo/cairogtkmodule.c (surface_create_for_drawable): change to
+	use new function.
+
+	* cairo/pycairo-context.c (pycairo_copy): change to new
+	cairo_copy() semantics.
+	(pycairo_arc): add wrapper.
+	(pycairo_arc_negative): add wrapper.
+
+	* cairo/pycairo-surface.c: same here.
+
+	* cairo/pycairo-matrix.c: same here.
+
+	* cairo/pycairo-context.c: don't cast to freefunc, as it didn't
+	exist in 2.2.
+
+2003-09-24  James Henstridge  <james@daa.com.au>
+
+	* examples/text.py (drawingarea): same here.
+
+	* examples/cairo-demo.py (expose): same here.
+
+	* examples/cairo-knockout.py (main): modify to make use of GTK
+	double buffering.
+
+	* cairo/cairogtkmodule.c (set_target_drawable): new function that
+	sets a context to draw on to a specified GdkDrawable, taking into
+	account the temporary pixmap GTK might be using for double
+	buffering.
+
+	* cairo/pycairo.h: expose check_status through the public API.
+
+2003-09-23  James Henstridge  <james@daa.com.au>
+
+	* examples/cairo-knockout.py: another example.
+
+	* examples/cairo-demo.py (SIZE): simple conversion of one of the
+	Cairo demos.
+
+2003-09-17  James Henstridge  <james@daa.com.au>
+
+	* examples/text.py (expose_event): set line width to 6 rather than
+	5.  This makes the line edges align with the pixel boundaries.
+
+	* cairo/cairomodule.c (pycairo_surface_create_for_image): add
+	wrapper.
+
+	* cairo/caironumpymodule.c (surface_from_array): new helper module
+	for creating surfaces from Numeric Python arrays.
+
+	* configure.in (export_dynamic): define conditionals for presence
+	of GTK and Numeric Python.
+
+	* cairo/pycairo-context.c (pycairo_current_target_surface): add
+	wrapper.
+

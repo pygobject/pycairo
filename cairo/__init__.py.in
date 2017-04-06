@@ -1,0 +1,4 @@
+from _cairo import *
+
+version = '@VERSION@'
+version_info = tuple([int(i) for i in '@VERSION@'.split('.')])

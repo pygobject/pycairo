@@ -1,0 +1,32 @@
+Snapshot 0.1.3 (2004-11-24 Carl Worth <cworth@cworth.org>)
+==========================================================
+After the recent server compromise we discarded all unsigned
+snapshots. That left us without a pycairo snapshot.
+
+Additionally, there were no tags in the source repository so I
+couldn't recreate the 0.1.2 snapshot, so here's a new 0.1.3 snapshot.
+
+I apologize if I botched the version number or left something
+significant out of this announcement---I'm not the one who will
+usually be doing pycairo maintenance.
+
+New bindings:
+	current_path
+	current_path_flat
+	current_font_extents
+
+Changes:
+	fill_extents,stroke_extents: Remove unnecessary args and
+	change from a method to an attribute.
+
+Other:
+	Added two new examples: context-subclass.py and warpedtext.py
+
+Snapshot 0.1.2 (2004-11-14 Steve Chaplin <steve1097@yahoo.com.au>
+=================================================================
+First snapshot for PyCairo
+
+Support added for patterns.
+Support added for cairo_set_target_png() and cairo_set_target_ps()
+
+Add LGPL/MPL license.
