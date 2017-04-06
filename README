@@ -3,7 +3,7 @@ http://www.cairographics.org/pycairo
 
 Dependencies
 ------------
-    cairo   >= 1.6.4
+    cairo   >= 1.8.0
     Python  >= 2.5
 
 Compiling
@@ -12,11 +12,8 @@ See the INSTALL document for build instructions.
 
 Documentation
 -------------
-Currently there is no Python specific cairo API documentation. However there
-is the cairo C documentation which can be useful. There is also a NOTES file
-in the tarball release which lists how Pycairo differs from the cairo C API,
-and there are Pycairo examples in the examples/ directory of the tarball
-release.
+The 'doc' directory contains reStructuredText files which are used by Sphinx
+to generate html (and other format) documentation.
 
 License
 -------
@@ -35,3 +32,10 @@ Bugzilla:
 If you find a bug in Pycairo, please go to
     https://bugs.freedesktop.org/enter_bug.cgi?product=pycairo
 and submit a bugreport.
+
+IMPORTANT: make sure you state which version of cairo and pycairo you are
+using when you report a problem or bug.
+
+>>> import cairo
+>>> cairo.cairo_version_string()  # shows the cairo version
+>>> cairo.version                 # shows the pycairo version

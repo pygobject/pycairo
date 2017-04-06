@@ -2,7 +2,7 @@
  *
  * Pycairo - Python bindings for cairo
  *
- * Copyright © 2003-2006 James Henstridge
+ * Copyright © 2003 James Henstridge, Steven Chaplin
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -87,11 +87,10 @@ font_face_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 static PyMethodDef font_face_methods[] = {
      * methods never exposed in a language binding:
      * cairo_font_face_destroy()
-     * cairo_font_face_get_type()
      * cairo_font_face_get_user_data()
+     * cairo_font_face_get_type()
      * cairo_font_face_reference()
      * cairo_font_face_set_user_data(),
-     *
     {NULL, NULL, 0, NULL},
 };
 */
@@ -218,6 +217,14 @@ scaled_font_get_font_face (PycairoScaledFont *o)
 }
 
 static PyObject *
+scaled_font_get_scale_matrix (PycairoScaledFont *o)
+{
+    cairo_matrix_t matrix;
+    cairo_scaled_font_get_scale_matrix (o->scaled_font, &matrix);
+    return PycairoMatrix_FromMatrix (&matrix);
+}
+
+static PyObject *
 scaled_font_text_extents (PycairoScaledFont *o, PyObject *obj)
 {
     cairo_text_extents_t extents;
@@ -247,10 +254,13 @@ static PyMethodDef scaled_font_methods[] = {
      * cairo_scaled_font_get_font_matrix
      * cairo_scaled_font_get_font_options
      * cairo_scaled_font_glyph_extents
+     * cairo_scaled_font_text_to_glyphs
      */
-    {"extents",       (PyCFunction)scaled_font_extents,       METH_NOARGS},
-    {"get_font_face", (PyCFunction)scaled_font_get_font_face, METH_NOARGS},
-    {"text_extents",  (PyCFunction)scaled_font_text_extents,  METH_O},
+    {"extents",       (PyCFunction)scaled_font_extents,        METH_NOARGS},
+    {"get_font_face", (PyCFunction)scaled_font_get_font_face,  METH_NOARGS},
+    {"get_scale_matrix", (PyCFunction)scaled_font_get_scale_matrix,
+                                                               METH_VARARGS},
+    {"text_extents",  (PyCFunction)scaled_font_text_extents,   METH_O},
     {NULL, NULL, 0, NULL},
 };
 
@@ -432,6 +442,7 @@ static PyMethodDef font_options_methods[] = {
      */
     /* TODO: */
     /* copy */
+    /* hash */
     /* merge */
     /* equal (richcmp?) */
     {"get_antialias",     (PyCFunction)font_options_get_antialias,

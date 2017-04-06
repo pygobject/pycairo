@@ -2,7 +2,7 @@
  *
  * Pycairo - Python bindings for cairo
  *
- * Copyright © 2003-2005 James Henstridge
+ * Copyright © 2003 James Henstridge, Steven Chaplin
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -65,6 +65,7 @@ typedef struct {
 typedef struct {
     PyObject_HEAD
     cairo_pattern_t *pattern;
+    PyObject *base; /* base object used to create pattern, or NULL */
 } PycairoPattern;
 
 #define PycairoSolidPattern   PycairoPattern

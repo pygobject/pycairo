@@ -1,4 +1,35 @@
-Overview of changes from pycairo 1.4.0 to pycairo 1.6.4
+Overview of changes from pycairo 1.6.4 to pycairo 1.8.0
+=======================================================
+General Changes:
+    Pycairo 1.8.0 requires cairo 1.8.0 (or later).
+    Add documentation (available separately)
+
+Bug Fixes:
+    18101: Add support for threading
+    18947: cairo.SurfacePattern should INCREF the used surface
+
+New Methods:
+    ScaledFont.get_scale_matrix
+    Surface.mark_dirty_rectangle
+    Surface.set_fallback_resolution
+
+New Constants:
+    cairo.EXTEND_PAD
+    cairo.HAS_IMAGE_SURFACE
+    cairo.HAS_USER_FONT
+
+API Changes:
+    Surface.mark_dirty: no longer accepts keyword arguments with default
+    values.
+    PycairoPattern_FromPattern (C API): has a new 'base' argument - to fix
+    #18947.
+
+Other Changes:
+    Allow unknown cairo Pattern/Surface types to use the pycairo base
+    Pattern/Surface type.
+
+
+Overview of changes from pycairo 1.4.12 to pycairo 1.6.4
 ========================================================
 General changes:
     Pycairo 1.6.4 requires cairo 1.6.4 (or later).

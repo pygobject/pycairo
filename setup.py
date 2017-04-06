@@ -6,11 +6,8 @@ import distutils.file_util as fut
 import subprocess
 import sys
 
-pycairo_version        = '1.6.4'
-cairo_version_required = '1.6.4'
-
-# Notes:
-# on Fedora Core 5 module is compiled with 'gcc -g' - why -g?
+pycairo_version        = '1.8.0'
+cairo_version_required = '1.8.0'
 
 def call(command):
     pipe = subprocess.Popen(command, shell=True,

@@ -2,7 +2,7 @@
  *
  * Pycairo - Python bindings for cairo
  *
- * Copyright © 2003-2005 James Henstridge
+ * Copyright © 2003 James Henstridge, Steven Chaplin
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -70,7 +70,8 @@ extern PyTypeObject PycairoSurfacePattern_Type;
 extern PyTypeObject PycairoGradient_Type;
 extern PyTypeObject PycairoLinearGradient_Type;
 extern PyTypeObject PycairoRadialGradient_Type;
-PyObject *PycairoPattern_FromPattern (cairo_pattern_t *pattern);
+PyObject *PycairoPattern_FromPattern (cairo_pattern_t *pattern,
+				      PyObject *base);
 
 extern PyTypeObject PycairoScaledFont_Type;
 PyObject *PycairoScaledFont_FromScaledFont (cairo_scaled_font_t *scaled_font);

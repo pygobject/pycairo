@@ -1,7 +1,12 @@
+***
+FAQ
+***
+
 Pycairo FAQ - Frequently Asked Questions
-----------------------------------------
+========================================
 
 Q: Can I subclass pycairo classes?
+
 A: Cairo, the C library, is not an object oriented library, so a Python
 binding can never be a truly object oriented interface to cairo.  One way to
 write the Python bindings for cairo would be as a single long list of module
@@ -22,21 +27,12 @@ cairo.Context can be subclassed.
 All other pycairo subclasses cannot be subclassed.
 
 
-Q: Where is the pycairo documentation?
-A: The documentation has not been written or generated yet.  The Python cairo
-bindings follow the underlying C API quite closely, so the C documentation can
-be used. It would be quite a long and tedious task to write Pycairo
-documentation from scratch; and it would essentially involve duplicating most
-of the C documentation. Another approach would be to take the existing C
-documentation and generate Python documentation from it, and just edit bits to
-make it Python-specific.  If anyone knows a good way to do this then any
-contributions would be welcome ...
-
-
 Q: How do I use pycairo with numpy?
+
 A: See test/isurface_create_for_data2.py
 
 
 Q: How do I use pycairo with pygame?
+
 A: See test/pygame-test1.py
        test/pygame-test2.py

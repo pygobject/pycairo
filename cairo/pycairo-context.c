@@ -2,7 +2,7 @@
  *
  * Pycairo - Python bindings for cairo
  *
- * Copyright © 2003-2005 James Henstridge
+ * Copyright © 2003 James Henstridge, Steven Chaplin
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -124,7 +124,9 @@ pycairo_append_path (PycairoContext *o, PyObject *args)
 			  &PycairoPath_Type, &p))
 	return NULL;
 
+    Py_BEGIN_ALLOW_THREADS
     cairo_append_path (o->ctx, p->path);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
@@ -160,7 +162,9 @@ pycairo_arc_negative (PycairoContext *o, PyObject *args)
 static PyObject *
 pycairo_clip (PycairoContext *o)
 {
+    Py_BEGIN_ALLOW_THREADS
     cairo_clip (o->ctx);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
@@ -177,7 +181,9 @@ pycairo_clip_extents (PycairoContext *o)
 static PyObject *
 pycairo_clip_preserve (PycairoContext *o)
 {
+    Py_BEGIN_ALLOW_THREADS
     cairo_clip_preserve (o->ctx);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
@@ -185,7 +191,9 @@ pycairo_clip_preserve (PycairoContext *o)
 static PyObject *
 pycairo_close_path (PycairoContext *o)
 {
+    Py_BEGIN_ALLOW_THREADS
     cairo_close_path (o->ctx);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
@@ -226,7 +234,9 @@ pycairo_copy_clip_rectangle_list (PycairoContext *o)
 static PyObject *
 pycairo_copy_page (PycairoContext *o)
 {
+    Py_BEGIN_ALLOW_THREADS
     cairo_copy_page (o->ctx);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
@@ -234,13 +244,21 @@ pycairo_copy_page (PycairoContext *o)
 static PyObject *
 pycairo_copy_path (PycairoContext *o)
 {
-    return PycairoPath_FromPath (cairo_copy_path (o->ctx));
+    cairo_path_t *cp;
+    Py_BEGIN_ALLOW_THREADS
+    cp = cairo_copy_path (o->ctx);
+    Py_END_ALLOW_THREADS
+    return PycairoPath_FromPath (cp);
 }
 
 static PyObject *
 pycairo_copy_path_flat (PycairoContext *o)
 {
-    return PycairoPath_FromPath (cairo_copy_path_flat (o->ctx));
+    cairo_path_t *cp;
+    Py_BEGIN_ALLOW_THREADS
+    cp = cairo_copy_path_flat (o->ctx);
+    Py_END_ALLOW_THREADS
+    return PycairoPath_FromPath (cp);
 }
 
 static PyObject *
@@ -287,7 +305,9 @@ pycairo_device_to_user_distance (PycairoContext *o, PyObject *args)
 static PyObject *
 pycairo_fill (PycairoContext *o)
 {
+    Py_BEGIN_ALLOW_THREADS
     cairo_fill (o->ctx);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
@@ -304,7 +324,9 @@ pycairo_fill_extents (PycairoContext *o)
 static PyObject *
 pycairo_fill_preserve (PycairoContext *o)
 {
+    Py_BEGIN_ALLOW_THREADS
     cairo_fill_preserve (o->ctx);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
@@ -460,7 +482,7 @@ static PyObject *
 pycairo_get_source (PycairoContext *o)
 {
     return PycairoPattern_FromPattern (
-	       cairo_pattern_reference (cairo_get_source (o->ctx)));
+	       cairo_pattern_reference (cairo_get_source (o->ctx)), NULL);
 }
 
 static PyObject *
@@ -639,7 +661,9 @@ pycairo_mask (PycairoContext *o, PyObject *args)
     if (!PyArg_ParseTuple(args, "O!:Context.mask", &PycairoPattern_Type, &p))
 	return NULL;
 
+    Py_BEGIN_ALLOW_THREADS
     cairo_mask (o->ctx, p->pattern);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
@@ -654,7 +678,9 @@ pycairo_mask_surface (PycairoContext *o, PyObject *args)
 			   &PycairoSurface_Type, &s, &surface_x, &surface_y))
 	return NULL;
 
+    Py_BEGIN_ALLOW_THREADS
     cairo_mask_surface (o->ctx, s->surface, surface_x, surface_y);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
@@ -691,7 +717,9 @@ pycairo_new_sub_path (PycairoContext *o)
 static PyObject *
 pycairo_paint (PycairoContext *o)
 {
+    Py_BEGIN_ALLOW_THREADS
     cairo_paint (o->ctx);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
@@ -704,7 +732,9 @@ pycairo_paint_with_alpha (PycairoContext *o, PyObject *args)
     if (!PyArg_ParseTuple (args, "d:Context.paint_with_alpha", &alpha))
 	return NULL;
 
+    Py_BEGIN_ALLOW_THREADS
     cairo_paint_with_alpha (o->ctx, alpha);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
@@ -721,7 +751,7 @@ pycairo_path_extents (PycairoContext *o)
 static PyObject *
 pycairo_pop_group (PycairoContext *o)
 {
-    return PycairoPattern_FromPattern (cairo_pop_group (o->ctx));
+    return PycairoPattern_FromPattern (cairo_pop_group (o->ctx), NULL);
 }
 
 static PyObject *
@@ -1160,7 +1190,9 @@ pycairo_show_glyphs (PycairoContext *o, PyObject *args)
     glyphs = _PyGlyphs_AsGlyphs (py_object, &num_glyphs);
     if (glyphs == NULL)
 	return NULL;
+    Py_BEGIN_ALLOW_THREADS
     cairo_show_glyphs (o->ctx, glyphs, num_glyphs);
+    Py_END_ALLOW_THREADS
     PyMem_Free (glyphs);
     RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
@@ -1169,7 +1201,9 @@ pycairo_show_glyphs (PycairoContext *o, PyObject *args)
 static PyObject *
 pycairo_show_page (PycairoContext *o)
 {
+    Py_BEGIN_ALLOW_THREADS
     cairo_show_page (o->ctx);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
@@ -1185,7 +1219,9 @@ pycairo_show_text (PycairoContext *o, PyObject *obj)
 	return NULL;
     }
 
+    Py_BEGIN_ALLOW_THREADS
     cairo_show_text (o->ctx, utf8);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
@@ -1193,7 +1229,9 @@ pycairo_show_text (PycairoContext *o, PyObject *obj)
 static PyObject *
 pycairo_stroke (PycairoContext *o)
 {
+    Py_BEGIN_ALLOW_THREADS
     cairo_stroke (o->ctx);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }
@@ -1210,7 +1248,9 @@ pycairo_stroke_extents (PycairoContext *o)
 static PyObject *
 pycairo_stroke_preserve (PycairoContext *o)
 {
+    Py_BEGIN_ALLOW_THREADS
     cairo_stroke_preserve (o->ctx);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
     Py_RETURN_NONE;
 }

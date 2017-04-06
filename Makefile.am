@@ -1,8 +1,6 @@
-SUBDIRS = cairo examples test
+SUBDIRS = cairo examples test doc
 
 EXTRA_DIST = \
-  doc/FAQ \
-  doc/NOTES \
   COPYING \
   COPYING-LGPL-2.1 \
   COPYING-MPL-1.1 \

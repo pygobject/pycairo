@@ -3,6 +3,7 @@
 """
 from __future__ import division
 from math import pi as M_PI  # used by many snippets
+import os.path
 import sys
 
 import cairo
@@ -11,7 +12,10 @@ import pango
 
 from snippets import snip_list, snippet_normalize
 
+
 Width, Height = 400, 400
+
+snippets_path = os.path.join(os.path.dirname(__file__), 'snippets')
 
 
 def gdkcolor_to_rgb (gdkcolor):
@@ -88,7 +92,8 @@ class Window (gtk.Window):
         if iter:
             filename = model[iter][0] + '.py'
             try:
-                file_obj = file('snippets/%s' % filename)
+                path = os.path.join(snippets_path, filename)
+                file_obj = open(path, 'r')
                 self.snippet_str = file_obj.read()
                 file_obj.close()
                 self.text_buffer.set_text(self.snippet_str)

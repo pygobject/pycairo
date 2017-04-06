@@ -2,7 +2,7 @@
  *
  * Pycairo - Python bindings for cairo
  *
- * Copyright © 2003-2005 James Henstridge
+ * Copyright © 2003 James Henstridge, Steven Chaplin
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -49,11 +49,10 @@
  *   PycairoWin32Surface, or
  *   PycairoXlibSurface from a cairo_surface_t.
  * surface - a cairo_surface_t to 'wrap' into a Python object.
- *           it is unreferenced if the PycairoSurface creation fails, or if
- *           the cairo_surface_t has an error status
- * base - the base object used to create the context, or NULL.
- *        it is referenced to keep it alive while the cairo_surface_t is
- *        being used
+ *   It is unreferenced if the PycairoSurface creation fails, or if the
+ *   cairo_surface_t has an error status.
+ * base - the base object used to create the surface, or NULL.
+ *   It is referenced to keep it alive while the cairo_surface_t is being used.
  * Return value: New reference or NULL on failure
  */
 PyObject *
@@ -70,9 +69,11 @@ PycairoSurface_FromSurface (cairo_surface_t *surface, PyObject *base)
     }
 
     switch (cairo_surface_get_type (surface)) {
+#if CAIRO_HAS_IMAGE_SURFACE
     case CAIRO_SURFACE_TYPE_IMAGE:
 	type = &PycairoImageSurface_Type;
 	break;
+#endif
 #if CAIRO_HAS_PDF_SURFACE
     case CAIRO_SURFACE_TYPE_PDF:
 	type = &PycairoPDFSurface_Type;
@@ -99,8 +100,8 @@ PycairoSurface_FromSurface (cairo_surface_t *surface, PyObject *base)
 	break;
 #endif
     default:
-	PyErr_SetString(CairoError, "Unsupported Surface type");
-	return NULL;
+	type = &PycairoSurface_Type;
+	break;
     }
 
     o = type->tp_alloc (type, 0);
@@ -156,7 +157,9 @@ surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 static PyObject *
 surface_copy_page (PycairoSurface *o)
 {
+    Py_BEGIN_ALLOW_THREADS
     cairo_surface_copy_page (o->surface);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
     Py_RETURN_NONE;
 }
@@ -187,7 +190,9 @@ surface_finish (PycairoSurface *o)
 static PyObject *
 surface_flush (PycairoSurface *o)
 {
+    Py_BEGIN_ALLOW_THREADS
     cairo_surface_flush (o->surface);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
     Py_RETURN_NONE;
 }
@@ -207,6 +212,14 @@ surface_get_device_offset (PycairoSurface *o)
 }
 
 static PyObject *
+surface_get_fallback_resolution (PycairoSurface *o)
+{
+    double x_ppi, y_ppi;
+    cairo_surface_get_fallback_resolution (o->surface, &x_ppi, &y_ppi);
+    return Py_BuildValue("(dd)", x_ppi, y_ppi);
+}
+
+static PyObject *
 surface_get_font_options (PycairoSurface *o)
 {
     cairo_font_options_t *options = cairo_font_options_create();
@@ -217,14 +230,20 @@ surface_get_font_options (PycairoSurface *o)
 }
 
 static PyObject *
-surface_mark_dirty (PycairoSurface *o, PyObject *args, PyObject *kwds)
+surface_mark_dirty (PycairoSurface *o)
 {
-    static char *kwlist[] = {"x", "y", "width", "height", NULL};
-    int x = 0, y = 0, width = -1, height = -1;
+    cairo_surface_mark_dirty (o->surface);
+    RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
+    Py_RETURN_NONE;
+}
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds,
-				     "|iiii:Surface.mark_dirty", kwlist,
-				     &x, &y, &width, &height))
+static PyObject *
+surface_mark_dirty_rectangle (PycairoSurface *o, PyObject *args)
+{
+    int x, y, width, height;
+
+    if (!PyArg_ParseTuple(args, "iiii:Surface.mark_dirty_rectangle",
+			  &x, &y, &width, &height))
 	return NULL;
 
     cairo_surface_mark_dirty_rectangle (o->surface, x, y, width, height);
@@ -260,7 +279,9 @@ surface_set_fallback_resolution (PycairoSurface *o, PyObject *args)
 static PyObject *
 surface_show_page (PycairoSurface *o)
 {
+    Py_BEGIN_ALLOW_THREADS
     cairo_surface_show_page (o->surface);
+    Py_END_ALLOW_THREADS
     RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
     Py_RETURN_NONE;
 }
@@ -274,8 +295,10 @@ surface_write_to_png (PycairoSurface *o, PyObject *file)
 
     if (PyObject_TypeCheck (file, &PyBaseString_Type)) {
 	/* string (filename) argument */
+	Py_BEGIN_ALLOW_THREADS
 	status = cairo_surface_write_to_png (o->surface,
 					     PyString_AsString(file));
+	Py_END_ALLOW_THREADS
 
     } else {  /* file or file-like object argument */
 	PyObject* writer = PyObject_GetAttrString (file, "write");
@@ -287,8 +310,10 @@ surface_write_to_png (PycairoSurface *o, PyObject *file)
 	    return NULL;
 	}
 	Py_DECREF(writer);
+	Py_BEGIN_ALLOW_THREADS
 	status = cairo_surface_write_to_png_stream (o->surface, _write_func,
 						    file);
+	Py_END_ALLOW_THREADS
     }
     RETURN_NULL_IF_CAIRO_ERROR(status);
     Py_RETURN_NONE;
@@ -310,8 +335,12 @@ static PyMethodDef surface_methods[] = {
     {"flush",          (PyCFunction)surface_flush,              METH_NOARGS},
     {"get_content",    (PyCFunction)surface_get_content,        METH_NOARGS},
     {"get_device_offset",(PyCFunction)surface_get_device_offset,METH_NOARGS},
+    {"get_fallback_resolution",(PyCFunction)surface_get_fallback_resolution,
+                                                                METH_NOARGS},
     {"get_font_options",(PyCFunction)surface_get_font_options,  METH_NOARGS},
-    {"mark_dirty",     (PyCFunction)surface_mark_dirty,         METH_KEYWORDS},
+    {"mark_dirty",     (PyCFunction)surface_mark_dirty,         METH_NOARGS},
+    {"mark_dirty_rectangle", (PyCFunction)surface_mark_dirty_rectangle,
+                                                                METH_VARARGS},
     {"set_device_offset",(PyCFunction)surface_set_device_offset,METH_VARARGS},
     {"set_fallback_resolution",(PyCFunction)surface_set_fallback_resolution,
                                                                 METH_VARARGS},
@@ -370,6 +399,7 @@ PyTypeObject PycairoSurface_Type = {
 
 
 /* Class ImageSurface(Surface) -------------------------------------------- */
+#ifdef CAIRO_HAS_IMAGE_SURFACE
 
 static PyObject *
 image_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
@@ -424,8 +454,10 @@ image_surface_create_for_data (PyTypeObject *type, PyObject *args)
 	PyErr_SetString(PyExc_TypeError, "buffer is not long enough");
 	return NULL;
     }
+    Py_BEGIN_ALLOW_THREADS
     surface = cairo_image_surface_create_for_data (buffer, format, width,
 						   height, stride);
+    Py_END_ALLOW_THREADS
     return PycairoSurface_FromSurface(surface, obj);
 }
 
@@ -453,11 +485,13 @@ static PyObject *
 image_surface_create_from_png (PyTypeObject *type, PyObject *file)
 {
     PyObject* reader;
+    cairo_surface_t *is;
 
     if (PyObject_TypeCheck (file, &PyBaseString_Type)) {
-	return PycairoSurface_FromSurface (
-            cairo_image_surface_create_from_png (PyString_AsString(file)),
-            NULL);
+	Py_BEGIN_ALLOW_THREADS
+        is = cairo_image_surface_create_from_png (PyString_AsString(file));
+	Py_END_ALLOW_THREADS
+        return PycairoSurface_FromSurface (is, NULL);
     }
 
     /* file or file-like object argument */
@@ -471,8 +505,10 @@ image_surface_create_from_png (PyTypeObject *type, PyObject *file)
     }
     Py_DECREF(reader);
 
-    return PycairoSurface_FromSurface (
-        cairo_image_surface_create_from_png_stream (_read_func, file), NULL);
+    Py_BEGIN_ALLOW_THREADS
+    is = cairo_image_surface_create_from_png_stream (_read_func, file);
+    Py_END_ALLOW_THREADS
+    return PycairoSurface_FromSurface (is, NULL);
 }
 #endif /* CAIRO_HAS_PNG_FUNCTIONS */
 
@@ -639,6 +675,7 @@ PyTypeObject PycairoImageSurface_Type = {
     0,                                  /* tp_is_gc */
     0,                                  /* tp_bases */
 };
+#endif /* CAIRO_HAS_IMAGE_SURFACE */
 
 
 /* Class PDFSurface(Surface) ---------------------------------------------- */
@@ -650,6 +687,7 @@ pdf_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     double width_in_points, height_in_points;
     PyObject *file, *writer;
+    cairo_surface_t *sfc;
 
     if (!PyArg_ParseTuple(args, "Odd:PDFSurface.__new__",
 			  &file, &width_in_points, &height_in_points))
@@ -657,10 +695,11 @@ pdf_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 
     if (PyObject_TypeCheck (file, &PyBaseString_Type)) {
 	/* string (filename) argument */
-	return PycairoSurface_FromSurface (
-                  cairo_pdf_surface_create (PyString_AsString(file),
-                                     width_in_points, height_in_points),
-	       NULL);
+	Py_BEGIN_ALLOW_THREADS
+	sfc = cairo_pdf_surface_create (PyString_AsString(file),
+					width_in_points, height_in_points);
+	Py_END_ALLOW_THREADS
+	    return PycairoSurface_FromSurface (sfc, NULL);
     }
     /* file or file-like object argument */
     writer = PyObject_GetAttrString (file, "write");
@@ -673,10 +712,11 @@ pdf_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
     }
     Py_DECREF(writer);
 
-    return PycairoSurface_FromSurface (
-	       cairo_pdf_surface_create_for_stream (_write_func, file,
-		   width_in_points, height_in_points),
-	   file);
+    Py_BEGIN_ALLOW_THREADS
+    sfc = cairo_pdf_surface_create_for_stream (_write_func, file,
+					       width_in_points, height_in_points);
+    Py_END_ALLOW_THREADS
+    return PycairoSurface_FromSurface (sfc, file);
 }
 
 static PyObject *
@@ -753,6 +793,7 @@ ps_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     double width_in_points, height_in_points;
     PyObject *file, *writer;
+    cairo_surface_t *sfc;
 
     if (!PyArg_ParseTuple(args, "Odd:PSSurface.__new__",
 			  &file, &width_in_points, &height_in_points))
@@ -760,11 +801,11 @@ ps_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 
     if (PyObject_TypeCheck (file, &PyBaseString_Type)) {
 	/* string (filename) argument */
-	return PycairoSurface_FromSurface (
-                  cairo_ps_surface_create (PyString_AsString(file),
-                                     width_in_points, height_in_points),
-	       NULL);
-
+        Py_BEGIN_ALLOW_THREADS
+	sfc = cairo_ps_surface_create (PyString_AsString(file),
+				 width_in_points, height_in_points);
+        Py_END_ALLOW_THREADS
+	return PycairoSurface_FromSurface (sfc, NULL);
     }
     /* else: file or file-like object argument */
     writer = PyObject_GetAttrString (file, "write");
@@ -777,10 +818,11 @@ ps_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
     }
     Py_DECREF(writer);
 
-    return PycairoSurface_FromSurface (
-	       cairo_ps_surface_create_for_stream (_write_func, file,
-                   width_in_points, height_in_points),
-	       file);
+    Py_BEGIN_ALLOW_THREADS
+    sfc = cairo_ps_surface_create_for_stream (_write_func, file,
+					width_in_points, height_in_points);
+    Py_END_ALLOW_THREADS
+    return PycairoSurface_FromSurface (sfc, file);
 }
 
 static PyObject *
@@ -943,6 +985,7 @@ svg_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     double width_in_points, height_in_points;
     PyObject *file, *writer;
+    cairo_surface_t *sfc;
 
     if (!PyArg_ParseTuple(args, "Odd:SVGSurface.__new__",
 			  &file, &width_in_points, &height_in_points))
@@ -950,10 +993,11 @@ svg_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 
     if (PyObject_TypeCheck (file, &PyBaseString_Type)) {
 	/* string (filename) argument */
-	return PycairoSurface_FromSurface (
-                  cairo_svg_surface_create (PyString_AsString(file),
-                                     width_in_points, height_in_points),
-	       NULL);
+        Py_BEGIN_ALLOW_THREADS
+	sfc = cairo_svg_surface_create (PyString_AsString(file),
+				  width_in_points, height_in_points);
+        Py_END_ALLOW_THREADS
+	return PycairoSurface_FromSurface (sfc, NULL);
     }
     /* else: file or file-like object argument */
     writer = PyObject_GetAttrString (file, "write");
@@ -966,10 +1010,11 @@ svg_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
     }
     Py_DECREF(writer);
 
-    return PycairoSurface_FromSurface (
-	       cairo_svg_surface_create_for_stream (_write_func, file,
-	           width_in_points, height_in_points),
-	       file);
+    Py_BEGIN_ALLOW_THREADS
+    sfc = cairo_svg_surface_create_for_stream (_write_func, file,
+					 width_in_points, height_in_points);
+    Py_END_ALLOW_THREADS
+    return PycairoSurface_FromSurface (sfc, file);
 }
 
 static PyMethodDef svg_surface_methods[] = {

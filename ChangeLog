@@ -1,3 +1,121 @@
+=== Pycairo 1.8.0 ===
+2008-12-15  Steven Chaplin  <steve1097 # yahoo.com.au>
+
+	* configure.ac:
+	* cairo/cairomodule.c:
+	* setup.py:
+	update version number to 1.8.0
+
+	* NEWS: update for the 1.8.0 release
+
+2008-12-15  Steven Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/pycairo-pattern.c (surface_pattern_get_surface): return the
+	PycairoSurface used to create the PycairoSurfacePattern, instead of
+	creating a new PycairoSurface.
+
+2008-12-10  Steven Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/pycairo-private.h:
+	* cairo/pycairo.h (struct): add 'base' field for PycairoPattern
+
+	* cairo/pycairo-pattern.c (PycairoPattern_FromPattern): add a new 'base'
+	argument - this is a C API change to fix #18947.
+
+	* cairo/pycairo-context.c:
+	* cairo/pycairo-pattern.c:
+	Update all calls to PycairoPattern_FromPattern to new API.
+
+	* cairo/pycairo-surface.c: update PycairoSurface_FromSurface comment.
+
+2008-12-10  Steven Chaplin  <steve1097 # yahoo.com.au>
+	* RELEASING: add doc generating notes
+
+	* configure.ac: add 'doc/Makefile' to AC_CONFIG_FILES.
+	Require automake 1.9.6
+	* Makefile.am: add 'doc' to SUBDIRS
+
+	* configure.ac:
+	* README :
+	* setup.py :
+	Require cairo 1.8.0
+
+	* cairo/cairomodule.c:
+	add cairo.EXTEND_PAD
+
+	* cairo/pycairo-font.c: update comments in the method section
+
+	* cairo/pycairo-matrix.c: add comment in method list
+
+	* cairo/pycairo-surface.c
+	(surface_mark_dirty): API change, it no longer accepts keyword
+	arguments with default values - the default values used are not
+	documented in the cairo manual so were effectively magic numbers.
+	(surface_mark_dirty_rectangle):
+	(surface_set_fallback_resolution):
+	add new bindings
+
+	* doc/FAQ:
+	* doc/NOTES:
+        remove files - the info has been merged into the other docs.
+
+	* doc/c-api.rst:
+	* doc/conf.py:
+	* doc/faq.rst:
+	* doc/index.rst:
+	* doc/Makefile.am:
+	* doc/overview.rst:
+	* doc/README:
+	* doc/reference/context.rst:
+	* doc/reference/exceptions.rst:
+	* doc/reference/index.rst:
+	* doc/reference/matrix.rst:
+	* doc/reference/mattributes.rst:
+	* doc/reference/paths.rst:
+	* doc/reference/patterns.rst:
+	* doc/reference/surfaces.rst:
+	* doc/reference/text.rst:
+	Create Sphinx documentation files
+
+	* examples/cairo_snippets/snippets_gtk.py:
+	update so it can be run from outside its directory
+
+2008-11-25  Steven Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/pycairo-context.c:
+	* cairo/pycairo-surface.c:
+	Improve support for threads by using
+	Py_BEGIN_ALLOW_THREADS
+	Py_END_ALLOW_THREADS
+	around any blocking or possibly long-running cairo calls.
+	Addresses bug #18101
+
+	* cairo/cairomodule.c:
+	add cairo.HAS_IMAGE_SURFACE
+	add cairo.HAS_USER_FONT
+
+	* cairo/pycairo-font.c:
+	wrap cairo_scaled_font_get_scale_matrix
+
+	* cairo/pycairo-surface.c:
+	use CAIRO_HAS_IMAGE_SURFACE
+
+2008-09-09  Steven Chaplin  <steve1097 # yahoo.com.au>
+
+	* NEWS: fix pycairo version number error
+
+2008-09-01  Steven Chaplin  <steve1097 # yahoo.com.au>
+
+	* setup.py (pycairo_version):
+	* cairo/cairomodule.c:
+	* configure.ac:
+	Increment pycairo version to 1.6.5
+
+	* cairo/pycairo-pattern.c (PycairoPattern_FromPattern):
+	* cairo/pycairo-surface.c (PycairoSurface_FromSurface):
+	Allow unknown cairo Pattern/Surface types to use the pycairo base
+	Pattern/Surface type, patch by Owen Taylor.
+
 === Pycairo 1.6.4 ===
 2008-07-17  Steven Chaplin  <steve1097 # yahoo.com.au>
 
