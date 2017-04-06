@@ -65,6 +65,9 @@ pycairo_check_status(cairo_status_t status)
     case CAIRO_STATUS_NULL_POINTER:
 	PyErr_SetString(PyExc_RuntimeError, "NULL pointer");
 	return 1;
+    case CAIRO_STATUS_INVALID_STRING:
+	PyErr_SetString(PyExc_RuntimeError, "invalid string");
+	return 1;
     default:
 	PyErr_SetString(PyExc_RuntimeError, "other cairo error");
 	return 1;

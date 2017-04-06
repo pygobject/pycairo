@@ -1,4 +1,87 @@
-=== PyCairo snapshot 0.1.4 ===
+=== PyCairo 0.4.0 ===
+2005-03-10  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* configure.ac: require cairo >= 0.4.0
+	increase pycairo version to 0.4.0
+
+	* README: note cairo >= 0.4.0 is required
+
+2005-03-10  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/cairomodule.c (pycairo_check_status): add 
+	CAIRO_STATUS_INVALID_STRING
+
+	* cairo/pycairo-context.c (pycairo_current_font): if !font display
+	error message
+
+	* cairo/pycairo-font.c (pycairo_font_set_transform) 
+	(pycairo_font_current_transform): remove the (already commented out)
+	functions.
+	(cairo_font_extents): new wrapper
+
+2005-03-08  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* examples/gtk/hangman.py: new example moved over from
+	cairo-demo/python/, updated to remove DeprecationWarnings.
+	* examples/Makefile.am (EXTRA_DIST): add hangman.py
+
+2005-03-02  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo.h: include cairo-pdf.h
+
+2005-03-02  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo.h: 
+	* cairo/cairogtkmodule.c: move '#include <cairo-xlib.h>' from pycairo.h
+	to cairogtkmodule.c - the only place where its needed. Remove the
+	'#ifdef CAIRO_HAS_XLIB_SURFACE' since its already in cairo-xlib.h 
+
+2005-03-02  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* configure.ac: increase libsvg_cairo_required_version to 0.1.5
+	* examples/Makefile.am (EXTRA_DIST): change paths so that svg examples
+	are now in examples/svg/
+
+2005-02-16  Carl Worth  <cworth@cworth.org>
+
+	* cairo/pycairo.h: Wrap include of cairo-xlib.h in
+	CAIRO_HAS_XLIB_SURFACE.
+
+	* autogen.sh: Call all autotool commands through environment
+	variables. Thanks to Rui Lopes.
+
+2005-02-16  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* configure.ac: add examples/Makefile to AC_CONFIG_FILES (omitted from
+	last commit)
+	* examples: move gtk examples (cairo-demo.py, cairo-knockout.py,
+	lsystem.py, text.py) to their own subdirectory examples/gtk
+	* examples/Makefile.am (EXTRA_DIST): update paths to gtk examples
+	
+2005-02-05  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* INSTALL: new file
+	* README: move install notes to INSTALL; add reference to the mailing
+	list
+
+	* Makefile.am (SUBDIRS): add examples
+	* examples/Makefile.am: new file with EXTRA_DIST listing examples/*.py
+	* configure.ac: add examples/Makefile to AC_CONFIG_FILES
+
+2005-01-26  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* configure.ac: require Cairo 0.3.0
+
+	* README: mention cairo 0.3.0 is required
+
+	* cairo/pycairo-font.c (pycairo_font_set_transform):
+	(pycairo_font_current_transform): comment out - they give compile
+	warnings and it looks like the cairo functions are no longer available.
+
+2005-01-20  Carl Worth  <cworth@cworth.org>
+
+	* cairo/pycairo.h: Track split-up of cairo.h.
+
 2005-01-12  Steve Chaplin  <steve1097@yahoo.com.au>
 	
 	* configure.ac: Increment pycairo version to 0.1.4
@@ -26,6 +109,7 @@
 	* configure.ac: add --without-pygtk option
 	* README: add './configure --without-pygtk' example
 
+>>>>>>> 1.39
 2004-12-14  Steve Chaplin  <steve1097@yahoo.com.au>
 
 	* README: added notes to describe compiling and how to avoid PYTHONPATH

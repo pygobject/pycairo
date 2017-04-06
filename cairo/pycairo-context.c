@@ -917,9 +917,10 @@ pycairo_current_font(PyCairoContext *self)
     cairo_font_t *font;
 
     font = cairo_current_font(self->ctx);
-    if (!font)
-	Py_RETURN_NONE;
-
+    if (!font){
+	pycairo_check_status(cairo_status(self->ctx));
+	return NULL;
+    }
     cairo_font_reference(font);
     return pycairo_font_wrap(font);
 }
@@ -1222,23 +1223,23 @@ static PyMethodDef pycairo_methods[] = {
 };
 
 static PyGetSetDef pycairo_getsets[] = {
-    { "alpha",        (getter)pycairo_current_alpha, (setter)0 },
-    { "fill_extents", (getter)pycairo_fill_extents, (setter)0 },
-    { "fill_rule",    (getter)pycairo_current_fill_rule, (setter)0 },
-    { "font",         (getter)pycairo_current_font, (setter)0 },
-    { "font_extents", (getter)pycairo_current_font_extents, (setter)0 },
-    { "line_cap",     (getter)pycairo_current_line_cap, (setter)0 },
-    { "line_join",    (getter)pycairo_current_line_join, (setter)0 },
-    { "line_width",   (getter)pycairo_current_line_width, (setter)0 },
-    { "matrix",       (getter)pycairo_current_matrix, (setter)0 },
-    { "miter_limit",  (getter)pycairo_current_miter_limit, (setter)0 },
-    { "operator",     (getter)pycairo_current_operator, (setter)0 },
-    { "pattern",      (getter)pycairo_current_pattern, (setter)0 },
-    { "point",        (getter)pycairo_current_point, (setter)0 },
-    { "rgb_color",    (getter)pycairo_current_rgb_color, (setter)0 },
-    { "stroke_extents", (getter)pycairo_stroke_extents, (setter)0 },
+    { "alpha",          (getter)pycairo_current_alpha,        (setter)0 },
+    { "fill_extents",   (getter)pycairo_fill_extents,         (setter)0 },
+    { "fill_rule",      (getter)pycairo_current_fill_rule,    (setter)0 },
+    { "font",           (getter)pycairo_current_font,         (setter)0 },
+    { "font_extents",   (getter)pycairo_current_font_extents, (setter)0 },
+    { "line_cap",       (getter)pycairo_current_line_cap,     (setter)0 },
+    { "line_join",      (getter)pycairo_current_line_join,    (setter)0 },
+    { "line_width",     (getter)pycairo_current_line_width,   (setter)0 },
+    { "matrix",         (getter)pycairo_current_matrix,       (setter)0 },
+    { "miter_limit",    (getter)pycairo_current_miter_limit,  (setter)0 },
+    { "operator",       (getter)pycairo_current_operator,     (setter)0 },
+    { "pattern",        (getter)pycairo_current_pattern,      (setter)0 },
+    { "point",          (getter)pycairo_current_point,        (setter)0 },
+    { "rgb_color",      (getter)pycairo_current_rgb_color,    (setter)0 },
+    { "stroke_extents", (getter)pycairo_stroke_extents,       (setter)0 },
     { "target_surface", (getter)pycairo_current_target_surface, (setter)0 },
-    { "tolerance",    (getter)pycairo_current_tolerance, (setter)0 },
+    { "tolerance",      (getter)pycairo_current_tolerance,    (setter)0 },
     { NULL, (getter)0, (setter)0 }
 };
 

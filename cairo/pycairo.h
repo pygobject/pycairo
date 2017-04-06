@@ -36,6 +36,9 @@
 
 #include <Python.h>
 #include <cairo.h>
+#include <cairo-pdf.h>
+#include <cairo-png.h>
+#include <cairo-ps.h>
 
 typedef struct {
     PyObject_HEAD

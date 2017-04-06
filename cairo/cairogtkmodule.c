@@ -36,7 +36,8 @@
 #endif
 #include "pycairo.h"
 #include "pycairo-misc.h"
-#include <cairo.h>
+#include <cairo-xlib.h>
+
 #include <pygtk/pygtk.h>
 #include <gdk/gdkx.h>
 

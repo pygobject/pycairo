@@ -1,3 +1,22 @@
+Snapshot 0.4.0 (2005-03-10 Steve Chaplin <steve1097@yahoo.com.au>)
+==================================================================
+
+New Cairo bindings:
+	cairo_font_extents
+
+Bindings removed:
+	cairo_font_set_transform
+	cairo_font_current_transform
+
+New examples:
+	gtk/hangman.py
+
+Other:
+	Changed version numbering to correspond directly with the Cairo
+	version PyCairo was developed to work with. So, for example,
+	PyCairo version 0.4.0 represents the PyCairo version that has been 
+	developed and tested with Cairo 0.4.0.
+
 Snapshot 0.1.4 (2005-01-12 Steve Chaplin <steve1097@yahoo.com.au>)
 ===================================================================
 The PyCairo license has changed so that it is now dual-licensed under the LGPL

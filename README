@@ -1,27 +1,22 @@
 PyCairo - Python bindings for Cairo
 http://cairographics.org
 
-Dependencies (with minimum versions required)
-------------
-    cairo  		0.2.0
-    Python 		2.2  
-    libsvg-cairo	0.1.4, optional
-    Numeric Python	optional
-    PyGTK		1.99.16, optional
-
 Compiling
 ---------
-    $ python -c "import sys; print sys.prefix"
-        # make a note of the python prefix
-    $ ./configure --prefix=<python_prefix>
-    $ make
-    $ make install
+See the INSTALL document for build instructions.
 
-If you're installing to another prefix than the one where Python is installed
-Python will not be able to find the cairo module until you add
-$prefix/lib/pythonX.Y/site-packages to the PYTHONPATH variable.
+Dependencies
+------------
+    cairo  		>= 0.4.0
+    Python 		>= 2.2  
+    libsvg-cairo	optional >= 0.1.4
+    Numeric Python	optional
+    PyGTK		optional >= 1.99.16
 
-If libsvg-cairo, PyGTK or Numeric Python are detected optional modules will
-be compiled. To disable PyGTK support use
+Mailing List
+------------
+If you have trouble with Cairo or PyCairo or you have some ideas for how it
+could be improved, please feel free to send a message to
+cairo@cairographics.org
 
-    $ ./configure --without-pygtk
+	http://cairographics.org/cgi-bin/mailman/listinfo/cairo

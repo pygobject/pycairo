@@ -66,39 +66,29 @@ pycairo_font_dealloc(PyCairoFont *self)
 	PyObject_Del(self);
 }
 
-
 static PyObject *
-pycairo_font_set_transform(PyCairoFont *self, PyObject *args)
+pycairo_font_extents(PyCairoFont *self, PyObject *args)
 {
     PyCairoMatrix *matrix;
+    cairo_font_extents_t extents;
 
-    if (!PyArg_ParseTuple(args, "O!:Font.set_transform",
+    if (!PyArg_ParseTuple(args, "O!:Font.extents",
 			  &PyCairoMatrix_Type, &matrix))
 	return NULL;
 
-    cairo_font_set_transform(self->font, matrix->matrix);
-    Py_RETURN_NONE;
+    if (pycairo_check_status(cairo_font_extents(self->font, matrix, &extents)))
+	return NULL;
+    return Py_BuildValue("(ddddd)", extents.ascent, extents.descent, extents.height, extents.max_x_advance, extents.max_y_advance);
 }
 
+
 static PyMethodDef pycairo_font_methods[] = {
-    { "set_transform", (PyCFunction)pycairo_font_set_transform, METH_VARARGS },
+    { "extents", (PyCFunction)pycairo_font_extents, METH_VARARGS },
+    /* TODO { "glyph_extents", (PyCFunction)pycairo_font_extents, METH_VARARGS },*/
     { NULL, NULL, 0 }
 };
 
-static PyObject *
-pycairo_font_current_transform(PyCairoFont *self)
-{
-    cairo_matrix_t *matrix;
-
-    matrix = cairo_matrix_create();
-    if (!matrix)
-	return PyErr_NoMemory();
-    cairo_font_current_transform(self->font, matrix);
-    return pycairo_matrix_wrap(matrix);
-}
-
 static PyGetSetDef pycairo_font_getsets[] = {
-    { "transform", (getter)pycairo_font_current_transform, (setter)0 },
     { NULL, (getter)0, (setter)0 }
 };
 
@@ -112,8 +102,8 @@ PyTypeObject PyCairoFont_Type = {
     /* methods */
     (destructor)pycairo_font_dealloc,   /* tp_dealloc */
     (printfunc)0,                       /* tp_print */
-    (getattrfunc)0,                     /* tp_getattr */
-    (setattrfunc)0,                     /* tp_setattr */
+    0,                                  /* tp_getattr */
+    0,                                  /* tp_setattr */
     (cmpfunc)0,                         /* tp_compare */
     (reprfunc)0,                        /* tp_repr */
     0,                                  /* tp_as_number */
@@ -122,8 +112,8 @@ PyTypeObject PyCairoFont_Type = {
     (hashfunc)0,                        /* tp_hash */
     (ternaryfunc)0,                     /* tp_call */
     (reprfunc)0,                        /* tp_str */
-    (getattrofunc)0,                    /* tp_getattro */
-    (setattrofunc)0,                    /* tp_setattro */
+    0,                                  /* tp_getattro */
+    0,                                  /* tp_setattro */
     0,                                  /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,                 /* tp_flags */
     NULL, /* Documentation string */
