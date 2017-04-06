@@ -8,8 +8,6 @@ EXTRA_DIST = \
   cairo_snippets/snippets_png.py \
   cairo_snippets/snippets_ps.py \
   cairo_snippets/snippets_svg.py \
-  cairo_snippets/data/freedesktop.svg \
-  cairo_snippets/data/home.svg \
   cairo_snippets/data/romedalen.png \
   cairo_snippets/snippets/arc_negative.py \
   cairo_snippets/snippets/arc.py \
@@ -21,22 +19,11 @@ EXTRA_DIST = \
   cairo_snippets/snippets/fill_and_stroke2.py \
   cairo_snippets/snippets/fill_and_stroke.py \
   cairo_snippets/snippets/gradient.py \
+  cairo_snippets/snippets/gradient_mask.py \
   cairo_snippets/snippets/group.py \
   cairo_snippets/snippets/imagepattern.py \
   cairo_snippets/snippets/image.py \
   cairo_snippets/snippets/__init__.py \
-  cairo_snippets/snippets/libsvg.py \
-  cairo_snippets/snippets/operator_add.py \
-  cairo_snippets/snippets/operator_atop.py \
-  cairo_snippets/snippets/operator_atop_reverse.py \
-  cairo_snippets/snippets/operator_in.py \
-  cairo_snippets/snippets/operator_in_reverse.py \
-  cairo_snippets/snippets/operator_out.py \
-  cairo_snippets/snippets/operator_out_reverse.py \
-  cairo_snippets/snippets/operator_over.py \
-  cairo_snippets/snippets/operator_over_reverse.py \
-  cairo_snippets/snippets/operator_saturate.py \
-  cairo_snippets/snippets/operator_xor.py \
   cairo_snippets/snippets/path.py \
   cairo_snippets/snippets/set_line_cap.py \
   cairo_snippets/snippets/set_line_join.py \
@@ -48,6 +35,4 @@ EXTRA_DIST = \
   gtk/hangman.py \
   gtk/lsystem.py \
   gtk/png_view.py \
-  gtk/text.py \
-  svg/svgconvert.py \
-  svg/svgview.py
+  gtk/text.py

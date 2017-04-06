@@ -35,6 +35,11 @@
 #endif
 #include "pycairo-private.h"
 
+#define VERSION_MAJOR 1
+#define VERSION_MINOR 2
+#define VERSION_MICRO 2
+static char pycairo_version_string[] = "1.2.2";
+
 
 /* A module specific exception */
 PyObject *CairoError = NULL;
@@ -221,6 +226,11 @@ init_cairo(void)
 #endif
 
     m = Py_InitModule("cairo._cairo", cairo_functions);
+
+    PyModule_AddStringConstant(m, "version", pycairo_version_string);
+    PyModule_AddObject(m, "version_info",
+		       Py_BuildValue("(iii)", VERSION_MAJOR, VERSION_MINOR,
+				     VERSION_MICRO));
 
     Py_INCREF(&PycairoContext_Type);
     PyModule_AddObject(m, "Context", (PyObject *)&PycairoContext_Type);

@@ -12,7 +12,7 @@ if gtk.pygtk_version < (2,7,0):
 
 import pango
 
-from snippets import snip_list, snippet_normalize, snippet_set_bg_svg
+from snippets import snip_list, snippet_normalize
 
 Width, Height = 400, 400
 

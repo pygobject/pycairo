@@ -8,7 +8,7 @@ import cairo
 if not cairo.HAS_SVG_SURFACE:
     raise SystemExit ('cairo was not compiled with SVG support')
 
-from snippets import snip_list, snippet_normalize, snippet_set_bg_svg
+from snippets import snip_list, snippet_normalize
 
 
 width_in_inches, height_in_inches = 2, 2

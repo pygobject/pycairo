@@ -4,14 +4,13 @@ AC_PREREQ(2.59)
 # the pycairo version number
 m4_define(pycairo_version_major, 1)
 m4_define(pycairo_version_minor, 2)
-m4_define(pycairo_version_micro, 0)
+m4_define(pycairo_version_micro, 2)
 m4_define(pycairo_version, pycairo_version_major.pycairo_version_minor.pycairo_version_micro)
 
 # versions of packages we require
-m4_define(cairo_required_version,    1.2.0)
-m4_define(gtk_required_version,      2.2.0)
-m4_define(pygtk_required_version,    2.2.0)
-m4_define(libsvg_cairo_required_version, 0.1.6)
+m4_define(cairo_required_version, 1.2.2)
+m4_define(gtk_required_version,   2.2.0)
+m4_define(pygtk_required_version, 2.2.0)
 
 AC_INIT([pycairo],
 	[pycairo_version],
@@ -76,15 +75,6 @@ if test x"$with_pygtk" = xyes; then
 fi
 AM_CONDITIONAL(WITH_PYGTK, test x$with_pygtk = xyes)
 
-# is libsvg-cairo installed?
-PKG_CHECK_MODULES(LIBSVG_CAIRO,
-  libsvg-cairo >= libsvg_cairo_required_version,
-  [have_libsvg_cairo=yes],[have_libsvg_cairo=no])
-if test -n "$export_dynamic"; then
-  LIBSVG_CAIRO_LIBS=`echo $LIBSVG_CAIRO_LIBS | sed -e "s/$export_dynamic//"`
-fi
-AM_CONDITIONAL(HAVE_LIBSVG_CAIRO, test x$have_libsvg_cairo = xyes)
-
 # Checks for header files ---
 AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
 
@@ -145,7 +135,6 @@ esac
 AC_CONFIG_FILES([
 Makefile
 pycairo.pc
-cairo/__init__.py
 cairo/Makefile
 examples/Makefile
 test/Makefile
@@ -159,6 +148,5 @@ Installation prefix             ${prefix}
 
 Additional modules:
 	build cairo.gtk?        ${with_pygtk}
-	build cairo.svg?        ${have_libsvg_cairo}
 	build Numeric support?  ${have_numpy}
 "

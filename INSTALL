@@ -1,27 +1,30 @@
-This package uses automake
+Install method1 - preferred method
+---------------
+Using the same install method of install as cairo - GNU autotools.
 
-        $ python -c "import sys; print sys.prefix"
-            # make a note of the python prefix
+    $ python -c "import sys; print sys.prefix"
+      # make a note of the python prefix
+    $ ./configure --prefix=<python_prefix>
+    $ make
+    $ make install       # may require superuser access
 
-To build from CVS:
-	$ ./autogen.sh --prefix=<python_prefix>
-or to build from a snapshot release:
-        $ ./configure --prefix=<python_prefix>
-
-After that, standard build procedures apply:
-
-        $ make
-        # make install
+To build from CVS, use this line instead of the configure line above:
+    $ ./autogen.sh --prefix=<python_prefix>
 
 If you're installing to another prefix than the one where Python is installed
 Python will not be able to find the cairo module until you add
 $prefix/lib/pythonX.Y/site-packages to the PYTHONPATH variable.
 
-If libsvg-cairo, PyGTK or Numeric Python are detected optional modules will
-be compiled.
+If PyGTK or Numeric Python are detected optional modules will be compiled.
 However, if PyGTK >= 2.7.0 is detected then cairo.gtk is not built since
 pycairo is now supported directly by PyGTK.
 
-To disable PyGTK support use
-
+To disable PyGTK support use:
     $ ./configure --without-pygtk
+
+
+Install method2 - alternative install method
+---------------
+    1. Untar the .tar.gz file
+    2. cd into the resulting directory
+    3. python setup.py install

@@ -1,3 +1,20 @@
+Overview of changes from pycairo 1.2.0 to pycairo 1.2.2
+=======================================================
+
+* Pycairo requires cairo 1.2.2 (or later)
+
+* setup.py has been updated to allow installation by executing
+  $ python setup.py install
+
+* examples/cairo_snippets/snippets/gradient_mask.py
+  A new example to demonstrate pattern masks.
+
+* The cairo.svg module has been removed because:
+  1) Cairo does not include SVG parsing, so this module does not belong
+     in pycairo.
+  2) libsvg-cairo (the underlying C library) is unmaintained.
+
+
 Overview of changes from pycairo 1.1.6 to pycairo 1.2.0
 =======================================================
 General changes:

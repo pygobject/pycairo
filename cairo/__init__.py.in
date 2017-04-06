@@ -1,4 +1,0 @@
-from _cairo import *
-
-version = '@VERSION@'
-version_info = (@VERSION_INFO@)

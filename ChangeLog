@@ -1,3 +1,98 @@
+=== Pycairo 1.2.2 ===
+2006-08-21  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/Makefile.am (pycairoexec_PYTHON): remove 'nodist_' from
+	__init__.py
+
+	* README : note cairo 1.2.2 is required
+
+	* cairo/cairomodule.c: increment pycairo version to 1.2.2
+
+	* configure.ac: increment pycairo to 1.2.2, and require cairo 1.2.2.
+
+2006-08-19  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* INSTALL: add notes for new install method.
+
+	* setup.py : install pycairo.h and pycairo.pc files.
+
+2006-08-17  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* setup.py: update so 'python setup.py install' can be used as an
+	alternative install method.
+
+2006-08-16  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/__init__.py: add new file
+	* cairo/__init__.py.in: remove file
+
+	* configure.ac:
+	* RELEASING:
+	* cairo/cairomodule.c:
+	move version and version_info module attributes from __init__.py to
+	cairomodule.c
+
+2006-08-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* NOTES : update to note surface creation supports file-like objects.
+
+	* INSTALL: update
+
+2006-08-07  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* examples/Makefile.am:
+	* examples/cairo_snippets/snippets/gradient_mask.py:
+	Add new snippet	copied from Michael Urman's cairo tutorial.
+
+2006-08-04  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	Remove the cairo.svg module because
+	1) Cairo does not include SVG parsing, so this module does not belong
+	   in pycairo.
+	2) libsvg-cairo (the underlying C library) is unmaintained.
+
+	Modified files:
+	* cairo/Makefile.am
+	* configure.ac
+	* examples/cairo_snippets/snippets/__init__.py
+	* examples/cairo_snippets/snippets_gtk.py
+	* examples/cairo_snippets/snippets_pdf.py
+	* examples/cairo_snippets/snippets_png.py
+	* examples/cairo_snippets/snippets_ps.py
+	* examples/cairo_snippets/snippets_svg.py
+	* examples/Makefile.am
+	* INSTALL
+	* README
+
+	Deleted files:
+	* cairo/cairosvgmodule.c
+	* cairo/pycairosvg.h
+	* cairo/pycairosvg-private.h
+	* examples/cairo_snippets/data/freedesktop.svg
+	* examples/cairo_snippets/data/home.svg
+	* examples/cairo_snippets/snippets/libsvg.py
+	* examples/cairo_snippets/snippets/operator_add.py
+	* examples/cairo_snippets/snippets/operator_atop.py
+	* examples/cairo_snippets/snippets/operator_atop_reverse.py
+	* examples/cairo_snippets/snippets/operator_in.py
+	* examples/cairo_snippets/snippets/operator_in_reverse.py
+	* examples/cairo_snippets/snippets/operator_out.py
+	* examples/cairo_snippets/snippets/operator_out_reverse.py
+	* examples/cairo_snippets/snippets/operator_over.py
+	* examples/cairo_snippets/snippets/operator_over_reverse.py
+	* examples/cairo_snippets/snippets/operator_saturate.py
+	* examples/cairo_snippets/snippets/operator_xor.py
+	* examples/svg/svgconvert.py
+	* examples/svg/svgview.py
+
+2006-07-19  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* README : Update to match info at http://www.cairographics.org/pycairo
+
+2006-07-03  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* configure.ac: increment to version 1.2.1
+
 === Pycairo 1.2.0 ===
 2006-07-03  Steve Chaplin  <steve1097 # yahoo.com.au>
 

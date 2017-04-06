@@ -175,9 +175,10 @@ C:  surface = cairo_pdf_surface_create (filename, width_in_points,
     surface = cairo_svg_surface_create (filename, width_in_points,
 				        height_in_points);
 
-Py: surface = cairo.PDFSurface (filename, width_in_points, height_in_points)
-    surface = cairo.PSSurface (filename, width_in_points, height_in_points)
-    surface = cairo.SVGSurface (filename, width_in_points, height_in_points)
+Py: surface = cairo.PDFSurface (f, width_in_points, height_in_points)
+    surface = cairo.PSSurface  (f, width_in_points, height_in_points)
+    surface = cairo.SVGSurface (f, width_in_points, height_in_points)
+    where 'f' is a filename, a file object, or a file-like object
 
 Methods supporting default argument values:
 surface.mark_dirty (x=0, y=0, width=-1, height=-1)

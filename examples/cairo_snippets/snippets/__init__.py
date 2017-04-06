@@ -10,14 +10,3 @@ snip_list.sort()
 def snippet_normalize (ctx, width, height):
     ctx.scale (width, height)
     ctx.set_line_width (0.04)
-
-def snippet_set_bg_svg (ctx, filename):
-    import cairo.svg
-
-    svg_cr = cairo.svg.Context()
-    svg_cr.parse (filename)
-    w, h = svg_cr.get_size()
-    ctx.save()
-    ctx.scale (1.0/w, 1.0/h)
-    svg_cr.render (ctx)
-    ctx.restore()
