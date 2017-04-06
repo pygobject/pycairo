@@ -92,17 +92,11 @@ PycairoPattern_FromPattern (cairo_pattern_t *pattern)
 static void
 pattern_dealloc (PycairoPattern *o)
 {
-#ifdef DEBUG
-    printf("pattern_dealloc start\n");
-#endif
     if (o->pattern) {
 	cairo_pattern_destroy (o->pattern);
 	o->pattern = NULL;
     }
     o->ob_type->tp_free((PyObject *)o);
-#ifdef DEBUG
-    printf("pattern_dealloc end\n");
-#endif
 }
 
 static PyObject *

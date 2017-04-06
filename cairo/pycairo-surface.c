@@ -136,9 +136,6 @@ _write_func (void *closure, const unsigned char *data, unsigned int length)
 static void
 surface_dealloc (PycairoSurface *o)
 {
-#ifdef DEBUG
-    printf("surface_dealloc start\n");
-#endif
     if (o->surface) {
 	cairo_surface_destroy(o->surface);
 	o->surface = NULL;
@@ -146,9 +143,6 @@ surface_dealloc (PycairoSurface *o)
     Py_CLEAR(o->base);
 
     o->ob_type->tp_free((PyObject *)o);
-#ifdef DEBUG
-    printf("surface_dealloc end\n");
-#endif
 }
 
 static PyObject *

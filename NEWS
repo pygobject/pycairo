@@ -1,3 +1,18 @@
+Overview of changes from pycairo 1.4.0 to pycairo 1.4.12
+========================================================
+General changes:
+    Pycairo 1.4.12 requires cairo 1.4.12 (or later).
+                   requires Python 2.4 (or later).
+
+Bug fixes:
+    10006: update autogen.sh to support automake >= 1.10
+    13460: use python-config to get python includes
+
+Other changes:
+    - allow cairo.Context to be subclassed
+    - create a 'doc' subdirectory and start a FAQ file
+
+
 Overview of changes from pycairo 1.2.6 to pycairo 1.4.0
 =======================================================
 General changes:

@@ -228,29 +228,45 @@ matrix_item (PycairoMatrix *o, Py_ssize_t i)
 }
 
 static PyNumberMethods matrix_as_number = {
-  (binaryfunc)0,
-  (binaryfunc)0,
-  (binaryfunc)matrix_multiply,
-  (binaryfunc)0,
-  (binaryfunc)0,
-  (binaryfunc)0,
-  (ternaryfunc)0,
-  (unaryfunc)0,
-  (unaryfunc)0,
-  (unaryfunc)0,
-  (lenfunc)0,
-  (unaryfunc)0,
-  (binaryfunc)0,
-  (binaryfunc)0,
-  (binaryfunc)0,
-  (binaryfunc)0,
-  (binaryfunc)0,
-  (coercion)0,
-  (unaryfunc)0,
-  (unaryfunc)0,
-  (unaryfunc)0,
-  (unaryfunc)0,
-  (unaryfunc)0
+  (binaryfunc)0,   /*nb_add*/
+  (binaryfunc)0,   /*nb_subtract*/
+  (binaryfunc)matrix_multiply, 	/*nb_multiply*/
+  (binaryfunc)0,   /*nb_divide*/
+  (binaryfunc)0,   /*nb_remainder*/
+  (binaryfunc)0,   /*nb_divmod*/
+  (ternaryfunc)0,  /*nb_power*/
+  (unaryfunc)0,    /*nb_negative*/
+  (unaryfunc)0,    /*nb_positive*/
+  (unaryfunc)0,    /*nb_absolute*/
+  (inquiry)0,      /*nb_nonzero*/
+  (unaryfunc)0,    /*nb_invert*/
+  (binaryfunc)0,   /*nb_lshift*/
+  (binaryfunc)0,   /*nb_rshift*/
+  (binaryfunc)0,   /*nb_and*/
+  (binaryfunc)0,   /*nb_xor*/
+  (binaryfunc)0,   /*nb_or*/
+  (coercion)0,     /*nb_coerce*/
+  (unaryfunc)0,    /*nb_int*/
+  (unaryfunc)0,    /*nb_long*/
+  (unaryfunc)0,    /*nb_float*/
+  (unaryfunc)0,    /*nb_oct*/
+  (unaryfunc)0,    /*nb_hex*/
+  0,		   /*nb_inplace_add*/
+  0,		   /*nb_inplace_subtract*/
+  0,		   /*nb_inplace_multiply*/
+  0,		   /*nb_inplace_divide*/
+  0,		   /*nb_inplace_remainder*/
+  0,		   /*nb_inplace_power*/
+  0,		   /*nb_inplace_lshift*/
+  0,		   /*nb_inplace_rshift*/
+  0,		   /*nb_inplace_and*/
+  0,		   /*nb_inplace_xor*/
+  0,		   /*nb_inplace_or*/
+  (binaryfunc)0,   /* nb_floor_divide */
+  0,	           /* nb_true_divide */
+  0,		   /* nb_inplace_floor_divide */
+  0,		   /* nb_inplace_true_divide */
+  (unaryfunc)0,	   /* nb_index */
 };
 
 static PySequenceMethods matrix_as_sequence = {

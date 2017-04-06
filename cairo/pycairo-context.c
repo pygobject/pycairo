@@ -61,11 +61,11 @@ __PyBaseString_AsUTF8 (PyObject *o)
 /* PycairoContext_FromContext
  * Create a new PycairoContext from a cairo_t
  * ctx  - a cairo_t to 'wrap' into a Python object.
- *        it is unreferenced if the PycairoContext creation fails, or if
- *        the cairo_t has an error status
- * type - the type of the object to instantiate; it can be NULL,
- *        meaning a base cairo.Context type, or it can be a subclass of
- *        cairo.Context.
+ *        It is unreferenced if the PycairoContext creation fails, or if
+ *        the cairo_t has an error status.
+ * type - a pointer to the type to instantiate.
+ *        It can be &PycairoContext_Type, or a PycairoContext_Type subtype.
+ *        (cairo.Context or a cairo.Context subclass)
  * base - the base object used to create the context, or NULL.
  *        it is referenced to keep it alive while the cairo_t is being used
  * Return value: New reference or NULL on failure
@@ -82,8 +82,6 @@ PycairoContext_FromContext(cairo_t *ctx, PyTypeObject *type, PyObject *base)
 	return NULL;
     }
 
-    if (type == NULL)
-        type = &PycairoContext_Type;
     o = PycairoContext_Type.tp_alloc (type, 0);
     if (o) {
 	((PycairoContext *)o)->ctx = ctx;
@@ -98,9 +96,6 @@ PycairoContext_FromContext(cairo_t *ctx, PyTypeObject *type, PyObject *base)
 static void
 pycairo_dealloc(PycairoContext *o)
 {
-#ifdef DEBUG
-    printf("context_dealloc start\n");
-#endif
     if (o->ctx) {
 	cairo_destroy(o->ctx);
 	o->ctx = NULL;
@@ -108,9 +103,6 @@ pycairo_dealloc(PycairoContext *o)
     Py_CLEAR(o->base);
 
     o->ob_type->tp_free((PyObject *)o);
-#ifdef DEBUG
-    printf("context_dealloc end\n");
-#endif
 }
 
 static PyObject *
@@ -120,7 +112,7 @@ pycairo_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
     if (!PyArg_ParseTuple(args, "O!:Context.__new__",
 			  &PycairoSurface_Type, &s))
 	return NULL;
-    return PycairoContext_FromContext (cairo_create (s->surface), NULL, NULL);
+    return PycairoContext_FromContext (cairo_create (s->surface), type, NULL);
 }
 
 static PyObject *
@@ -1409,7 +1401,6 @@ static PyMethodDef pycairo_methods[] = {
                                                               METH_VARARGS},
     {NULL, NULL, 0, NULL},
 };
-
 
 PyTypeObject PycairoContext_Type = {
     PyObject_HEAD_INIT(NULL)

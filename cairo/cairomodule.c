@@ -38,8 +38,8 @@
 
 #define VERSION_MAJOR 1
 #define VERSION_MINOR 4
-#define VERSION_MICRO 0
-static char pycairo_version_string[] = "1.4.0";
+#define VERSION_MICRO 12
+static char pycairo_version_string[] = "1.4.12";
 
 
 /* A module specific exception */

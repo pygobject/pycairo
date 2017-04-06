@@ -103,21 +103,6 @@ PyObject *PycairoSurface_FromSurface (cairo_surface_t *surface,
 
 int Pycairo_Check_Status (cairo_status_t status);
 
-/* Python 2.4 compatibility */
-#if PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION < 4
-#  define Py_RETURN_NONE return Py_INCREF(Py_None), Py_None
-#  define Py_RETURN_TRUE return Py_INCREF(Py_True), Py_True
-#  define Py_RETURN_FALSE return Py_INCREF(Py_False), Py_False
-#  define Py_CLEAR(op)				\
-        do {                            	\
-                if (op) {			\
-                        PyObject *tmp = (PyObject *)(op);	\
-                        (op) = NULL;		\
-                        Py_DECREF(tmp);		\
-                }				\
-        } while (0)
-#endif /* PY_MAJOR_VERSION */
-
 /* Python 2.5 compatibility */
 #if PY_VERSION_HEX < 0x02050000 && !defined(PY_SSIZE_T_MIN)
 typedef int Py_ssize_t;

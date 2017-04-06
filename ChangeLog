@@ -1,3 +1,73 @@
+=== Pycairo 1.4.12 ===
+2007-12-13  Steven Chaplin  <steve1097 # yahoo.com.au>
+
+	* NEWS: update for version 1.4.12
+
+	* cairo/cairomodule.c:
+	* configure.ac:
+	* setup.py (pycairo_version):
+	Increase pycairo version to 1.4.12
+
+	* doc: create new directory for documentation
+
+	* Makefile.am (EXTRA_DIST): add doc/FAQ and doc/NOTES
+
+	* configure.ac:
+	* README:
+	* setup.py (pycairo_version):
+	Require cairo 1.4.12
+
+2007-12-12  Steven Chaplin  <steve1097 # yahoo.com.au>
+
+	* FAQ: new file
+
+	* configure.ac: Require Python 2.4
+
+	* cairo/pycairo-private.h: Remove macros required for Python < 2.4
+
+	* test/test.py (_test): Remove line checking for Python < 2.4
+
+2007-12-11  Steven Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/pycairo-context.c (pycairo_dealloc):
+	* cairo/pycairo-pattern.c (pattern_dealloc):
+	* cairo/pycairo-surface.c (surface_dealloc):
+	* cairo/pycairo-font.c (font_face_dealloc, scaled_font_dealloc)
+	(font_options_dealloc):
+	Remove the DEBUG statements - they are no longer used.
+
+	* cairo/pycairo-context.c (pycairo_new): Pass 'type' as second arg to
+	PycairoContext_FromContext(). This fixes the problem where Python
+	subclasses of cairo.Context were not working properly.
+	(PycairoContext_FromContext): Remove the support for arg #2 to be NULL,
+	- its not a good 'default' since it caused the subclassing problem
+	fixed above.
+
+2007-12-02  Steven Chaplin  <steve1097 # yahoo.com.au>
+
+	* acinclude.m4 : Fix #13460 by applying the patch from Sebastien
+	Bacher,	and rearranging a couple of lines.
+
+2007-11-20  Steven Chaplin  <steve1097 # yahoo.com.au>
+
+	* setup.py: update to use subprocess, and require Python 2.4
+
+	* cairo/pycairo-matrix.c (matrix_as_number): fix a compiler warning.
+
+2007-04-06  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* configure.ac (AC_PROG_LIBTOOL): Add version number required (as a
+	comment) for use by autogen.sh
+	* autogen.sh: Synchronize with the new cairo autogen.sh - to update
+	version checking for automake. Fixes #10006
+
+2007-03-14  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* configure.ac:
+	* cairo/cairomodule.c:
+	* setup.py:
+	increase pycairo version to 1.4.1
+
 === Pycairo 1.4.0 ===
 2007-03-14  Steve Chaplin  <steve1097 # yahoo.com.au>
 	* README:

@@ -68,17 +68,11 @@ PycairoFontFace_FromFontFace (cairo_font_face_t *font_face)
 static void
 font_face_dealloc (PycairoFontFace *o)
 {
-#ifdef DEBUG
-    printf("font_face_dealloc start\n");
-#endif
     if (o->font_face) {
 	cairo_font_face_destroy (o->font_face);
 	o->font_face = NULL;
     }
     o->ob_type->tp_free((PyObject *) o);
-#ifdef DEBUG
-    printf("font_face_dealloc end\n");
-#endif
 }
 
 static PyObject *
@@ -179,17 +173,11 @@ PycairoScaledFont_FromScaledFont (cairo_scaled_font_t *scaled_font)
 static void
 scaled_font_dealloc(PycairoScaledFont *o)
 {
-#ifdef DEBUG
-    printf("scaled_font_dealloc start\n");
-#endif
     if (o->scaled_font) {
 	cairo_scaled_font_destroy (o->scaled_font);
 	o->scaled_font = NULL;
     }
     o->ob_type->tp_free((PyObject *) o);
-#ifdef DEBUG
-    printf("scaled_font_dealloc end\n");
-#endif
 }
 
 static PyObject *
@@ -344,17 +332,11 @@ PycairoFontOptions_FromFontOptions (cairo_font_options_t *font_options)
 static void
 font_options_dealloc(PycairoFontOptions *o)
 {
-#ifdef DEBUG
-    printf("font_options_dealloc start\n");
-#endif
     if (o->font_options) {
 	cairo_font_options_destroy (o->font_options);
 	o->font_options = NULL;
     }
     o->ob_type->tp_free((PyObject *) o);
-#ifdef DEBUG
-    printf("font_options_dealloc end\n");
-#endif
 }
 
 static PyObject *

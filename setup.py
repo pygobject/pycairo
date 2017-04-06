@@ -3,32 +3,40 @@
 import distutils.core      as dic
 import distutils.dir_util  as dut
 import distutils.file_util as fut
-import os
+import subprocess
 import sys
 
-pycairo_version        = '1.4.0'
-cairo_version_required = '1.4.0'
+pycairo_version        = '1.4.12'
+cairo_version_required = '1.4.12'
 
 # Notes:
 # on Fedora Core 5 module is compiled with 'gcc -g' - why -g?
-# later: replace os.popen() with subprocess module, new in Python 2.4
 
-def pkg_config (opt, pkg):
-    fo = os.popen ('pkg-config %s %s' % (opt, pkg))
-    return fo.read(), fo.close()
+def call(command):
+    pipe = subprocess.Popen(command, shell=True,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+    pipe.wait()
+    return pipe
 
-def pkg_config_version_check (pkg, version):
-    output, status = pkg_config ('--atleast-version=%s' % version, pkg)
-    if status is None:
-        print '%s version >= %s detected' % (pkg, version)
+def pkg_config_version_check(pkg, version):
+    pipe = call("pkg-config --print-errors --exists '%s >= %s'" %
+                (pkg, version))
+    if pipe.returncode == 0:
+        print '%s >= %s detected' % (pkg, version)
     else:
-        raise SystemExit ('Error: %s version >= %s not found' % (pkg, version))
+        print pipe.stderr.read()
+        raise SystemExit('Error: %s >= %s not found' % (pkg, version))
 
-def pkg_config_parse (opt, pkg):
-    output, status = pkg_config (opt, pkg)
+def pkg_config_parse(opt, pkg):
+    pipe = call("pkg-config %s %s" % (opt, pkg))
+    output = pipe.stdout.read()
     opt = opt[-2:]
     return [x.lstrip(opt) for x in output.split()]
 
+
+if sys.version_info < (2,4):
+    raise SystemExit('Error: Python >= 2.4 is required')
 
 pkg_config_version_check ('cairo', cairo_version_required)
 if sys.platform == 'win32':

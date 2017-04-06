@@ -1,10 +1,11 @@
 SUBDIRS = cairo examples test
 
 EXTRA_DIST = \
+  doc/FAQ \
+  doc/NOTES \
   COPYING \
   COPYING-LGPL-2.1 \
   COPYING-MPL-1.1 \
-  NOTES \
   pycairo.pc.in \
   setup.py
 
