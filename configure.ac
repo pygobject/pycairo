@@ -1,21 +1,21 @@
 -*- mode: m4 -*-
-AC_PREREQ(2.54)
+AC_PREREQ(2.59)
 
 # the pycairo version number
 m4_define(pycairo_version_major, 1)
-m4_define(pycairo_version_minor, 0)
-m4_define(pycairo_version_micro, 2)
+m4_define(pycairo_version_minor, 1)
+m4_define(pycairo_version_micro, 6)
 m4_define(pycairo_version, pycairo_version_major.pycairo_version_minor.pycairo_version_micro)
 
 # versions of packages we require
-m4_define(cairo_required_version,    1.0.2)
+m4_define(cairo_required_version,    1.1.6)
 m4_define(gtk_required_version,      2.2.0)
 m4_define(pygtk_required_version,    2.2.0)
 m4_define(libsvg_cairo_required_version, 0.1.6)
 
 AC_INIT([pycairo],
 	[pycairo_version],
-	[http://bugs.freedesktop.org/enter_bug.cgi?product=cairo])
+	[http://bugs.freedesktop.org/enter_bug.cgi?product=pycairo])
 
 AC_SUBST(PYCAIRO_VERSION_MAJOR, [pycairo_version_major])
 AC_SUBST(PYCAIRO_VERSION_MINOR, [pycairo_version_minor])
@@ -26,7 +26,8 @@ AC_SUBST(VERSION_INFO,
 AC_CONFIG_SRCDIR([cairo/pycairo.h])
 AC_CONFIG_HEADERS(config.h)
 
-AM_INIT_AUTOMAKE([1.7 -Wall])
+AM_INIT_AUTOMAKE([1.9 -Wall])
+
 
 # Options
 AC_ARG_WITH(pygtk,
@@ -38,12 +39,15 @@ AC_ARG_WITH(pygtk,
 # put the ACLOCAL flags in the makefile
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
+
+# Checks for programs
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
 AM_PATH_PYTHON(2.3)
 
-AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
+
+# Checks for libraries
 
 # get rid of the -export-dynamic stuff from the configure flags ...
 export_dynamic=`(./libtool --config; echo eval echo \\$export_dynamic_flag_spec) | sh`
@@ -85,7 +89,6 @@ CPPFLAGS="$save_CPPFLAGS"
 if test x$have_numpy = xyes; then
   AC_DEFINE(HAVE_NUMPY, [1], [Define to 1 if Numeric python is found])
 fi
-AM_CONDITIONAL(HAVE_NUMPY, test x$have_numpy = xyes)
 
 # is libsvg-cairo installed?
 PKG_CHECK_MODULES(LIBSVG_CAIRO,
@@ -96,6 +99,13 @@ if test -n "$export_dynamic"; then
 fi
 AM_CONDITIONAL(HAVE_LIBSVG_CAIRO, test x$have_libsvg_cairo = xyes)
 
+
+# Checks for header files
+AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
+
+
+# checks for types and compilers
+AC_C_CONST
 
 # add gcc debugging options
 changequote(,)dnl
@@ -132,6 +142,18 @@ yes)
       CFLAGS="$CFLAGS -fno-strict-aliasing"
     fi
 esac
+
+
+# Checks for library functions
+
+# cairo has cairo_image_surface_get_data() patch?
+save_LIBS="$LIBS"
+LIBS="$CAIRO_LIBS"
+AC_CHECK_LIB([cairo], [cairo_image_surface_get_data],
+  [AC_DEFINE(HAVE_GETDATA, [1], [Define to 1 if get_data patch is found])],
+  [])
+LIBS="$save_LIBS"
+
 
 AC_CONFIG_FILES([
 Makefile

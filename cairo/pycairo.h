@@ -87,7 +87,9 @@ typedef struct {
 #define PycairoImageSurface PycairoSurface
 #define PycairoPDFSurface   PycairoSurface
 #define PycairoPSSurface    PycairoSurface
+#define PycairoSVGSurface   PycairoSurface
 #define PycairoWin32Surface PycairoSurface
+#define PycairoXlibSurface  PycairoSurface
 
 /* get C object out of the Python wrapper */
 #define PycairoContext_GET(obj)    (((PycairoContext *)(obj))->ctx)
@@ -114,8 +116,7 @@ typedef struct {
     PyTypeObject *Gradient_Type;
     PyTypeObject *LinearGradient_Type;
     PyTypeObject *RadialGradient_Type;
-    PyObject *(*Pattern_FromPattern)(cairo_pattern_t *pattern,
-				     PyTypeObject *type);
+    PyObject *(*Pattern_FromPattern)(cairo_pattern_t *pattern);
 
     PyTypeObject *ScaledFont_Type;
     PyObject *(*ScaledFont_FromScaledFont)(cairo_scaled_font_t *scaled_font);
@@ -124,9 +125,10 @@ typedef struct {
     PyTypeObject *ImageSurface_Type;
     PyTypeObject *PDFSurface_Type;
     PyTypeObject *PSSurface_Type;
+    PyTypeObject *SVGSurface_Type;
     PyTypeObject *Win32Surface_Type;
-    PyObject *(*Surface_FromSurface)(cairo_surface_t *surface,
-				     PyTypeObject *type, PyObject *base);
+    PyTypeObject *XlibSurface_Type;
+    PyObject *(*Surface_FromSurface)(cairo_surface_t *surface, PyObject *base);
 
     /* misc functions */
     int (*Check_Status)(cairo_status_t status);
@@ -171,8 +173,16 @@ typedef struct {
 #define PycairoPSSurface_Type       *(Pycairo_CAPI->PSSurface_Type)
 #endif
 
+#if CAIRO_HAS_SVG_SURFACE
+#define PycairoSVGSurface_Type      *(Pycairo_CAPI->SVGSurface_Type)
+#endif
+
 #if CAIRO_HAS_WIN32_SURFACE
 #define PycairoWin32Surface_Type    *(Pycairo_CAPI->Win32Surface_Type)
+#endif
+
+#if CAIRO_HAS_XLIB_SURFACE
+#define PycairoXlibSurface_Type     *(Pycairo_CAPI->XlibSurface_Type)
 #endif
 
 #define PycairoSurface_FromSurface   (Pycairo_CAPI->Surface_FromSurface)

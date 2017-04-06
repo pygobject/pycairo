@@ -80,12 +80,10 @@ def stroke_shapes(ctx, x, y):
     draw_shapes(ctx, x, y, False)
 
 def expose (da, event):
-    x, y, width, height = da.allocation
-
-    if gtk.pygtk_version >= (2,7,0):
-        ctx = da.window.cairo_create()
-    else:
+    if gtk.pygtk_version < (2,7,0):
         ctx = cairo.gtk.gdk_cairo_create(da.window)
+    else:
+        ctx = da.window.cairo_create()
 
     ctx.set_source_rgb(0, 0, 0)
 

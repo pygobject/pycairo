@@ -2,7 +2,7 @@
  *
  * Pycairo - Python bindings for cairo
  *
- * Copyright © 2004-2005 Steve Chaplin
+ * Copyright © 2004-2006 Steve Chaplin
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -39,18 +39,17 @@
 /* Class Pattern ---------------------------------------------------------- */
 
 /* PycairoPattern_FromPattern
- * Create a new PycairoPattern from a cairo_pattern_t
+ * Create a new PycairoSolidPattern, PycairoSurfacePattern,
+ * PycairoLinearGradient or PycairoRadialGradient from a cairo_pattern_t.
  * pattern - a cairo_pattern_t to 'wrap' into a Python object.
  *           pattern is unreferenced if the PycairoPattern creation fails, or
  *           if the pattern is in an error status.
- * type - the type of the object to instantiate; it can be NULL,
- *        meaning a base cairo.Pattern type, or it can be a subclass of
- *        cairo.Pattern
  * Return value: New reference or NULL on failure
  */
 PyObject *
-PycairoPattern_FromPattern (cairo_pattern_t *pattern, PyTypeObject *type)
+PycairoPattern_FromPattern (cairo_pattern_t *pattern)
 {
+    PyTypeObject *type = NULL;
     PyObject *o;
 
     assert (pattern != NULL);
@@ -60,14 +59,28 @@ PycairoPattern_FromPattern (cairo_pattern_t *pattern, PyTypeObject *type)
 	return NULL;
     }
 
-    if (type == NULL)
-        type = &PycairoPattern_Type;
-    o = PycairoPattern_Type.tp_alloc (type, 0);
-    if (o) {
-	((PycairoPattern *)o)->pattern = pattern;
-    } else {
-	cairo_pattern_destroy (pattern);
+    switch (cairo_pattern_get_type (pattern)) {
+    case CAIRO_PATTERN_TYPE_SOLID:
+	type = &PycairoSolidPattern_Type;
+	break;
+    case CAIRO_PATTERN_TYPE_SURFACE:
+	type = &PycairoSurfacePattern_Type;
+	break;
+    case CAIRO_PATTERN_TYPE_LINEAR:
+	type = &PycairoLinearGradient_Type;
+	break;
+    case CAIRO_PATTERN_TYPE_RADIAL:
+	type = &PycairoRadialGradient_Type;
+	break;
+    default:
+	ASSERT_NOT_REACHED;
     }
+
+    o = type->tp_alloc(type, 0);
+    if (o == NULL)
+	cairo_pattern_destroy (pattern);
+    else
+	((PycairoPattern *)o)->pattern = pattern;
     return o;
 }
 
@@ -120,6 +133,7 @@ pattern_set_matrix (PycairoPattern *o, PyObject *args)
 static PyMethodDef pattern_methods[] = {
     /* methods never exposed in a language binding:
      * cairo_pattern_destroy()
+     * cairo_pattern_get_type()
      * cairo_pattern_reference()
      *
      * cairo_pattern_status()
@@ -191,7 +205,7 @@ solid_pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 	return NULL;
 
     o = type->tp_alloc(type, 0);
-    if (o) {
+    if (o != NULL) {
 	pattern = cairo_pattern_create_rgba (red, green, blue, alpha);
 
 	if (Pycairo_Check_Status (cairo_pattern_status (pattern))) {
@@ -267,7 +281,7 @@ surface_pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 	return NULL;
 
     o = type->tp_alloc(type, 0);
-    if (o) {
+    if (o != NULL) {
 	pattern = cairo_pattern_create_for_surface (s->surface);
 
 	if (Pycairo_Check_Status (cairo_pattern_status (pattern))) {
@@ -477,7 +491,7 @@ linear_gradient_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 	return NULL;
 
     o = type->tp_alloc(type, 0);
-    if (o) {
+    if (o != NULL) {
 	pattern = cairo_pattern_create_linear (x0, y0, x1, y1);
 
 	if (Pycairo_Check_Status (cairo_pattern_status (pattern))) {
@@ -553,7 +567,7 @@ radial_gradient_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 	return NULL;
 
     o = type->tp_alloc(type, 0);
-    if (o) {
+    if (o != NULL) {
 	pattern = cairo_pattern_create_radial (cx0, cy0, radius0,
 					       cx1, cy1, radius1);
 	if (Pycairo_Check_Status (cairo_pattern_status (pattern))) {

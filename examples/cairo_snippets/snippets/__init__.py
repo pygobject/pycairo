@@ -2,7 +2,8 @@
 import os
 
 # list of snippet files
-snip_list = [x[:-3] for x in os.listdir (os.path.dirname (__file__)) if not x.startswith('_') and x.endswith('.py')]
+snip_list = [x[:-3] for x in os.listdir (os.path.dirname (__file__))
+             if not x.startswith('_') and x.endswith('.py')]
 snip_list.sort()
 
 # function used by some or all snippets
@@ -20,5 +21,3 @@ def snippet_set_bg_svg (ctx, filename):
     ctx.scale (1.0/w, 1.0/h)
     svg_cr.render (ctx)
     ctx.restore()
-
-    

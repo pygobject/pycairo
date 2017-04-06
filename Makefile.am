@@ -19,8 +19,10 @@ pkgconfig_DATA = pycairo.pc
 
 RELEASE_UPLOAD_HOST =   cairographics.org
 RELEASE_UPLOAD_BASE =	/srv/cairo.freedesktop.org/www
-RELEASE_UPLOAD_DIR =	$(RELEASE_UPLOAD_BASE)/releases
-RELEASE_URL_BASE = 	http://cairographics.org/releases
+#RELEASE_UPLOAD_DIR =	$(RELEASE_UPLOAD_BASE)/releases
+#RELEASE_URL_BASE = 	http://cairographics.org/releases
+RELEASE_UPLOAD_DIR =	$(RELEASE_UPLOAD_BASE)/snapshots
+RELEASE_URL_BASE = 	http://cairographics.org/snapshots
 RELEASE_ANNOUNCE_LIST = cairo-announce@cairographics.org (and CC python-announce-list@python.org)
 
 tar_file = $(PACKAGE)-$(VERSION).tar.gz

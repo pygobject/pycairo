@@ -52,9 +52,6 @@ class Window (gtk.Window):
         hpaned.pack2 (put_in_frame (self.da), True, True)
         self.da.set_size_request (int(Width/2), int(Height/2))
 
-        self.da.realize()
-        self._bg_rgb = gdkcolor_to_rgb (self.da.style.bg[gtk.STATE_NORMAL])
-
         # set focus to snippet list
         sl.get_child().grab_focus()
 
@@ -62,16 +59,10 @@ class Window (gtk.Window):
     def da_expose_event (self, da, event, data=None):
         x, y, width, height = da.allocation
 
-        if gtk.pygtk_version >= (2,7,0):
-            cr = da.window.cairo_create()
-        else:
+        if gtk.pygtk_version < (2,7,0):
             cr = cairo.gtk.gdk_cairo_create (da.window)
-
-        # set window bg
-        cr.set_source_rgb (*self._bg_rgb)
-        cr.rectangle(0, 0, width, height)
-        cr.fill()
-        cr.set_source_rgb (0,0,0) # reset black
+        else:
+            cr = da.window.cairo_create()
 
         try:
             exec (self.snippet_str, globals(), locals())

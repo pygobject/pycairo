@@ -41,6 +41,10 @@
 #include "pycairo.h"
 
 
+extern PyObject *CairoError;
+
+char * __PyBaseString_AsUTF8 (PyObject *o);
+
 extern PyTypeObject PycairoContext_Type;
 PyObject *PycairoContext_FromContext (cairo_t *ctx, PyTypeObject *type,
 				      PyObject *base);
@@ -64,8 +68,7 @@ extern PyTypeObject PycairoSurfacePattern_Type;
 extern PyTypeObject PycairoGradient_Type;
 extern PyTypeObject PycairoLinearGradient_Type;
 extern PyTypeObject PycairoRadialGradient_Type;
-PyObject *PycairoPattern_FromPattern (cairo_pattern_t *pattern,
-				      PyTypeObject *type);
+PyObject *PycairoPattern_FromPattern (cairo_pattern_t *pattern);
 
 extern PyTypeObject PycairoScaledFont_Type;
 PyObject *PycairoScaledFont_FromScaledFont (cairo_scaled_font_t *scaled_font);
@@ -81,13 +84,20 @@ extern PyTypeObject PycairoPDFSurface_Type;
 extern PyTypeObject PycairoPSSurface_Type;
 #endif
 
+#if CAIRO_HAS_SVG_SURFACE
+extern PyTypeObject PycairoSVGSurface_Type;
+#endif
+
 #if CAIRO_HAS_WIN32_SURFACE
 extern PyTypeObject PycairoWin32Surface_Type;
 #endif
 
+#if CAIRO_HAS_XLIB_SURFACE
+extern PyTypeObject PycairoXlibSurface_Type;
+#endif
+
 PyObject *PycairoSurface_FromSurface (cairo_surface_t *surface,
-				      PyTypeObject *type,
-				      PyObject *base);
+                                      PyObject *base);
 
 int Pycairo_Check_Status (cairo_status_t status);
 
@@ -105,5 +115,11 @@ int Pycairo_Check_Status (cairo_status_t status);
                 }				\
         } while (0)
 #endif /* PY_MAJOR_VERSION */
+
+#define ASSERT_NOT_REACHED		\
+do {					\
+    static const int NOT_REACHED = 0;	\
+    assert (NOT_REACHED);		\
+} while (0)
 
 #endif /* _PYCAIRO_PRIVATE_H_ */

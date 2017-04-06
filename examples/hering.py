@@ -2,7 +2,8 @@
 """cairo/cairo-demo/png/hering.c translated into Python
 """
 
-from math import pi
+import math
+
 import cairo
 
 WIDTH  = 300
@@ -10,7 +11,7 @@ HEIGHT = 600
 
 def draw_hering (ctx, width, height):
     LINES= 32
-    MAX_THETA = .80 * pi * 2
+    MAX_THETA = .80 * math.pi * 2
     THETA_INC = 2.0 * MAX_THETA / (LINES-1)
 
     ctx.set_source_rgb (0, 0, 0)
@@ -20,12 +21,12 @@ def draw_hering (ctx, width, height):
 
     ctx.translate (width / 2, height / 2)
     ctx.rotate (MAX_THETA)
-	
+
     for i in range (LINES):
         ctx.move_to (-2 * width, 0)
         ctx.line_to (2 * width, 0)
         ctx.stroke()
-	    
+
         ctx.rotate (- THETA_INC)
 
     ctx.restore()
@@ -45,9 +46,9 @@ def draw_hering (ctx, width, height):
 surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
 ctx = cairo.Context(surface)
 
-ctx.rectangle (0, 0, WIDTH, HEIGHT)
 ctx.set_source_rgb (1, 1, 1)
-ctx.fill()
+ctx.set_operator (cairo.OPERATOR_SOURCE)
+ctx.paint()
 
 draw_hering (ctx, WIDTH, HEIGHT)
 

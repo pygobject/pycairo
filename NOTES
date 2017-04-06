@@ -142,13 +142,16 @@ Surface         - base class, contains methods applicable to all surfaces
   ImageSurface
   PDFSurface
   PSSurface
+  SVGSurface
   Win32Surface
+  XlibSurface - available when using pygtk
 
 C:  cairo_surface_write_to_png (surface, filename);
     cairo_surface_write_to_png_stream (surface, write_func, closure);
 
-Py: surface.write_to_png (filename)
-    surface.write_to_png (file_object)
+Py: surface.write_to_png (f)
+      where 'f' is a filename, a file object, or a file-like object (an object
+      that has a "write" method, for example StringIO, cStringIO)
 
 C : surface = cairo_image_surface_create (format, width, height);
     surface = cairo_image_surface_create_from_png (filename);
@@ -156,10 +159,10 @@ C : surface = cairo_image_surface_create (format, width, height);
     surface = cairo_image_surface_create_for_data (data, format, w, h, stride)
 
 Py: surface = cairo.ImageSurface (format, width, height)
-    surface = cairo.ImageSurface.create_from_png (filename)
-    surface = cairo.ImageSurface.create_from_png (file_object)
+    surface = cairo.ImageSurface.create_from_png (f)
+      where 'f' is a filename, a file object, or a file-like object
     surface = cairo.ImageSurface.create_for_data (data, format, w, h, stride)
-                where 'data' if a writable Python buffer object
+      where 'data' if a writable Python buffer object
 
     extra pycairo ImageSurface creation methods:
     surface = cairo.ImageSurface.create_for_array (array)
@@ -169,9 +172,12 @@ C:  surface = cairo_pdf_surface_create (filename, width_in_points,
 				        height_in_points);
     surface = cairo_ps_surface_create (filename, width_in_points,
 			               height_in_points);
+    surface = cairo_svg_surface_create (filename, width_in_points,
+				        height_in_points);
 
 Py: surface = cairo.PDFSurface (filename, width_in_points, height_in_points)
     surface = cairo.PSSurface (filename, width_in_points, height_in_points)
+    surface = cairo.SVGSurface (filename, width_in_points, height_in_points)
 
 Methods supporting default argument values:
 surface.mark_dirty (x=0, y=0, width=-1, height=-1)

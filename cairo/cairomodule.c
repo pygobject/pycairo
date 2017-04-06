@@ -37,11 +37,14 @@
 
 
 /* A module specific exception */
-static PyObject *CairoError = NULL;
+PyObject *CairoError = NULL;
 
 int
 Pycairo_Check_Status (cairo_status_t status)
 {
+    if (PyErr_Occurred() != NULL)
+	return 1;
+
     switch (status) {
     case CAIRO_STATUS_SUCCESS:
 	return 0;
@@ -101,8 +104,18 @@ static Pycairo_CAPI_t CAPI = {
 #else
     0,
 #endif
+#ifdef CAIRO_HAS_SVG_SURFACE
+    &PycairoSVGSurface_Type,
+#else
+    0,
+#endif
 #ifdef CAIRO_HAS_WIN32_SURFACE
     &PycairoWin32Surface_Type,
+#else
+    0,
+#endif
+#ifdef CAIRO_HAS_XLIB_SURFACE
+    &PycairoXlibSurface_Type,
 #else
     0,
 #endif
@@ -191,9 +204,19 @@ init_cairo(void)
     if (PyType_Ready(&PycairoPSSurface_Type) < 0)
         return;
 #endif
+#ifdef CAIRO_HAS_SVG_SURFACE
+    PycairoSVGSurface_Type.tp_base = &PycairoSurface_Type;
+    if (PyType_Ready(&PycairoSVGSurface_Type) < 0)
+        return;
+#endif
 #ifdef CAIRO_HAS_WIN32_SURFACE
     PycairoWin32Surface_Type.tp_base = &PycairoSurface_Type;
     if (PyType_Ready(&PycairoWin32Surface_Type) < 0)
+        return;
+#endif
+#ifdef CAIRO_HAS_XLIB_SURFACE
+    PycairoXlibSurface_Type.tp_base = &PycairoSurface_Type;
+    if (PyType_Ready(&PycairoXlibSurface_Type) < 0)
         return;
 #endif
 
@@ -247,10 +270,21 @@ init_cairo(void)
     PyModule_AddObject(m, "PSSurface", (PyObject *)&PycairoPSSurface_Type);
 #endif
 
+#ifdef CAIRO_HAS_SVG_SURFACE
+    Py_INCREF(&PycairoSVGSurface_Type);
+    PyModule_AddObject(m, "SVGSurface", (PyObject *)&PycairoSVGSurface_Type);
+#endif
+
 #ifdef CAIRO_HAS_WIN32_SURFACE
     Py_INCREF(&PycairoWin32Surface_Type);
     PyModule_AddObject(m, "Win32Surface",
 		       (PyObject *)&PycairoWin32Surface_Type);
+#endif
+
+#ifdef CAIRO_HAS_XLIB_SURFACE
+    Py_INCREF(&PycairoXlibSurface_Type);
+    PyModule_AddObject(m, "XlibSurface",
+		       (PyObject *)&PycairoXlibSurface_Type);
 #endif
 
     PyModule_AddObject(m, "CAPI", PyCObject_FromVoidPtr(&CAPI, NULL));
@@ -286,15 +320,20 @@ init_cairo(void)
 #else
     PyModule_AddIntConstant(m, "HAS_PDF_SURFACE", 0);
 #endif
+#if CAIRO_HAS_PNG_FUNCTIONS
+    PyModule_AddIntConstant(m, "HAS_PNG_FUNCTIONS", 1);
+#else
+    PyModule_AddIntConstant(m, "HAS_PNG_FUNCTIONS", 0);
+#endif
 #if CAIRO_HAS_PS_SURFACE
     PyModule_AddIntConstant(m, "HAS_PS_SURFACE", 1);
 #else
     PyModule_AddIntConstant(m, "HAS_PS_SURFACE", 0);
 #endif
-#if CAIRO_HAS_PNG_FUNCTIONS
-    PyModule_AddIntConstant(m, "HAS_PNG_FUNCTIONS", 1);
+#if CAIRO_HAS_SVG_SURFACE
+    PyModule_AddIntConstant(m, "HAS_SVG_SURFACE", 1);
 #else
-    PyModule_AddIntConstant(m, "HAS_PNG_FUNCTIONS", 0);
+    PyModule_AddIntConstant(m, "HAS_SVG_SURFACE", 0);
 #endif
 #if CAIRO_HAS_QUARTZ_SURFACE
     PyModule_AddIntConstant(m, "HAS_QUARTZ_SURFACE", 1);
@@ -358,6 +397,16 @@ init_cairo(void)
     CONSTANT(FORMAT_A8);
     CONSTANT(FORMAT_A1);
 
+    CONSTANT(HINT_METRICS_DEFAULT);
+    CONSTANT(HINT_METRICS_OFF);
+    CONSTANT(HINT_METRICS_ON);
+
+    CONSTANT(HINT_STYLE_DEFAULT);
+    CONSTANT(HINT_STYLE_NONE);
+    CONSTANT(HINT_STYLE_SLIGHT);
+    CONSTANT(HINT_STYLE_MEDIUM);
+    CONSTANT(HINT_STYLE_FULL);
+
     CONSTANT(LINE_CAP_BUTT);
     CONSTANT(LINE_CAP_ROUND);
     CONSTANT(LINE_CAP_SQUARE);
@@ -388,5 +437,11 @@ init_cairo(void)
     CONSTANT(PATH_LINE_TO);
     CONSTANT(PATH_CURVE_TO);
     CONSTANT(PATH_CLOSE_PATH);
+
+    CONSTANT(SUBPIXEL_ORDER_DEFAULT);
+    CONSTANT(SUBPIXEL_ORDER_RGB);
+    CONSTANT(SUBPIXEL_ORDER_BGR);
+    CONSTANT(SUBPIXEL_ORDER_VRGB);
+    CONSTANT(SUBPIXEL_ORDER_VBGR);
 #undef CONSTANT
 }

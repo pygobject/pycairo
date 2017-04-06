@@ -1,15 +1,12 @@
 #!/usr/bin/env python
-"""Python version of cairo-demo/cairo_snippets/cairo_snippets_pdf.c
-create a file for each example rather than one large file for all examples
-"""
 
 from __future__ import division
 from math import pi as M_PI  # used by many snippets
 import sys
 
 import cairo
-if not cairo.HAS_PDF_SURFACE:
-    raise SystemExit ('cairo was not compiled with PDF support')
+if not cairo.HAS_SVG_SURFACE:
+    raise SystemExit ('cairo was not compiled with SVG support')
 
 from snippets import snip_list, snippet_normalize, snippet_set_bg_svg
 
@@ -23,8 +20,8 @@ def do_snippet (snippet):
     if verbose_mode:
         print 'processing %s' % snippet,
 
-    filename = 'snippets/%s.pdf' % snippet
-    surface = cairo.PDFSurface (filename, width_in_points, height_in_points)
+    filename = 'snippets/%s.svg' % snippet
+    surface = cairo.SVGSurface (filename, width_in_points, height_in_points)
     cr = cairo.Context (surface)
 
     cr.save()

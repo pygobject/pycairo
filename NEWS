@@ -1,3 +1,56 @@
+Overview of changes from pycairo 1.0.2 to pycairo 1.1.6
+=======================================================
+General changes:
+Pycairo has been updated to work with cairo 1.1.6.
+
+New objects:
+    SVGSurface
+
+New methods:
+    Context.get_group_target
+    Context.new_sub_path
+    Context.pop_group
+    Context.pop_group_to_source
+    Context.push_group
+    Context.push_group_with_content
+    FontOptions.get_antialias
+    FontOptions.get_hint_metrics
+    FontOptions.get_hint_style
+    FontOptions.get_subpixel_order
+    FontOptions.set_antialias
+    FontOptions.set_hint_metrics
+    FontOptions.set_hint_style
+    FontOptions.set_subpixel_order
+    PDFSurface.set_size
+    PSSurface.dsc_begin_page_setup
+    PSSurface.dsc_begin_setup
+    PSSurface.dsc_comment
+    PSSurface.set_size
+    ScaledFont.get_font_face
+    ScaledFont.text_extents
+    Surface.get_device_offset
+    XlibSurface.get_depth
+
+Updated methods:
+    PDFSurface()/PSSurface() - can now write to file-like objects (like
+    StringIO).
+
+    surface.write_to_png() and ImageSurface.create_from_png() can now write to
+    file-like objects (like StringIO).
+
+    select_font_face, show_text, text_extents and text_path now accept unicode
+    objects.
+
+Other changes:
+    misc bug fixes.
+
+New examples:
+    examples/cairo_snippets/snippets_svg.py
+    examples/cairo_snippets/snippets/ellipse.py
+    examples/cairo_snippets/snippets/group.py
+    examples/svg/svgconvert.py
+
+
 Overview of changes from pycairo 1.0.0 to pycairo 1.0.2
 =======================================================
 General changes:

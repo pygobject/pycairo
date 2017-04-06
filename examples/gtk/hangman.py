@@ -57,8 +57,7 @@ def guess_letter(widget, event):
         widget.queue_draw()
 
 def expose_event(widget, event):
-    width  = widget.allocation.width
-    height = widget.allocation.height
+    _, _, width, height = widget.allocation
 
     if width < height:
         size = width
@@ -67,15 +66,15 @@ def expose_event(widget, event):
 
     pixmap = gtk.gdk.Pixmap (widget.window, width, height)
 
-    if gtk.pygtk_version >= (2,7,0):
-        ctx = pixmap.cairo_create()
-    else:
+    if gtk.pygtk_version < (2,7,0):
         ctx = cairo.gtk.gdk_cairo_create(pixmap)
+    else:
+        ctx = pixmap.cairo_create()
 
     # set the background
     ctx.set_source_rgb(0.7,0.7,0.7)
-    ctx.rectangle(0,0,width, height)
-    ctx.fill()
+    ctx.set_operator (cairo.OPERATOR_SOURCE)
+    ctx.paint()
 
     ctx.translate ((width - size) / 2, (height - size) / 2)
     ctx.scale(size / 150.0, size / 160.0)

@@ -7,6 +7,7 @@ EXTRA_DIST = \
   cairo_snippets/snippets_pdf.py \
   cairo_snippets/snippets_png.py \
   cairo_snippets/snippets_ps.py \
+  cairo_snippets/snippets_svg.py \
   cairo_snippets/data/freedesktop.svg \
   cairo_snippets/data/home.svg \
   cairo_snippets/data/romedalen.png \
@@ -16,9 +17,11 @@ EXTRA_DIST = \
   cairo_snippets/snippets/clip.py \
   cairo_snippets/snippets/curve_rectangle.py \
   cairo_snippets/snippets/curve_to.py \
+  cairo_snippets/snippets/ellipse.py \
   cairo_snippets/snippets/fill_and_stroke2.py \
   cairo_snippets/snippets/fill_and_stroke.py \
   cairo_snippets/snippets/gradient.py \
+  cairo_snippets/snippets/group.py \
   cairo_snippets/snippets/imagepattern.py \
   cairo_snippets/snippets/image.py \
   cairo_snippets/snippets/__init__.py \
@@ -46,5 +49,5 @@ EXTRA_DIST = \
   gtk/lsystem.py \
   gtk/png_view.py \
   gtk/text.py \
-  svg/svg2png.py \
+  svg/svgconvert.py \
   svg/svgview.py

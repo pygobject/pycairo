@@ -106,12 +106,13 @@ def draw (ctx, width, height):
     ctx.paint()
 
 def expose(drawingarea, event):
-    if gtk.pygtk_version >= (2,7,0):
-        ctx = drawingarea.window.cairo_create()
-    else:
+    if gtk.pygtk_version < (2,7,0):
         ctx = cairo.gtk.gdk_cairo_create(drawingarea.window)
+    else:
+        ctx = drawingarea.window.cairo_create()
 
-    draw (ctx, drawingarea.allocation.width, drawingarea.allocation.height)
+    _, _, width, height = drawingarea.allocation
+    draw (ctx, width, height)
 
     return False
 

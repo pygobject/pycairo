@@ -27,9 +27,9 @@ def draw_spiral (ctx, width, height):
 surface = cairo.ImageSurface (cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
 ctx = cairo.Context(surface)
 
-ctx.rectangle (0, 0, WIDTH, HEIGHT)
 ctx.set_source_rgb (1, 1, 1)
-ctx.fill()
+ctx.set_operator (cairo.OPERATOR_SOURCE)
+ctx.paint()
 
 draw_spiral (ctx, WIDTH, HEIGHT)
 

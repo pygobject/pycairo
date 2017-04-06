@@ -7,14 +7,26 @@ See the INSTALL document for build instructions.
 
 Dependencies
 ------------
-    cairo  		>= 1.0.2
+    cairo  		>= 1.1.6
     Python 		>= 2.3
 
 
 Not required, but supported if they are detected:
     libsvg-cairo	>= 0.1.6
     Numeric Python	any version (?)
-    PyGTK		>= 2.2.0 and < 2.7.0
+    PyGTK		2.2.0 <= version < 2.7.0
+
+PyGTK and the cairo.gtk module:
+PyGTK 2.8 and above has built in support for cairo and does not need to use the
+cairo.gtk module. The cairo.gtk module is deprecated and will be removed from
+a future version of pycairo.
+
+libsvg-cairo and the cairo.svg module:
+libsvg-cairo is no longer actively maintained. Instead a recommended cairo-SVG
+library is pyrsvg (part of python-gnome-desktop) which is a Python binding of
+the librsvg library. The cairo.svg module is deprecated and will be removed
+from a future version of pycairo.
+
 
 Mailing List
 ------------

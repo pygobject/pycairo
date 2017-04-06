@@ -35,6 +35,37 @@
 #endif
 #include "pycairo-private.h"
 
+#define RETURN_NULL_IF_CONTEXT_STATUS_ERROR(obj) \
+    do {                                         \
+	cairo_status_t status = cairo_status (obj->ctx); \
+	if (status != CAIRO_STATUS_SUCCESS) { \
+	    Pycairo_Check_Status (status);    \
+            return NULL;		      \
+	}                                     \
+    } while (0)
+
+
+/* Take a PyBaseString (str or unicode) object and return a pointer to the
+ * UTF-8 encoded string.
+ */
+char *
+__PyBaseString_AsUTF8 (PyObject *o)
+{
+    if (PyString_Check(o)) {
+	/* A plain ASCII string is also a valid UTF-8 string */
+	return PyString_AsString(o);
+
+    } else if (PyUnicode_Check(o)) {
+	PyObject *u = PyUnicode_AsUTF8String(o);
+	if (u != NULL) {
+	    char *utf8 = PyString_AsString(u);
+	    Py_DECREF(u);
+	    return utf8;
+	}
+    }
+    return NULL;
+}
+
 /* PycairoContext_FromContext
  * Create a new PycairoContext from a cairo_t
  * ctx  - a cairo_t to 'wrap' into a Python object.
@@ -101,7 +132,7 @@ pycairo_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 	return NULL;
 
     o = type->tp_alloc(type, 0);
-    if (o) {
+    if (o != NULL) {
 	cairo_t *ctx = cairo_create (s->surface);
 	if (Pycairo_Check_Status (cairo_status (ctx))) {
 	    cairo_destroy (ctx);
@@ -123,8 +154,7 @@ pycairo_append_path (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_append_path (o->ctx, p->path);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -138,8 +168,7 @@ pycairo_arc (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_arc (o->ctx, xc, yc, radius, angle1, angle2);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -153,8 +182,7 @@ pycairo_arc_negative (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_arc_negative (o->ctx, xc, yc, radius, angle1, angle2);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -162,8 +190,7 @@ static PyObject *
 pycairo_clip (PycairoContext *o)
 {
     cairo_clip (o->ctx);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -171,8 +198,7 @@ static PyObject *
 pycairo_clip_preserve (PycairoContext *o)
 {
     cairo_clip_preserve (o->ctx);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -180,8 +206,7 @@ static PyObject *
 pycairo_close_path (PycairoContext *o)
 {
     cairo_close_path (o->ctx);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -189,8 +214,7 @@ static PyObject *
 pycairo_copy_page (PycairoContext *o)
 {
     cairo_copy_page (o->ctx);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -216,8 +240,7 @@ pycairo_curve_to (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_curve_to (o->ctx, x1, y1, x2, y2, x3, y3);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -230,8 +253,7 @@ pycairo_device_to_user(PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_device_to_user(o->ctx, &x, &y);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     return Py_BuildValue("(dd)", x, y);
 }
 
@@ -245,8 +267,7 @@ pycairo_device_to_user_distance (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_device_to_user_distance (o->ctx, &dx, &dy);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     return Py_BuildValue("(dd)", dx, dy);
 }
 
@@ -254,8 +275,7 @@ static PyObject *
 pycairo_fill (PycairoContext *o)
 {
     cairo_fill (o->ctx);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -264,8 +284,7 @@ pycairo_fill_extents (PycairoContext *o)
 {
     double x1, y1, x2, y2;
     cairo_fill_extents (o->ctx, &x1, &y1, &x2, &y2);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     return Py_BuildValue("(dddd)", x1, y1, x2, y2);
 }
 
@@ -273,8 +292,7 @@ static PyObject *
 pycairo_fill_preserve (PycairoContext *o)
 {
     cairo_fill_preserve (o->ctx);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -284,8 +302,7 @@ pycairo_font_extents (PycairoContext *o)
     cairo_font_extents_t e;
 
     cairo_font_extents (o->ctx, &e);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     return Py_BuildValue("(ddddd)", e.ascent, e.descent, e.height,
 			 e.max_x_advance, e.max_y_advance);
 }
@@ -313,9 +330,8 @@ pycairo_get_fill_rule (PycairoContext *o)
 static PyObject *
 pycairo_get_font_face (PycairoContext *o)
 {
-    cairo_font_face_t *font_face = cairo_get_font_face (o->ctx);
-    cairo_font_face_reference (font_face);
-    return PycairoFontFace_FromFontFace (font_face);
+    return PycairoFontFace_FromFontFace (
+               cairo_font_face_reference (cairo_get_font_face (o->ctx)));
 }
 
 static PyObject *
@@ -334,6 +350,16 @@ pycairo_get_font_options (PycairoContext *o)
     cairo_get_font_options (o->ctx, options);
     /* there is no reference fn */
     return PycairoFontOptions_FromFontOptions (options);
+}
+
+static PyObject *
+pycairo_get_group_target (PycairoContext *o)
+{
+    cairo_surface_t *surface = cairo_get_group_target (o->ctx);
+    if (surface != NULL)
+	return PycairoSurface_FromSurface (cairo_surface_reference (surface),
+					   NULL);
+    Py_RETURN_NONE;
 }
 
 static PyObject *
@@ -365,35 +391,28 @@ pycairo_get_matrix (PycairoContext *o)
 static PyObject *
 pycairo_get_miter_limit (PycairoContext *o)
 {
-    return PyFloat_FromDouble(cairo_get_miter_limit(o->ctx));
+    return PyFloat_FromDouble (cairo_get_miter_limit (o->ctx));
 }
 
 static PyObject *
 pycairo_get_operator (PycairoContext *o)
 {
-    return PyInt_FromLong(cairo_get_operator (o->ctx));
+    return PyInt_FromLong (cairo_get_operator (o->ctx));
 }
 
 static PyObject *
 pycairo_get_source (PycairoContext *o)
 {
-    cairo_pattern_t *pattern = cairo_get_source (o->ctx);
-    cairo_pattern_reference (pattern);
-    /* bug #2765 - "How do we identify surface (and pattern) types?"
-     * should pass pattern type as arg2
-     */
-    return PycairoPattern_FromPattern (pattern, NULL);
+    return PycairoPattern_FromPattern (
+	       cairo_pattern_reference (cairo_get_source (o->ctx)));
 }
 
 static PyObject *
 pycairo_get_target (PycairoContext *o)
 {
-    cairo_surface_t *surface = cairo_get_target (o->ctx);
-    cairo_surface_reference (surface);
-    /* bug #2765 - "How do we identify surface types?"
-     * should pass surface type as arg2
-     */
-    return PycairoSurface_FromSurface (surface, NULL, NULL);
+    return PycairoSurface_FromSurface (
+	       cairo_surface_reference (cairo_get_target (o->ctx)),
+	       NULL);
 }
 
 static PyObject *
@@ -406,8 +425,7 @@ static PyObject *
 pycairo_identity_matrix (PycairoContext *o)
 {
     cairo_identity_matrix (o->ctx);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -421,8 +439,7 @@ pycairo_in_fill (PycairoContext *o, PyObject *args)
 	return NULL;
 
     result = cairo_in_fill (o->ctx, x, y) ? Py_True : Py_False;
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_INCREF(result);
     return result;
 }
@@ -437,8 +454,7 @@ pycairo_in_stroke (PycairoContext *o, PyObject *args)
 	return NULL;
 
     result = cairo_in_stroke (o->ctx, x, y) ? Py_True : Py_False;
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_INCREF(result);
     return result;
 }
@@ -452,8 +468,7 @@ pycairo_line_to (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_line_to (o->ctx, x, y);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -466,8 +481,7 @@ pycairo_mask (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_mask (o->ctx, p->pattern);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -482,8 +496,7 @@ pycairo_mask_surface (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_mask_surface (o->ctx, s->surface, surface_x, surface_y);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -496,8 +509,7 @@ pycairo_move_to (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_move_to (o->ctx, x, y);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -505,8 +517,15 @@ static PyObject *
 pycairo_new_path (PycairoContext *o)
 {
     cairo_new_path (o->ctx);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    Py_RETURN_NONE;
+}
+
+static PyObject *
+pycairo_new_sub_path (PycairoContext *o)
+{
+    cairo_new_sub_path (o->ctx);
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -514,8 +533,7 @@ static PyObject *
 pycairo_paint (PycairoContext *o)
 {
     cairo_paint (o->ctx);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -528,8 +546,41 @@ pycairo_paint_with_alpha (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_paint_with_alpha (o->ctx, alpha);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    Py_RETURN_NONE;
+}
+
+static PyObject *
+pycairo_pop_group (PycairoContext *o)
+{
+    return PycairoPattern_FromPattern (cairo_pop_group (o->ctx));
+}
+
+static PyObject *
+pycairo_pop_group_to_source (PycairoContext *o)
+{
+    cairo_pop_group_to_source (o->ctx);
+    Py_RETURN_NONE;
+}
+
+static PyObject *
+pycairo_push_group (PycairoContext *o)
+{
+    cairo_push_group (o->ctx);
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
+    Py_RETURN_NONE;
+}
+
+static PyObject *
+pycairo_push_group_with_content (PycairoContext *o, PyObject *args)
+{
+    cairo_content_t content;
+
+    if (!PyArg_ParseTuple(args, "i:Context.push_group_with_content",
+			  &content))
 	return NULL;
+    cairo_push_group_with_content (o->ctx, content);
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -543,8 +594,7 @@ pycairo_rectangle (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_rectangle (o->ctx, x, y, width, height);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -558,8 +608,7 @@ pycairo_rel_curve_to (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_rel_curve_to (o->ctx, dx1, dy1, dx2, dy2, dx3, dy3);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -572,8 +621,7 @@ pycairo_rel_line_to (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_rel_line_to (o->ctx, dx, dy);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -586,8 +634,7 @@ pycairo_rel_move_to (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_rel_move_to (o->ctx, dx, dy);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -595,8 +642,7 @@ static PyObject *
 pycairo_reset_clip (PycairoContext *o)
 {
     cairo_reset_clip (o->ctx);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -604,8 +650,7 @@ static PyObject *
 pycairo_restore (PycairoContext *o)
 {
     cairo_restore (o->ctx);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -618,8 +663,7 @@ pycairo_rotate (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_rotate (o->ctx, angle);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -627,8 +671,7 @@ static PyObject *
 pycairo_save (PycairoContext *o)
 {
     cairo_save (o->ctx);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -641,25 +684,28 @@ pycairo_scale (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_scale (o->ctx, sx, sy);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
 static PyObject *
 pycairo_select_font_face (PycairoContext *o, PyObject *args)
 {
+    PyObject *obj;
     const char *family;
     cairo_font_slant_t slant = CAIRO_FONT_SLANT_NORMAL;
     cairo_font_weight_t weight = CAIRO_FONT_WEIGHT_NORMAL;
 
-    if (!PyArg_ParseTuple(args, "s|ii:Context.select_font_face",
-			  &family, &slant, &weight))
+    if (!PyArg_ParseTuple(args, "O!|ii:Context.select_font_face",
+			  &PyBaseString_Type, &obj, &slant, &weight))
+	return NULL;
+
+    family = __PyBaseString_AsUTF8 (obj);
+    if (family == NULL)
 	return NULL;
 
     cairo_select_font_face (o->ctx, family, slant, weight);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -672,8 +718,7 @@ pycairo_set_antialias (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_antialias (o->ctx, antialias);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -708,8 +753,7 @@ pycairo_set_dash (PycairoContext *o, PyObject *args)
 
     cairo_set_dash (o->ctx, dashes, ndash, offset);
     free (dashes);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -722,8 +766,7 @@ pycairo_set_fill_rule (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_fill_rule (o->ctx, fill_rule);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -737,8 +780,7 @@ pycairo_set_font_matrix (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_font_matrix (o->ctx, &matrix->matrix);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -755,9 +797,7 @@ pycairo_set_font_face (PycairoContext *o, PyObject *obj)
 			"cairo.FontFace or None");
 	return NULL;
     }
-
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -771,8 +811,7 @@ pycairo_set_font_options (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_font_options (o->ctx, options->font_options);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -785,8 +824,7 @@ pycairo_set_font_size (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_font_size (o->ctx, size);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -799,8 +837,7 @@ pycairo_set_line_cap (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_line_cap (o->ctx, line_cap);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -813,8 +850,7 @@ pycairo_set_line_join (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_line_join (o->ctx, line_join);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -827,8 +863,7 @@ pycairo_set_line_width (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_line_width (o->ctx, width);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -842,8 +877,7 @@ pycairo_set_matrix (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_matrix (o->ctx, &matrix->matrix);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -856,8 +890,7 @@ pycairo_set_miter_limit (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_miter_limit (o->ctx, limit);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -870,8 +903,7 @@ pycairo_set_operator(PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_operator(o->ctx, op);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -885,8 +917,7 @@ pycairo_set_source (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_source (o->ctx, p->pattern);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -900,8 +931,7 @@ pycairo_set_source_rgb (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_source_rgb (o->ctx, red, green, blue);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -916,8 +946,7 @@ pycairo_set_source_rgba (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_source_rgba (o->ctx, red, green, blue, alpha);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -932,8 +961,7 @@ pycairo_set_source_surface (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_source_surface (o->ctx, surface->surface, x, y);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -946,8 +974,7 @@ pycairo_set_tolerance (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_set_tolerance (o->ctx, tolerance);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -955,22 +982,23 @@ static PyObject *
 pycairo_show_page (PycairoContext *o)
 {
     cairo_show_page (o->ctx);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
 static PyObject *
-pycairo_show_text (PycairoContext *o, PyObject *args)
+pycairo_show_text (PycairoContext *o, PyObject *obj)
 {
-    const char *utf8;
-
-    if (!PyArg_ParseTuple(args, "s:Context.show_text", &utf8))
+    const char *utf8 = __PyBaseString_AsUTF8 (obj);
+    if (utf8==NULL) {
+	PyErr_SetString(PyExc_TypeError,
+			"Context.show_text() argument must be a string or "
+			"unicode object");
 	return NULL;
+    }
 
     cairo_show_text (o->ctx, utf8);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -978,8 +1006,7 @@ static PyObject *
 pycairo_stroke (PycairoContext *o)
 {
     cairo_stroke (o->ctx);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -988,8 +1015,7 @@ pycairo_stroke_extents (PycairoContext *o)
 {
     double x1, y1, x2, y2;
     cairo_stroke_extents (o->ctx, &x1, &y1, &x2, &y2);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     return Py_BuildValue("(dddd)", x1, y1, x2, y2);
 }
 
@@ -997,39 +1023,42 @@ static PyObject *
 pycairo_stroke_preserve (PycairoContext *o)
 {
     cairo_stroke_preserve (o->ctx);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
 static PyObject *
-pycairo_text_extents (PycairoContext *o, PyObject *args)
+pycairo_text_extents (PycairoContext *o, PyObject *obj)
 {
-    const char *utf8;
     cairo_text_extents_t extents;
-
-    if (!PyArg_ParseTuple (args, "s:Context.text_extents", &utf8))
+    const char *utf8 = __PyBaseString_AsUTF8 (obj);
+    if (utf8==NULL) {
+	PyErr_SetString(PyExc_TypeError,
+			"Context.text_extents() argument must be a string or "
+			"unicode object");
 	return NULL;
+    }
 
     cairo_text_extents (o->ctx, utf8, &extents);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     return Py_BuildValue("(dddddd)", extents.x_bearing, extents.y_bearing,
 			 extents.width, extents.height, extents.x_advance,
 			 extents.y_advance);
 }
 
 static PyObject *
-pycairo_text_path (PycairoContext *o, PyObject *args)
+pycairo_text_path (PycairoContext *o, PyObject *obj)
 {
-    const char *utf8;
-
-    if (!PyArg_ParseTuple (args, "s:Context.text_path", &utf8))
+    const char *utf8 = __PyBaseString_AsUTF8 (obj);
+    if (utf8==NULL) {
+	PyErr_SetString(PyExc_TypeError,
+			"Context.text_path() argument must be a string or "
+			"unicode object");
 	return NULL;
+    }
 
     cairo_text_path (o->ctx, utf8);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -1042,8 +1071,7 @@ pycairo_translate (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_translate (o->ctx, tx, ty);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -1057,8 +1085,7 @@ pycairo_transform (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_transform (o->ctx, &matrix->matrix);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     Py_RETURN_NONE;
 }
 
@@ -1071,8 +1098,7 @@ pycairo_user_to_device (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_user_to_device (o->ctx, &x, &y);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     return Py_BuildValue("(dd)", x, y);
 }
 
@@ -1086,8 +1112,7 @@ pycairo_user_to_device_distance (PycairoContext *o, PyObject *args)
 	return NULL;
 
     cairo_user_to_device_distance (o->ctx, &dx, &dy);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
+    RETURN_NULL_IF_CONTEXT_STATUS_ERROR(o);
     return Py_BuildValue("(dd)", dx, dy);
 }
 
@@ -1102,92 +1127,101 @@ static PyMethodDef pycairo_methods[] = {
      * - not needed since Pycairo calls Pycairo_Check_Status() to check
      *   for errors and raise exceptions
      */
-    {"append_path",     (PyCFunction)pycairo_append_path,    METH_VARARGS},
-    {"arc",             (PyCFunction)pycairo_arc,            METH_VARARGS},
-    {"arc_negative",    (PyCFunction)pycairo_arc_negative,   METH_VARARGS},
-    {"clip",            (PyCFunction)pycairo_clip,           METH_NOARGS},
-    {"clip_preserve",   (PyCFunction)pycairo_clip_preserve,  METH_NOARGS},
-    {"close_path",      (PyCFunction)pycairo_close_path,     METH_NOARGS},
-    {"copy_page",       (PyCFunction)pycairo_copy_page,      METH_NOARGS},
-    {"copy_path",       (PyCFunction)pycairo_copy_path,      METH_NOARGS},
-    {"copy_path_flat",  (PyCFunction)pycairo_copy_path_flat, METH_NOARGS},
-    {"curve_to",        (PyCFunction)pycairo_curve_to,       METH_VARARGS},
-    {"device_to_user",  (PyCFunction)pycairo_device_to_user, METH_VARARGS},
+    {"append_path",     (PyCFunction)pycairo_append_path,     METH_VARARGS},
+    {"arc",             (PyCFunction)pycairo_arc,             METH_VARARGS},
+    {"arc_negative",    (PyCFunction)pycairo_arc_negative,    METH_VARARGS},
+    {"clip",            (PyCFunction)pycairo_clip,            METH_NOARGS},
+    {"clip_preserve",   (PyCFunction)pycairo_clip_preserve,   METH_NOARGS},
+    {"close_path",      (PyCFunction)pycairo_close_path,      METH_NOARGS},
+    {"copy_page",       (PyCFunction)pycairo_copy_page,       METH_NOARGS},
+    {"copy_path",       (PyCFunction)pycairo_copy_path,       METH_NOARGS},
+    {"copy_path_flat",  (PyCFunction)pycairo_copy_path_flat,  METH_NOARGS},
+    {"curve_to",        (PyCFunction)pycairo_curve_to,        METH_VARARGS},
+    {"device_to_user",  (PyCFunction)pycairo_device_to_user,  METH_VARARGS},
     {"device_to_user_distance",
-               (PyCFunction)pycairo_device_to_user_distance, METH_VARARGS},
-    {"fill",            (PyCFunction)pycairo_fill,           METH_NOARGS},
-    {"fill_extents",    (PyCFunction)pycairo_fill_extents,   METH_NOARGS},
-    {"fill_preserve",   (PyCFunction)pycairo_fill_preserve,  METH_NOARGS},
-    {"font_extents",    (PyCFunction)pycairo_font_extents,   METH_NOARGS},
-    {"get_antialias",   (PyCFunction)pycairo_get_antialias,  METH_NOARGS},
-    {"get_fill_rule",   (PyCFunction)pycairo_get_fill_rule,  METH_NOARGS},
-    {"get_font_face",   (PyCFunction)pycairo_get_font_face,  METH_NOARGS},
-    {"get_font_matrix", (PyCFunction)pycairo_get_font_matrix,METH_NOARGS},
+               (PyCFunction)pycairo_device_to_user_distance,  METH_VARARGS},
+    {"fill",            (PyCFunction)pycairo_fill,            METH_NOARGS},
+    {"fill_extents",    (PyCFunction)pycairo_fill_extents,    METH_NOARGS},
+    {"fill_preserve",   (PyCFunction)pycairo_fill_preserve,   METH_NOARGS},
+    {"font_extents",    (PyCFunction)pycairo_font_extents,    METH_NOARGS},
+    {"get_antialias",   (PyCFunction)pycairo_get_antialias,   METH_NOARGS},
+    {"get_current_point",(PyCFunction)pycairo_get_current_point,METH_NOARGS},
+    {"get_fill_rule",   (PyCFunction)pycairo_get_fill_rule,   METH_NOARGS},
+    {"get_font_face",   (PyCFunction)pycairo_get_font_face,   METH_NOARGS},
+    {"get_font_matrix", (PyCFunction)pycairo_get_font_matrix, METH_NOARGS},
     {"get_font_options",(PyCFunction)pycairo_get_font_options,METH_NOARGS},
-    {"get_line_cap",    (PyCFunction)pycairo_get_line_cap,   METH_NOARGS},
-    {"get_line_join",   (PyCFunction)pycairo_get_line_join,  METH_NOARGS},
-    {"get_line_width",  (PyCFunction)pycairo_get_line_width, METH_NOARGS},
-    {"get_matrix",      (PyCFunction)pycairo_get_matrix,     METH_NOARGS},
-    {"get_miter_limit", (PyCFunction)pycairo_get_miter_limit,METH_NOARGS},
-    {"get_operator",    (PyCFunction)pycairo_get_operator,   METH_NOARGS},
-    {"get_source",      (PyCFunction)pycairo_get_source,     METH_NOARGS},
-    {"get_target",      (PyCFunction)pycairo_get_target,     METH_NOARGS},
-    {"get_tolerance",   (PyCFunction)pycairo_get_tolerance,  METH_NOARGS},
+    {"get_group_target",(PyCFunction)pycairo_get_group_target,METH_NOARGS},
+    {"get_line_cap",    (PyCFunction)pycairo_get_line_cap,    METH_NOARGS},
+    {"get_line_join",   (PyCFunction)pycairo_get_line_join,   METH_NOARGS},
+    {"get_line_width",  (PyCFunction)pycairo_get_line_width,  METH_NOARGS},
+    {"get_matrix",      (PyCFunction)pycairo_get_matrix,      METH_NOARGS},
+    {"get_miter_limit", (PyCFunction)pycairo_get_miter_limit, METH_NOARGS},
+    {"get_operator",    (PyCFunction)pycairo_get_operator,    METH_NOARGS},
+    {"get_source",      (PyCFunction)pycairo_get_source,      METH_NOARGS},
+    {"get_target",      (PyCFunction)pycairo_get_target,      METH_NOARGS},
+    {"get_tolerance",   (PyCFunction)pycairo_get_tolerance,   METH_NOARGS},
     /* glyph_extents */
     /* glyph_path    - undocumented */
-    {"identity_matrix", (PyCFunction)pycairo_identity_matrix,METH_NOARGS},
-    {"in_fill",         (PyCFunction)pycairo_in_fill,        METH_VARARGS},
-    {"in_stroke",       (PyCFunction)pycairo_in_stroke,      METH_VARARGS},
-    {"line_to",         (PyCFunction)pycairo_line_to,        METH_VARARGS},
-    {"mask",            (PyCFunction)pycairo_mask,           METH_VARARGS},
-    {"mask_surface",    (PyCFunction)pycairo_mask_surface,   METH_VARARGS},
-    {"move_to",         (PyCFunction)pycairo_move_to,        METH_VARARGS},
-    {"new_path",        (PyCFunction)pycairo_new_path,       METH_NOARGS},
-    {"paint",           (PyCFunction)pycairo_paint,          METH_NOARGS},
+    {"identity_matrix", (PyCFunction)pycairo_identity_matrix, METH_NOARGS},
+    {"in_fill",         (PyCFunction)pycairo_in_fill,         METH_VARARGS},
+    {"in_stroke",       (PyCFunction)pycairo_in_stroke,       METH_VARARGS},
+    {"line_to",         (PyCFunction)pycairo_line_to,         METH_VARARGS},
+    {"mask",            (PyCFunction)pycairo_mask,            METH_VARARGS},
+    {"mask_surface",    (PyCFunction)pycairo_mask_surface,    METH_VARARGS},
+    {"move_to",         (PyCFunction)pycairo_move_to,         METH_VARARGS},
+    {"new_path",        (PyCFunction)pycairo_new_path,        METH_NOARGS},
+    {"new_sub_path",    (PyCFunction)pycairo_new_sub_path,    METH_NOARGS},
+    {"paint",           (PyCFunction)pycairo_paint,           METH_NOARGS},
     {"paint_with_alpha",(PyCFunction)pycairo_paint_with_alpha,METH_VARARGS},
-    {"get_current_point",(PyCFunction)pycairo_get_current_point,METH_NOARGS},
-    {"rectangle",       (PyCFunction)pycairo_rectangle,      METH_VARARGS},
-    {"rel_curve_to",    (PyCFunction)pycairo_rel_curve_to,   METH_VARARGS},
-    {"rel_line_to",     (PyCFunction)pycairo_rel_line_to,    METH_VARARGS},
-    {"rel_move_to",     (PyCFunction)pycairo_rel_move_to,    METH_VARARGS},
-    {"reset_clip",      (PyCFunction)pycairo_reset_clip,     METH_NOARGS},
-    {"restore",         (PyCFunction)pycairo_restore,        METH_NOARGS},
-    {"rotate",          (PyCFunction)pycairo_rotate,         METH_VARARGS},
-    {"save",            (PyCFunction)pycairo_save,           METH_NOARGS},
-    {"scale",           (PyCFunction)pycairo_scale,          METH_VARARGS},
+    {"pop_group",       (PyCFunction)pycairo_pop_group,       METH_NOARGS},
+    {"pop_group_to_source",
+                    (PyCFunction)pycairo_pop_group_to_source, METH_NOARGS},
+    {"push_group",      (PyCFunction)pycairo_push_group,      METH_NOARGS},
+    {"push_group_with_content",
+                (PyCFunction)pycairo_push_group_with_content, METH_VARARGS},
+    {"rectangle",       (PyCFunction)pycairo_rectangle,       METH_VARARGS},
+    {"rel_curve_to",    (PyCFunction)pycairo_rel_curve_to,    METH_VARARGS},
+    {"rel_line_to",     (PyCFunction)pycairo_rel_line_to,     METH_VARARGS},
+    {"rel_move_to",     (PyCFunction)pycairo_rel_move_to,     METH_VARARGS},
+    {"reset_clip",      (PyCFunction)pycairo_reset_clip,      METH_NOARGS},
+    {"restore",         (PyCFunction)pycairo_restore,         METH_NOARGS},
+    {"rotate",          (PyCFunction)pycairo_rotate,          METH_VARARGS},
+    {"save",            (PyCFunction)pycairo_save,            METH_NOARGS},
+    {"scale",           (PyCFunction)pycairo_scale,           METH_VARARGS},
     {"select_font_face",(PyCFunction)pycairo_select_font_face,METH_VARARGS},
-    {"set_antialias",   (PyCFunction)pycairo_set_antialias,  METH_VARARGS},
-    {"set_dash",        (PyCFunction)pycairo_set_dash,       METH_VARARGS},
-    {"set_fill_rule",   (PyCFunction)pycairo_set_fill_rule,  METH_VARARGS},
-    {"set_font_face",   (PyCFunction)pycairo_set_font_face,  METH_O},
-    {"set_font_matrix", (PyCFunction)pycairo_set_font_matrix,METH_VARARGS},
+    {"set_antialias",   (PyCFunction)pycairo_set_antialias,   METH_VARARGS},
+    {"set_dash",        (PyCFunction)pycairo_set_dash,        METH_VARARGS},
+    {"set_fill_rule",   (PyCFunction)pycairo_set_fill_rule,   METH_VARARGS},
+    {"set_font_face",   (PyCFunction)pycairo_set_font_face,   METH_O},
+    {"set_font_matrix", (PyCFunction)pycairo_set_font_matrix, METH_VARARGS},
     {"set_font_options",(PyCFunction)pycairo_set_font_options,METH_VARARGS},
-    {"set_font_size",   (PyCFunction)pycairo_set_font_size,  METH_VARARGS},
-    {"set_line_cap",    (PyCFunction)pycairo_set_line_cap,   METH_VARARGS},
-    {"set_line_join",   (PyCFunction)pycairo_set_line_join,  METH_VARARGS},
-    {"set_line_width",  (PyCFunction)pycairo_set_line_width, METH_VARARGS},
-    {"set_matrix",      (PyCFunction)pycairo_set_matrix,     METH_VARARGS},
-    {"set_miter_limit", (PyCFunction)pycairo_set_miter_limit,METH_VARARGS},
-    {"set_operator",    (PyCFunction)pycairo_set_operator,   METH_VARARGS},
-    {"set_source",      (PyCFunction)pycairo_set_source,     METH_VARARGS},
-    {"set_source_rgb",  (PyCFunction)pycairo_set_source_rgb, METH_VARARGS},
-    {"set_source_rgba", (PyCFunction)pycairo_set_source_rgba,METH_VARARGS},
+    {"set_font_size",   (PyCFunction)pycairo_set_font_size,   METH_VARARGS},
+    {"set_line_cap",    (PyCFunction)pycairo_set_line_cap,    METH_VARARGS},
+    {"set_line_join",   (PyCFunction)pycairo_set_line_join,   METH_VARARGS},
+    {"set_line_width",  (PyCFunction)pycairo_set_line_width,  METH_VARARGS},
+    {"set_matrix",      (PyCFunction)pycairo_set_matrix,      METH_VARARGS},
+    {"set_miter_limit", (PyCFunction)pycairo_set_miter_limit, METH_VARARGS},
+    {"set_operator",    (PyCFunction)pycairo_set_operator,    METH_VARARGS},
+    /* set_scaled_font */
+    {"set_source",      (PyCFunction)pycairo_set_source,      METH_VARARGS},
+    {"set_source_rgb",  (PyCFunction)pycairo_set_source_rgb,  METH_VARARGS},
+    {"set_source_rgba", (PyCFunction)pycairo_set_source_rgba, METH_VARARGS},
     {"set_source_surface",(PyCFunction)pycairo_set_source_surface,
-                                                             METH_VARARGS},
-    {"set_tolerance",   (PyCFunction)pycairo_set_tolerance,  METH_VARARGS},
+                                                              METH_VARARGS},
+    {"set_tolerance",   (PyCFunction)pycairo_set_tolerance,   METH_VARARGS},
     /* show_glyphs - undocumented */
-    {"show_page",       (PyCFunction)pycairo_show_page,      METH_NOARGS},
-    {"show_text",       (PyCFunction)pycairo_show_text,      METH_VARARGS},
-    {"stroke",          (PyCFunction)pycairo_stroke,         METH_NOARGS},
-    {"stroke_extents",  (PyCFunction)pycairo_stroke_extents, METH_NOARGS},
-    {"stroke_preserve", (PyCFunction)pycairo_stroke_preserve,METH_NOARGS},
-    {"text_extents",    (PyCFunction)pycairo_text_extents,   METH_VARARGS},
-    {"text_path",       (PyCFunction)pycairo_text_path,      METH_VARARGS},
-    {"transform",       (PyCFunction)pycairo_transform,      METH_VARARGS},
-    {"translate",       (PyCFunction)pycairo_translate,      METH_VARARGS},
-    {"user_to_device",  (PyCFunction)pycairo_user_to_device, METH_VARARGS},
+    {"show_page",       (PyCFunction)pycairo_show_page,       METH_NOARGS},
+    {"show_text",       (PyCFunction)pycairo_show_text,       METH_O},
+    {"stroke",          (PyCFunction)pycairo_stroke,          METH_NOARGS},
+    {"stroke_extents",  (PyCFunction)pycairo_stroke_extents,  METH_NOARGS},
+    {"stroke_preserve", (PyCFunction)pycairo_stroke_preserve, METH_NOARGS},
+    {"text_extents",    (PyCFunction)pycairo_text_extents,    METH_O},
+    {"text_path",       (PyCFunction)pycairo_text_path,       METH_O},
+    {"transform",       (PyCFunction)pycairo_transform,       METH_VARARGS},
+    {"translate",       (PyCFunction)pycairo_translate,       METH_VARARGS},
+    {"user_to_device",  (PyCFunction)pycairo_user_to_device,  METH_VARARGS},
     {"user_to_device_distance",(PyCFunction)pycairo_user_to_device_distance,
-                                                             METH_VARARGS},
+                                                              METH_VARARGS},
     {NULL, NULL, 0, NULL},
 };
 

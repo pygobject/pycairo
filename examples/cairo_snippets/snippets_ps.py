@@ -36,6 +36,7 @@ def do_snippet (snippet):
     else:
         cr.restore()
         cr.show_page()
+        surface.finish()
 
     if verbose_mode:
         print
