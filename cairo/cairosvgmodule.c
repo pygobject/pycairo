@@ -184,7 +184,7 @@ pycairosvg_render (PycairoSVGContext *o, PyObject *args)
 static PyObject *
 pycairosvg_get_size (PycairoSVGContext *o, void *closure)
 {
-    int width, height;
+    unsigned int width, height;
     svg_cairo_get_size (o->ctx, &width, &height);
     return Py_BuildValue("ii", width, height);
 }

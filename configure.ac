@@ -4,14 +4,14 @@ AC_PREREQ(2.54)
 # the pycairo version number
 m4_define(pycairo_major_version, 0)
 m4_define(pycairo_minor_version, 5)
-m4_define(pycairo_micro_version, 0)
+m4_define(pycairo_micro_version, 1)
 m4_define(pycairo_version, pycairo_major_version.pycairo_minor_version.pycairo_micro_version)
 
 # versions of packages we require
-m4_define(cairo_required_version,    0.5.0)
+m4_define(cairo_required_version,    0.5.1)
 m4_define(gtk_required_version,      2.0.0)
 m4_define(pygtk_required_version,    1.99.16)
-m4_define(libsvg_cairo_required_version, 0.1.5)
+m4_define(libsvg_cairo_required_version, 0.1.6)
 
 AC_INIT(pycairo, pycairo_version)
 
@@ -27,8 +27,8 @@ AM_INIT_AUTOMAKE([1.7 -Wall])
 
 # Options
 AC_ARG_WITH(pygtk,
-            [AC_HELP_STRING([--with-pygtk],
-                            [support pygtk [default=yes]])],,
+            [AC_HELP_STRING([--with-pygtk], [support pygtk [default=yes]])],
+	    [],
 	    [with_pygtk="yes"])
 
 
@@ -51,40 +51,57 @@ if test -n "$export_dynamic"; then
   CAIRO_LIBS=`echo $CAIRO_LIBS | sed -e "s/$export_dynamic//"`
 fi
 
-# cairo + gtk + pygtk
-if test x"$with_pygtk" = xno; then
-  with_pygtk=false
-else
-  PKG_CHECK_MODULES(CAIRO_GTK,
+# cairo + cairo-xlib + gtk + pygtk
+if test x"$with_pygtk" = xyes; then
+  # was cairo compiled with cairo-xlib enabled?
+  save_LIBS="$LIBS"
+  LIBS="$CAIRO_LIBS"
+  AC_CHECK_LIB([cairo], [cairo_xlib_surface_create], [], [with_pygtk=no])
+  LIBS="$save_LIBS"
+fi
+
+if test x"$with_pygtk" = xyes; then
+  PKG_CHECK_MODULES(GTK,
     [gtk+-2.0 >= gtk_required_version
     pygtk-2.0 >= pygtk_required_version],
-    [with_pygtk=true], [with_pygtk=false])
+    [], [with_pygtk=no])
   if test -n "$export_dynamic"; then
-    CAIRO_GTK_LIBS=`echo $CAIRO_GTK_LIBS | sed -e "s/$export_dynamic//"`
+    GTK_LIBS=`echo $GTK_LIBS | sed -e "s/$export_dynamic//"`
   fi
 fi
-AM_CONDITIONAL(WITH_PYGTK, $with_pygtk)
+AM_CONDITIONAL(WITH_PYGTK, test x$with_pygtk = xyes)
+
+# Define HAVE_GTK28 if gtk+ > 2.7 is found
+if test x"$with_pygtk" = xyes; then
+  AC_MSG_CHECKING([for gtk+ 2.8 API])
+  if $PKG_CONFIG --modversion "gtk+-2.0 >= 2.7.0" > /dev/null 2>&1; then
+     AC_MSG_RESULT([found])
+     AC_DEFINE([HAVE_GTK28], [1], [Define to 1 if gtk+ 2.8 API is found])
+  else
+     AC_MSG_RESULT([not found])
+  fi
+fi
 
 # Numeric Python
 save_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $PYTHON_INCLUDES"
 AC_CHECK_HEADER([Numeric/arrayobject.h],
-  [have_numpy=true], [have_numpy=false],
+  [have_numpy=yes], [have_numpy=no],
   [#include <Python.h>])
 CPPFLAGS="$save_CPPFLAGS"
-if $have_numpy; then
-  AC_DEFINE(HAVE_NUMPY,,[whether to include numeric python support])
+if test x$have_numpy = xyes; then
+  AC_DEFINE(HAVE_NUMPY, [1], [Define to 1 if Numeric python is found])
 fi
-AM_CONDITIONAL(HAVE_NUMPY, $have_numpy)
+AM_CONDITIONAL(HAVE_NUMPY, test x$have_numpy = xyes)
 
 # is libsvg-cairo installed?
-PKG_CHECK_MODULES(LIBSVG_CAIRO, dnl
+PKG_CHECK_MODULES(LIBSVG_CAIRO,
   libsvg-cairo >= libsvg_cairo_required_version,
-  [have_libsvg_cairo=true],[have_libsvg_cairo=false])
+  [have_libsvg_cairo=yes],[have_libsvg_cairo=no])
 if test -n "$export_dynamic"; then
   LIBSVG_CAIRO_LIBS=`echo $LIBSVG_CAIRO_LIBS | sed -e "s/$export_dynamic//"`
 fi
-AM_CONDITIONAL(HAVE_LIBSVG_CAIRO, $have_libsvg_cairo)
+AM_CONDITIONAL(HAVE_LIBSVG_CAIRO, test x$have_libsvg_cairo = xyes)
 
 
 # add gcc debugging options
@@ -138,7 +155,7 @@ Configuration:
 Installation prefix             ${prefix}
 
 Additional modules:
-	build cairo.gtk   ?	${with_pygtk}
-	build cairo.svg   ?     ${have_libsvg_cairo}
+	build cairo.gtk?        ${with_pygtk}
+	build cairo.svg?        ${have_libsvg_cairo}
 	build Numeric support?  ${have_numpy}
 "

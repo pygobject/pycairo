@@ -38,18 +38,30 @@
 /* PycairoContext_FromContext
  * Create a new PycairoContext from a cairo_t
  * ctx  - a cairo_t to 'wrap' into a Python object.
- *        it is unreferenced if the PycairoContext creation fails
+ *        it is unreferenced if the PycairoContext creation fails, or if
+ *        the cairo_t has an error status
+ * type - the type of the object to instantiate; it can be NULL,
+ *        meaning a base cairo.Context type, or it can be a subclass of
+ *        cairo.Context.
  * base - the base object used to create the context, or NULL.
  *        it is referenced to keep it alive while the cairo_t is being used
  * Return value: New reference or NULL on failure
  */
 PyObject *
-PycairoContext_FromContext(cairo_t *ctx, PyObject *base)
+PycairoContext_FromContext(cairo_t *ctx, PyTypeObject *type, PyObject *base)
 {
     PyObject *o;
 
     assert (ctx != NULL);
-    o = PycairoContext_Type.tp_alloc (&PycairoContext_Type, 0);
+
+    if (Pycairo_Check_Status (cairo_status (ctx))) {
+	cairo_destroy (ctx);
+	return NULL;
+    }
+
+    if (type == NULL)
+        type = &PycairoContext_Type;
+    o = PycairoContext_Type.tp_alloc (type, 0);
     if (o) {
 	((PycairoContext *)o)->ctx = ctx;
 	Py_XINCREF(base);
@@ -91,16 +103,12 @@ pycairo_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
     o = type->tp_alloc(type, 0);
     if (o) {
 	cairo_t *ctx = cairo_create (s->surface);
-	if (ctx) {
-	    if (Pycairo_Check_Status (cairo_status (ctx))) {
-		Py_DECREF(o);
-		return NULL;
-	    }
-	    ((PycairoContext *)o)->ctx = ctx;
-	}else {
+	if (Pycairo_Check_Status (cairo_status (ctx))) {
+	    cairo_destroy (ctx);
 	    Py_DECREF(o);
-	    return PyErr_NoMemory();
+	    return NULL;
 	}
+	((PycairoContext *)o)->ctx = ctx;
     }
     return o;
 }
@@ -189,19 +197,13 @@ pycairo_copy_page (PycairoContext *o)
 static PyObject *
 pycairo_copy_path (PycairoContext *o)
 {
-    cairo_path_t *path = cairo_copy_path (o->ctx);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
-    return PycairoPath_FromPath (path);
+    return PycairoPath_FromPath (cairo_copy_path (o->ctx));
 }
 
 static PyObject *
 pycairo_copy_path_flat (PycairoContext *o)
 {
-    cairo_path_t *path = cairo_copy_path_flat (o->ctx);
-    if (Pycairo_Check_Status (cairo_status (o->ctx)))
-	return NULL;
-    return PycairoPath_FromPath (path);
+    return PycairoPath_FromPath (cairo_copy_path_flat (o->ctx));
 }
 
 static PyObject *
@@ -364,10 +366,6 @@ static PyObject *
 pycairo_get_source (PycairoContext *o)
 {
     cairo_pattern_t *pattern = cairo_get_source (o->ctx);
-    if (!pattern) {
-	Pycairo_Check_Status (cairo_status (o->ctx));
-	return NULL;
-    }
     cairo_pattern_reference (pattern);
     return PycairoPattern_FromPattern (pattern);
 }
@@ -381,7 +379,10 @@ pycairo_get_target (PycairoContext *o)
 	return NULL;
     }
     cairo_surface_reference (surface);
-    return PycairoSurface_FromSurface (surface, NULL);
+    /* bug #2765 - "How do we identify surface types?"
+     * should pass surface type as arg2
+     */
+    return PycairoSurface_FromSurface (surface, NULL, NULL);
 }
 
 static PyObject *
@@ -1095,8 +1096,8 @@ static PyMethodDef pycairo_methods[] = {
     {"in_fill",         (PyCFunction)pycairo_in_fill,        METH_VARARGS},
     {"in_stroke",       (PyCFunction)pycairo_in_stroke,      METH_VARARGS},
     {"line_to",         (PyCFunction)pycairo_line_to,        METH_VARARGS},
-    {"mask",            (PyCFunction)pycairo_move_to,        METH_VARARGS},
-    {"mask_surface",    (PyCFunction)pycairo_move_to,        METH_VARARGS},
+    {"mask",            (PyCFunction)pycairo_mask,           METH_VARARGS},
+    {"mask_surface",    (PyCFunction)pycairo_mask_surface,   METH_VARARGS},
     {"move_to",         (PyCFunction)pycairo_move_to,        METH_VARARGS},
     {"new_path",        (PyCFunction)pycairo_new_path,       METH_NOARGS},
     {"paint",           (PyCFunction)pycairo_paint,          METH_NOARGS},
@@ -1134,7 +1135,7 @@ static PyMethodDef pycairo_methods[] = {
     {"show_text",       (PyCFunction)pycairo_show_text,      METH_VARARGS},
     {"stroke",          (PyCFunction)pycairo_stroke,         METH_NOARGS},
     {"stroke_extents",  (PyCFunction)pycairo_stroke_extents, METH_NOARGS},
-    {"stroke_preserve", (PyCFunction)pycairo_stroke,         METH_NOARGS},
+    {"stroke_preserve", (PyCFunction)pycairo_stroke_preserve,METH_NOARGS},
     {"text_extents",    (PyCFunction)pycairo_text_extents,   METH_VARARGS},
     {"text_path",       (PyCFunction)pycairo_text_path,      METH_VARARGS},
     {"transform",       (PyCFunction)pycairo_transform,      METH_VARARGS},

@@ -39,7 +39,8 @@
 /* PycairoPattern_FromPattern
  * Create a new PycairoPattern from a cairo_pattern_t
  * pattern - a cairo_pattern_t to 'wrap' into a Python object.
- *           it is unreferenced if the PycairoPattern creation fails
+ *           pattern is unreferenced if the PycairoPattern creation fails, or
+ *           if the pattern is in an error status.
  * Return value: New reference or NULL on failure
  */
 PyObject *
@@ -48,6 +49,12 @@ PycairoPattern_FromPattern (cairo_pattern_t *pattern)
     PyObject *o;
 
     assert (pattern != NULL);
+
+    if (Pycairo_Check_Status (cairo_pattern_status (pattern))) {
+	cairo_pattern_destroy (pattern);
+	return NULL;
+    }
+
     o = PycairoPattern_Type.tp_alloc (&PycairoPattern_Type, 0);
     if (o)
 	((PycairoPattern *)o)->pattern = pattern;
@@ -92,8 +99,6 @@ pattern_create_for_surface (PyTypeObject *type, PyObject *args)
 	return NULL;
 
     pattern = cairo_pattern_create_for_surface (s->surface);
-    if (!pattern)
-	return PyErr_NoMemory();
     return PycairoPattern_FromPattern (pattern);
 }
 
@@ -108,8 +113,6 @@ pattern_create_linear (PyTypeObject *type, PyObject *args)
 	return NULL;
 
     pattern = cairo_pattern_create_linear (x0, y0, x1, y1);
-    if (!pattern)
-	return PyErr_NoMemory();
     return PycairoPattern_FromPattern (pattern);
 }
 
@@ -125,8 +128,6 @@ pattern_create_radial (PyTypeObject *type, PyObject *args)
 
     pattern = cairo_pattern_create_radial (cx0, cy0, radius0, 
 					   cx1, cy1, radius1);
-    if (!pattern)
-	return PyErr_NoMemory();
     return PycairoPattern_FromPattern (pattern);
 }
 
@@ -134,15 +135,13 @@ static PyObject *
 pattern_add_color_stop_rgb (PycairoPattern *o, PyObject *args)
 {
     double offset, red, green, blue;
-    cairo_status_t status;
 
     if (!PyArg_ParseTuple(args, "dddd:Pattern.add_color_stop_rgb",
 			  &offset, &red, &green, &blue))
 	return NULL;
 
-    status = cairo_pattern_add_color_stop_rgb (o->pattern, offset, red, green, 
-					       blue);
-    if (Pycairo_Check_Status(status))
+    cairo_pattern_add_color_stop_rgb (o->pattern, offset, red, green, blue);
+    if (Pycairo_Check_Status (cairo_pattern_status (o->pattern)))
 	return NULL;
     Py_RETURN_NONE;
 }
@@ -151,15 +150,14 @@ static PyObject *
 pattern_add_color_stop_rgba (PycairoPattern *o, PyObject *args)
 {
     double offset, red, green, blue, alpha;
-    cairo_status_t status;
 
     if (!PyArg_ParseTuple(args, "ddddd:Pattern.add_color_stop_rgba",
 			  &offset, &red, &green, &blue, &alpha))
 	return NULL;
 
-    status = cairo_pattern_add_color_stop_rgba (o->pattern, offset, red, 
-						green, blue, alpha);
-    if (Pycairo_Check_Status(status))
+    cairo_pattern_add_color_stop_rgba (o->pattern, offset, red, 
+				       green, blue, alpha);
+    if (Pycairo_Check_Status (cairo_pattern_status (o->pattern)))
 	return NULL;
     Py_RETURN_NONE;
 }
@@ -167,13 +165,13 @@ pattern_add_color_stop_rgba (PycairoPattern *o, PyObject *args)
 static PyObject *
 pattern_get_extend (PycairoPattern *o)
 {
-    return PyInt_FromLong(cairo_pattern_get_extend (o->pattern));
+    return PyInt_FromLong (cairo_pattern_get_extend (o->pattern));
 }
 
 static PyObject *
 pattern_get_filter (PycairoPattern *o)
 {
-    return PyInt_FromLong(cairo_pattern_get_filter (o->pattern));
+    return PyInt_FromLong (cairo_pattern_get_filter (o->pattern));
 }
 
 static PyObject *
@@ -192,7 +190,6 @@ pattern_set_extend (PycairoPattern *o, PyObject *args)
     if (!PyArg_ParseTuple(args, "i:Pattern.set_extend", &extend))
  	return NULL;
  
-    /* always returns status = success */
     cairo_pattern_set_extend (o->pattern, extend);
     Py_RETURN_NONE;
 }
@@ -205,7 +202,6 @@ pattern_set_filter (PycairoPattern *o, PyObject *args)
     if (!PyArg_ParseTuple (args, "i:Pattern.set_filter", &filter))
 	return NULL;
 
-    /* always returns status = success */
     cairo_pattern_set_filter (o->pattern, filter);
     Py_RETURN_NONE;
 }
@@ -219,7 +215,6 @@ pattern_set_matrix (PycairoPattern *o, PyObject *args)
 			   &PycairoMatrix_Type, &m))
 	return NULL;
 
-    /* always returns status = success */
     cairo_pattern_set_matrix (o->pattern, &m->matrix);
     Py_RETURN_NONE;
 }
@@ -228,6 +223,9 @@ static PyMethodDef pattern_methods[] = {
     /* methods never exposed in a language binding:
      * cairo_pattern_destroy()
      * cairo_pattern_reference()
+     *
+     * cairo_pattern_status()
+     * - not needed since Pycairo handles status checking
      */
     {"add_color_stop_rgb",(PyCFunction)pattern_add_color_stop_rgb,  
                                                                METH_VARARGS },

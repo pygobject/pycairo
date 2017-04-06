@@ -36,37 +36,36 @@
 
 #include "pycairo-private.h"
 
-#ifdef CAIRO_HAS_PDF_SURFACE
-#  include <cairo-pdf.h>
-#endif
-#ifdef CAIRO_HAS_PS_SURFACE
-#  include <cairo-ps.h>
-#endif
-
 
 #ifdef HAVE_NUMPY
 #  include <Numeric/arrayobject.h>
    static int load_numpy (void);
 #endif
 
-/* Class cairo.Surface ---------------------------------------------------- */
+/* Class Surface ---------------------------------------------------------- */
 
 /* PycairoSurface_FromSurface
  * Create a new PycairoSurface from a cairo_surface_t
  * surface - a cairo_surface_t to 'wrap' into a Python object.
  *           it is unreferenced if the PycairoSurface creation fails
+ * type - the type of the object to instantiate; it can be NULL,
+ *        meaning a base cairo.Surface type, or it can be a subclass of
+ *        cairo.Surface.
  * base - the base object used to create the context, or NULL.
  *        it is referenced to keep it alive while the cairo_surface_t is 
  *        being used
  * Return value: New reference or NULL on failure
  */
 PyObject *
-PycairoSurface_FromSurface (cairo_surface_t *surface, PyObject *base)
+PycairoSurface_FromSurface (cairo_surface_t *surface, PyTypeObject *type, 
+			    PyObject *base)
 {
     PyObject *o;
 
     assert (surface != NULL);
-    o = PycairoSurface_Type.tp_alloc (&PycairoSurface_Type, 0);
+    if (type == NULL)
+        type = &PycairoSurface_Type;
+    o = PycairoSurface_Type.tp_alloc (type, 0);
     if (o) {
 	((PycairoSurface *)o)->surface = surface;
 	Py_XINCREF(base);
@@ -118,10 +117,9 @@ surface_create_similar (PycairoSurface *o, PyObject *args)
     if (!surface)
 	return PyErr_NoMemory();
     /* bug #2765 - "How do we identify surface types?"
-     * determine surface type and use PycairoImageSurface_FromImageSurface() 
-     * etc to create the correct Pycairo object
+     * should pass surface type as arg2
      */
-    return PycairoSurface_FromSurface (surface, NULL);
+    return PycairoSurface_FromSurface (surface, NULL, NULL);
 }
 
 static PyObject *
@@ -231,24 +229,7 @@ PyTypeObject PycairoSurface_Type = {
 };
 
 
-/* Class cairo.ImageSurface ----------------------------------------------- */
-
-PyObject *
-PycairoImageSurface_FromImageSurface (cairo_surface_t *surface, PyObject *base)
-{
-    PyObject *o;
-
-    assert (surface != NULL);
-    o = PycairoImageSurface_Type.tp_alloc (&PycairoImageSurface_Type, 0);
-    if (o) {
-	((PycairoImageSurface *)o)->surface = surface;
-	Py_XINCREF(base);
-	((PycairoImageSurface *)o)->base = base;
-    } else {
-	cairo_surface_destroy (surface);
-    }
-    return o;
-}
+/* Class ImageSurface(Surface) -------------------------------------------- */
 
 static PyObject *
 image_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
@@ -325,14 +306,17 @@ image_surface_create_for_array (PyTypeObject *type, PyObject *args)
 			"array must be MxN or MxNxP where P is 1, 3 or 4");
 	return NULL;
     }
-    surface = cairo_image_surface_create_for_data(array->data, 
-						  format,
-						  array->dimensions[1],
-						  array->dimensions[0],
-						  array->strides[0]);
+    surface = cairo_image_surface_create_for_data(
+		                          (unsigned char *) array->data, 
+					  format,
+					  array->dimensions[1],
+					  array->dimensions[0],
+					  array->strides[0]);
+
     if (!surface)
 	return PyErr_NoMemory();
-    return PycairoImageSurface_FromImageSurface(surface, (PyObject *)array);
+    return PycairoSurface_FromSurface(surface, &PycairoImageSurface_Type, 
+				      (PyObject *)array);
 }
 #endif /* HAVE_NUMPY */
 
@@ -384,7 +368,8 @@ image_surface_create_for_data (PyTypeObject *type, PyObject *args)
     if (!surface)
 	return PyErr_NoMemory();
 
-    return PycairoImageSurface_FromImageSurface (surface, NULL);
+    return PycairoSurface_FromSurface(surface, &PycairoImageSurface_Type, 
+				      NULL);
     /* FIXME: get surface to hold a reference to buffer */
 }
 #endif
@@ -405,7 +390,8 @@ image_surface_create_from_png (PyTypeObject *type, PyObject *args)
 			"not be allocated for operation");
 	return NULL;
     }
-    return PycairoImageSurface_FromImageSurface (surface, NULL);
+    return PycairoSurface_FromSurface (surface, &PycairoImageSurface_Type, 
+				       NULL);
 }
 #endif /* CAIRO_HAS_PNG_FUNCTIONS */
 
@@ -488,22 +474,9 @@ PyTypeObject PycairoImageSurface_Type = {
 };
 
 
-/* Class class.PDFSurface ------------------------------------------------- */
-
-PyObject *
-PycairoPDFSurface_FromPDFSurface (cairo_surface_t *surface, PyObject *base)
-{
-    PyObject *o;
-
-    assert (surface != NULL);
-    o = PycairoPDFSurface_Type.tp_alloc (&PycairoPDFSurface_Type, 0);
-    if (o) {
-	((PycairoPDFSurface *)o)->surface = surface;
-	Py_XINCREF(base);
-	((PycairoPDFSurface *)o)->base = base;
-    }
-    return o;
-}
+/* Class PDFSurface(Surface) ---------------------------------------------- */
+#ifdef CAIRO_HAS_PDF_SURFACE
+#include <cairo-pdf.h>
 
 static PyObject *
 pdf_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
@@ -591,24 +564,12 @@ PyTypeObject PycairoPDFSurface_Type = {
     0,                                  /* tp_is_gc */
     0,                                  /* tp_bases */
 };
+#endif /* CAIRO_HAS_PDF_SURFACE */
 
 
-/* Class class.PSSurface -------------------------------------------------- */
-
-PyObject *
-PycairoPSSurface_FromPSSurface (cairo_surface_t *surface, PyObject *base)
-{
-    PyObject *o;
-
-    assert (surface != NULL);
-    o = PycairoPSSurface_Type.tp_alloc (&PycairoPSSurface_Type, 0);
-    if (o) {
-	((PycairoPSSurface *)o)->surface = surface;
-	Py_XINCREF(base);
-	((PycairoPSSurface *)o)->base = base;
-    }
-    return o;
-}
+/* Class PSSurface(Surface) ----------------------------------------------- */
+#ifdef CAIRO_HAS_PS_SURFACE
+#include <cairo-ps.h>
 
 static PyObject *
 ps_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
@@ -696,6 +657,85 @@ PyTypeObject PycairoPSSurface_Type = {
     0,                                  /* tp_is_gc */
     0,                                  /* tp_bases */
 };
+#endif  /* CAIRO_HAS_PS_SURFACE */
+
+
+/* Class Win32Surface(Surface) -------------------------------------------- */
+#if CAIRO_HAS_WIN32_SURFACE
+#include <cairo-win32.h>
+
+static PyObject *
+win32_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+    int hdc;
+    cairo_surface_t *surface;
+    PyObject *o;
+
+    if (!PyArg_ParseTuple(args, "i:Win32Surface.__new__",  &hdc))
+	return NULL;
+
+    o = type->tp_alloc(type, 0);
+    if (o) {
+	surface = cairo_win32_surface_create ((HDC)hdc);
+	if (surface) {
+	    ((PycairoPSSurface *)o)->surface = surface;
+	} else {
+	    Py_DECREF(o);
+	    return PyErr_NoMemory();
+	}
+    }
+    return o;
+}
+
+static PyMethodDef win32surface_methods[] = {
+    {NULL, NULL, 0, NULL},
+};
+
+PyTypeObject PycairoWin32Surface_Type = {
+    PyObject_HEAD_INIT(&PyType_Type)
+    0,                                  /* ob_size */
+    "cairo.Win32Surface",               /* tp_name */
+    sizeof(PycairoWin32Surface),        /* tp_basicsize */
+    0,                                  /* tp_itemsize */
+    0,                                  /* tp_dealloc */
+    0,                                  /* tp_print */
+    0,                                  /* tp_getattr */
+    0,                                  /* tp_setattr */
+    0,                                  /* tp_compare */
+    0,                                  /* tp_repr */
+    0,                                  /* tp_as_number */
+    0,                                  /* tp_as_sequence */
+    0,                                  /* tp_as_mapping */
+    0,                                  /* tp_hash */
+    0,                                  /* tp_call */
+    0,                                  /* tp_str */
+    0,                                  /* tp_getattro */
+    0,                                  /* tp_setattro */
+    0,                                  /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,                 /* tp_flags */
+    0,                                  /* tp_doc */
+    0,                                  /* tp_traverse */
+    0,                                  /* tp_clear */
+    0,                                  /* tp_richcompare */
+    0,                                  /* tp_weaklistoffset */
+    0,                                  /* tp_iter */
+    0,                                  /* tp_iternext */
+    win32surface_methods,               /* tp_methods */
+    0,                                  /* tp_members */
+    0,                                  /* tp_getset */
+    &PycairoSurface_Type,               /* tp_base */
+    0,                                  /* tp_dict */
+    0,                                  /* tp_descr_get */
+    0,                                  /* tp_descr_set */
+    0,                                  /* tp_dictoffset */
+    0,                                  /* tp_init */
+    0,                                  /* tp_alloc */
+    (newfunc)win32_surface_new,         /* tp_new */
+    0,                                  /* tp_free */
+    0,                                  /* tp_is_gc */
+    0,                                  /* tp_bases */
+};
+#endif  /* CAIRO_HAS_WIN32_SURFACE */
 
 
 /* Numeric routines ------------------------------------------------------- */

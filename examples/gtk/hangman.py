@@ -249,7 +249,7 @@ def expose_event(widget, event):
 win = gtk.Window()
 win.connect('destroy', gtk.main_quit)
 win.connect('key_press_event', guess_letter)
-win.set_title('Kevin\'s Cairo Demo')
+win.set_title('Kevin\'s cairo demo')
 
 drawingarea = gtk.DrawingArea()
 win.add(drawingarea)

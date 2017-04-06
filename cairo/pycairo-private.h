@@ -41,35 +41,43 @@
 #include "pycairo.h"
 
 
-extern PyObject *CairoError;
-
 extern PyTypeObject PycairoContext_Type;
+PyObject *PycairoContext_FromContext (cairo_t *ctx, PyTypeObject *type,
+				      PyObject *base);
+
 extern PyTypeObject PycairoFontFace_Type;
+PyObject *PycairoFontFace_FromFontFace (cairo_font_face_t *font_face);
+
 extern PyTypeObject PycairoMatrix_Type;
+PyObject *PycairoMatrix_FromMatrix (const cairo_matrix_t *matrix);
+
 extern PyTypeObject PycairoPath_Type;
+PyObject *PycairoPath_FromPath (cairo_path_t *path);
+
 extern PyTypeObject PycairoPattern_Type;
+PyObject *PycairoPattern_FromPattern (cairo_pattern_t *pattern);
+
 extern PyTypeObject PycairoScaledFont_Type;
+PyObject *PycairoScaledFont_FromScaledFont (cairo_scaled_font_t *scaled_font);
 
 extern PyTypeObject PycairoSurface_Type;
 extern PyTypeObject PycairoImageSurface_Type;
+
+#if CAIRO_HAS_PDF_SURFACE
 extern PyTypeObject PycairoPDFSurface_Type;
+#endif
+
+#if CAIRO_HAS_PS_SURFACE
 extern PyTypeObject PycairoPSSurface_Type;
+#endif
 
-PyObject *PycairoContext_FromContext (cairo_t *ctx, PyObject *base);
-PyObject *PycairoFontFace_FromFontFace (cairo_font_face_t *font_face);
-PyObject *PycairoMatrix_FromMatrix (const cairo_matrix_t *matrix);
-PyObject *PycairoPath_FromPath (cairo_path_t *path);
-PyObject *PycairoPattern_FromPattern (cairo_pattern_t *pattern);
-PyObject *PycairoScaledFont_FromScaledFont (cairo_scaled_font_t *scaled_font);
+#if CAIRO_HAS_WIN32_SURFACE
+extern PyTypeObject PycairoWin32Surface_Type;
+#endif
 
-PyObject *PycairoSurface_FromSurface (cairo_surface_t *surface, 
+PyObject *PycairoSurface_FromSurface (cairo_surface_t *surface,  
+				      PyTypeObject *type,
 				      PyObject *base);
-PyObject *PycairoImageSurface_FromImageSurface (cairo_surface_t *surface, 
-						PyObject *base);
-PyObject *PycairoPDFSurface_FromPDFSurface (cairo_surface_t *surface, 
-					    PyObject *base);
-PyObject *PycairoPSSurface_FromPSSurface (cairo_surface_t *surface, 
-					  PyObject *base);
 
 int Pycairo_Check_Status (cairo_status_t status);
 

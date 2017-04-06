@@ -1,3 +1,178 @@
+=== Pycairo 0.5.1 ===
+2005-06-22  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* RELEASING: add note about setup.py version
+
+	* setup.py : increment pycairo version
+
+	* configure.ac: increment pycairo version and required cairo version
+	to 0.5.1
+
+	* NOTES : add Win32Surface
+
+2005-06-22  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* examples/gtk/text.py :
+	* examples/gtk/cairo-demo.py : don't set window title (use the default)
+
+	* examples/gtk/hangman.py :
+	* examples/gtk/lsystem.py : change Cairo to cairo
+
+	* examples/cairo_snippets/snippets_pdf.py: 
+	* examples/cairo_snippets/snippets_png.py: 
+	* examples/cairo_snippets/snippets_ps.py: 
+	use cairo.HAS_PDF_SURFACE, cairo.HAS_PNG_FUNCTIONS, 
+	cairo.HAS_PS_SURFACE to check cairo supports the required surfaces.
+
+2005-06-20  Steve Chaplin  <steve1097@yahoo.com.au>
+
+        Fixes for compiler warnings:
+	* cairo/pycairo-surface.c (image_surface_create_for_array): cast
+	array->data to (unsigned char *)
+	
+	* cairo/cairosvgmodule.c (pycairosvg_get_size): change int to unsigned 
+	int width, height
+
+2005-06-20  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* examples/cairo_snippets/snippets_gtk.py: move select_path() to below 
+	append_column() to fix problem with initial path not being set.
+
+2005-06-20  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo-private.h: remove unnecessary 
+	'extern PyObject *CairoError;'
+
+2005-06-16  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* configure.ac: increase optional libsvg-cairo version from 0.1.5 to 
+	0.1.6
+
+2005-06-15  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* examples/cairo_snippets/snippets_ps.py: 
+	* examples/cairo_snippets/snippets_pdf.py: 
+	change width, height to width_in_points, height_in_points
+
+2005-06-14  Steve Chaplin  <steve1097@yahoo.com.au>
+	
+	* cairo/pycairo-context.c (PycairoContext_FromContext, pycairo_new): 
+	* cairo/cairogtkmodule.c (pygdk_cairo_create): 
+	update to use cairo_t error objects
+
+2005-06-14  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo-pattern.c: 
+	* cairo/pycairo-context.c (pycairo_get_source): 
+	update to use cairo_pattern_t error objects
+
+	* cairo/pycairo-path.c (PycairoPath_FromPath): 
+	* cairo/pycairo-context.c (pycairo_copy_path, pycairo_copy_path_flat):
+	update to use cairo_path_t error objects
+
+2005-06-06  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo.h (PycairoContext_GET): add new macro. Fixes #3469
+
+2005-06-02  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/cairomodule.c (Pycairo_Check_Status): use 
+	cairo_status_to_string to simplify this function
+
+2005-06-01  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo-surface.c (PycairoSurface_FromSurface): 
+	add type argument, like PycairoContext_FromContext
+
+	* cairo/cairomodule.c: 
+	* cairo/cairogtkmodule.c: 
+	* cairo/pycairo.h: 
+	* cairo/pycairo-private.h: 
+	update to new PycairoSurface_FromSurface API
+
+	* cairo/pycairo-surface.c : 
+	Update to new PycairoSurface_FromSurface API.
+	Delete PycairoImageSurface_FromImageSurface,
+	PycairoPDFSurface_FromPDFSurface, PycairoPSSurface_FromPSSurface,
+	PycairoWin32Surface_FromWin32Surface which are replaced by the new 
+	PycairoSurface_FromSurface
+
+2005-06-01  Gustavo J. A. M. Carneiro  <gjc@gnome.org>
+
+	* cairo/cairogtkmodule.c (pygdk_cairo_create): Update to new
+	PycairoContext_FromContext API.
+
+	* cairo/pycairo-private.h, cairo/pycairo.h, cairo/pycairo-context.c
+	(PycairoContext_FromContext): Add a third parameter that allows
+	instantiation of a subclass of cairo.Context.
+
+2005-05-31  Steve Chaplin  <steve1097@yahoo.com.au>
+	
+	* cairo/cairomodule.c (init_cairo): correct CAIRO_HAS_PNG_SURFACE
+	to CAIRO_HAS_PNG_FUNCTIONS
+
+2005-05-30  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/cairomodule.c : add cairo features cairo.HAS_WIN32_SURFACE, 
+	cairo.HAS_PS_SURFACE etc
+
+	* cairo/pycairo-private.h: 
+	* cairo/pycairo.h: 
+	add more PS/PDF/WIN32 preprocessor checks
+
+2005-05-29  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/Makefile.am : change svg target to use LIBSVG_CAIRO (not CAIRO)
+	LIBS and CFLAGS
+
+	* configure.ac : only compile the cairo.gtk module if cairo-xlib is
+	enabled.
+	Change module configuration report from "true/false" to "yes/no"
+
+	* cairo/cairomodule.c (Pycairo_Check_Status): remove
+	CAIRO_STATUS_BAD_NESTING to track changes in cairo
+
+	* README : update to mention the pycairo product in bugzilla
+
+2005-05-29  Steve Chaplin  <steve1097@yahoo.com.au>
+	
+	* cairo/cairomodule.c: 
+	* cairo/pycairo.h: 
+	* cairo/pycairo-private.h: 
+	* cairo/pycairo-surface.c: 
+	add Win32Surface, conditionally compile all PS/PDF code, contributed 
+	by Niki Spahiev.
+	Change the C API struct back to (type, constructor) pairs to make
+	preprocessor macros simpler.
+
+2005-05-27  Gustavo J. A. M. Carneiro  <gjc@gnome.org>
+ 
+ 	* cairo/cairogtkmodule.c (gdk_cairo_create): Don't define
+ 	gdk_cairo_create if compiling against gtk+ 2.8 API.
+ 
+ 	* configure.ac : Define HAVE_GTK28 if gtk+ > 2.7 is found.
+
+2005-05-26  Steve Chaplin  <steve1097@yahoo.com.au>
+	
+	* cairo/Makefile.am (AM_CPPFLAGS): Delete AM_CPPFLAGS (it uses 
+	unnecessary GTK flags to compile the cairo module) and use module 
+	specific _CPPFLAGS instead
+
+2005-05-25  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* setup.py: new file, contributed by Niki Spahiev
+
+2005-05-25  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo-context.c: update method table to hold the correct
+	values for cairo_mask, cairo_mask_surface and cairo_stroke_preserve
+
+2005-05-24  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo.h : fix mismatch with Check_Status (reported by Owen
+	Taylor).
+	Add Path and PSSurface C API functions and macros.
+
 === Pycairo 0.5.0 ===
 2005-05-20  Steve Chaplin  <steve1097@yahoo.com.au>
 

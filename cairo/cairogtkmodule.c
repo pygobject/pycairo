@@ -84,15 +84,16 @@ surface_create_for_pixbuf(PyObject *self, PyObject *args)
 	 gdk_pixbuf_get_rowstride(gdk_pixbuf));
     if (!surface)
 	return PyErr_NoMemory();
-    return PycairoImageSurface_FromImageSurface (surface, 
-						 (PyObject *)py_pixbuf);
+    return PycairoSurface_FromSurface (surface, &PycairoImageSurface_Type,
+				       (PyObject *)py_pixbuf);
 }
 
+#ifndef HAVE_GTK28
 /* copied from gtk+/gdk/gdkcairo.c and gtk+/gdk/x11/gdkdrawable-x11.c
  * gdk_cairo_create() should be available in gtk 2.8
  */
 static cairo_t *
-_gdk_cairo_create (GdkDrawable *drawable)
+gdk_cairo_create (GdkDrawable *drawable)
 {
     int width, height;
     cairo_t *cr = NULL;
@@ -125,10 +126,11 @@ _gdk_cairo_create (GdkDrawable *drawable)
     }
     return cr;
 }
+#endif
 
 /* gdk.cairo_create() should be available in pygtk 2.8 */
 static PyObject *
-gdk_cairo_create(PyObject *self, PyObject *args)
+pygdk_cairo_create(PyObject *self, PyObject *args)
 {
     cairo_t *cr;
     PyGObject *py_drawable;
@@ -137,19 +139,14 @@ gdk_cairo_create(PyObject *self, PyObject *args)
 			  &PyGdkDrawable_Type, &py_drawable))
 	return NULL;
 
-    cr = _gdk_cairo_create (GDK_DRAWABLE(py_drawable->obj));
-    if (!cr) {
-	PyErr_SetString(PyExc_RuntimeError, "could not create context");
-	return NULL;
-    }
-    return PycairoContext_FromContext (cr, (PyObject *)py_drawable);
+    cr = gdk_cairo_create (GDK_DRAWABLE(py_drawable->obj));
+    return PycairoContext_FromContext (cr, NULL, (PyObject *)py_drawable);
 }
 
-
 static PyMethodDef cairogtk_functions[] = {
-    { "gdk_cairo_create", (PyCFunction)gdk_cairo_create,      METH_VARARGS },
+    { "gdk_cairo_create", (PyCFunction)pygdk_cairo_create,     METH_VARARGS },
     { "surface_create_for_pixbuf", 
-      (PyCFunction)surface_create_for_pixbuf,                 METH_VARARGS },
+      (PyCFunction)surface_create_for_pixbuf,                  METH_VARARGS },
     { NULL, NULL, 0 }
 };
 

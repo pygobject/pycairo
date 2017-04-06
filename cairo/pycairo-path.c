@@ -43,21 +43,28 @@
 /* PycairoPath_FromPath
  * Create a new PycairoPath from a cairo_path_t
  * path - a cairo_path_t to 'wrap' into a Python object.
- *        it is unreferenced if the PycairoPath creation fails
+ *        path is unreferenced if the PycairoPath creation fails, or if path
+ *        is in an error status.
  * Return value: New reference or NULL on failure
  */
 PyObject *
-PycairoPath_FromPath(cairo_path_t *path)
+PycairoPath_FromPath (cairo_path_t *path)
 {
-    PyObject *p;
+    PyObject *o;
 
     assert (path != NULL);
-    p = PycairoPath_Type.tp_alloc (&PycairoPath_Type, 0);
-    if (p)
-	((PycairoPath *)p)->path = path;
+
+    if (Pycairo_Check_Status (path->status)) {
+	cairo_path_destroy (path);
+	return NULL;
+    }
+
+    o = PycairoPath_Type.tp_alloc (&PycairoPath_Type, 0);
+    if (o)
+	((PycairoPath *)o)->path = path;
     else
-	cairo_path_destroy(path);
-    return p;
+	cairo_path_destroy (path);
+    return o;
 }
 
 static void

@@ -33,7 +33,6 @@ def expose_event(widget, event):
 
 win = gtk.Window()
 win.connect('destroy', lambda x: gtk.main_quit())
-win.set_title('Cairo Demo')
 
 drawingarea = gtk.DrawingArea()
 win.add(drawingarea)

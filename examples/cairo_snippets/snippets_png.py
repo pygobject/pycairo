@@ -1,24 +1,27 @@
 #!/usr/bin/env python
 """Python version of cairo-demo/cairo_snippets/cairo_snippets_png.c
 """
+
 from __future__ import division
 from math import pi as M_PI  # used by many snippets
 import sys
 
 import cairo
+if not cairo.HAS_PNG_FUNCTIONS:
+    raise SystemExit ('cairo was not compiled with PNG support')
 
 from snippets import snip_list, snippet_normalize, snippet_set_bg_svg
 
+
 width, height = 256, 256 # used by snippet_normalize()
-Verbose_mode = True
 
 
 def do_snippet (snippet):
-    if Verbose_mode:
+    if verbose_mode:
         print 'processing %s' % snippet,
     
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
-    cr = cairo.Context(surface)
+    surface = cairo.ImageSurface (cairo.FORMAT_ARGB32, width, height)
+    cr = cairo.Context (surface)
 
     cr.save()
     try:
@@ -30,12 +33,13 @@ def do_snippet (snippet):
         cr.restore()
         surface.write_to_png ('snippets/%s.png' % snippet)
 
-    if Verbose_mode:
+    if verbose_mode:
         print
 
 if __name__ == '__main__':
+    verbose_mode = True
     if len(sys.argv) > 1 and sys.argv[1] == '-s':
-        Verbose_mode=False
+        verbose_mode = False
         del sys.argv[1]
     
     if len(sys.argv) > 1: # do specified snippets

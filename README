@@ -22,6 +22,5 @@ free to send a message to cairo@cairographics.org
 
 Bugzilla
 --------
-If you find a bug in cairo or Pycairo, please submit a bugreport to for cairo
-to
-	https://bugs.freedesktop.org/
+If you find a bug in Pycairo, please go to https://bugs.freedesktop.org/
+select the pycairo product and submit a bugreport.

@@ -1,3 +1,17 @@
+Snapshot 0.5.1 (2005-05-20 Steve Chaplin <steve1097@yahoo.com.au>)
+==================================================================
+Changes since 0.5.0:
+New features:
+- new class cairo.Win32Surface (Niki Spahiev)
+- cairo.HAS_WIN32_SURFACE, cairo.HAS_PS_SURFACE etc are defined to give access
+  to the values from cairo-features.h
+
+Fixes:
+- fix cairo_mask, cairo_mask_surface and cairo_stroke_preserve wrappers
+- compile properly against GTK+ 2.7 (Gustavo Carneiro)
+- other small fixes, including fixes for gcc 4.0 warnings
+
+
 Snapshot 0.5.0 (2005-05-20 Steve Chaplin <steve1097@yahoo.com.au>)
 ==================================================================
 This version has many changes which update Pycairo to the new cairo API. The 

@@ -114,7 +114,6 @@ def expose(drawingarea, event):
 def main():
     win = gtk.Window()
     win.connect('destroy', lambda x: gtk.main_quit())
-    win.set_title('Python Cairo Demo')
     win.set_default_size(450, 550)
 
     drawingarea = gtk.DrawingArea()

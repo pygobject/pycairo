@@ -128,12 +128,13 @@ class Window (gtk.Window):
         tselection = tree_view.get_selection()
         tselection.connect ("changed", self.cb_selection_changed)
         tselection.set_mode (gtk.SELECTION_BROWSE)
-        tselection.select_path(0,) # select first item
 
         cr = gtk.CellRendererText()
         tvc = gtk.TreeViewColumn (None, cr, text=0)
         tree_view.append_column (tvc)
         
+        tselection.select_path(0,) # select first item
+
         return sw
 
 

@@ -111,7 +111,7 @@ def lin_setup():
 def main():
     win = gtk.Window()
     win.connect('destroy', lambda x: gtk.main_quit())
-    win.set_title('Cairo Lindenmayer System')
+    win.set_title('cairo Lindenmayer System')
     win.set_default_size(600, 600)
 
     cls = lin_setup()

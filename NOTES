@@ -11,15 +11,14 @@ Features of the Pycairo bindings
 --------------------------------
 * Provides an OO interface to cairo, using Python 2.2 new style classes.
 
-* Pycairo_Check_Status() is called to check the status of cairo_t operations,
+* Pycairo_Check_Status() is called to check the status of cairo operations,
 and raise exceptions as appropriate.
 
 * Includes the cairo.gtk module - a simple extension with functions for
 creating cairo objects from GdkDrawables or GdkPixbufs.  This makes it
-possible to use the bindings with PyGTK.
+possible to use the Pycairo with PyGTK.
 
-* Provides a C API that can be used by other Python extensions. Will be
-important when wrapping other libraries that depend on cairo
+* Provides a C API that can be used by other Python extensions.
 
 
 Constants
@@ -43,16 +42,16 @@ construction and destruction.
 
 The Pycairo classes are listed below showing just the differences to the C API.
 Use the cairo docs to get a full listing of available functions.
-See the 'examples' directory for Pycairo examples
+See the 'examples' directory for Pycairo examples.
 
 
 cairo.Context
 -------------
 C : cr = cairo_create (surface);	    
-Py:ctx = cairo.Context (surface)
+Py: ctx = cairo.Context (surface)
 
 C : cairo_set_dash (cairo_t *cr, double *dashes, int ndash, double offset);
-Py:ctx.set_dash (dash_sequence, offset)
+Py: ctx.set_dash (dash_sequence, offset)
 
 Methods supporting default argument values:
 ctx.mask_surface(surface, x=0.0, y=0.0)
@@ -124,8 +123,7 @@ Surfaces are implemented in a class hierarchy:
     ImageSurface
     PDFSurface
     PSSurface
-
-gtk ...
+    Win32Surface
 
 C : surface = cairo_image_surface_create (format, width, height);
     surface = cairo_image_surface_create_from_png (filename);
@@ -134,7 +132,7 @@ C : surface = cairo_image_surface_create (format, width, height);
 Py: surface = cairo.ImageSurface (format, width, height)
     surface = cairo.ImageSurface.create_from_png (filename)
     surface = cairo.ImageSurface.create_for_array (array)
-    # create a surface from a Numerical Python array
+              # create a surface from a Numerical Python array
 
 
 C:  surface = cairo_pdf_surface_create (filename, width_in_points, 
