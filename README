@@ -3,7 +3,7 @@ http://www.cairographics.org/pycairo
 
 Dependencies
 ------------
-    cairo  		>= 1.2.2
+    cairo  		>= 1.2.6
     Python 		>= 2.3
 
 Not required, but supported if they are detected:

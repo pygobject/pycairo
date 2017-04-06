@@ -37,8 +37,8 @@
 
 #define VERSION_MAJOR 1
 #define VERSION_MINOR 2
-#define VERSION_MICRO 2
-static char pycairo_version_string[] = "1.2.2";
+#define VERSION_MICRO 6
+static char pycairo_version_string[] = "1.2.6";
 
 
 /* A module specific exception */
@@ -169,6 +169,7 @@ init_cairo(void)
     PycairoPath_Type.tp_base = &PyBaseObject_Type;
     if (PyType_Ready(&PycairoPath_Type) < 0)
 	return;
+    PycairoPathiter_Type.tp_iter=&PyObject_SelfIter;
 
     PycairoPattern_Type.tp_base = &PyBaseObject_Type;
     if (PyType_Ready(&PycairoPattern_Type) < 0)

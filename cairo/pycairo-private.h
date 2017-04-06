@@ -62,6 +62,8 @@ PyObject *PycairoMatrix_FromMatrix (const cairo_matrix_t *matrix);
 extern PyTypeObject PycairoPath_Type;
 PyObject *PycairoPath_FromPath (cairo_path_t *path);
 
+extern PyTypeObject PycairoPathiter_Type;
+
 extern PyTypeObject PycairoPattern_Type;
 extern PyTypeObject PycairoSolidPattern_Type;
 extern PyTypeObject PycairoSurfacePattern_Type;

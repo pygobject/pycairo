@@ -6,8 +6,8 @@ import distutils.file_util as fut
 import os
 import sys
 
-pycairo_version        = '1.2.2'
-cairo_version_required = '1.2.2'
+pycairo_version        = '1.2.6'
+cairo_version_required = '1.2.6'
 
 # Notes:
 # on Fedora Core 5 module is compiled with 'gcc -g' - why -g?
@@ -31,35 +31,14 @@ def pkg_config_parse (opt, pkg):
 
 
 pkg_config_version_check ('cairo', cairo_version_required)
+if sys.platform == 'win32':
+    runtime_library_dirs = []
+else:
+    runtime_library_dirs = pkg_config_parse('--libs-only-L', 'cairo')
 
-cairo = dic.Extension(
-    name = 'cairo._cairo',
-    sources = ['cairo/cairomodule.c',
-               'cairo/pycairo-context.c',
-               'cairo/pycairo-font.c',
-               'cairo/pycairo-matrix.c',
-               'cairo/pycairo-path.c',
-               'cairo/pycairo-pattern.c',
-               'cairo/pycairo-surface.c',
-               ],
-    include_dirs = pkg_config_parse('--cflags-only-I', 'cairo'),
-    library_dirs = pkg_config_parse('--libs-only-L', 'cairo'),
-    libraries    = pkg_config_parse('--libs-only-l', 'cairo'),
-    runtime_library_dirs = pkg_config_parse('--libs-only-L', 'cairo'),
-    )
-
-dic.setup(
-    name = "pycairo",
-    version = pycairo_version,
-    description = "python interface for cairo",
-    packages = ['cairo'],
-    ext_modules = [cairo],
-    )
-
-pkgconfig_dir  = os.path.join (sys.prefix, 'lib', 'pkgconfig')
-pkgconfig_file = os.path.join (pkgconfig_dir, 'pycairo.pc')
+pkgconfig_file='pycairo.pc'
 print 'creating %s' % pkgconfig_file
-fo = file (pkgconfig_file, 'w')
+fo = open (pkgconfig_file, 'w')
 fo.write ("""\
 prefix=%s
 
@@ -73,6 +52,28 @@ Libs:
           )
 fo.close()
 
-includedir = os.path.join (sys.prefix, 'include', 'pycairo')
-dut.mkpath (includedir, verbose=True)
-fut.copy_file ('cairo/pycairo.h', includedir, verbose=True)
+cairo = dic.Extension(
+    name = 'cairo._cairo',
+     sources = ['cairo/cairomodule.c',
+               'cairo/pycairo-context.c',
+               'cairo/pycairo-font.c',
+               'cairo/pycairo-matrix.c',
+               'cairo/pycairo-path.c',
+               'cairo/pycairo-pattern.c',
+               'cairo/pycairo-surface.c',
+               ],
+    include_dirs = pkg_config_parse('--cflags-only-I', 'cairo'),
+    library_dirs = pkg_config_parse('--libs-only-L', 'cairo'),
+    libraries    = pkg_config_parse('--libs-only-l', 'cairo'),
+    runtime_library_dirs = runtime_library_dirs,
+    )
+
+dic.setup(
+    name = "pycairo",
+    version = pycairo_version,
+    description = "python interface for cairo",
+    packages = ['cairo'],
+    ext_modules = [cairo],
+    data_files=[('include/pycairo',['cairo/pycairo.h']),
+                ('lib/pkgconfig',[pkgconfig_file])],
+    )

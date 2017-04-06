@@ -4,11 +4,11 @@ AC_PREREQ(2.59)
 # the pycairo version number
 m4_define(pycairo_version_major, 1)
 m4_define(pycairo_version_minor, 2)
-m4_define(pycairo_version_micro, 2)
+m4_define(pycairo_version_micro, 6)
 m4_define(pycairo_version, pycairo_version_major.pycairo_version_minor.pycairo_version_micro)
 
 # versions of packages we require
-m4_define(cairo_required_version, 1.2.2)
+m4_define(cairo_required_version, 1.2.6)
 m4_define(gtk_required_version,   2.2.0)
 m4_define(pygtk_required_version, 2.2.0)
 
@@ -28,8 +28,8 @@ AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([1.9 -Wall])
 
 # Options ---
-AC_ARG_WITH(pygtk,
-            [AC_HELP_STRING([--with-pygtk], [support pygtk [default=yes]])],
+AC_ARG_WITH([pygtk],
+            AS_HELP_STRING([--with-pygtk], [support pygtk [default=yes]]),
 	    [],
 	    [with_pygtk="yes"])
 

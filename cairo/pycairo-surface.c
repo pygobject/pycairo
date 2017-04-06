@@ -542,6 +542,12 @@ image_surface_create_from_png (PyTypeObject *type, PyObject *file)
 #endif /* CAIRO_HAS_PNG_FUNCTIONS */
 
 static PyObject *
+image_surface_get_data (PycairoImageSurface *o)
+{
+    return PyBuffer_FromReadWriteObject((PyObject *)o, 0, Py_END_OF_BUFFER);
+}
+
+static PyObject *
 image_surface_get_format (PycairoImageSurface *o)
 {
     return PyInt_FromLong (cairo_image_surface_get_format (o->surface));
@@ -565,64 +571,60 @@ image_surface_get_stride (PycairoImageSurface *o)
     return PyInt_FromLong (cairo_image_surface_get_stride (o->surface));
 }
 
-/* This was modified from cairo/src/cairo-png.c unpremultiply_data() */
-/* ARGB32 (native-endian, premultiplied) => RGBA */
-static void
-_argb32_to_unpremultiplied_rgba (uint8_t *data, int length)
+
+/* Buffer interface functions, used by ImageSurface.get_data() */
+static int
+image_surface_buffer_getreadbuf (PycairoImageSurface *o, int segment,
+				 const void **ptr)
 {
-    unsigned int i;
-
-    for (i = 0; i < length; i += 4) {
-        uint8_t *b = &data[i];
-        uint32_t pixel;
-        uint8_t  alpha;
-
-	memcpy (&pixel, b, sizeof (uint32_t));
-	alpha = (pixel & 0xff000000) >> 24;
-        if (alpha == 0) {
-	    b[0] = b[1] = b[2] = b[3] = 0;
-	} else {
-            b[0] = (((pixel & 0xff0000) >> 16) * 255 + alpha / 2) / alpha;
-            b[1] = (((pixel & 0x00ff00) >>  8) * 255 + alpha / 2) / alpha;
-            b[2] = (((pixel & 0x0000ff) >>  0) * 255 + alpha / 2) / alpha;
-	    b[3] = alpha;
-	}
+    if (segment != 0) {
+	PyErr_SetString(PyExc_SystemError,
+			"accessing non-existent ImageSurface segment");
+	return -1;
     }
-}
-
-/* return a Python buffer object containing the ImageSurface data in RGBA
- * format.
- */
-static PyObject *
-image_surface_get_data_as_rgba (PycairoImageSurface *o)
-{
-    PyObject *buf;
-    unsigned char *data;
-    uint8_t *buffer;
-    int height, stride, length;
     cairo_surface_t *surface = o->surface;
-    cairo_format_t format = cairo_image_surface_get_format (surface);
-
-    if (format != CAIRO_FORMAT_ARGB32) {
-	PyErr_SetString(PyExc_TypeError, "ImageSurface.to_rgba() can only be "
-			"called on a cairo.FORMAT_ARGB32 surface");
-	return NULL;
-    }
-    data   = cairo_image_surface_get_data (surface);
-    height = cairo_image_surface_get_height (surface);
-    stride = cairo_image_surface_get_stride (surface);
-
-    buf = PyBuffer_New(height * stride);
-    if (buf != NULL) {
-	if (PyObject_AsWriteBuffer(buf, (void **)&buffer, &length)) {
-	    Py_DECREF(buf);
-	    return NULL;
-	}
-	memcpy (buffer, data, length);
-	_argb32_to_unpremultiplied_rgba (buffer, length);
-    }
-    return buf;
+    int height = cairo_image_surface_get_height (surface);
+    int stride = cairo_image_surface_get_stride (surface);
+    *ptr = (void *) cairo_image_surface_get_data (surface);
+    return height * stride;
 }
+
+static int
+image_surface_buffer_getwritebuf (PycairoImageSurface *o, int segment,
+				  const void **ptr)
+{
+    if (segment != 0) {
+	PyErr_SetString(PyExc_SystemError,
+			"accessing non-existent ImageSurface segment");
+	return -1;
+    }
+    cairo_surface_t *surface = o->surface;
+    int height = cairo_image_surface_get_height (surface);
+    int stride = cairo_image_surface_get_stride (surface);
+    *ptr = (void *) cairo_image_surface_get_data (surface);
+    return height * stride;
+}
+
+static int
+image_surface_buffer_getsegcount (PycairoImageSurface *o, int *lenp)
+{
+    if (lenp) {
+	/* report the sum of the sizes (in bytes) of all segments */
+	cairo_surface_t *surface = o->surface;
+	int height = cairo_image_surface_get_height (surface);
+	int stride = cairo_image_surface_get_stride (surface);
+	*lenp = height * stride;
+    }
+    return 1;  /* surface data is all in one segment */
+}
+
+/* See Python C API Manual 10.7 */
+static PyBufferProcs image_surface_as_buffer = {
+    (getreadbufferproc) image_surface_buffer_getreadbuf,
+    (getwritebufferproc)image_surface_buffer_getwritebuf,
+    (getsegcountproc)   image_surface_buffer_getsegcount,
+    (getcharbufferproc) NULL,
+};
 
 static PyMethodDef image_surface_methods[] = {
 #ifdef HAVE_NUMPY
@@ -635,12 +637,11 @@ static PyMethodDef image_surface_methods[] = {
     {"create_from_png", (PyCFunction)image_surface_create_from_png,
                                                    METH_O | METH_CLASS },
 #endif
+    {"get_data",      (PyCFunction)image_surface_get_data,       METH_NOARGS},
     {"get_format",    (PyCFunction)image_surface_get_format,     METH_NOARGS},
     {"get_height",    (PyCFunction)image_surface_get_height,     METH_NOARGS},
     {"get_width",     (PyCFunction)image_surface_get_width,      METH_NOARGS},
     {"get_stride",    (PyCFunction)image_surface_get_stride,     METH_NOARGS},
-    {"get_data_as_rgba",(PyCFunction)image_surface_get_data_as_rgba,
-                                                                 METH_NOARGS},
     {NULL, NULL, 0, NULL},
 };
 
@@ -665,7 +666,7 @@ PyTypeObject PycairoImageSurface_Type = {
     0,                                  /* tp_str */
     0,                                  /* tp_getattro */
     0,                                  /* tp_setattro */
-    0,                                  /* tp_as_buffer */
+    &image_surface_as_buffer,		/* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,                 /* tp_flags */
     0,                                  /* tp_doc */
     0,                                  /* tp_traverse */

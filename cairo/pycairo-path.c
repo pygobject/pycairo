@@ -230,7 +230,7 @@ typedef struct {
     PycairoPath *pypath; /* Set to NULL when iterator is exhausted */
 } PycairoPathiter;
 
-static PyTypeObject PycairoPathiter_Type;
+PyTypeObject PycairoPathiter_Type;
 
 
 static void
@@ -303,7 +303,7 @@ pathiter_next(PycairoPathiter *it)
     return NULL;
 }
 
-static PyTypeObject PycairoPathiter_Type = {
+PyTypeObject PycairoPathiter_Type = {
     PyObject_HEAD_INIT(NULL)
     0,                                  /* ob_size */
     "cairo.Pathiter",                   /* tp_name */
@@ -330,7 +330,7 @@ static PyTypeObject PycairoPathiter_Type = {
     0,                                  /* tp_clear */
     0,                                  /* tp_richcompare */
     0,                                  /* tp_weaklistoffset */
-    PyObject_SelfIter,			/* tp_iter */
+    0, /* PyObject_SelfIter, */		/* tp_iter */
     (iternextfunc)pathiter_next,	/* tp_iternext */
     0,					/* tp_methods */
 };

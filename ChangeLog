@@ -1,3 +1,66 @@
+=== Pycairo 1.2.6 ===
+2006-11-27  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* configure.ac :
+	* cairo/cairomodule.c :
+	* setup.py :
+	* README :
+	increment pycairo and cairo versions to 1.2.6
+
+	* NEWS: list changes for 1.2.6
+
+2006-11-27  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* configure.ac: replace AC_HELP_STRING with AS_HELP_STRING
+
+	* test/isurface_get_data.py : update to use numpy to write to the
+	surface.
+
+2006-11-20  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/pycairo-surface.c (image_surface_get_data_as_rgba): Delete
+	method (at request of Carl Worth) since language bindings should not
+	have functions which are not provided by the C cairo library.
+
+	* test/isurface_get_data_as_rgba.py: delete test script
+
+	* test/Makefile.am (EXTRA_DIST): remove isurface_get_data_as_rgba.py
+
+2006-11-20  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/pycairo-surface.c (image_surface_buffer_getreadbuf)
+	(image_surface_buffer_getwritebuf, image_surface_buffer_getsegcount):
+	Add writable buffer interface support to ImageSurface.
+	(image_surface_get_data): new binding which returns a Python writable
+	buffer object.
+
+	* test/isurface_get_data.py: new test
+	* test/Makefile.am (EXTRA_DIST): add isurface_get_data.py
+
+2006-09-22  Cedric Gustin  <cedric.gustin@gmail.com>
+
+	* setup.py: Fixes for win32. Install pycairo.pc and pycairo.h as
+	data_files.
+
+2006-09-21  Cedric Gustin  <cedric.gustin@gmail.com>
+
+	* cairo/pycairo-path.c: Initialize PycairoPathiter_Type.tp_iter in
+	init_cairo (cairomodule.c) to avoid "non-const initializer" errors
+	on win32 (mingw32). Remove static declaration for
+	PycairoPathiter_Type as it has to be used in cairomodule.c.
+	* cairo/pycairo-private.h: Export PycairoPathiter_Type.
+	* cairo/cairomodule.c (init_cairo): Initialize
+	PycairoPathiter_Type.tp_iter.
+
+2006-08-21  Steve Chaplin  <steve1097 # yahoo.com.au>
+
+	* RELEASING: update step 8.
+
+	* configure.ac:
+	* cairo/cairomodule.c:
+	* setup.py:
+	increment version to 1.2.3
+
 === Pycairo 1.2.2 ===
 2006-08-21  Steve Chaplin  <steve1097 # yahoo.com.au>
 
