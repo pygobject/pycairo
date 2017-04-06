@@ -4,11 +4,11 @@ AC_PREREQ(2.54)
 # the pycairo version number
 m4_define(pycairo_version_major, 1)
 m4_define(pycairo_version_minor, 0)
-m4_define(pycairo_version_micro, 0)
+m4_define(pycairo_version_micro, 2)
 m4_define(pycairo_version, pycairo_version_major.pycairo_version_minor.pycairo_version_micro)
 
 # versions of packages we require
-m4_define(cairo_required_version,    1.0.0)
+m4_define(cairo_required_version,    1.0.2)
 m4_define(gtk_required_version,      2.2.0)
 m4_define(pygtk_required_version,    2.2.0)
 m4_define(libsvg_cairo_required_version, 0.1.6)

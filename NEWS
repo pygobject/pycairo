@@ -1,3 +1,19 @@
+Overview of changes from pycairo 1.0.0 to pycairo 1.0.2
+=======================================================
+General changes:
+Pycairo has been updated to work with cairo 1.0.2.
+
+New cairo functions supported:
+    cairo.ImageSurface.create_for_data()
+
+Updated functions:
+    ctx.set_source_rgba (r, g, b, a=1.0) now supports a default alpha argument
+
+Other changes:
+    cairo.Matrix now supports the Python sequence protocol, so you can do:
+    xx, yx, xy, yy, x0, y0 = matrix
+
+
 Overview of changes from pycairo 0.9.0 to pycairo 1.0.0
 =======================================================
 General changes:

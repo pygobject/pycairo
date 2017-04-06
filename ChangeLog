@@ -1,3 +1,66 @@
+=== Pycairo 1.0.2 ===
+2005-10-11  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* NEWS: update for 1.0.2
+
+	* setup.py:
+	* README :
+	* configure.ac: Increment pycairo version to 1.0.2, require cairo 1.0.2
+
+2005-10-03  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* cairo/pycairo-matrix.c (matrix_get_xx, matrix_get_yx, matrix_get_xy)
+	(matrix_get_yy, matrix_get_x0, matrix_get_y0, matrix_get_value):
+	delete
+	(matrix_item): new function to allow matrix to be used as a sequence
+	by providing Matrix.__get_item__()
+
+	* NOTES : update cairo.Matrix notes
+
+2005-09-28  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* NOTES : add note for cairo.ImageSurface.create_for_data()
+
+	* cairo/pycairo-surface.c (pycairo_read_func, pycairo_write_func):
+	rename to _read_func and _write_func
+
+2005-09-22  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* test/cairo_image_surface_create_for_data.py : rename to
+	test/for_data1.py:
+	* test/for_data2.py: add new test using Numeric
+	* test/for_data3.py: add new test using numarray
+	* test/Makefile.am (EXTRA_DIST): add/update filenames
+
+2005-09-22  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* test/cairo_image_surface_create_for_data.py : update
+
+	* cairo/pycairo-surface.c: (image_surface_create_for_data): new
+	wrapper.
+	(pycairo_write_func): add 'const' to 'unsigned char *data' to fix
+	compiler warning.
+
+2005-09-11  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* INSTALL: explain that cairo.gtk is not built if pygtk >= 2.7.0 is
+	detected.
+
+2005-09-05  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* README : note that libsvg-cairo, Numeric, and PyGTK are NOT required,
+	but are supported if detected.
+
+2005-09-05  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* NOTES :
+	* cairo/pycairo-context.c (pycairo_set_source_rgba): Let alpha be
+	a default argument, ctx.set_source_rgba (r, g, b, a=1.0)
+
+2005-09-01  Steve Chaplin  <steve1097@yahoo.com.au>
+
+	* configure.ac: inrcease pycairo version to 1.0.1
+
 === Pycairo 1.0.0 ===
 2005-08-30  Steve Chaplin  <steve1097@yahoo.com.au>
 

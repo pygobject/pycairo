@@ -94,52 +94,6 @@ matrix_init_rotate (PyTypeObject *type, PyObject *args)
 }
 
 static PyObject *
-matrix_get_xx (PycairoMatrix *o)
-{
-    return Py_BuildValue("d", o->matrix.xx);
-}
-
-static PyObject *
-matrix_get_yx (PycairoMatrix *o)
-{
-    return Py_BuildValue("d", o->matrix.yx);
-}
-
-static PyObject *
-matrix_get_xy (PycairoMatrix *o)
-{
-    return Py_BuildValue("d", o->matrix.xy);
-}
-
-static PyObject *
-matrix_get_yy (PycairoMatrix *o)
-{
-    return Py_BuildValue("d", o->matrix.yy);
-}
-
-static PyObject *
-matrix_get_x0 (PycairoMatrix *o)
-{
-    return Py_BuildValue("d", o->matrix.x0);
-}
-
-static PyObject *
-matrix_get_y0 (PycairoMatrix *o)
-{
-    return Py_BuildValue("d", o->matrix.y0);
-}
-
-/* return cairo_matrix_t data as a 6-tuple */
-static PyObject *
-matrix_get_value (PycairoMatrix *o)
-{
-    return Py_BuildValue("(dddddd)",
-			 o->matrix.xx, o->matrix.yx,
-			 o->matrix.xy, o->matrix.yy,
-			 o->matrix.x0, o->matrix.y0);
-}
-
-static PyObject *
 matrix_invert (PycairoMatrix *o)
 {
     if (Pycairo_Check_Status (cairo_matrix_invert (&o->matrix)))
@@ -154,32 +108,6 @@ matrix_multiply (PycairoMatrix *o, PycairoMatrix *o2)
     cairo_matrix_multiply (&result, &o->matrix, &o2->matrix);
     return PycairoMatrix_FromMatrix (&result);
 }
-
-static PyNumberMethods matrix_as_number = {
-  (binaryfunc)0,
-  (binaryfunc)0,
-  (binaryfunc)matrix_multiply,
-  (binaryfunc)0,
-  (binaryfunc)0,
-  (binaryfunc)0,
-  (ternaryfunc)0,
-  (unaryfunc)0,
-  (unaryfunc)0,
-  (unaryfunc)0,
-  (inquiry)0,
-  (unaryfunc)0,
-  (binaryfunc)0,
-  (binaryfunc)0,
-  (binaryfunc)0,
-  (binaryfunc)0,
-  (binaryfunc)0,
-  (coercion)0,
-  (unaryfunc)0,
-  (unaryfunc)0,
-  (unaryfunc)0,
-  (unaryfunc)0,
-  (unaryfunc)0
-};
 
 static PyObject *
 matrix_repr (PycairoMatrix *o)
@@ -279,6 +207,64 @@ matrix_transform_point (PycairoMatrix *o, PyObject *args)
     return Py_BuildValue("(dd)", x, y);
 }
 
+static PyObject *
+matrix_item (PycairoMatrix *o, int i)
+{
+    switch (i) {
+    case 0:
+	return Py_BuildValue("d", o->matrix.xx);
+    case 1:
+	return Py_BuildValue("d", o->matrix.yx);
+    case 2:
+	return Py_BuildValue("d", o->matrix.xy);
+    case 3:
+	return Py_BuildValue("d", o->matrix.yy);
+    case 4:
+	return Py_BuildValue("d", o->matrix.x0);
+    case 5:
+	return Py_BuildValue("d", o->matrix.y0);
+    default:
+	PyErr_SetString(PyExc_IndexError, "Matrix index out of range");
+	return NULL;
+    }
+}
+
+static PyNumberMethods matrix_as_number = {
+  (binaryfunc)0,
+  (binaryfunc)0,
+  (binaryfunc)matrix_multiply,
+  (binaryfunc)0,
+  (binaryfunc)0,
+  (binaryfunc)0,
+  (ternaryfunc)0,
+  (unaryfunc)0,
+  (unaryfunc)0,
+  (unaryfunc)0,
+  (inquiry)0,
+  (unaryfunc)0,
+  (binaryfunc)0,
+  (binaryfunc)0,
+  (binaryfunc)0,
+  (binaryfunc)0,
+  (binaryfunc)0,
+  (coercion)0,
+  (unaryfunc)0,
+  (unaryfunc)0,
+  (unaryfunc)0,
+  (unaryfunc)0,
+  (unaryfunc)0
+};
+
+static PySequenceMethods matrix_as_sequence = {
+    0,                  		/* sq_length */
+    0,                  		/* sq_concat */
+    0,                  		/* sq_repeat */
+    (intargfunc)matrix_item,		/* sq_item */
+    0,                     		/* sq_slice */
+    0,					/* sq_ass_item */
+    0,					/* sq_ass_slice */
+    0,		                        /* sq_contains */
+};
 
 static PyMethodDef matrix_methods[] = {
     /* Do not need to wrap all cairo_matrix_init_*() functions
@@ -301,17 +287,6 @@ static PyMethodDef matrix_methods[] = {
     {NULL, NULL, 0, NULL},
 };
 
-static PyGetSetDef matrix_getsets[] = {
-    {"xx",   (getter)matrix_get_xx},
-    {"yx",   (getter)matrix_get_yx},
-    {"xy",   (getter)matrix_get_xy},
-    {"yy",   (getter)matrix_get_yy},
-    {"x0",   (getter)matrix_get_x0},
-    {"y0",   (getter)matrix_get_y0},
-    {"value",(getter)matrix_get_value},
-    {NULL, (getter)0, (setter)0, NULL, NULL},
-};
-
 PyTypeObject PycairoMatrix_Type = {
     PyObject_HEAD_INIT(NULL)
     0,                                  /* ob_size */
@@ -325,7 +300,7 @@ PyTypeObject PycairoMatrix_Type = {
     0,                                  /* tp_compare */
     (reprfunc)matrix_repr,              /* tp_repr */
     &matrix_as_number,                  /* tp_as_number */
-    0,                                  /* tp_as_sequence */
+    &matrix_as_sequence,                /* tp_as_sequence */
     0,                                  /* tp_as_mapping */
     0,                                  /* tp_hash */
     0,                                  /* tp_call */
@@ -343,7 +318,7 @@ PyTypeObject PycairoMatrix_Type = {
     0,                                  /* tp_iternext */
     matrix_methods,                     /* tp_methods */
     0,                                  /* tp_members */
-    matrix_getsets,                     /* tp_getset */
+    0,                                  /* tp_getset */
     0, /* &PyBaseObject_Type, */        /* tp_base */
     0,                                  /* tp_dict */
     0,                                  /* tp_descr_get */

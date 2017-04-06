@@ -192,7 +192,8 @@ surface_set_device_offset (PycairoSurface *o, PyObject *args)
 
 #ifdef CAIRO_HAS_PNG_FUNCTIONS
 static cairo_status_t
-pycairo_write_func (void *closure, unsigned char *data, unsigned int length)
+_write_func (void *closure, const unsigned char *data,
+	     unsigned int length)
 {
     if (fwrite (data, 1, (size_t) length, (FILE *)closure) != length)
 	return CAIRO_STATUS_WRITE_ERROR;
@@ -221,8 +222,7 @@ surface_write_to_png (PycairoSurface *o, PyObject *file)
 			"which must be a filename (str) or file object");
 	return NULL;
     }
-    status = cairo_surface_write_to_png_stream (o->surface, pycairo_write_func,
-						fp);
+    status = cairo_surface_write_to_png_stream (o->surface, _write_func, fp);
     if (PyObject_TypeCheck (file, &PyBaseString_Type))
     	fclose (fp);
 
@@ -388,18 +388,21 @@ image_surface_create_for_array (PyTypeObject *type, PyObject *args)
 }
 #endif /* HAVE_NUMPY */
 
-#if 0 /* disable until a reference to the buffer is added to the surface */
-/* alternative constructor */
 static PyObject *
 image_surface_create_for_data (PyTypeObject *type, PyObject *args)
 {
     cairo_surface_t *surface;
     cairo_format_t format;
-    char *data;
-    int length, width, height, stride = -1;
+    unsigned char *buffer;
+    int buffer_len, width, height, stride = -1, res;
+    PyObject *obj;
 
-    if (!PyArg_ParseTuple(args, "w#iii|i:Surface.create_for_data",
-			  &data, &length, &format, &width, &height, &stride))
+    if (!PyArg_ParseTuple(args, "Oiii|i:Surface.create_for_data",
+			  &obj, &format, &width, &height, &stride))
+	return NULL;
+
+    res = PyObject_AsWriteBuffer (obj, (void **)&buffer, &buffer_len);
+    if (res == -1)
 	return NULL;
 
     if (width <= 0) {
@@ -411,7 +414,7 @@ image_surface_create_for_data (PyTypeObject *type, PyObject *args)
 	return NULL;
     }
     /* if stride is missing, calculate it from width */
-    if (stride < 0)
+    if (stride < 0) {
 	switch (format) {
 	case CAIRO_FORMAT_ARGB32:
 	    stride = width * 4;
@@ -426,23 +429,20 @@ image_surface_create_for_data (PyTypeObject *type, PyObject *args)
 	    stride = (width + 1) / 8;
 	    break;
 	}
-    if (height * stride > length) {
+    }
+    if (height * stride > buffer_len) {
 	PyErr_SetString(PyExc_TypeError, "buffer is not long enough");
 	return NULL;
     }
-
-    surface = cairo_image_surface_create_for_data
-	((unsigned char *)data, format, width, height, stride);
-    return PycairoSurface_FromSurface(surface, &PycairoImageSurface_Type,
-				      NULL);
-    /* FIXME: get surface to hold a reference to buffer */
+    surface = cairo_image_surface_create_for_data (buffer, format, width,
+						   height, stride);
+    return PycairoSurface_FromSurface(surface, &PycairoImageSurface_Type, obj);
 }
-#endif
 
 
 #ifdef CAIRO_HAS_PNG_FUNCTIONS
 static cairo_status_t
-pycairo_read_func (void *closure, unsigned char *data, unsigned int length)
+_read_func (void *closure, unsigned char *data, unsigned int length)
 {
     if (fread (data, 1, (size_t) length, (FILE *)closure) != length)
 	return CAIRO_STATUS_READ_ERROR;
@@ -473,8 +473,7 @@ image_surface_create_from_png (PyTypeObject *type, PyObject *o)
 	return NULL;
     }
 
-    surface = cairo_image_surface_create_from_png_stream (pycairo_read_func,
-							  fp);
+    surface = cairo_image_surface_create_from_png_stream (_read_func, fp);
     if (PyObject_TypeCheck (o, &PyBaseString_Type))
 	fclose (fp);
 
@@ -501,10 +500,8 @@ static PyMethodDef image_surface_methods[] = {
     {"create_for_array",(PyCFunction)image_surface_create_for_array,
                                                    METH_VARARGS | METH_CLASS },
 #endif
-#if 0
     {"create_for_data",(PyCFunction)image_surface_create_for_data,
                                                    METH_VARARGS | METH_CLASS },
-#endif
 #ifdef CAIRO_HAS_PNG_FUNCTIONS
     {"create_from_png", (PyCFunction)image_surface_create_from_png,
                                                    METH_O | METH_CLASS },

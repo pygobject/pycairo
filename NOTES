@@ -61,10 +61,11 @@ C : cairo_set_dash (cairo_t *cr, double *dashes, int ndash, double offset);
 Py: ctx.set_dash (dash_sequence, offset)
 
 Methods supporting default argument values:
-ctx.mask_surface(surface, x=0.0, y=0.0)
-ctx.select_font_face(family, slant=cairo.FONT_SLANT_NORMAL)
-                     weight=cairo.FONT_WEIGHT_NORMAL)
-ctx.set_source_surface(surface, x=0.0, y=0.0)
+ctx.mask_surface (surface, x=0.0, y=0.0)
+ctx.select_font_face (family, slant=cairo.FONT_SLANT_NORMAL)
+                      weight=cairo.FONT_WEIGHT_NORMAL)
+ctx.set_source_surface (surface, x=0.0, y=0.0)
+ctx.set_source_rgba (r, g, b, a=1.0)
 
 
 cairo.FontFace
@@ -95,6 +96,9 @@ Py: matrix = cairo.Matrix (xx, yx, xy, yy, x0, y0)
     matrix = cairo.Matrix (xx=sy, yy=sy)
     matrix = cairo.Matrix.init_rotate (radians)
     result = matrix1 * matrix2
+
+To read Matrix values:
+xx, yx, xy, yy, x0, y0 = matrix
 
 To compare Matrix values:
 matrix1 == matrix2
@@ -149,14 +153,17 @@ Py: surface.write_to_png (filename)
 C : surface = cairo_image_surface_create (format, width, height);
     surface = cairo_image_surface_create_from_png (filename);
     surface = cairo_image_surface_create_from_png_stream (read_func, closure);
-    not available
+    surface = cairo_image_surface_create_for_data (data, format, w, h, stride)
 
 Py: surface = cairo.ImageSurface (format, width, height)
     surface = cairo.ImageSurface.create_from_png (filename)
     surface = cairo.ImageSurface.create_from_png (file_object)
-    surface = cairo.ImageSurface.create_for_array (array)
-              # create a surface from a Numerical Python array
+    surface = cairo.ImageSurface.create_for_data (data, format, w, h, stride)
+                where 'data' if a writable Python buffer object
 
+    extra pycairo ImageSurface creation methods:
+    surface = cairo.ImageSurface.create_for_array (array)
+                where 'array' is a Numerical Python array
 
 C:  surface = cairo_pdf_surface_create (filename, width_in_points,
 				        height_in_points);

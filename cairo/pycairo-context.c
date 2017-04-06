@@ -908,9 +908,10 @@ pycairo_set_source_rgb (PycairoContext *o, PyObject *args)
 static PyObject *
 pycairo_set_source_rgba (PycairoContext *o, PyObject *args)
 {
-    double red, green, blue, alpha;
+    double red, green, blue;
+    double alpha = 1.0;
 
-    if (!PyArg_ParseTuple (args, "dddd:Context.set_source_rgba",
+    if (!PyArg_ParseTuple (args, "ddd|d:Context.set_source_rgba",
 			   &red, &green, &blue, &alpha))
 	return NULL;
 

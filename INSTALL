@@ -18,6 +18,10 @@ Python will not be able to find the cairo module until you add
 $prefix/lib/pythonX.Y/site-packages to the PYTHONPATH variable.
 
 If libsvg-cairo, PyGTK or Numeric Python are detected optional modules will
-be compiled. To disable PyGTK support use
+be compiled.
+However, if PyGTK >= 2.7.0 is detected then cairo.gtk is not built since
+pycairo is now supported directly by PyGTK.
+
+To disable PyGTK support use
 
     $ ./configure --without-pygtk

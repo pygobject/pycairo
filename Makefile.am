@@ -56,7 +56,7 @@ release-upload: release-check $(tar_file) $(md5_file)
 	scp $(tar_file) $(md5_file) $(RELEASE_UPLOAD_HOST):$(RELEASE_UPLOAD_DIR)
 	mv $(tar_file) $(md5_file) releases
 	ssh $(RELEASE_UPLOAD_HOST) "rm -f $(RELEASE_UPLOAD_DIR)/LATEST-$(PACKAGE)-[0-9]* && ln -s $(tar_file) $(RELEASE_UPLOAD_DIR)/LATEST-$(PACKAGE)-$(VERSION)"
-	$(CVS) tag RELEASE_$(PYCAIRO_VERSION_MAJOR)_$(PYCAIRO_VERSION_MINOR)_$(CAIRO_VERSION_MICRO)
+	cvs tag RELEASE_$(PYCAIRO_VERSION_MAJOR)_$(PYCAIRO_VERSION_MINOR)_$(PYCAIRO_VERSION_MICRO)
 
 release-publish: release-upload releases/$(md5_file)
 	@echo ""
@@ -67,8 +67,8 @@ release-publish: release-upload releases/$(md5_file)
 	@echo ""
 	@echo "============================== CUT HERE =============================="
 	@echo "Pycairo is a set of Python bindings for the multi-platform 2D graphics library cairo."
-	@echo "http://cairographics.org"
-	@echo "http://cairographics.org/pycairo"
+	@echo " http://cairographics.org"
+	@echo " http://cairographics.org/pycairo"
 	@echo ""
 	@echo "A new $(PACKAGE) release $(VERSION) is now available from:"
 	@echo ""

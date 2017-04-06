@@ -7,11 +7,14 @@ See the INSTALL document for build instructions.
 
 Dependencies
 ------------
-    cairo  		>= 1.0.0
+    cairo  		>= 1.0.2
     Python 		>= 2.3
-    libsvg-cairo	optional >= 0.1.6
-    Numeric Python	optional
-    PyGTK		optional >= 2.2.0
+
+
+Not required, but supported if they are detected:
+    libsvg-cairo	>= 0.1.6
+    Numeric Python	any version (?)
+    PyGTK		>= 2.2.0 and < 2.7.0
 
 Mailing List
 ------------
