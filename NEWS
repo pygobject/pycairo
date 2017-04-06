@@ -1,3 +1,33 @@
+Overview of changes from pycairo 1.4.0 to pycairo 1.6.4
+========================================================
+General changes:
+    Pycairo 1.6.4 requires cairo 1.6.4 (or later).
+                  requires Python 2.5 (or later).
+
+Bug fixes:
+    16112: Fix win32 'python setup.py ...' build -- use double quotes
+
+New Methods:
+    Context.has_current_point
+    Context.path_extents
+    ImageSurface.format_stride_for_width
+    PSSurface.get_eps
+    PSSurface.set_eps
+    PSSurface.ps_level_to_string
+    PSSurface.restrict_to_level
+    Surface.copy_page
+    Surface.show_page
+
+New Constants:
+    cairo.PS_LEVEL_2, cairo.PS_LEVEL_3
+
+Other changes:
+    test/pygame-test1.py, test/pygame-test2.py : pygame tests
+
+    examples/cairo_snippets/snippets/ellipse.py : Update
+    so line-width is a constant width in device-space not user-space
+
+
 Overview of changes from pycairo 1.4.0 to pycairo 1.4.12
 ========================================================
 General changes:

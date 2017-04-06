@@ -3,12 +3,12 @@ AC_PREREQ(2.59)
 
 # the pycairo version number
 m4_define(pycairo_version_major, 1)
-m4_define(pycairo_version_minor, 4)
-m4_define(pycairo_version_micro, 12)
+m4_define(pycairo_version_minor, 6)
+m4_define(pycairo_version_micro, 4)
 m4_define(pycairo_version, pycairo_version_major.pycairo_version_minor.pycairo_version_micro)
 
 # versions of packages we require
-m4_define(cairo_required_version, 1.4.12)
+m4_define(cairo_required_version, 1.6.4)
 
 AC_INIT([pycairo],
 	[pycairo_version],
@@ -34,7 +34,7 @@ ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL dnl required version (1.4) DON'T REMOVE - used by autogen.sh
 
-AM_PATH_PYTHON(2.4)
+AM_PATH_PYTHON(2.5)
 
 # Checks for libraries ---
 

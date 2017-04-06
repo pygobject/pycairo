@@ -1,3 +1,69 @@
+=== Pycairo 1.6.4 ===
+2008-07-17  Steven Chaplin  <steve1097 # yahoo.com.au>
+
+	* NEWS: update for 1.6.4 release
+
+	* setup.py :
+	* cairo/cairomodule.c:
+	* configure.ac:
+	update pycairo version to 1.6.4
+
+2008-07-17  Steven Chaplin  <steve1097 # yahoo.com.au>
+
+	* examples/cairo_snippets/snippets/ellipse.py (path_ellipse): Update
+	so line-width is a constant width in device-space not user-space
+
+	* doc/FAQ : Add new FAQs
+
+	* test/Makefile.am (EXTRA_DIST)
+	* test/pygame-test1.py, test/pygame-test2.py : Add new tests
+
+2008-07-17  Steven Chaplin  <steve1097 # yahoo.com.au>
+
+	* setup.py (pkg_config_version_check): apply patch (modified) from
+	Kirill Smelkov to fix #16112.
+
+2008-05-12  Steven Chaplin  <steve1097 # yahoo.com.au>
+
+	* test/isurface_create_for_data1.py:
+	* test/isurface_create_for_data2.py:
+	update tests
+
+	* cairo/pycairo-surface.c (pycairo_format_stride_for_width)
+	(ps_surface_ps_level_to_string):
+	Add ImageSurface.format_stride_for_width and
+	PSSurface.ps_level_to_string static methods.
+	(image_surface_create_for_data): Use the new function
+	cairo_format_stride_for_width() to calculate the stride.
+
+	* cairo/pycairo-context.c (pycairo_has_current_point)
+	(pycairo_path_extents):
+	* cairo/pycairo-surface.c (surface_copy_page, surface_show_page):
+	Add new bindings
+
+	* configure.ac:
+	* README :
+	* setup.py :
+	Require cairo 1.6.4 and Python 2.5
+
+	* cairo/pycairo-private.h: remove code used for Python < 2.5
+
+2008-05-08  Steven Chaplin  <steve1097 # yahoo.com.au>
+
+	* cairo/cairomodule.c: add new constants cairo.PS_LEVEL_2 and
+	cairo.PS_LEVEL_3
+	* cairo/pycairo-surface.c (ps_surface_get_eps, ps_surface_set_eps)
+	(ps_surface_restrict_to_level):
+	Add some new cairo 1.6.4 API - apply patch (with some changes)
+	from Tom Hughes to fix #15618.
+
+2007-12-13  Steven Chaplin  <steve1097 # yahoo.com.au>
+
+	* setup.py (pycairo_version):
+	* cairo/cairomodule.c:
+	* configure.ac:
+	Increment pycairo version to 1.4.13
+
 === Pycairo 1.4.12 ===
 2007-12-13  Steven Chaplin  <steve1097 # yahoo.com.au>
 

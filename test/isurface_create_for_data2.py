@@ -3,14 +3,15 @@
 """
 
 import cairo
+
 import numpy
 
 dir_ = "/tmp/"
-imgW, imgH = 255, 255
-data = numpy.ndarray (shape=(imgH,imgW,4), dtype=numpy.uint8)
+width, height = 255, 255
+data = numpy.ndarray (shape=(height,width,4), dtype=numpy.uint8)
 
-for x in range(imgW):
-    for y in range(imgH):
+for x in range(width):
+    for y in range(height):
         alpha = y
 
         # cairo.FORMAT_ARGB32 uses pre-multiplied alpha
@@ -19,8 +20,7 @@ for x in range(imgW):
         data[y][x][2] = 0
         data[y][x][3] = alpha
 
-stride = imgW * 4
 surface = cairo.ImageSurface.create_for_data (data, cairo.FORMAT_ARGB32,
-                                              imgW, imgH, stride)
-ctx = cairo.Context (surface)
-surface.write_to_png (dir_ + 'for_data2.png')
+                                              width, height)
+ctx = cairo.Context(surface)
+surface.write_to_png(dir_ + 'for_data2.png')

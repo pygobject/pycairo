@@ -6,8 +6,8 @@ import distutils.file_util as fut
 import subprocess
 import sys
 
-pycairo_version        = '1.4.12'
-cairo_version_required = '1.4.12'
+pycairo_version        = '1.6.4'
+cairo_version_required = '1.6.4'
 
 # Notes:
 # on Fedora Core 5 module is compiled with 'gcc -g' - why -g?
@@ -20,7 +20,7 @@ def call(command):
     return pipe
 
 def pkg_config_version_check(pkg, version):
-    pipe = call("pkg-config --print-errors --exists '%s >= %s'" %
+    pipe = call('pkg-config --print-errors --exists "%s >= %s"' %
                 (pkg, version))
     if pipe.returncode == 0:
         print '%s >= %s detected' % (pkg, version)
@@ -35,8 +35,8 @@ def pkg_config_parse(opt, pkg):
     return [x.lstrip(opt) for x in output.split()]
 
 
-if sys.version_info < (2,4):
-    raise SystemExit('Error: Python >= 2.4 is required')
+if sys.version_info < (2,5):
+    raise SystemExit('Error: Python >= 2.5 is required')
 
 pkg_config_version_check ('cairo', cairo_version_required)
 if sys.platform == 'win32':

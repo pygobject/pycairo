@@ -103,20 +103,6 @@ PyObject *PycairoSurface_FromSurface (cairo_surface_t *surface,
 
 int Pycairo_Check_Status (cairo_status_t status);
 
-/* Python 2.5 compatibility */
-#if PY_VERSION_HEX < 0x02050000 && !defined(PY_SSIZE_T_MIN)
-typedef int Py_ssize_t;
-#define PY_SSIZE_T_MAX INT_MAX
-#define PY_SSIZE_T_MIN INT_MIN
-typedef inquiry lenfunc;
-typedef intargfunc ssizeargfunc;
-typedef intobjargproc ssizeobjargproc;
-typedef getreadbufferproc readbufferproc;
-typedef getwritebufferproc writebufferproc;
-typedef getsegcountproc segcountproc;
-typedef getcharbufferproc charbufferproc;
-#endif
-
 /* error checking macros */
 #define RETURN_NULL_IF_CAIRO_ERROR(status)    \
     do {                                      \

@@ -154,6 +154,14 @@ surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds)
 }
 
 static PyObject *
+surface_copy_page (PycairoSurface *o)
+{
+    cairo_surface_copy_page (o->surface);
+    RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
+    Py_RETURN_NONE;
+}
+
+static PyObject *
 surface_create_similar (PycairoSurface *o, PyObject *args)
 {
     cairo_content_t content;
@@ -249,6 +257,14 @@ surface_set_fallback_resolution (PycairoSurface *o, PyObject *args)
     Py_RETURN_NONE;
 }
 
+static PyObject *
+surface_show_page (PycairoSurface *o)
+{
+    cairo_surface_show_page (o->surface);
+    RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
+    Py_RETURN_NONE;
+}
+
 #ifdef CAIRO_HAS_PNG_FUNCTIONS
 /* METH_O */
 static PyObject *
@@ -288,20 +304,20 @@ static PyMethodDef surface_methods[] = {
      * cairo_surface_reference()
      * cairo_surface_set_user_data()
      */
-    {"create_similar", (PyCFunction)surface_create_similar,    METH_VARARGS },
-    {"finish",         (PyCFunction)surface_finish,            METH_NOARGS },
-    {"flush",          (PyCFunction)surface_flush,             METH_NOARGS },
-    {"get_content",    (PyCFunction)surface_get_content,       METH_NOARGS },
-    {"get_device_offset",(PyCFunction)surface_get_device_offset,
-                                                                METH_NOARGS },
-    {"get_font_options",(PyCFunction)surface_get_font_options, METH_NOARGS },
-    {"mark_dirty",     (PyCFunction)surface_mark_dirty,        METH_KEYWORDS },
-    {"set_device_offset",(PyCFunction)surface_set_device_offset,
-                                                                METH_VARARGS },
+    {"copy_page",      (PyCFunction)surface_copy_page,          METH_NOARGS},
+    {"create_similar", (PyCFunction)surface_create_similar,     METH_VARARGS},
+    {"finish",         (PyCFunction)surface_finish,             METH_NOARGS},
+    {"flush",          (PyCFunction)surface_flush,              METH_NOARGS},
+    {"get_content",    (PyCFunction)surface_get_content,        METH_NOARGS},
+    {"get_device_offset",(PyCFunction)surface_get_device_offset,METH_NOARGS},
+    {"get_font_options",(PyCFunction)surface_get_font_options,  METH_NOARGS},
+    {"mark_dirty",     (PyCFunction)surface_mark_dirty,         METH_KEYWORDS},
+    {"set_device_offset",(PyCFunction)surface_set_device_offset,METH_VARARGS},
     {"set_fallback_resolution",(PyCFunction)surface_set_fallback_resolution,
-                                                                METH_VARARGS },
+                                                                METH_VARARGS},
+    {"show_page",      (PyCFunction)surface_show_page,          METH_NOARGS},
 #ifdef CAIRO_HAS_PNG_FUNCTIONS
-    {"write_to_png",   (PyCFunction)surface_write_to_png,      METH_O },
+    {"write_to_png",   (PyCFunction)surface_write_to_png,       METH_O },
 #endif
     {NULL, NULL, 0, NULL},
 };
@@ -390,29 +406,17 @@ image_surface_create_for_data (PyTypeObject *type, PyObject *args)
     if (width <= 0) {
 	PyErr_SetString(PyExc_ValueError, "width must be positive");
 	return NULL;
-    }
+	}
     if (height <= 0) {
 	PyErr_SetString(PyExc_ValueError, "height must be positive");
 	return NULL;
     }
     /* if stride is missing, calculate it from width */
     if (stride < 0) {
-	switch (format) {
-	case CAIRO_FORMAT_ARGB32:
-	case CAIRO_FORMAT_RGB24:
-	    stride = width * 4;
-	    break;
-	case CAIRO_FORMAT_RGB16_565:
-	    stride = width * 2;
-	    break;
-	case CAIRO_FORMAT_A8:
-	    stride = width;
-	    break;
-	case CAIRO_FORMAT_A1: /* should be stride = (width + 31) / 32 * 4 ? */
-	    stride = (width + 1) / 8;
-	    break;
-	default:
-	    PyErr_SetString(CairoError, "Unknown format");
+	stride = cairo_format_stride_for_width (format, width);
+	if (stride == -1){
+	    PyErr_SetString(CairoError,
+			    "format is invalid or the width too large");
 	    return NULL;
 	}
     }
@@ -471,6 +475,17 @@ image_surface_create_from_png (PyTypeObject *type, PyObject *file)
         cairo_image_surface_create_from_png_stream (_read_func, file), NULL);
 }
 #endif /* CAIRO_HAS_PNG_FUNCTIONS */
+
+/* METH_STATIC */
+static PyObject *
+image_surface_format_stride_for_width (PyObject *self, PyObject *args)
+{
+    cairo_format_t format;
+    int width;
+    if (!PyArg_ParseTuple(args, "ii:format_stride_for_width", &format, &width))
+	return NULL;
+    return PyInt_FromLong (cairo_format_stride_for_width (format, width));
+}
 
 static PyObject *
 image_surface_get_data (PycairoImageSurface *o)
@@ -563,16 +578,19 @@ static PyBufferProcs image_surface_as_buffer = {
 
 static PyMethodDef image_surface_methods[] = {
     {"create_for_data",(PyCFunction)image_surface_create_for_data,
-                                                   METH_VARARGS | METH_CLASS },
+                                                    METH_VARARGS | METH_CLASS},
 #ifdef CAIRO_HAS_PNG_FUNCTIONS
     {"create_from_png", (PyCFunction)image_surface_create_from_png,
-                                                   METH_O | METH_CLASS },
+                                                          METH_O | METH_CLASS},
 #endif
-    {"get_data",      (PyCFunction)image_surface_get_data,       METH_NOARGS},
-    {"get_format",    (PyCFunction)image_surface_get_format,     METH_NOARGS},
-    {"get_height",    (PyCFunction)image_surface_get_height,     METH_NOARGS},
-    {"get_width",     (PyCFunction)image_surface_get_width,      METH_NOARGS},
-    {"get_stride",    (PyCFunction)image_surface_get_stride,     METH_NOARGS},
+    {"format_stride_for_width",
+     (PyCFunction)image_surface_format_stride_for_width,
+                                                   METH_VARARGS | METH_STATIC},
+    {"get_data",      (PyCFunction)image_surface_get_data,        METH_NOARGS},
+    {"get_format",    (PyCFunction)image_surface_get_format,      METH_NOARGS},
+    {"get_height",    (PyCFunction)image_surface_get_height,      METH_NOARGS},
+    {"get_width",     (PyCFunction)image_surface_get_width,       METH_NOARGS},
+    {"get_stride",    (PyCFunction)image_surface_get_stride,      METH_NOARGS},
     {NULL, NULL, 0, NULL},
 };
 
@@ -793,6 +811,55 @@ ps_surface_dsc_comment (PycairoPSSurface *o, PyObject *args)
 }
 
 static PyObject *
+ps_surface_get_eps (PycairoPSSurface *o)
+{
+    PyObject *eps = cairo_ps_surface_get_eps (o->surface) ? Py_True : Py_False;
+    RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
+    Py_INCREF(eps);
+    return eps;
+}
+
+/* METH_STATIC */
+static PyObject *
+ps_surface_ps_level_to_string (PyObject *self, PyObject *args)
+{
+    int level;
+    if (!PyArg_ParseTuple(args, "i:ps_level_to_string", &level))
+	return NULL;
+    const char *s = cairo_ps_level_to_string (level);
+    if (s == NULL){
+	PyErr_SetString(CairoError, "ps_level_to_string: "
+			"invalid level argument");
+	return NULL;
+    }
+    return PyString_FromString(s);
+}
+
+static PyObject *
+ps_surface_restrict_to_level (PycairoPSSurface *o, PyObject *args)
+{
+    int level;
+
+    if (!PyArg_ParseTuple(args, "i:PSSurface.restrict_to_level", &level))
+	return NULL;
+    cairo_ps_surface_restrict_to_level (o->surface, level);
+    RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
+    Py_RETURN_NONE;
+}
+
+static PyObject *
+ps_surface_set_eps (PycairoPSSurface *o, PyObject *args)
+{
+    PyObject *py_eps;
+    if (!PyArg_ParseTuple(args, "O!:PSSurface.set_eps",
+			  &PyBool_Type, &py_eps))
+	return NULL;
+    cairo_ps_surface_set_eps (o->surface, (py_eps == Py_True));
+    RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
+    Py_RETURN_NONE;
+}
+
+static PyObject *
 ps_surface_set_size (PycairoPSSurface *o, PyObject *args)
 {
     double width_in_points, height_in_points;
@@ -809,6 +876,13 @@ static PyMethodDef ps_surface_methods[] = {
                    (PyCFunction)ps_surface_dsc_begin_page_setup, METH_NOARGS },
     {"dsc_begin_setup", (PyCFunction)ps_surface_dsc_begin_setup, METH_NOARGS },
     {"dsc_comment", (PyCFunction)ps_surface_dsc_comment,        METH_VARARGS },
+    {"get_eps", (PyCFunction)ps_surface_get_eps,                 METH_NOARGS },
+    /* ps_get_levels - not implemented yet*/
+    {"ps_level_to_string", (PyCFunction)ps_surface_ps_level_to_string,
+                                                   METH_VARARGS | METH_STATIC},
+    {"restrict_to_level", (PyCFunction)ps_surface_restrict_to_level,
+                                                                METH_VARARGS },
+    {"set_eps", (PyCFunction)ps_surface_set_eps,                METH_VARARGS },
     {"set_size", (PyCFunction)ps_surface_set_size,              METH_VARARGS },
     {NULL, NULL, 0, NULL},
 };

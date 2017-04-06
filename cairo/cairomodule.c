@@ -36,10 +36,15 @@
 #endif
 #include "pycairo-private.h"
 
+#ifdef CAIRO_HAS_PS_SURFACE
+#  include <cairo-ps.h>
+#endif
+
+
 #define VERSION_MAJOR 1
-#define VERSION_MINOR 4
-#define VERSION_MICRO 12
-static char pycairo_version_string[] = "1.4.12";
+#define VERSION_MINOR 6
+#define VERSION_MICRO 4
+static char pycairo_version_string[] = "1.6.4";
 
 
 /* A module specific exception */
@@ -450,6 +455,11 @@ init_cairo(void)
     CONSTANT(PATH_LINE_TO);
     CONSTANT(PATH_CURVE_TO);
     CONSTANT(PATH_CLOSE_PATH);
+
+#ifdef CAIRO_HAS_PS_SURFACE
+    CONSTANT(PS_LEVEL_2);
+    CONSTANT(PS_LEVEL_3);
+#endif
 
     CONSTANT(SUBPIXEL_ORDER_DEFAULT);
     CONSTANT(SUBPIXEL_ORDER_RGB);

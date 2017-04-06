@@ -7,12 +7,12 @@ import array
 import cairo
 
 dir_ = "/tmp/"
-imgW, imgH = 255, 255
-data = array.array('B', [0] * imgW * imgH * 4)
+width, height = 255, 255
+data = array.array('B', [0] * width * height * 4)
 
-for y in range(imgH):
-    for x in range(imgW):
-        offset = (x + (y * imgW)) * 4
+for y in range(height):
+    for x in range(width):
+        offset = (x + (y * width)) * 4
         alpha = y
 
         # cairo.FORMAT_ARGB32 uses pre-multiplied alpha
@@ -21,8 +21,7 @@ for y in range(imgH):
         data[offset+2] = 0                    # R
         data[offset+3] = alpha                # A
 
-stride = imgW * 4
-surface = cairo.ImageSurface.create_for_data (data, cairo.FORMAT_ARGB32,
-                                              imgW, imgH, stride)
-ctx = cairo.Context (surface)
-surface.write_to_png (dir_ + 'for_data1.png')
+surface = cairo.ImageSurface.create_for_data(data, cairo.FORMAT_ARGB32,
+                                             width, height)
+ctx = cairo.Context(surface)
+surface.write_to_png(dir_ + 'for_data1.png')
