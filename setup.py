@@ -76,7 +76,7 @@ class test_cmd(Command):
         cmd.ensure_finalized()
         cmd.run()
 
-        status = pytest.main(["tests/api_test.py"])
+        status = pytest.main(["tests"])
         if status != 0:
             raise SystemExit(status)
 
