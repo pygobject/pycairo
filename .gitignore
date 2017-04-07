@@ -16,6 +16,8 @@
 *.pyo
 *.so
 .cache
+MANIFEST
+dist
 
 # image files
 *.pdf
