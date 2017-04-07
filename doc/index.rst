@@ -5,8 +5,10 @@ Pycairo Documentation
 
 .. toctree::
    :maxdepth: 1
+   :titlesonly:
 
    overview
+   changelog
    reference/index
    faq
    pycairo_c_api

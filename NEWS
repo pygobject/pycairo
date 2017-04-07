@@ -1,5 +1,6 @@
-Overview of changes from py2cairo 1.8.10 to py2cairo 1.10.0
-===========================================================
+1.10.0 - 2011-05-01
+-------------------
+
 General Changes:
     py2cairo 1.10.0 requires cairo 1.10.0 (or later).
 
@@ -7,34 +8,35 @@ New Constants:
     cairo.FORMAT_RGB16_565
 
 Bug Fixes:
-    context.get_source().get_surface() fails        #33013
-    Add support for './waf configure --libdir=XXX'  #30230
+    * context.get_source().get_surface() fails        #33013
+    * Add support for './waf configure --libdir=XXX'  #30230
 
 Documentation Changes:
-    Upgrade to using Sphinx 1.0.7.
-    Include html documentation in the pycairo archive file.
+    * Upgrade to using Sphinx 1.0.7.
+    * Include html documentation in the pycairo archive file.
 
 Build Changes:
-    Update waf to 1.6.3
-    Remove setup.py
+    * Update waf to 1.6.3
+    * Remove setup.py
 
 Other Changes:
-    Improve/simplify unicode filename support.
-    Improve/simplify unicode text support.
+    * Improve/simplify unicode filename support.
+    * Improve/simplify unicode text support.
 
 
-Overview of changes from pycairo 1.8.8 to pycairo 1.8.10
-========================================================
+1.8.10 - 2010-05-20
+-------------------
+
 General Changes:
     Pycairo 1.8.10 requires cairo 1.8.10 (or later).
 
 New Classes/Types:
-    Win32PrintingSurface
-    XCBSurface - add XCB support using xpyb
+    * Win32PrintingSurface
+    * XCBSurface - add XCB support using xpyb
 
 Bug Fixes:
-    Fix for libtool 2.2 (#27974).
-    Mingw32 and pypy fixes (#25203).
+    * Fix for libtool 2.2 (#27974).
+    * Mingw32 and pypy fixes (#25203).
 
 Other Changes:
     Tests updated.
@@ -44,111 +46,118 @@ not binary compatible with pycairo 1.8.8. So modules that use the pycairo C
 API (like pygtk) will need to be recompiled to use pycairo 1.8.10.
 
 
-Overview of changes from pycairo 1.8.6 to pycairo 1.8.8
-=======================================================
+1.8.8 - 2009-08-26
+------------------
+
 General Changes:
-    Pycairo 1.8.8 requires cairo 1.8.8 (or later).
-    Move from CVS to git.
-    Add support for the waf build tool.
+    * Pycairo 1.8.8 requires cairo 1.8.8 (or later).
+    * Move from CVS to git.
+    * Add support for the waf build tool.
 
 Updated Methods:
-    The PDF/PS/SVGSurface constructors now accept None as a filename.
+    * The PDF/PS/SVGSurface constructors now accept None as a filename.
 
 
-Overview of changes from pycairo 1.8.4 to pycairo 1.8.6
-=======================================================
+1.8.6 - 2009-06-25
+------------------
+
 General Changes:
     Pycairo 1.8.6 requires cairo 1.8.6 (or later)
 
 Bug Fixes:
-    ImageSurface.create_from_png _read_func fix
-    ToyFontFace type fix
-    19221: restore cairo.Matrix '*' operator to the way it originally worked.
+    * ImageSurface.create_from_png _read_func fix
+    * ToyFontFace type fix
+    * 19221: restore cairo.Matrix '*' operator to the way it originally worked.
 
 Other Changes:
     Documentation completed.
 
 
-Overview of changes from pycairo 1.8.2 to pycairo 1.8.4
-=======================================================
+1.8.4 - 2009-03-19
+------------------
+
 General Changes:
     Pycairo 1.8.4 requires cairo 1.8.4 (or later) and Python 2.6
 
 Bug Fixes:
-    20674: Add get/set_extend for Gradient Patterns
+    * 20674: Add get/set_extend for Gradient Patterns
 
 New Classes:
     cairo.ToyFontFace
 
 New Methods:
-    Pattern.get_extend
-    Pattern.set_extend
-    ToyFontFace.get_family
-    ToyFontFace.get_slant
-    ToyFontFace.get_weight
+    | Pattern.get_extend
+    | Pattern.set_extend
+    | ToyFontFace.get_family
+    | ToyFontFace.get_slant
+    | ToyFontFace.get_weight
 
 Deleted Methods:
-    SurfacePattern.get_extend
-    SurfacePattern.set_extend
+    | SurfacePattern.get_extend
+    | SurfacePattern.set_extend
 
 Other Changes:
     Threading for surfaces with stream functions has been reenabled.
     Documentation updates.
 
 
-Overview of changes from pycairo 1.8.0 to pycairo 1.8.2
-=======================================================
+1.8.2 - 2009-01-15
+------------------
 
 Pycairo 1.8.0 resulted in crashes for some applications using threads. So
 upgrading to 1.8.2 is recommended for threaded applications.
 
-Bug Fixes: #19287: Threading support results in crashes in cairo.ImageSurface
+Bug Fixes:
+    * #19287: Threading support results in crashes in cairo.ImageSurface
 
 New Methods:
     Context.set_scaled_font
 
 API Changes:
-    Matrix multiplication:
-    old code: matrix3 = matrix1 * matrix2
-    new equivalent code: matrix3 = matrix1.multiply(matrix2)
-    matrix3 = matrix1 * matrix2
-    is now equivalent to matrix3 = matrix2.multiply(matrix1)
-    which is consistent with standard matrix multiplication.
+    Matrix multiplication::
+
+        old code: matrix3 = matrix1 * matrix2
+        new equivalent code: matrix3 = matrix1.multiply(matrix2)
+        matrix3 = matrix1 * matrix2
+        is now equivalent to matrix3 = matrix2.multiply(matrix1)
+        which is consistent with standard matrix multiplication.
 
 
-Overview of changes from pycairo 1.6.4 to pycairo 1.8.0
-=======================================================
+1.8.0 - 2008-12-15
+------------------
+
 General Changes:
     Pycairo 1.8.0 requires cairo 1.8.0 (or later).
     Add documentation (available separately)
 
 Bug Fixes:
-    18101: Add support for threading
-    18947: cairo.SurfacePattern should INCREF the used surface
+    * 18101: Add support for threading
+    * 18947: cairo.SurfacePattern should INCREF the used surface
 
 New Methods:
-    ScaledFont.get_scale_matrix
-    Surface.mark_dirty_rectangle
-    Surface.set_fallback_resolution
+    | ScaledFont.get_scale_matrix
+    | Surface.mark_dirty_rectangle
+    | Surface.set_fallback_resolution
 
 New Constants:
-    cairo.EXTEND_PAD
-    cairo.HAS_IMAGE_SURFACE
-    cairo.HAS_USER_FONT
+    | cairo.EXTEND_PAD
+    | cairo.HAS_IMAGE_SURFACE
+    | cairo.HAS_USER_FONT
 
 API Changes:
-    Surface.mark_dirty: no longer accepts keyword arguments with default
-    values.
-    PycairoPattern_FromPattern (C API): has a new 'base' argument - to fix
-    #18947.
+    * Surface.mark_dirty: no longer accepts keyword arguments with default
+      values.
+    * PycairoPattern_FromPattern (C API): has a new 'base' argument - to fix
+      #18947.
 
 Other Changes:
     Allow unknown cairo Pattern/Surface types to use the pycairo base
     Pattern/Surface type.
 
 
-Overview of changes from pycairo 1.4.12 to pycairo 1.6.4
-========================================================
+1.6.4 - 2008-08-18
+------------------
+
 General changes:
     Pycairo 1.6.4 requires cairo 1.6.4 (or later).
                   requires Python 2.5 (or later).
@@ -157,15 +166,15 @@ Bug fixes:
     16112: Fix win32 'python setup.py ...' build -- use double quotes
 
 New Methods:
-    Context.has_current_point
-    Context.path_extents
-    ImageSurface.format_stride_for_width
-    PSSurface.get_eps
-    PSSurface.set_eps
-    PSSurface.ps_level_to_string
-    PSSurface.restrict_to_level
-    Surface.copy_page
-    Surface.show_page
+    | Context.has_current_point
+    | Context.path_extents
+    | ImageSurface.format_stride_for_width
+    | PSSurface.get_eps
+    | PSSurface.set_eps
+    | PSSurface.ps_level_to_string
+    | PSSurface.restrict_to_level
+    | Surface.copy_page
+    | Surface.show_page
 
 New Constants:
     cairo.PS_LEVEL_2, cairo.PS_LEVEL_3
@@ -177,39 +186,41 @@ Other changes:
     so line-width is a constant width in device-space not user-space
 
 
-Overview of changes from pycairo 1.4.0 to pycairo 1.4.12
-========================================================
+1.4.12 - 2007-12-13
+-------------------
+
 General changes:
     Pycairo 1.4.12 requires cairo 1.4.12 (or later).
-                   requires Python 2.4 (or later).
+    requires Python 2.4 (or later).
 
 Bug fixes:
-    10006: update autogen.sh to support automake >= 1.10
-    13460: use python-config to get python includes
+    * 10006: update autogen.sh to support automake >= 1.10
+    * 13460: use python-config to get python includes
 
 Other changes:
-    - allow cairo.Context to be subclassed
-    - create a 'doc' subdirectory and start a FAQ file
+    * allow cairo.Context to be subclassed
+    * create a 'doc' subdirectory and start a FAQ file
 
 
-Overview of changes from pycairo 1.2.6 to pycairo 1.4.0
-=======================================================
+1.4.0 - 2007-03-14
+------------------
+
 General changes:
-Pycairo 1.4.0 requires cairo 1.4.0 (or later).
+    Pycairo 1.4.0 requires cairo 1.4.0 (or later).
 
 New methods:
-    Context.clip_extents
-    Context.copy_clip_rectangles
-    Context.get_dash
-    Context.get_dash_count
-    Context.get_scaled_font
-    Context.glyph_extents
-    Context.glyph_path
-    Context.show_glyphs
-    LinearGradient.get_linear_points
-    RadialGradient.get_radial_circles
-    SolidPattern.get_rgba
-    SurfacePattern.get_surface
+    | Context.clip_extents
+    | Context.copy_clip_rectangles
+    | Context.get_dash
+    | Context.get_dash_count
+    | Context.get_scaled_font
+    | Context.glyph_extents
+    | Context.glyph_path
+    | Context.show_glyphs
+    | LinearGradient.get_linear_points
+    | RadialGradient.get_radial_circles
+    | SolidPattern.get_rgba
+    | SurfacePattern.get_surface
 
 Deleted methods:
     ImageSurface.create_for_array
@@ -221,46 +232,42 @@ Other changes:
     support built in).
 
 
-Overview of changes from pycairo 1.2.2 to pycairo 1.2.6
-=======================================================
+1.2.6 - 2006-11-27
+------------------
 
 * Pycairo 1.2.6 requires cairo 1.2.6 (or later).
-
 * mingw32 compiler fixes (Cedric Gustin)
-
 * setup.py improvements  (Cedric Gustin)
-
 * ImageSurface.get_data() new method added
   ImageSurface.get_data_as_rgba() method removed
 
 
-Overview of changes from pycairo 1.2.0 to pycairo 1.2.2
-=======================================================
+1.2.2 - 2006-08-21
+------------------
 
 * Pycairo requires cairo 1.2.2 (or later).
-
 * setup.py has been updated to allow installation by executing
   $ python setup.py install
-
 * examples/cairo_snippets/snippets/gradient_mask.py
   A new example to demonstrate pattern masks.
-
 * The cairo.svg module has been removed because:
+
   1) Cairo does not include SVG parsing, so this module does not belong
      in pycairo.
   2) libsvg-cairo (the underlying C library) is unmaintained.
 
 
-Overview of changes from pycairo 1.1.6 to pycairo 1.2.0
-=======================================================
+1.2.0 - 2006-07-03
+------------------
+
 General changes:
-Pycairo has been updated to work with cairo 1.2.0.
+    Pycairo has been updated to work with cairo 1.2.0.
 
 New methods:
-    Surface.set_fallback_resolution
-    Surface_get_content
-    ImageSurface_get_format
-    Image_surface_get_stride
+    | Surface.set_fallback_resolution
+    | Surface_get_content
+    | ImageSurface_get_format
+    | Image_surface_get_stride
 
 Deleted methods:
     PDFSurface.set_dpi, PSSurface.set_dpi, SVGSurface.set_dpi
@@ -270,38 +277,39 @@ Other changes:
     cairo.FORMAT_RGB16_565 added
 
 
-Overview of changes from pycairo 1.0.2 to pycairo 1.1.6
-=======================================================
+1.1.6 - 2006-05-29
+------------------
+
 General changes:
-Pycairo has been updated to work with cairo 1.1.6.
+    Pycairo has been updated to work with cairo 1.1.6.
 
 New objects:
     SVGSurface
 
 New methods:
-    Context.get_group_target
-    Context.new_sub_path
-    Context.pop_group
-    Context.pop_group_to_source
-    Context.push_group
-    Context.push_group_with_content
-    FontOptions.get_antialias
-    FontOptions.get_hint_metrics
-    FontOptions.get_hint_style
-    FontOptions.get_subpixel_order
-    FontOptions.set_antialias
-    FontOptions.set_hint_metrics
-    FontOptions.set_hint_style
-    FontOptions.set_subpixel_order
-    PDFSurface.set_size
-    PSSurface.dsc_begin_page_setup
-    PSSurface.dsc_begin_setup
-    PSSurface.dsc_comment
-    PSSurface.set_size
-    ScaledFont.get_font_face
-    ScaledFont.text_extents
-    Surface.get_device_offset
-    XlibSurface.get_depth
+    | Context.get_group_target
+    | Context.new_sub_path
+    | Context.pop_group
+    | Context.pop_group_to_source
+    | Context.push_group
+    | Context.push_group_with_content
+    | FontOptions.get_antialias
+    | FontOptions.get_hint_metrics
+    | FontOptions.get_hint_style
+    | FontOptions.get_subpixel_order
+    | FontOptions.set_antialias
+    | FontOptions.set_hint_metrics
+    | FontOptions.set_hint_style
+    | FontOptions.set_subpixel_order
+    | PDFSurface.set_size
+    | PSSurface.dsc_begin_page_setup
+    | PSSurface.dsc_begin_setup
+    | PSSurface.dsc_comment
+    | PSSurface.set_size
+    | ScaledFont.get_font_face
+    | ScaledFont.text_extents
+    | Surface.get_device_offset
+    | XlibSurface.get_depth
 
 Updated methods:
     PDFSurface()/PSSurface() - can now write to file-like objects (like
@@ -317,16 +325,17 @@ Other changes:
     misc bug fixes.
 
 New examples:
-    examples/cairo_snippets/snippets_svg.py
-    examples/cairo_snippets/snippets/ellipse.py
-    examples/cairo_snippets/snippets/group.py
-    examples/svg/svgconvert.py
+    | examples/cairo_snippets/snippets_svg.py
+    | examples/cairo_snippets/snippets/ellipse.py
+    | examples/cairo_snippets/snippets/group.py
+    | examples/svg/svgconvert.py
 
 
-Overview of changes from pycairo 1.0.0 to pycairo 1.0.2
-=======================================================
+1.0.2 - 2005-10-11
+------------------
+
 General changes:
-Pycairo has been updated to work with cairo 1.0.2.
+    Pycairo has been updated to work with cairo 1.0.2.
 
 New cairo functions supported:
     cairo.ImageSurface.create_for_data()
@@ -339,21 +348,22 @@ Other changes:
     xx, yx, xy, yy, x0, y0 = matrix
 
 
-Overview of changes from pycairo 0.9.0 to pycairo 1.0.0
-=======================================================
+1.0.0 - 2005-08-31
+------------------
+
 General changes:
-Pycairo has been updated to work with cairo 1.0.0.
+    Pycairo has been updated to work with cairo 1.0.0.
 
 New cairo functions supported:
-    cairo.cairo_version()
-    cairo.cairo_version_string()
-    PSSurface.set_dpi()
+    | cairo.cairo_version()
+    | cairo.cairo_version_string()
+    | PSSurface.set_dpi()
 
 Patterns are now implemented in a class hierarchy, the new constructors are:
-    cairo.SolidPattern (r, g, b, a=1.0)
-    cairo.SurfacePattern (surface)
-    cairo.LinearGradient (x0, y0, x1, y1)
-    cairo.RadialGradient (cx0, cy0, radius0, cx1, cy1, radius1)
+    | cairo.SolidPattern (r, g, b, a=1.0)
+    | cairo.SurfacePattern (surface)
+    | cairo.LinearGradient (x0, y0, x1, y1)
+    | cairo.RadialGradient (cx0, cy0, radius0, cx1, cy1, radius1)
 
 Updated functions:
     Surface.write_to_png() now accepts a file object as well as a filename
@@ -362,68 +372,38 @@ Updated examples:
     The gtk examples now work with pygtk >= 2.7.0 without requiring the
     cairo.gtk module
 
-Bug Fixes
+Bug Fixes:
     fix "initializer element is not constant" compiler warnings
 
 
-Overview of changes from pycairo 0.6.0 to pycairo 0.9.0
-=======================================================
+0.9.0 - 2005-08-10
+------------------
+
 General changes:
-Pycairo has been updated to work with cairo 0.9.0.
+    Pycairo has been updated to work with cairo 0.9.0.
 
 New cairo functions supported:
-	cairo_get_antialias
-	cairo_set_antialias
-	cairo_surface_mark_dirty_rectangle
-	cairo_surface_flush
+    | cairo_get_antialias
+    | cairo_set_antialias
+    | cairo_surface_mark_dirty_rectangle
+    | cairo_surface_flush
 
-Bug Fixes
-- double buffering now works with the cairo.gtk module
-
-
-Overview of changes from pycairo 0.5.1 to pycairo 0.6.0
-=======================================================
-General changes:
- Pycairo has been updated to work with cairo 0.6.0, including using cairo's new
- error handling scheme.
-
-New features:
- cairo.CONTENT_COLOR, cairo.ALPHA, cairo.COLOR_ALPHA have been added for
- working with surfaces.
-
- A new class cairo.FontOptions has been added.
-
- cairo.ImageSurface.create_from_png() now accepts a filename string or a file
- object
-
- New wrapper functions have been added for cairo_get_font_options,
- cairo_set_font_options and cairo_surface_get_font_options.
+Bug Fixes:
+    * double buffering now works with the cairo.gtk module
 
 
-Overview of changes from pycairo 0.5.0 to pycairo 0.5.1
-=======================================================
-New features:
-- new class cairo.Win32Surface (Niki Spahiev)
-- cairo.HAS_WIN32_SURFACE, cairo.HAS_PS_SURFACE etc are defined to give access
-  to the values from cairo-features.h
+0.6.0 - 2005-08-01
+------------------
 
-Fixes:
-- fix cairo_mask, cairo_mask_surface and cairo_stroke_preserve wrappers
-- compile properly against GTK+ 2.7 (Gustavo Carneiro)
-- other small fixes, including fixes for gcc 4.0 warnings
-
-
-Overview of changes from pycairo 0.5.1 to pycairo 0.6.0
-=======================================================
 This version has many changes which update Pycairo to the new cairo API. The
 change list is not duplicated here, instead see the cairo/NEWS file for full
 details of all these API changes.
 
 Pycairo method names that were different from the underlying cairo function
 names have been changed to make Pycairo more closely follow cairo and so
-enable the cairo documentation to be used for writing Pycairo programs.
-NOTES has been updated to list the differences between the C API and the
-Pycairo API.
+enable the cairo documentation to be used for writing Pycairo programs. NOTES
+has been updated to list the differences between the C API and the Pycairo
+API.
 
 Context.copy_path() has been implemented, it returns a Path instance which
 supports the iterator protocol.
@@ -431,59 +411,91 @@ supports the iterator protocol.
 Python 2.3 is now required.
 
 New examples:
-examples/warpedtext.py
-	shows usage of the Path iterator
+    examples/warpedtext.py: shows usage of the Path iterator
 
-examples/cairo_snippets/
-	shows many of the 'cairo-demo/cairo_snippets' examples
+    examples/cairo_snippets/: shows many of the 'cairo-demo/cairo_snippets'
+    examples
 
-examples/gtk/png_view.py
-	example using cairo.ImageSurface.create_from_png()
+    examples/gtk/png_view.py: example using cairo.ImageSurface.create_from_png()
+
+General changes:
+    Pycairo has been updated to work with cairo 0.6.0, including using cairo's
+    new error handling scheme.
+
+New features:
+    cairo.CONTENT_COLOR, cairo.ALPHA, cairo.COLOR_ALPHA have been added for
+    working with surfaces.
+
+    A new class cairo.FontOptions has been added.
+
+    cairo.ImageSurface.create_from_png() now accepts a filename string or a
+    file object
+
+    New wrapper functions have been added for cairo_get_font_options,
+    cairo_set_font_options and cairo_surface_get_font_options.
 
 
-Overview of changes from pycairo 0.1.4 to pycairo 0.4.0
-=======================================================
+0.5.1 - 2005-06-22
+------------------
+
+New features:
+    * new class cairo.Win32Surface (Niki Spahiev)
+    * cairo.HAS_WIN32_SURFACE, cairo.HAS_PS_SURFACE etc are defined to give
+      access to the values from cairo-features.h
+
+Fixes:
+    * fix cairo_mask, cairo_mask_surface and cairo_stroke_preserve wrappers
+    * compile properly against GTK+ 2.7 (Gustavo Carneiro)
+    * other small fixes, including fixes for gcc 4.0 warnings
+
+
+0.4.0 - 2005-03-10
+------------------
+
 New cairo bindings:
-	cairo_font_extents
+    | cairo_font_extents
 
 Bindings removed:
-	cairo_font_set_transform
-	cairo_font_current_transform
+    | cairo_font_set_transform
+    | cairo_font_current_transform
 
 New examples:
-	gtk/hangman.py
+    gtk/hangman.py
 
 Other:
-	Changed version numbering to correspond directly with the Cairo
-	version Pycairo was developed to work with. So, for example,
-	Pycairo version 0.4.0 represents the Pycairo version that has been
-	developed and tested with Cairo 0.4.0.
+    Changed version numbering to correspond directly with the Cairo version
+    Pycairo was developed to work with. So, for example, Pycairo version 0.4.0
+    represents the Pycairo version that has been developed and tested with
+    Cairo 0.4.0.
 
-Overview of changes from pycairo 0.1.3 to pycairo 0.1.4
-=======================================================
+
+0.1.4 - 2005-01-14
+------------------
+
 The Pycairo license has changed so that it is now dual-licensed under the LGPL
 and the MPL, the same as Cairo itself. For details see the COPYING file as
 well as COPYING-LGPL-2.1 and COPYING-MPL-1.1.
 
 New cairo bindings:
-	cairo_pdf_surface_create
-	cairo_set_target_pdf
+    | cairo_pdf_surface_create
+    | cairo_set_target_pdf
 
 New libsvg-cairo bindings:
-	svg_cairo_parse
-	svg_cairo_parse_buffer
-	svg_cairo_render
-	svg_cairo_get_size
+    | svg_cairo_parse
+    | svg_cairo_parse_buffer
+    | svg_cairo_render
+    | svg_cairo_get_size
 
 Other:
-	Added --without-pygtk configure option.
-	Renamed the Pycairo API _new() functions to _wrap() to allow _new() to
-	be used for python __new__ functions.
-	New examples: svg2png.py and svgview.py.
+    * Added --without-pygtk configure option.
+    * Renamed the Pycairo API _new() functions to _wrap() to allow _new() to
+    * be used for python __new__ functions.
+    * New examples: svg2png.py and svgview.py.
 
 
-Overview of changes for pycairo 0.1.3
-=====================================
+0.1.3 - 2004-11-24
+------------------
+
 After the recent server compromise we discarded all unsigned
 snapshots. That left us without a pycairo snapshot.
 
@@ -495,13 +507,13 @@ significant out of this announcement---I'm not the one who will
 usually be doing pycairo maintenance.
 
 New bindings:
-	current_path
-	current_path_flat
-	current_font_extents
+    | current_path
+    | current_path_flat
+    | current_font_extents
 
 Changes:
-	fill_extents,stroke_extents: Remove unnecessary args and
-	change from a method to an attribute.
+    fill_extents,stroke_extents: Remove unnecessary args and
+    change from a method to an attribute.
 
 Other:
-	Added two new examples: context-subclass.py and warpedtext.py
+    Added two new examples: context-subclass.py and warpedtext.py
