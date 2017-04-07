@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import sys, os
-
 extensions = [
     'sphinx.ext.intersphinx',
 ]
