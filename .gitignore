@@ -14,6 +14,8 @@
 *.rej
 *.pyc
 *.pyo
+*.so
+.cache
 
 # image files
 *.pdf
