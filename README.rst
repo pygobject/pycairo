@@ -1,0 +1,55 @@
+===================================
+Pycairo - Python bindings for cairo
+===================================
+
+http://www.cairographics.org/pycairo
+
+Dependencies
+------------
+
+* cairo   >= 1.10.0
+* Python  >= 2.6
+
+
+Compiling
+---------
+
+See the INSTALL document for build instructions.
+
+
+Documentation
+-------------
+
+The 'doc' directory contains reStructuredText files which are used by Sphinx
+to generate html (and other format) documentation.
+
+
+License
+-------
+
+Pycairo is free software and is available to be redistributed and/or modified
+under the terms of either the GNU Lesser General Public License (LGPL) version
+2.1 or the Mozilla Public License (MPL) version 1.1.
+
+
+Contact
+-------
+
+Mailing List:
+    If you have some ideas for how cairo or Pycairo could be improved, please
+    feel free to send a message to cairo@cairographics.org
+    http://cairographics.org/cgi-bin/mailman/listinfo/cairo
+
+Bugzilla:
+    If you find a bug in Pycairo, please go to
+    https://bugs.freedesktop.org/enter_bug.cgi?product=pycairo and submit a
+    bugreport.
+
+    IMPORTANT: make sure you state which version of cairo, pycairo, and Python
+    you are using when you report a problem or bug.
+
+    .. code:: pycon
+
+        >>> import cairo
+        >>> cairo.cairo_version_string()  # shows the cairo version
+        >>> cairo.version                 # shows the pycairo version
