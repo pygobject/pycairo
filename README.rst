@@ -53,3 +53,14 @@ Bugzilla:
         >>> import cairo
         >>> cairo.cairo_version_string()  # shows the cairo version
         >>> cairo.version                 # shows the pycairo version
+
+
+Authors
+-------
+
+Original Author:
+    James Henstridge
+Maintainer:
+    Steve Chaplin
+Contributors:
+    Maarten Breddels
