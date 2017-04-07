@@ -1,8 +1,8 @@
 .. _reference_index:
 
-*********
-Reference
-*********
+*************
+API Reference
+*************
 
 .. currentmodule:: cairo
 

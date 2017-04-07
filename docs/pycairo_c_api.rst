@@ -1,9 +1,9 @@
 .. highlightlang:: c
 
 
-*************
-Pycairo C API
-*************
+***************
+C API Reference
+***************
 
 .. currentmodule:: cairo
 

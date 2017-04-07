@@ -18,3 +18,6 @@ release = '1.10.1'
 exclude_patterns = ['_build']
 pygments_style = 'sphinx'
 html_theme = "sphinx_rtd_theme"
+html_theme_options = {
+    "display_version": False,
+}
