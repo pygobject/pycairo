@@ -927,7 +927,7 @@ safely be changed, without loosing the current state. Use
    .. method:: select_font_face(family[, slant[, weight]])
 
       :param family: a font family name
-      :type family: str or unicode
+      :type family: text
       :param slant: the :ref:`FONT_SLANT <constants_FONT_SLANT>` of the font,
         defaults to :data:`cairo.FONT_SLANT_NORMAL`.
       :param weight: the :ref:`FONT_WEIGHT <constants_FONT_WEIGHT>` of the
@@ -1295,7 +1295,7 @@ safely be changed, without loosing the current state. Use
    .. method:: show_text(text)
 
       :param text: text
-      :type text: str or unicode
+      :type text: text
 
       A drawing operator that generates the shape from a string of text,
       rendered according to the current font_face, font_size (font_matrix),
@@ -1389,7 +1389,7 @@ safely be changed, without loosing the current state. Use
    .. method:: text_extents(text)
 
       :param text: text to get extents for
-      :type text: string or unicode
+      :type text: text
       :returns: x_bearing, y_bearing, width, height, x_advance, y_advance
       :rtype: 6-tuple of float
 
@@ -1409,7 +1409,7 @@ safely be changed, without loosing the current state. Use
    .. method:: text_path(text)
 
       :param text: text
-      :type text: string or unicode
+      :type text: text
 
       Adds closed paths for text to the current path. The generated path if
       filled, achieves an effect similar to that of :meth:`Context.show_text`.

@@ -227,7 +227,7 @@ class Surface()
    .. method:: write_to_png(fobj)
 
       :param fobj: the file to write to
-      :type fobj: filename (str or unicode), file or file-like object
+      :type fobj: filename (:obj:`text`), file or file-like object
       :raises: *MemoryError* if memory could not be allocated for the operation
 
                *IOError* if an I/O error occurs while attempting to write the file
@@ -341,7 +341,7 @@ multi-page vector surface backend.
 .. class:: PDFSurface(fobj, width_in_points, height_in_points)
 
    :param fobj: a filename or writable file object. None may be used to specify no output. This will generate a *PDFSurface* that may be queried and used as a source, without generating a temporary file.
-   :type fobj: None, str, unicode, file or file-like object
+   :type fobj: None, :obj:`text`, file or file-like object
    :param width_in_points: width of the surface, in points
      (1 point == 1/72.0 inch)
    :type  width_in_points: float
@@ -383,7 +383,7 @@ is a multi-page vector surface backend.
 .. class:: PSSurface(fobj, width_in_points, height_in_points)
 
    :param fobj: a filename or writable file object. None may be used to specify no output. This will generate a *PSSurface* that may be queried and used as a source, without generating a temporary file.
-   :type fobj: None, str, unicode, file or file-like object
+   :type fobj: None, :obj:`text`, file or file-like object
    :param width_in_points: width of the surface, in points
      (1 point == 1/72.0 inch)
    :type  width_in_points: float
@@ -647,7 +647,7 @@ multi-page vector surface backend
 .. class:: SVGSurface(fobj, width_in_points, height_in_points)
 
    :param fobj: a filename or writable file object. None may be used to specify no output. This will generate a *SVGSurface* that may be queried and used as a source, without generating a temporary file.
-   :type fobj: None, str, unicode, file or file-like object
+   :type fobj: None, :obj:`text`, file or file-like object
    :param width_in_points: width of the surface, in points (1 point == 1/72.0 inch)
    :type  width_in_points: float
    :param height_in_points: height of the surface, in points (1 point == 1/72.0 inch)

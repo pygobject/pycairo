@@ -13,8 +13,9 @@ extension modules that use pycairo.
 
 .. _api-includes:
 
-To access the Pycairo C API
-===========================
+To access the Pycairo C API under Python 2
+==========================================
+
 Edit the client module file to add the following lines::
 
   /* All function, type and macro definitions needed to use the Pycairo/C API
@@ -27,6 +28,28 @@ Edit the client module file to add the following lines::
 
   /* import pycairo - add to the init<module> function */
   Pycairo_IMPORT;
+
+
+To access the Pycairo C API under Python 3
+==========================================
+
+Example showing how to import the pycairo API::
+
+  #include "py3cairo.h"
+
+  PyMODINIT_FUNC
+  PyInit_client(void)
+  {
+    PyObject *m;
+
+    m = PyModule_Create(&clientmodule);
+    if (m == NULL)
+        return NULL;
+    if (import_cairo() < 0)
+        return NULL;
+    /* additional initialization can happen here */
+    return m;
+  }
 
 
 Pycairo Objects

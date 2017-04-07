@@ -65,7 +65,7 @@ The *cairo.ToyFontFace* class can be used instead of :meth:`Context.select_font_
 .. class:: ToyFontFace(family[, slant[, weight]])
 
    :param family: a font family name
-   :type family: str or unicode
+   :type family: text
    :param slant: the :ref:`FONT_SLANT <constants_FONT_SLANT>` of the font,
      defaults to :data:`cairo.FONT_SLANT_NORMAL`.
    :param weight: the :ref:`FONT_WEIGHT <constants_FONT_WEIGHT>` of the font,
@@ -186,7 +186,7 @@ use.
    .. method:: text_extents(text)
 
       :param text: text
-      :type text: str or unicode
+      :type text: text
       :returns: (x_bearing, y_bearing, width, height, x_advance, y_advance)
       :rtype: 6-tuple of float
 

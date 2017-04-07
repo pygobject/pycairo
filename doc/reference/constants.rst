@@ -529,3 +529,12 @@ the display device when rendering with an antialiasing mode of
 
    Subpixel elements are arranged vertically with blue at the top
 
+
+Other Classes and Functions
+===========================
+
+.. class:: text()
+
+    This type only exists for documentation purposes. It represents
+    :obj:`python:str`/:obj:`python:unicode` under Python 2 and
+    :obj:`python3:str` under Python 3.
