@@ -1,0 +1,36 @@
+.wy-side-nav-search {
+    background-color: initial;
+}
+
+.wy-nav-top {
+    background-color:  #2e3436 ;
+}
+
+.wy-side-nav-search input[type="text"] {
+    border-color: transparent;
+}
+
+.wy-nav-content {
+    margin: initial;
+}
+
+.wy-nav-side {
+    background-color:  #2e3436 ;
+}
+
+.rst-content div[role=navigation], footer {
+   font-size: 0.85em;
+   color: #999;
+}
+
+.rst-content div[role=navigation] hr {
+    margin-top: 6px;
+}
+
+footer hr {
+    margin-bottom: 6px;
+}
+
+.rst-footer-buttons {
+    display: none;
+}

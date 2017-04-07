@@ -21,3 +21,12 @@ html_theme = "sphinx_rtd_theme"
 html_theme_options = {
     "display_version": False,
 }
+html_context = {
+    'extra_css_files': [
+        '_static/extra.css',
+    ],
+}
+
+html_static_path = [
+    "extra.css",
+]
