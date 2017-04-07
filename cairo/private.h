@@ -40,6 +40,7 @@
 #include <Python.h>
 
 #include "pycairo.h"
+#include "compat.h"
 
 
 extern PyObject *CairoError;

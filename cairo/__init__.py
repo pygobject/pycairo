@@ -1,1 +1,1 @@
-from _cairo import *
+from ._cairo import *

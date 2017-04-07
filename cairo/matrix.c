@@ -52,7 +52,7 @@ PycairoMatrix_FromMatrix (const cairo_matrix_t *matrix) {
 
 static void
 matrix_dealloc (PycairoMatrix *o) {
-  o->ob_type->tp_free((PyObject *)o);
+  Py_TYPE(o)->tp_free(o);
 }
 
 static PyObject *
@@ -119,7 +119,7 @@ matrix_repr (PycairoMatrix *o) {
 		o->matrix.xx, o->matrix.yx,
 		o->matrix.xy, o->matrix.yy,
 		o->matrix.x0, o->matrix.y0);
-  return PyString_FromString(buf);
+  return PYCAIRO_PyUnicode_FromString(buf);
 }
 
 static PyObject *
@@ -227,30 +227,38 @@ static PyNumberMethods matrix_as_number = {
   (binaryfunc)0,   /*nb_add*/
   (binaryfunc)0,   /*nb_subtract*/
   (binaryfunc)matrix_operator_multiply,  /*nb_multiply*/
+#if PY_MAJOR_VERSION < 3
   (binaryfunc)0,   /*nb_divide*/
+#endif
   (binaryfunc)0,   /*nb_remainder*/
   (binaryfunc)0,   /*nb_divmod*/
   (ternaryfunc)0,  /*nb_power*/
   (unaryfunc)0,    /*nb_negative*/
   (unaryfunc)0,    /*nb_positive*/
   (unaryfunc)0,    /*nb_absolute*/
-  (inquiry)0,      /*nb_nonzero*/
+  (inquiry)0,      /*py2:nb_nonzero/py3:nb_bool*/
   (unaryfunc)0,    /*nb_invert*/
   (binaryfunc)0,   /*nb_lshift*/
   (binaryfunc)0,   /*nb_rshift*/
   (binaryfunc)0,   /*nb_and*/
   (binaryfunc)0,   /*nb_xor*/
   (binaryfunc)0,   /*nb_or*/
+#if PY_MAJOR_VERSION < 3
   (coercion)0,     /*nb_coerce*/
+#endif
   (unaryfunc)0,    /*nb_int*/
-  (unaryfunc)0,    /*nb_long*/
+  (unaryfunc)0,    /*py2:nb_long/py3:nb_reserved*/
   (unaryfunc)0,    /*nb_float*/
+#if PY_MAJOR_VERSION < 3
   (unaryfunc)0,    /*nb_oct*/
   (unaryfunc)0,    /*nb_hex*/
+#endif
   0,		   /*nb_inplace_add*/
   0,		   /*nb_inplace_subtract*/
   0,		   /*nb_inplace_multiply*/
+#if PY_MAJOR_VERSION < 3
   0,		   /*nb_inplace_divide*/
+#endif
   0,		   /*nb_inplace_remainder*/
   0,		   /*nb_inplace_power*/
   0,		   /*nb_inplace_lshift*/
@@ -298,8 +306,7 @@ static PyMethodDef matrix_methods[] = {
 };
 
 PyTypeObject PycairoMatrix_Type = {
-  PyObject_HEAD_INIT(NULL)
-  0,                                  /* ob_size */
+  PyVarObject_HEAD_INIT(NULL, 0)
   "cairo.Matrix",                     /* tp_name */
   sizeof(PycairoMatrix),              /* tp_basicsize */
   0,                                  /* tp_itemsize */

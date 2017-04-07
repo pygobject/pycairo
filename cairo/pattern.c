@@ -101,7 +101,7 @@ pattern_dealloc (PycairoPattern *o) {
   }
   Py_CLEAR(o->base);
 
-  o->ob_type->tp_free((PyObject *)o);
+  Py_TYPE(o)->tp_free(o);
 }
 
 static PyObject *
@@ -113,7 +113,7 @@ pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 
 static PyObject *
 pattern_get_extend (PycairoPattern *o) {
-  return PyInt_FromLong (cairo_pattern_get_extend (o->pattern));
+  return PYCAIRO_PyLong_FromLong (cairo_pattern_get_extend (o->pattern));
 }
 
 static PyObject *
@@ -163,8 +163,7 @@ static PyMethodDef pattern_methods[] = {
 };
 
 PyTypeObject PycairoPattern_Type = {
-  PyObject_HEAD_INIT(NULL)
-  0,                                  /* ob_size */
+  PyVarObject_HEAD_INIT(NULL, 0)
   "cairo.Pattern",                    /* tp_name */
   sizeof(PycairoPattern),             /* tp_basicsize */
   0,                                  /* tp_itemsize */
@@ -232,8 +231,7 @@ static PyMethodDef solid_pattern_methods[] = {
 };
 
 PyTypeObject PycairoSolidPattern_Type = {
-  PyObject_HEAD_INIT(NULL)
-  0,                                  /* ob_size */
+  PyVarObject_HEAD_INIT(NULL, 0)
   "cairo.SolidPattern",               /* tp_name */
   sizeof(PycairoSolidPattern),        /* tp_basicsize */
   0,                                  /* tp_itemsize */
@@ -290,7 +288,7 @@ surface_pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 
 static PyObject *
 surface_pattern_get_filter (PycairoSurfacePattern *o) {
-  return PyInt_FromLong (cairo_pattern_get_filter (o->pattern));
+  return PYCAIRO_PyLong_FromLong (cairo_pattern_get_filter (o->pattern));
 }
 
 static PyObject *
@@ -324,8 +322,7 @@ static PyMethodDef surface_pattern_methods[] = {
 };
 
 PyTypeObject PycairoSurfacePattern_Type = {
-  PyObject_HEAD_INIT(NULL)
-  0,                                  /* ob_size */
+  PyVarObject_HEAD_INIT(NULL, 0)
   "cairo.SurfacePattern",             /* tp_name */
   sizeof(PycairoSurfacePattern),      /* tp_basicsize */
   0,                                  /* tp_itemsize */
@@ -409,8 +406,7 @@ static PyMethodDef gradient_methods[] = {
 };
 
 PyTypeObject PycairoGradient_Type = {
-  PyObject_HEAD_INIT(NULL)
-  0,                                  /* ob_size */
+  PyVarObject_HEAD_INIT(NULL, 0)
   "cairo.Gradient",                   /* tp_name */
   sizeof(PycairoGradient),            /* tp_basicsize */
   0,                                  /* tp_itemsize */
@@ -479,8 +475,7 @@ static PyMethodDef linear_gradient_methods[] = {
 };
 
 PyTypeObject PycairoLinearGradient_Type = {
-  PyObject_HEAD_INIT(NULL)
-  0,                                  /* ob_size */
+  PyVarObject_HEAD_INIT(NULL, 0)
   "cairo.LinearGradient",             /* tp_name */
   sizeof(PycairoLinearGradient),      /* tp_basicsize */
   0,                                  /* tp_itemsize */
@@ -551,8 +546,7 @@ static PyMethodDef radial_gradient_methods[] = {
 };
 
 PyTypeObject PycairoRadialGradient_Type = {
-  PyObject_HEAD_INIT(NULL)
-  0,                                  /* ob_size */
+  PyVarObject_HEAD_INIT(NULL, 0)
   "cairo.RadialGradient",             /* tp_name */
   sizeof(PycairoRadialGradient),      /* tp_basicsize */
   0,                                  /* tp_itemsize */

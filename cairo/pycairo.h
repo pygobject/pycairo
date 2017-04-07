@@ -212,6 +212,7 @@ typedef struct {
 
 #define Pycairo_Check_Status         (Pycairo_CAPI->Check_Status)
 
+#if PY_MAJOR_VERSION < 3
 
 /* To access the Pycairo C API, edit the client module file to:
  * 1) Add the following line to define a global variable for the C API
@@ -220,6 +221,26 @@ typedef struct {
  */
 #define Pycairo_IMPORT \
         Pycairo_CAPI = (Pycairo_CAPI_t*) PyCObject_Import("cairo", "CAPI")
+
+#else
+
+/* To access the Pycairo C API, the client module should call 'import_cairo()'
+ * from the init<module> function, and check the return value, < 0 means the
+ * import failed.
+ */
+static Pycairo_CAPI_t *Pycairo_CAPI;
+
+/* Return -1 on error, 0 on success.
+ * PyCapsule_Import will set an exception if there's an error.
+ */
+static int
+import_cairo(void)
+{
+  Pycairo_CAPI = (Pycairo_CAPI_t*) PyCapsule_Import("cairo.CAPI", 0);
+  return (Pycairo_CAPI != 0) ? 0 : -1;
+}
+
+#endif
 
 #endif /* ifndef _INSIDE_PYCAIRO_ */
 

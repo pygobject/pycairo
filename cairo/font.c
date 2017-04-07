@@ -77,7 +77,7 @@ font_face_dealloc (PycairoFontFace *o) {
     cairo_font_face_destroy (o->font_face);
     o->font_face = NULL;
   }
-  o->ob_type->tp_free((PyObject *) o);
+  Py_TYPE(o)->tp_free(o);
 }
 
 static PyObject *
@@ -100,8 +100,7 @@ static PyMethodDef font_face_methods[] = {
 */
 
 PyTypeObject PycairoFontFace_Type = {
-  PyObject_HEAD_INIT(NULL)
-  0,                                  /* ob_size */
+  PyVarObject_HEAD_INIT(NULL, 0)
   "cairo.FontFace",                   /* tp_name */
   sizeof(PycairoFontFace),            /* tp_basicsize */
   0,                                  /* tp_itemsize */
@@ -153,7 +152,7 @@ toy_font_face_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   cairo_font_slant_t slant   = CAIRO_FONT_SLANT_NORMAL;
   cairo_font_weight_t weight = CAIRO_FONT_WEIGHT_NORMAL;
 
-  if (!PyArg_ParseTuple (args, "et|ii:ToyFontFace.__new__",
+  if (!PyArg_ParseTuple (args, PYCAIRO_ENC_TEXT_FORMAT "|ii:ToyFontFace.__new__",
 			 "utf-8", &utf8, &slant, &weight))
     return NULL;
 
@@ -165,17 +164,17 @@ toy_font_face_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 
 static PyObject *
 toy_font_get_family (PycairoToyFontFace *o) {
-  return PyString_FromString (cairo_toy_font_face_get_family (o->font_face));
+  return PYCAIRO_PyUnicode_FromString (cairo_toy_font_face_get_family (o->font_face));
 }
 
 static PyObject *
 toy_font_get_slant (PycairoToyFontFace *o) {
-  return PyInt_FromLong (cairo_toy_font_face_get_slant (o->font_face));
+  return PYCAIRO_PyLong_FromLong (cairo_toy_font_face_get_slant (o->font_face));
 }
 
 static PyObject *
 toy_font_get_weight (PycairoToyFontFace *o) {
-  return PyInt_FromLong (cairo_toy_font_face_get_weight (o->font_face));
+  return PYCAIRO_PyLong_FromLong (cairo_toy_font_face_get_weight (o->font_face));
 }
 
 static PyMethodDef toy_font_face_methods[] = {
@@ -187,8 +186,7 @@ static PyMethodDef toy_font_face_methods[] = {
 
 
 PyTypeObject PycairoToyFontFace_Type = {
-  PyObject_HEAD_INIT(NULL)
-  0,                                  /* ob_size */
+  PyVarObject_HEAD_INIT(NULL, 0)
   "cairo.ToyFontFace",                /* tp_name */
   sizeof(PycairoToyFontFace),         /* tp_basicsize */
   0,                                  /* tp_itemsize */
@@ -265,7 +263,7 @@ scaled_font_dealloc(PycairoScaledFont *o) {
     cairo_scaled_font_destroy (o->scaled_font);
     o->scaled_font = NULL;
   }
-  o->ob_type->tp_free((PyObject *) o);
+  Py_TYPE(o)->tp_free(o);
 }
 
 static PyObject *
@@ -314,7 +312,7 @@ scaled_font_text_extents (PycairoScaledFont *o, PyObject *args) {
   const char *utf8;
   cairo_text_extents_t extents;
 
-  if (!PyArg_ParseTuple (args, "et:ScaledFont.text_extents", "utf-8", &utf8))
+  if (!PyArg_ParseTuple (args, PYCAIRO_ENC_TEXT_FORMAT ":ScaledFont.text_extents", "utf-8", &utf8))
     return NULL;
 
   cairo_scaled_font_text_extents (o->scaled_font, utf8, &extents);
@@ -347,8 +345,7 @@ static PyMethodDef scaled_font_methods[] = {
 
 
 PyTypeObject PycairoScaledFont_Type = {
-  PyObject_HEAD_INIT(NULL)
-  0,                                  /* ob_size */
+  PyVarObject_HEAD_INIT(NULL, 0)
   "cairo.ScaledFont",                 /* tp_name */
   sizeof(PycairoScaledFont),          /* tp_basicsize */
   0,                                  /* tp_itemsize */
@@ -425,7 +422,7 @@ font_options_dealloc(PycairoFontOptions *o) {
     cairo_font_options_destroy (o->font_options);
     o->font_options = NULL;
   }
-  o->ob_type->tp_free((PyObject *) o);
+  Py_TYPE(o)->tp_free(o);
 }
 
 static PyObject *
@@ -435,24 +432,24 @@ font_options_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 
 static PyObject *
 font_options_get_antialias (PycairoFontOptions *o) {
-  return PyInt_FromLong (cairo_font_options_get_antialias (o->font_options));
+  return PYCAIRO_PyLong_FromLong (cairo_font_options_get_antialias (o->font_options));
 }
 
 static PyObject *
 font_options_get_hint_metrics (PycairoFontOptions *o) {
-  return PyInt_FromLong (cairo_font_options_get_hint_metrics
+  return PYCAIRO_PyLong_FromLong (cairo_font_options_get_hint_metrics
 			 (o->font_options));
 }
 
 static PyObject *
 font_options_get_hint_style (PycairoFontOptions *o) {
-  return PyInt_FromLong (cairo_font_options_get_hint_style
+  return PYCAIRO_PyLong_FromLong (cairo_font_options_get_hint_style
 			 (o->font_options));
 }
 
 static PyObject *
 font_options_get_subpixel_order (PycairoFontOptions *o) {
-  return PyInt_FromLong (cairo_font_options_get_subpixel_order
+  return PYCAIRO_PyLong_FromLong (cairo_font_options_get_subpixel_order
 			 (o->font_options));
 }
 
@@ -532,8 +529,7 @@ static PyMethodDef font_options_methods[] = {
 
 
 PyTypeObject PycairoFontOptions_Type = {
-  PyObject_HEAD_INIT(NULL)
-  0,                                  /* ob_size */
+  PyVarObject_HEAD_INIT(NULL, 0)
   "cairo.FontOptions",                /* tp_name */
   sizeof(PycairoFontOptions),         /* tp_basicsize */
   0,                                  /* tp_itemsize */
