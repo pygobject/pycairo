@@ -46,8 +46,36 @@ xpyb_CAPI_t *xpyb_CAPI;
 PyObject *xpybVISUALTYPE_type;
 #endif
 
+#if PY_MAJOR_VERSION < 3
+
 /* A module specific exception */
-PyObject *CairoError = NULL;
+PyObject *_CairoError = NULL;
+
+#else
+
+// Module initialization
+struct cairo_state {
+  PyObject *ErrorObject;
+};
+
+#define GETSTATE(m) ((struct cairo_state*)PyModule_GetState(m))
+
+static struct PyModuleDef cairomoduledef;
+#endif
+
+/* Returns a borrowed reference of the error type. */
+PyObject *
+_Pycairo_Get_Error(void) {
+#if PY_MAJOR_VERSION < 3
+  assert(_CairoError != NULL);
+  return _CairoError;
+#else
+  PyObject *cairo_module = PyState_FindModule(&cairomoduledef);
+  assert(cairo_module != NULL);
+  return GETSTATE(cairo_module)->ErrorObject;
+#endif
+}
+
 
 int
 Pycairo_Check_Status (cairo_status_t status) {
@@ -68,15 +96,15 @@ Pycairo_Check_Status (cairo_status_t status) {
     PyErr_SetString(PyExc_IOError, cairo_status_to_string (status));
     break;
   case CAIRO_STATUS_INVALID_RESTORE:
-    PyErr_SetString(CairoError, "Context.restore without matching "
+    PyErr_SetString(Pycairo_Error, "Context.restore without matching "
 		    "Context.save");
     break;
   case CAIRO_STATUS_INVALID_POP_GROUP:
-    PyErr_SetString(CairoError, "Context.pop_group without matching "
+    PyErr_SetString(Pycairo_Error, "Context.pop_group without matching "
 		    "Context.push_group");
     break;
   default:
-    PyErr_SetString(CairoError, cairo_status_to_string (status));
+    PyErr_SetString(Pycairo_Error, cairo_status_to_string (status));
   }
   return 1;
 }
@@ -184,16 +212,11 @@ static PyMethodDef cairo_functions[] = {
 };
 
 #if PY_MAJOR_VERSION >= 3
-// Module initialization
-struct cairo_state {
-  PyObject *ErrorObject;
-};
-
-#define GETSTATE(m) ((struct cairo_state*)PyModule_GetState(m))
 
 static int
-cairo_traverse(PyObject *m, visitproc v, void *arg)
+cairo_traverse(PyObject *m, visitproc visit, void *arg)
 {
+  Py_VISIT(GETSTATE(m)->ErrorObject);
   return 0;
 }
 
@@ -204,7 +227,7 @@ cairo_clear(PyObject *m)
   return 0;
 }
 
-static struct PyModuleDef cairomodule = {
+static struct PyModuleDef cairomoduledef = {
   PyModuleDef_HEAD_INIT,
   "cairo",
   NULL,
@@ -299,7 +322,7 @@ PYCAIRO_MOD_INIT(_cairo)
 #if PY_MAJOR_VERSION < 3
   m = Py_InitModule("cairo._cairo", cairo_functions);
 #else
-  m = PyModule_Create(&cairomodule);
+  m = PyModule_Create(&cairomoduledef);
 #endif
   if (m == NULL)
     return PYCAIRO_MOD_ERROR_VAL;
@@ -403,24 +426,25 @@ PYCAIRO_MOD_INIT(_cairo)
 		     (PyObject *)&PycairoXlibSurface_Type);
 #endif
 
-#if PY_MAJOR_VERSION < 3
-  PyModule_AddObject(m, "CAPI", PyCObject_FromVoidPtr(&CAPI, NULL));
-
   /* Add 'cairo.Error' to the module */
-  if (CairoError == NULL) {
-    CairoError = PyErr_NewException("cairo.Error", NULL, NULL);
-    if (CairoError == NULL)
-      return;
-  }
-  Py_INCREF(CairoError);
-  if (PyModule_AddObject(m, "Error", CairoError) < 0)
-    return;
-#else
+#if PY_MAJOR_VERSION >= 3
   GETSTATE(m)->ErrorObject = PyErr_NewException("cairo.Error", NULL, NULL);
   if (GETSTATE(m)->ErrorObject == NULL) {
     Py_DECREF(m);
     return PYCAIRO_MOD_ERROR_VAL;
   }
+  Py_INCREF(GETSTATE(m)->ErrorObject);
+  if (PyModule_AddObject(m, "Error", GETSTATE(m)->ErrorObject) < 0)
+    return PYCAIRO_MOD_ERROR_VAL;
+#else
+  if (_CairoError == NULL) {
+    _CairoError = PyErr_NewException("cairo.Error", NULL, NULL);
+    if (_CairoError == NULL)
+      return PYCAIRO_MOD_ERROR_VAL;
+  }
+  Py_INCREF(_CairoError);
+  if (PyModule_AddObject(m, "Error", _CairoError) < 0)
+    return PYCAIRO_MOD_ERROR_VAL;
 #endif
 
     /* constants */
@@ -601,6 +625,8 @@ PYCAIRO_MOD_INIT(_cairo)
   if (T != NULL) {
     PyModule_AddObject(m, "CAPI", T);
   }
+#else
+  PyModule_AddObject(m, "CAPI", PyCObject_FromVoidPtr(&CAPI, NULL));
 #endif
 
   return PYCAIRO_MOD_SUCCESS_VAL(m);

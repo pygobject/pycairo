@@ -122,6 +122,9 @@ def test_image_surface_create_for_data():
     with pytest.raises(ValueError):
         cairo.ImageSurface.create_for_data(buf, format_, -1, 3)
 
+    with pytest.raises(cairo.Error):
+        cairo.ImageSurface.create_for_data(buf, format_, 3, 3, 3)
+
 
 def test_surface_file_obj_error():
     class Fail(object):

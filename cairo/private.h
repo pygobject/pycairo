@@ -43,7 +43,9 @@
 #include "compat.h"
 
 
-extern PyObject *CairoError;
+PyObject *_Pycairo_Get_Error(void);
+
+#define Pycairo_Error (_Pycairo_Get_Error())
 
 extern PyTypeObject PycairoContext_Type;
 PyObject *PycairoContext_FromContext (cairo_t *ctx, PyTypeObject *type,

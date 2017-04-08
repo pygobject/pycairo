@@ -453,7 +453,7 @@ image_surface_create_for_data (PyTypeObject *type, PyObject *args) {
   if (stride < 0) {
     stride = cairo_format_stride_for_width (format, width);
     if (stride == -1){
-      PyErr_SetString(CairoError,
+      PyErr_SetString(Pycairo_Error,
 		      "format is invalid or the width too large");
       return NULL;
     }
@@ -943,7 +943,7 @@ ps_surface_ps_level_to_string (PyObject *self, PyObject *args) {
     return NULL;
   const char *s = cairo_ps_level_to_string (level);
   if (s == NULL){
-    PyErr_SetString(CairoError, "ps_level_to_string: "
+    PyErr_SetString(Pycairo_Error, "ps_level_to_string: "
 		    "invalid level argument");
     return NULL;
   }
