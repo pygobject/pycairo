@@ -89,3 +89,71 @@ def test_surface():
 
 def test_text():
     pass
+
+
+def test_region():
+    a = cairo.Region()
+    assert a.is_empty() is True
+    assert a.num_rectangles() == 0
+
+    b = cairo.RectangleInt(1, 2, 10, 12)
+    assert repr(b) == "cairo.RectangleInt(1, 2, 10, 12)"
+    assert isinstance(repr(b), str)
+    d = cairo.RectangleInt(1, 1, 10, 12)
+    e = cairo.RectangleInt(1, 3, 8, 12)
+    assert (b.x, b.y, b.width, b.height) == (1, 2, 10, 12)
+    c = cairo.Region((b, e))
+    assert not c.is_empty()
+    assert c.num_rectangles() == 2
+    assert c.get_rectangle(1).y == 14
+
+    ex = c.get_extents()
+    assert ex == cairo.RectangleInt(1, 2, 10, 13)
+    assert c.contains_rectangle(d) == cairo.REGION_OVERLAP_PART
+
+    c.translate(10, 20)
+    assert c.contains_rectangle(d) == cairo.REGION_OVERLAP_OUT
+    assert c.get_rectangle(1) == cairo.RectangleInt(11, 34, 8, 1)
+
+    cp = c.copy()
+    assert c.num_rectangles() == cp.num_rectangles()
+    assert c.get_rectangle(0) == cp.get_rectangle(0)
+    assert c == cp
+    assert 3 != c
+    assert c != "test"
+
+    c = cairo.Region((b, e))
+    c.intersect(d)
+    assert c.num_rectangles() == 1
+    assert c.get_rectangle(0) == cairo.RectangleInt(1, 2, 10, 11)
+
+    c = cairo.Region((b, e))
+    c.subtract(d)
+    assert c.num_rectangles() == 2
+    assert c == cairo.Region([
+        cairo.RectangleInt(1, 13, 10, 1),
+        cairo.RectangleInt(1, 14, 8, 1),
+    ])
+
+    d = cairo.Region(d)
+    c = cairo.Region((b, e))
+    c.subtract(d)
+    assert c.num_rectangles() == 2
+    assert c.get_rectangle(0) == cairo.RectangleInt(1, 13, 10, 1)
+
+    c = cairo.Region((b, e))
+    c.union(d)
+    assert c.num_rectangles() == 2
+    assert c == cairo.Region([
+        cairo.RectangleInt(1, 1, 10, 13),
+        cairo.RectangleInt(1, 14, 8, 1),
+    ])
+
+    c = cairo.Region((b, e))
+    c.xor(d)
+    assert c.num_rectangles() == 3
+    assert c == cairo.Region([
+        cairo.RectangleInt(1, 1, 10, 1),
+        cairo.RectangleInt(1, 14, 8, 1),
+        cairo.RectangleInt(1, 13, 10, 1),
+    ])

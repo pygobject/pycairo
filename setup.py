@@ -173,6 +173,7 @@ def main():
             'cairo/matrix.c',
             'cairo/path.c',
             'cairo/pattern.c',
+            'cairo/region.c',
             'cairo/surface.c',
         ],
         include_dirs=pkg_config_parse('--cflags-only-I', 'cairo'),

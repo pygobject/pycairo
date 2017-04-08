@@ -63,6 +63,8 @@ Objects::
   PycairoMatrix
   PycairoPath
   PycairoPattern
+  PycairoRegion
+  PycairoRectangleInt
   PycairoSolidPattern
   PycairoSurfacePattern
   PycairoGradient
@@ -91,6 +93,8 @@ Types::
   PyTypeObject *Matrix_Type;
   PyTypeObject *Path_Type;
   PyTypeObject *Pattern_Type;
+  PyTypeObject *Region_Type;
+  PyTypeObject *RectangleInt_Type;
   PyTypeObject *SolidPattern_Type;
   PyTypeObject *SurfacePattern_Type;
   PyTypeObject *Gradient_Type;
@@ -132,6 +136,12 @@ Functions
 
 
 .. c:function::  PyObject * PycairoPattern_FromPattern(cairo_pattern_t *pattern, PyObject *base)
+
+
+.. c:function::  PyObject * PycairoRegion_FromRegion(cairo_region_t *region)
+
+
+.. c:function::  PyObject * PycairoRectangleInt_FromRectangleInt(const cairo_rectangle_int_t *rectangle_int)
 
 
 .. c:function::  PyObject * PycairoScaledFont_FromScaledFont(cairo_scaled_font_t *scaled_font)

@@ -158,6 +158,12 @@ static Pycairo_CAPI_t CAPI = {
   PycairoSurface_FromSurface,
 
   Pycairo_Check_Status,
+
+  &PycairoRectangleInt_Type,
+  PycairoRectangleInt_FromRectangleInt,
+
+  &PycairoRegion_Type,
+  PycairoRegion_FromRegion,
 };
 
 static PyObject *
@@ -242,6 +248,12 @@ PYCAIRO_MOD_INIT(_cairo)
   if (PyType_Ready(&PycairoLinearGradient_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
   if (PyType_Ready(&PycairoRadialGradient_Type) < 0)
+    return PYCAIRO_MOD_ERROR_VAL;
+
+  if (PyType_Ready(&PycairoRectangleInt_Type) < 0)
+    return PYCAIRO_MOD_ERROR_VAL;
+
+  if (PyType_Ready(&PycairoRegion_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
 
   if (PyType_Ready(&PycairoScaledFont_Type) < 0)
@@ -330,6 +342,12 @@ PYCAIRO_MOD_INIT(_cairo)
   Py_INCREF(&PycairoRadialGradient_Type);
   PyModule_AddObject(m, "RadialGradient",
 		     (PyObject *)&PycairoRadialGradient_Type);
+
+  Py_INCREF(&PycairoRectangleInt_Type);
+  PyModule_AddObject(m, "RectangleInt",  (PyObject *)&PycairoRectangleInt_Type);
+
+  Py_INCREF(&PycairoRegion_Type);
+  PyModule_AddObject(m, "Region",  (PyObject *)&PycairoRegion_Type);
 
   Py_INCREF(&PycairoScaledFont_Type);
   PyModule_AddObject(m, "ScaledFont", (PyObject *)&PycairoScaledFont_Type);
@@ -560,6 +578,10 @@ PYCAIRO_MOD_INIT(_cairo)
   CONSTANT(PATH_LINE_TO);
   CONSTANT(PATH_CURVE_TO);
   CONSTANT(PATH_CLOSE_PATH);
+
+  CONSTANT(REGION_OVERLAP_IN);
+  CONSTANT(REGION_OVERLAP_OUT);
+  CONSTANT(REGION_OVERLAP_PART);
 
 #ifdef CAIRO_HAS_PS_SURFACE
   CONSTANT(PS_LEVEL_2);
