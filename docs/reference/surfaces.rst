@@ -309,7 +309,9 @@ those defined in :ref:`FORMAT attributes <constants_FORMAT>`.
 
    .. method:: get_data()
 
-      :returns: a Python buffer object for the data of the *ImageSurface*, for direct inspection or modification.
+      :returns: a Python buffer object for the data of the *ImageSurface*, for
+        direct inspection or modification. On Python 3 a memoryview object is
+        returned.
 
       .. versionadded:: 1.2
 

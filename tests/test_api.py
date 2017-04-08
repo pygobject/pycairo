@@ -7,6 +7,7 @@ from __future__ import print_function
 import tempfile as tfi
 
 import cairo
+import pytest
 import py.test as test
 
 
@@ -85,6 +86,41 @@ def test_surface():
     if cairo.HAS_SVG_SURFACE:
         f, w, h = tfi.TemporaryFile(mode='w+b'), 100, 100
         s = cairo.SVGSurface(f, w, h)
+
+
+def test_image_surface_get_data():
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 3, 3)
+    ctx = cairo.Context(surface)
+    ctx.paint()
+    surface.flush()
+    buf = surface.get_data()
+    assert buf
+    assert len(buf) == 4 * 3 * 3
+    assert len(bytes(buf)) == len(buf)
+    buf[0:1] = b"\x42"
+
+    newbuf = surface.get_data()
+    assert newbuf[0:1] == b"\x42"
+    ctx.paint()
+    surface.flush()
+    assert newbuf[0:1] == b"\x00"
+
+
+def test_image_surface_create_for_data():
+    format_ = cairo.FORMAT_ARGB32
+    surface = cairo.ImageSurface(format_, 3, 3)
+    ctx = cairo.Context(surface)
+    ctx.paint()
+    surface.flush()
+    buf = surface.get_data()
+
+    new = cairo.ImageSurface.create_for_data(buf, format_, 3, 3)
+    assert new.get_data() == buf
+
+    with pytest.raises(ValueError):
+        cairo.ImageSurface.create_for_data(buf, format_, 3, -1)
+    with pytest.raises(ValueError):
+        cairo.ImageSurface.create_for_data(buf, format_, -1, 3)
 
 
 def test_surface_file_obj_error():

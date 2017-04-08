@@ -433,12 +433,6 @@ image_surface_create_for_data (PyTypeObject *type, PyObject *args) {
   Py_ssize_t buffer_len;
   PyObject *obj;
 
-#if PY_MAJOR_VERSION >= 3
-  // buffer function disabled
-  PyErr_SetString(PyExc_NotImplementedError, "ImageSurface.create_for_data: Not Implemented yet.");
-  return NULL;
-#endif
-
   if (!PyArg_ParseTuple(args, "Oiii|i:ImageSurface.create_for_data",
 			&obj, &format, &width, &height, &stride))
     return NULL;
@@ -561,8 +555,22 @@ image_surface_format_stride_for_width (PyObject *self, PyObject *args) {
 static PyObject *
 image_surface_get_data (PycairoImageSurface *o) {
 #if PY_MAJOR_VERSION >= 3
-  PyErr_SetString(PyExc_NotImplementedError, "ImageSurface.get_data: Not Implemented yet.");
-  return NULL;
+  Py_buffer view;
+  cairo_surface_t *surface;;
+  int height, stride;
+  unsigned char * buffer;
+
+  surface = o->surface;
+  buffer = cairo_image_surface_get_data (surface);
+  if (buffer == NULL) {
+    Py_RETURN_NONE;
+  }
+  height = cairo_image_surface_get_height (surface);
+  stride = cairo_image_surface_get_stride (surface);
+  if (PyBuffer_FillInfo (&view, (PyObject *)o, buffer, height * stride, 0, 0) < 0)
+    return NULL;
+
+  return PyMemoryView_FromBuffer (&view);
 #else
   return PyBuffer_FromReadWriteObject((PyObject *)o, 0, Py_END_OF_BUFFER);
 #endif
