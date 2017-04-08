@@ -530,6 +530,24 @@ the display device when rendering with an antialiasing mode of
    Subpixel elements are arranged vertically with blue at the top
 
 
+.. _constants_REGION_OVERLAP:
+
+cairo.REGION_OVERLAP
+--------------------
+
+.. data:: REGION_OVERLAP_IN
+
+    The contents are entirely inside the region.
+
+.. data:: REGION_OVERLAP_OUT
+
+    The contents are entirely outside the region.
+
+.. data:: REGION_OVERLAP_PART
+
+    The contents are partially inside and partially outside the region.
+
+
 Other Classes and Functions
 ===========================
 

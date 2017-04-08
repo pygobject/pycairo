@@ -157,3 +157,9 @@ def test_region():
         cairo.RectangleInt(1, 14, 8, 1),
         cairo.RectangleInt(1, 13, 10, 1),
     ])
+
+
+def test_constants():
+    assert cairo.REGION_OVERLAP_IN == 0
+    assert cairo.REGION_OVERLAP_OUT == 1
+    assert cairo.REGION_OVERLAP_PART == 2
