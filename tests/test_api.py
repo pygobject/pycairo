@@ -87,6 +87,16 @@ def test_surface():
         s = cairo.SVGSurface(f, w, h)
 
 
+def test_surface_file_obj_error():
+    class Fail(object):
+
+        def write(*args):
+            raise IOError
+
+    cairo.PDFSurface(Fail(), 100, 100)
+    cairo.PSSurface(Fail(), 100, 100)
+
+
 def test_text():
     pass
 

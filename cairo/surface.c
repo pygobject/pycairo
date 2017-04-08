@@ -138,6 +138,7 @@ _write_func (void *closure, const unsigned char *data, unsigned int length) {
   PyObject *res = PyObject_CallMethod ((PyObject *)closure, "write", "(" PYCAIRO_DATA_FORMAT "#)",
 				       data, (Py_ssize_t)length);
   if (res == NULL) {
+    PyErr_Clear();
     /* an exception has occurred, it will be picked up later by
      * Pycairo_Check_Status()
      */
@@ -485,6 +486,7 @@ _read_func (void *closure, unsigned char *data, unsigned int length) {
   PyObject *pystr = PyObject_CallMethod ((PyObject *)closure, "read", "(i)",
 					 length);
   if (pystr == NULL) {
+    PyErr_Clear();
     /* an exception has occurred, it will be picked up later by
      * Pycairo_Check_Status()
      */
@@ -492,6 +494,7 @@ _read_func (void *closure, unsigned char *data, unsigned int length) {
   }
   int ret = PYCAIRO_PyBytes_AsStringAndSize(pystr, &buffer, &str_length);
   if (ret == -1 || str_length < length) {
+    PyErr_Clear();
     goto end;
   }
   /* don't use strncpy() since png data may contain NUL bytes */
