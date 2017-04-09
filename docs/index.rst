@@ -18,6 +18,8 @@ Pycairo - Python bindings for cairo
 
 ----
 
+Tarballs:
+    https://github.com/pygobject/pycairo/releases
 Git repo:
     https://github.com/pygobject/pycairo
 Bug tracker:
