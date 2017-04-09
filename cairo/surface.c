@@ -1252,15 +1252,25 @@ PyTypeObject PycairoSVGSurface_Type = {
 #if CAIRO_HAS_WIN32_SURFACE
 #include <cairo-win32.h>
 
+static int
+convert_pyobject_to_hdc (PyObject *obj, HDC* addr) {
+    HDC temp = PyLong_AsVoidPtr(obj);
+    if (PyErr_Occurred() != NULL)
+      return 0;
+    *addr = temp;
+    return 1;
+}
+
 /* Class Win32Surface(Surface) -------------------------------------------- */
 static PyObject *
 win32_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
-  int hdc;
+  HDC hdc;
 
-  if (!PyArg_ParseTuple(args, "i:Win32Surface.__new__", &hdc))
+  if (!PyArg_ParseTuple(args, "O&:Win32Surface.__new__",
+                        convert_pyobject_to_hdc, &hdc))
     return NULL;
   return PycairoSurface_FromSurface (
-		     cairo_win32_surface_create ((HDC)hdc), NULL);
+		     cairo_win32_surface_create (hdc), NULL);
 }
 
 static PyMethodDef win32_surface_methods[] = {
@@ -1316,12 +1326,13 @@ PyTypeObject PycairoWin32Surface_Type = {
 static PyObject *
 win32_printing_surface_new (PyTypeObject *type, PyObject *args,
 			    PyObject *kwds) {
-  int hdc;
+  HDC hdc;
 
-  if (!PyArg_ParseTuple(args, "i:Win32PrintingSurface.__new__", &hdc))
+  if (!PyArg_ParseTuple(args, "O&:Win32PrintingSurface.__new__",
+                        convert_pyobject_to_hdc, &hdc))
     return NULL;
   return PycairoSurface_FromSurface (
-		     cairo_win32_printing_surface_create ((HDC)hdc), NULL);
+		     cairo_win32_printing_surface_create (hdc), NULL);
 }
 
 static PyMethodDef win32_printing_surface_methods[] = {
