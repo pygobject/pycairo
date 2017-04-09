@@ -23,6 +23,7 @@ areas of interest, such as change or clip areas.
     Allocates a new empty region object or a region object with the containing
     rectangle(s).
 
+    .. versionadded:: 1.11.0
 
     .. method:: copy()
 
@@ -131,4 +132,5 @@ coordinates.
 
    Allocates a new *RectangleInt* object.
 
+   .. versionadded:: 1.11.0
 

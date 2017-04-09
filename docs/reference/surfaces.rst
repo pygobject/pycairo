@@ -257,7 +257,7 @@ those defined in :ref:`FORMAT attributes <constants_FORMAT>`.
 
    .. classmethod:: create_for_data(data, format, width, height[, stride])
 
-      :param data: a writable Python buffer object
+      :param data: a writable Python buffer/memoryview object
       :param format: the :ref:`FORMAT <constants_FORMAT>` of pixels in the
         buffer
       :param width: the width of the image to be stored in the buffer
@@ -621,7 +621,7 @@ replay.
    necessary objects (paths, patterns, etc.), in order to achieve accurate
    replay.
 
-   .. versionadded:: 1.10.2
+   .. versionadded:: 1.11.0
 
    .. method:: ink_extents()
 
@@ -637,7 +637,7 @@ replay.
       *ImageSurface* (or equivalent) into which to replay the full sequence of
       drawing operations.
 
-      .. versionadded:: 1.10.2
+      .. versionadded:: 1.11.0
 
 
 class SVGSurface(:class:`Surface`)
