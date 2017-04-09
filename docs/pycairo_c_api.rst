@@ -150,4 +150,4 @@ Functions
 .. c:function::  PyObject * PycairoSurface_FromSurface(cairo_surface_t *surface, PyObject *base)
 
 
-.. c:function::  int PycairoCheck_Status(cairo_status_t status)
+.. c:function::  int Pycairo_Check_Status(cairo_status_t status)
