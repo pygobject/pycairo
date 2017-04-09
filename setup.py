@@ -120,7 +120,7 @@ Name: Pycairo
 Description: Python %(py_version)d bindings for cairo
 Version: %(version)s
 Requires: cairo
-Cflags: -I%(prefix)s/include/pycairo
+Cflags: -I${prefix}/include/pycairo
 Libs:
 """ % {
                 "prefix": self.prefix, "version": PYCAIRO_VERSION,
