@@ -159,11 +159,6 @@ class install_data(du_install_data):
 
 def main():
 
-    if sys.platform == 'win32':
-        runtime_library_dirs = []
-    else:
-        runtime_library_dirs = pkg_config_parse('--libs-only-L', 'cairo')
-
     cairo_ext = Extension(
         name='cairo._cairo',
         sources=[
@@ -179,7 +174,6 @@ def main():
         include_dirs=pkg_config_parse('--cflags-only-I', 'cairo'),
         library_dirs=pkg_config_parse('--libs-only-L', 'cairo'),
         libraries=pkg_config_parse('--libs-only-l', 'cairo'),
-        runtime_library_dirs=runtime_library_dirs,
     )
 
     setup(
