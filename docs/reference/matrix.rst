@@ -39,7 +39,7 @@ To compare two matrices::
   matrix1 == matrix2
   matrix1 != matrix2
 
-For more information on matrix transformation see http://www.cairographics.org/matrix_transform
+For more information on matrix transformation see https://www.cairographics.org/cookbook/matrix_transform/
 
 
 .. class:: Matrix(xx = 1.0, yx = 0.0, xy = 0.0, yy = 1.0, x0 = 0.0, y0 = 0.0)

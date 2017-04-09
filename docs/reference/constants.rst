@@ -398,7 +398,7 @@ for when both source and destination are either fully transparent or fully
 opaque.  The actual implementation works for translucent layers too.
 
 For a more detailed explanation of the effects of each operator, including the
-mathematical definitions, see http://cairographics.org/operators.
+mathematical definitions, see https://cairographics.org/operators.
 
 .. data:: OPERATOR_CLEAR
 
