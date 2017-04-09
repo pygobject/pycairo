@@ -730,7 +730,7 @@ extension if it is available.
 
    Creates a cairo surface that targets the given drawable (pixmap or window).
 
-   .. note:: This methods works using xpyb.
+   .. note:: *XCBSurface* cannot be instantiated directly
 
    .. method:: set_size(width, height)
 
