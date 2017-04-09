@@ -7,10 +7,12 @@ from distutils.core import Extension, setup, Command
 from distutils.command.build_ext import build_ext as du_build_ext
 from distutils.command.install import install as du_install
 from distutils.command.install_data import install_data as du_install_data
+from distutils.command.build import build as du_build
 
 
 PYCAIRO_VERSION = '1.10.1'
 CAIRO_VERSION_REQUIRED = '1.10.2'
+XPYB_VERSION_REQUIRED = '1.3'
 
 
 def pkg_config_version_check(pkg, version):
@@ -59,10 +61,12 @@ def write_config_file(path, version):
 
 class test_cmd(Command):
     description = "run tests"
-    user_options = []
+    user_options = [
+        ("enable-xpyb", None, "Build with xpyb support (default=disabled)"),
+    ]
 
     def initialize_options(self):
-        pass
+        self.enable_xpyb = None
 
     def finalize_options(self):
         pass
@@ -72,6 +76,8 @@ class test_cmd(Command):
 
         # ensure the C extension is build inplace
         cmd = self.reinitialize_command("build_ext")
+        if self.enable_xpyb is not None:
+            cmd.enable_xpyb = self.enable_xpyb
         cmd.inplace = True
         cmd.ensure_finalized()
         cmd.run()
@@ -138,14 +144,56 @@ class install(du_install):
 
 class build_ext(du_build_ext):
 
+    user_options = du_build_ext.user_options + [
+        ("enable-xpyb", None, "Build with xpyb support (default=disabled)"),
+    ]
+
+    def initialize_options(self):
+        du_build_ext.initialize_options(self)
+        self.enable_xpyb = None
+
+    def finalize_options(self):
+        du_build_ext.finalize_options(self)
+
+        self.set_undefined_options(
+            'build',
+            ('enable_xpyb', 'enable_xpyb'),
+        )
+
     def run(self):
         pkg_config_version_check('cairo', CAIRO_VERSION_REQUIRED)
+
+        if self.enable_xpyb:
+            if sys.version_info[0] != 2:
+                raise SystemExit("xpyb only supported with Python 2")
+            pkg_config_version_check("xpyb", XPYB_VERSION_REQUIRED)
+            ext = self.extensions[0]
+
+            ext.define_macros += [("HAVE_XPYB", None)]
+            ext.include_dirs += pkg_config_parse('--cflags-only-I', 'xpyb')
+            ext.library_dirs += pkg_config_parse('--libs-only-L', 'xpyb')
+            ext.libraries += pkg_config_parse('--libs-only-l', 'xpyb')
 
         script_dir = os.path.dirname(os.path.realpath(__file__))
         target = os.path.join(script_dir, "cairo", "config.h")
         write_config_file(target, PYCAIRO_VERSION)
 
         du_build_ext.run(self)
+
+
+class build(du_build):
+
+    user_options = du_build.user_options + [
+        ("enable-xpyb", None, "Build with xpyb support (default=disabled)"),
+    ]
+
+    def initialize_options(self):
+        du_build.initialize_options(self)
+        self.enable_xpyb = False
+
+    def finalize_options(self):
+        du_build.finalize_options(self)
+        self.enable_xpyb = bool(self.enable_xpyb)
 
 
 class install_data(du_install_data):
@@ -186,6 +234,7 @@ def main():
             ('include/pycairo', ['cairo/pycairo.h']),
         ],
         cmdclass={
+            "build": build,
             "build_ext": build_ext,
             "install": install,
             "install_pkgconfig": install_pkgconfig,

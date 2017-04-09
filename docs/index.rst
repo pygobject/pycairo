@@ -40,6 +40,14 @@ To run the tests::
 
     python2/3 setup.py test
 
+The Python 2 version supports `xpyb
+<https://xcb.freedesktop.org/XcbPythonBinding/>`__ integration which is
+disabled by default. To enable, build as follows::
+
+    python2 setup.py build --enable-xpyb
+    # and for running tests:
+    python2 setup.py test --enable-xpyb
+
 For examples of pycairo code see the 'examples' directory that comes with the
 pycairo distribution.
 
