@@ -1,66 +1,19 @@
-===================================
-Pycairo - Python bindings for cairo
-===================================
+Pycairo is a Python module providing bindings for the `cairo graphics library
+<https://cairographics.org/>`__.
 
-http://www.cairographics.org/pycairo
+The Pycairo bindings are designed to match the cairo C API as closely as
+possible, and to deviate only in cases which are clearly better implemented in
+a more ‘Pythonic’ way.
 
-Dependencies
-------------
+Features of the Pycairo bindings:
 
-* cairo   >= 1.10.0
-* Python  >= 2.6
+* Provides an object oriented interface to cairo.
+* Queries the error status of objects and translates them to exceptions.
+* Provides a C API that can be used by other Python extensions.
 
+Pycairo depends on **cairo >= 1.10.2** and works with **Python 2.7+** as well
+as **Python 3.3+**. If you are looking for bindings that work with PyPy have a
+look at `cairocffi <https://cairocffi.readthedocs.io>`__. Pycairo is licensed
+under the **LGPLv2.1** as well as the **MPLv1.1**.
 
-Compiling
----------
-
-See the INSTALL document for build instructions.
-
-
-Documentation
--------------
-
-The 'doc' directory contains reStructuredText files which are used by Sphinx
-to generate html (and other format) documentation.
-
-
-License
--------
-
-Pycairo is free software and is available to be redistributed and/or modified
-under the terms of either the GNU Lesser General Public License (LGPL) version
-2.1 or the Mozilla Public License (MPL) version 1.1.
-
-
-Contact
--------
-
-Mailing List:
-    If you have some ideas for how cairo or Pycairo could be improved, please
-    feel free to send a message to cairo@cairographics.org
-    http://cairographics.org/cgi-bin/mailman/listinfo/cairo
-
-Bugzilla:
-    If you find a bug in Pycairo, please go to
-    https://bugs.freedesktop.org/enter_bug.cgi?product=pycairo and submit a
-    bugreport.
-
-    IMPORTANT: make sure you state which version of cairo, pycairo, and Python
-    you are using when you report a problem or bug.
-
-    .. code:: pycon
-
-        >>> import cairo
-        >>> cairo.cairo_version_string()  # shows the cairo version
-        >>> cairo.version                 # shows the pycairo version
-
-
-Authors
--------
-
-Original Author:
-    James Henstridge
-Maintainer:
-    Steve Chaplin
-Contributors:
-    Maarten Breddels
+For more information visit https://pycairo.readthedocs.io

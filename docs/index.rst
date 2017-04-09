@@ -1,6 +1,6 @@
-=======
-Pycairo
-=======
+===================================
+Pycairo - Python bindings for cairo
+===================================
 
 .. toctree::
    :maxdepth: 1
@@ -14,29 +14,34 @@ Pycairo
 
 .. currentmodule:: cairo
 .. title:: Overview
+.. include:: ../README.rst
 
-Pycairo is a Python binding for the cairo graphics library.
+----
 
-The Pycairo bindings are designed to match the cairo C API as closely as
-possible, and to deviate only in cases which are clearly better implemented in
-a more 'Pythonic' way.
+Git repo:
+    https://github.com/pygobject/pycairo
+Bug tracker:
+    https://github.com/pygobject/pycairo/issues
+Mailing list:
+    https://lists.cairographics.org/cgi-bin/mailman/listinfo/cairo
 
-Features of the Pycairo bindings:
-
-* Provides an object oriented interface to cairo.
-* Pycairo_Check_Status() is called to check the status of cairo operations, and raise exceptions as appropriate.
-* Provides a C API that can be used by other Python extensions.
-
-The C cairo functions cairo_reference(), cairo_destroy(),
-cairo_surface_reference(), cairo_surface_destroy() (and their equivalents for
-surfaces and patterns) are not made public by the pycairo bindings. This is
-because pycairo handles cairo object construction and destruction.
+See the ":ref:`reference_index`" for further details.
 
 To use the pycairo library::
 
-  import cairo
+    import cairo
 
-See :ref:`Reference <reference_index>` for further details.
+To build/install the library::
+
+    python2/3 setup.py build
+    python2/3 setup.py install
+
+To run the tests::
+
+    python2/3 setup.py test
 
 For examples of pycairo code see the 'examples' directory that comes with the
 pycairo distribution.
+
+For author information see the git history as well as the now deleted
+"ChangeLog" file in the git history.
