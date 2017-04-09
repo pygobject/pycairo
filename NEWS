@@ -1,14 +1,21 @@
 1.11.0 - 2017-??-??
 -------------------
 
+This version is based on the Python 2 version of pycairo 1.10.0 and is API/ABI
+compatible with both py2cairo 1.10.0 and py3cairo 1.10.0.
+
 General Changes:
     * Requires cairo 1.10.2+
     * Switch to semantic versioning
-    * Switch build system to distutils/setup.py
+    * Switch build system to distutils/setup.py (xpyb integration can be
+      enabled with passing ``--enable-xpyb`` to setup.py build)
     * Moved to GitHub: https://github.com/pygobject/pycairo
 
 New Features:
-    * Python 3 support (API/ABI compatible with py3cairo)
+    * Python 3 support (API/ABI compatible with py3cairo 1.10.0) including
+      support for :exc:`cairo.Error`, :meth:`cairo.ImageSurface.get_data` and
+      :meth:`cairo.ImageSurface.create_for_data`, which were missing in
+      py3cairo.
     * :class:`cairo.RecordingSurface` (:fdobug:`36854`,
       `Torsten Landschoff <t.landschoff@gmx.net>`__)
     * :class:`cairo.Region`, :class:`cairo.RectangleInt` and
@@ -18,6 +25,8 @@ New Features:
 Bug Fixes:
     * Fix crash when read()/write() methods of file objects passed to pycairo
       raise exceptions.
+    * Fix possible value truncation of handles passed to Win32Surface and
+      Win32PrintingSurface on 64bit Windows.
 
 
 1.10.0 - 2011-05-01

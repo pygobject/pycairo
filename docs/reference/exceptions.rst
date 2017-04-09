@@ -13,6 +13,6 @@ cairo.Error.
 cairo.Error()
 =============
 
-.. exception:: cairo.Error
+.. exception:: Error
 
    This exception is raised when a cairo object returns an error status.
