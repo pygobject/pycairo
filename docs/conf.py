@@ -2,6 +2,7 @@
 
 extensions = [
     'sphinx.ext.intersphinx',
+    'sphinx.ext.extlinks',
 ]
 intersphinx_mapping = {
     'python': ('https://docs.python.org/2.7', None),
@@ -26,3 +27,7 @@ html_context = {
 html_static_path = [
     "extra.css",
 ]
+
+extlinks = {
+    'fdobug': ('https://bugs.freedesktop.org/show_bug.cgi?id=%s', '#'),
+}

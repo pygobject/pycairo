@@ -9,11 +9,11 @@ General Changes:
 
 New Features:
     * Python 3 support (API/ABI compatible with py3cairo)
-    * :class:`cairo.RecordingSurface` (#36854,
+    * :class:`cairo.RecordingSurface` (:fdobug:`36854`,
       `Torsten Landschoff <t.landschoff@gmx.net>`__)
     * :class:`cairo.Region`, :class:`cairo.RectangleInt` and
       :ref:`cairo.REGION_OVERLAP <constants_REGION_OVERLAP>`
-      (#44336, `Bug Fly <mozbugbox@yahoo.com.au>`__)
+      (:fdobug:`44336`, `Bug Fly <mozbugbox@yahoo.com.au>`__)
 
 Bug Fixes:
     * Fix crash when read()/write() methods of file objects passed to pycairo
@@ -30,8 +30,8 @@ New Constants:
     cairo.FORMAT_RGB16_565
 
 Bug Fixes:
-    * context.get_source().get_surface() fails        #33013
-    * Add support for './waf configure --libdir=XXX'  #30230
+    * context.get_source().get_surface() fails :fdobug:`33013`
+    * Add support for './waf configure --libdir=XXX' :fdobug:`30230`
 
 Documentation Changes:
     * Upgrade to using Sphinx 1.0.7.
@@ -57,8 +57,8 @@ New Classes/Types:
     * XCBSurface - add XCB support using xpyb
 
 Bug Fixes:
-    * Fix for libtool 2.2 (#27974).
-    * Mingw32 and pypy fixes (#25203).
+    * Fix for libtool 2.2 (:fdobug:`27974`).
+    * Mingw32 and pypy fixes (:fdobug:`25203`).
 
 Other Changes:
     Tests updated.
@@ -89,7 +89,8 @@ General Changes:
 Bug Fixes:
     * ImageSurface.create_from_png _read_func fix
     * ToyFontFace type fix
-    * 19221: restore cairo.Matrix '*' operator to the way it originally worked.
+    * :fdobug:`19221`: restore cairo.Matrix '*' operator to the way it
+      originally worked.
 
 Other Changes:
     Documentation completed.
@@ -130,7 +131,8 @@ Pycairo 1.8.0 resulted in crashes for some applications using threads. So
 upgrading to 1.8.2 is recommended for threaded applications.
 
 Bug Fixes:
-    * #19287: Threading support results in crashes in cairo.ImageSurface
+    * :fdobug:`19287`: Threading support results in crashes in
+      cairo.ImageSurface
 
 New Methods:
     Context.set_scaled_font
@@ -153,8 +155,8 @@ General Changes:
     Add documentation (available separately)
 
 Bug Fixes:
-    * 18101: Add support for threading
-    * 18947: cairo.SurfacePattern should INCREF the used surface
+    * :fdobug:`18101`: Add support for threading
+    * :fdobug:`18947`: cairo.SurfacePattern should INCREF the used surface
 
 New Methods:
     | ScaledFont.get_scale_matrix
@@ -170,7 +172,7 @@ API Changes:
     * Surface.mark_dirty: no longer accepts keyword arguments with default
       values.
     * PycairoPattern_FromPattern (C API): has a new 'base' argument - to fix
-      #18947.
+      :fdobug:`18947`.
 
 Other Changes:
     Allow unknown cairo Pattern/Surface types to use the pycairo base
@@ -185,7 +187,7 @@ General changes:
                   requires Python 2.5 (or later).
 
 Bug fixes:
-    16112: Fix win32 'python setup.py ...' build -- use double quotes
+    :fdobug:`16112`: Fix win32 'python setup.py ...' build -- use double quotes
 
 New Methods:
     | Context.has_current_point
@@ -216,8 +218,8 @@ General changes:
     requires Python 2.4 (or later).
 
 Bug fixes:
-    * 10006: update autogen.sh to support automake >= 1.10
-    * 13460: use python-config to get python includes
+    * :fdobug:`10006`: update autogen.sh to support automake >= 1.10
+    * :fdobug:`13460`: use python-config to get python includes
 
 Other changes:
     * allow cairo.Context to be subclassed
