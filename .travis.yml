@@ -1,0 +1,30 @@
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      language: python
+      python: "2.7"
+    - os: linux
+      dist: trusty
+      language: python
+      python: "3.3"
+    - os: linux
+      dist: trusty
+      language: python
+      python: "3.4"
+    - os: linux
+      dist: trusty
+      language: python
+      python: "3.5"
+    - os: linux
+      dist: trusty
+      language: python
+      python: "3.6"
+
+install:
+  - travis_retry sudo apt-get update -q
+  - travis_retry sudo apt-get install -y libcairo2-dev
+  - python -m pip install --upgrade pytest
+
+script:
+  - python setup.py test

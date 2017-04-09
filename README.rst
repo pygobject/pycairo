@@ -17,3 +17,6 @@ look at `cairocffi <https://cairocffi.readthedocs.io>`__. Pycairo is licensed
 under the **LGPLv2.1** as well as the **MPLv1.1**.
 
 For more information visit https://pycairo.readthedocs.io
+
+.. image:: https://travis-ci.org/pygobject/pycairo.svg?branch=master
+    :target: https://travis-ci.org/pygobject/pycairo
