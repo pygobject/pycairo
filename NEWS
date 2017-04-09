@@ -1,3 +1,25 @@
+1.11.0 - 2017-??-??
+-------------------
+
+General Changes:
+    * Requires cairo 1.10.2+
+    * Switch to semantic versioning
+    * Switch build system to distutils/setup.py
+    * Moved to GitHub: https://github.com/pygobject/pycairo
+
+New Features:
+    * Python 3 support (API/ABI compatible with py3cairo)
+    * :class:`cairo.RecordingSurface` (#36854,
+      `Torsten Landschoff <t.landschoff@gmx.net>`__)
+    * :class:`cairo.Region`, :class:`cairo.RectangleInt` and
+      :ref:`cairo.REGION_OVERLAP <constants_REGION_OVERLAP>`
+      (#44336, `Bug Fly <mozbugbox@yahoo.com.au>`__)
+
+Bug Fixes:
+    * Fix crash when read()/write() methods of file objects passed to pycairo
+      raise exceptions.
+
+
 1.10.0 - 2011-05-01
 -------------------
 
