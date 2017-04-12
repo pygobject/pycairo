@@ -2,8 +2,7 @@
  *
  * Pycairo - Python bindings for cairo
  *
- * Copyright © 2003 James Henstridge
- * Copyright © 2004-2011 Steven Chaplin
+ * Copyright © 2003 James Henstridge, Steven Chaplin
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -95,10 +94,6 @@ extern PyTypeObject PycairoPDFSurface_Type;
 
 #if CAIRO_HAS_PS_SURFACE
 extern PyTypeObject PycairoPSSurface_Type;
-#endif
-
-#if CAIRO_HAS_RECORDING_SURFACE
-extern PyTypeObject PycairoRecordingSurface_Type;
 #endif
 
 #if CAIRO_HAS_SVG_SURFACE

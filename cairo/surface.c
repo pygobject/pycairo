@@ -2,8 +2,7 @@
  *
  * Pycairo - Python bindings for cairo
  *
- * Copyright © 2003 James Henstridge
- * Copyright © 2004-2011 Steven Chaplin
+ * Copyright © 2003 James Henstridge, Steven Chaplin
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -83,11 +82,6 @@ PycairoSurface_FromSurface (cairo_surface_t *surface, PyObject *base) {
 #if CAIRO_HAS_PS_SURFACE
   case CAIRO_SURFACE_TYPE_PS:
     type = &PycairoPSSurface_Type;
-    break;
-#endif
-#if CAIRO_HAS_RECORDING_SURFACE
-  case CAIRO_SURFACE_TYPE_RECORDING:
-    type = &PycairoRecordingSurface_Type;
     break;
 #endif
 #if CAIRO_HAS_SVG_SURFACE
@@ -1043,98 +1037,6 @@ PyTypeObject PycairoPSSurface_Type = {
   0,                                  /* tp_bases */
 };
 #endif  /* CAIRO_HAS_PS_SURFACE */
-
-
-/* Class RecordingSurface(Surface) ---------------------------------------- */
-#ifdef CAIRO_HAS_RECORDING_SURFACE
-
-static PyObject *
-recording_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
-  int content;
-  cairo_rectangle_t extents, *extents_ptr;
-  cairo_surface_t *sfc;
-  PyObject *extents_tuple;
-
-  if (!PyArg_ParseTuple(args, "iO:RecordingSurface.__new__",
-			&content, &extents_tuple))
-    return NULL;
-
-  if (extents_tuple == Py_None) {
-    extents_ptr = NULL;
-  } else {
-    if (!PyArg_ParseTuple(extents_tuple, "dddd", &extents.x, &extents.y,
-			  &extents.width, &extents.height)) {
-      PyErr_SetString(PyExc_TypeError,
-		      "RecordingSurface() argument 2 must be a "
-		      "4-tuple of float");
-      return NULL;
-    }
-    extents_ptr = &extents;
-  }
-
-  Py_BEGIN_ALLOW_THREADS;
-  sfc = cairo_recording_surface_create (content, extents_ptr);
-  Py_END_ALLOW_THREADS;
-  return PycairoSurface_FromSurface (sfc, NULL);
-}
-
-static PyObject *
-recording_surface_ink_extents (PycairoRecordingSurface *o) {
-  double x0, y0, width, height;
-  cairo_recording_surface_ink_extents(o->surface, &x0, &y0, &width, &height);
-  return Py_BuildValue("(dddd)", x0, y0, width, height);
-}
-
-static PyMethodDef recording_surface_methods[] = {
-  {"ink_extents", (PyCFunction)recording_surface_ink_extents, METH_NOARGS },
-  {NULL, NULL, 0, NULL},
-};
-
-PyTypeObject PycairoRecordingSurface_Type = {
-  PyVarObject_HEAD_INIT(NULL, 0)
-  "cairo.RecordingSurface",           /* tp_name */
-  sizeof(PycairoRecordingSurface),    /* tp_basicsize */
-  0,                                  /* tp_itemsize */
-  0,                                  /* tp_dealloc */
-  0,                                  /* tp_print */
-  0,                                  /* tp_getattr */
-  0,                                  /* tp_setattr */
-  0,                                  /* tp_compare */
-  0,                                  /* tp_repr */
-  0,                                  /* tp_as_number */
-  0,                                  /* tp_as_sequence */
-  0,                                  /* tp_as_mapping */
-  0,                                  /* tp_hash */
-  0,                                  /* tp_call */
-  0,                                  /* tp_str */
-  0,                                  /* tp_getattro */
-  0,                                  /* tp_setattro */
-  0,                                  /* tp_as_buffer */
-  Py_TPFLAGS_DEFAULT,                 /* tp_flags */
-  0,                                  /* tp_doc */
-  0,                                  /* tp_traverse */
-  0,                                  /* tp_clear */
-  0,                                  /* tp_richcompare */
-  0,                                  /* tp_weaklistoffset */
-  0,                                  /* tp_iter */
-  0,                                  /* tp_iternext */
-  recording_surface_methods,          /* tp_methods */
-  0,                                  /* tp_members */
-  0,                                  /* tp_getset */
-  &PycairoSurface_Type,               /* tp_base */
-  0,                                  /* tp_dict */
-  0,                                  /* tp_descr_get */
-  0,                                  /* tp_descr_set */
-  0,                                  /* tp_dictoffset */
-  0,                                  /* tp_init */
-  0,                                  /* tp_alloc */
-  (newfunc)recording_surface_new,     /* tp_new */
-  0,                                  /* tp_free */
-  0,                                  /* tp_is_gc */
-  0,                                  /* tp_bases */
-};
-#endif /* CAIRO_HAS_RECORDING_SURFACE */
-
 
 /* Class SVGSurface(Surface) ----------------------------------------------- */
 #ifdef CAIRO_HAS_SVG_SURFACE

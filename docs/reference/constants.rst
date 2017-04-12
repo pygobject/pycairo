@@ -50,7 +50,6 @@ cairo.HAS
           HAS_PDF_SURFACE
           HAS_PNG_FUNCTIONS
           HAS_PS_SURFACE
-          HAS_RECORDING_SURFACE
           HAS_SVG_SURFACE
           HAS_USER_FONT
           HAS_QUARTZ_SURFACE

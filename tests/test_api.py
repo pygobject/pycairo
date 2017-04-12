@@ -79,10 +79,6 @@ def test_surface():
         f, w, h = tfi.TemporaryFile(mode='w+b'), 100, 100
         s = cairo.PSSurface(f, w, h)
 
-    if cairo.HAS_RECORDING_SURFACE:
-        s = cairo.RecordingSurface(cairo.CONTENT_COLOR, None)
-        s = cairo.RecordingSurface(cairo.CONTENT_COLOR, (1, 1, 10, 10))
-
     if cairo.HAS_SVG_SURFACE:
         f, w, h = tfi.TemporaryFile(mode='w+b'), 100, 100
         s = cairo.SVGSurface(f, w, h)
