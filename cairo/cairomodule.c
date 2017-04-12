@@ -2,7 +2,8 @@
  *
  * Pycairo - Python bindings for cairo
  *
- * Copyright © 2003 James Henstridge, Steven Chaplin
+ * Copyright © 2003 James Henstridge
+ * Copyright © 2004-2011 Steven Chaplin
  *
  * This library is free software; you can redistribute it and/or
  * modify it either under the terms of the GNU Lesser General Public
@@ -186,6 +187,11 @@ static Pycairo_CAPI_t CAPI = {
 
   &PycairoRegion_Type,
   PycairoRegion_FromRegion,
+#ifdef CAIRO_HAS_RECORDING_SURFACE
+  &PycairoRecordingSurface_Type,
+#else
+  0,
+#endif
 };
 
 static PyObject *
@@ -290,6 +296,10 @@ PYCAIRO_MOD_INIT(_cairo)
   if (PyType_Ready(&PycairoPSSurface_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
 #endif
+#ifdef CAIRO_HAS_RECORDING_SURFACE
+  if (PyType_Ready(&PycairoRecordingSurface_Type) < 0)
+    return PYCAIRO_MOD_ERROR_VAL;
+#endif
 #ifdef CAIRO_HAS_SVG_SURFACE
   if (PyType_Ready(&PycairoSVGSurface_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
@@ -384,6 +394,12 @@ PYCAIRO_MOD_INIT(_cairo)
   PyModule_AddObject(m, "PSSurface", (PyObject *)&PycairoPSSurface_Type);
 #endif
 
+#ifdef CAIRO_HAS_RECORDING_SURFACE
+  Py_INCREF(&PycairoRecordingSurface_Type);
+  PyModule_AddObject(m, "RecordingSurface",
+		     (PyObject *)&PycairoRecordingSurface_Type);
+#endif
+
 #ifdef CAIRO_HAS_SVG_SURFACE
   Py_INCREF(&PycairoSVGSurface_Type);
   PyModule_AddObject(m, "SVGSurface", (PyObject *)&PycairoSVGSurface_Type);
@@ -466,6 +482,11 @@ PYCAIRO_MOD_INIT(_cairo)
   PyModule_AddIntConstant(m, "HAS_PS_SURFACE", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_PS_SURFACE", 0);
+#endif
+#if CAIRO_HAS_RECORDING_SURFACE
+  PyModule_AddIntConstant(m, "HAS_RECORDING_SURFACE", 1);
+#else
+  PyModule_AddIntConstant(m, "HAS_RECORDING_SURFACE", 0);
 #endif
 #if CAIRO_HAS_SVG_SURFACE
   PyModule_AddIntConstant(m, "HAS_SVG_SURFACE", 1);

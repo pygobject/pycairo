@@ -75,6 +75,7 @@ Objects::
   PycairoImageSurface
   PycairoPDFSurface
   PycairoPSSurface
+  PycairoRecordingSurface
   PycairoSVGSurface
   PycairoWin32Surface
   PycairoXCBSurface
@@ -104,6 +105,7 @@ Types::
   PyTypeObject *ImageSurface_Type;
   PyTypeObject *PDFSurface_Type;
   PyTypeObject *PSSurface_Type;
+  PyTypeObject *RecordingSurface_Type;
   PyTypeObject *SVGSurface_Type;
   PyTypeObject *Win32Surface_Type;
   PyTypeObject *XCBSurface_Type;

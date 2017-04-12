@@ -579,6 +579,67 @@ is a multi-page vector surface backend.
       .. versionadded:: 1.2
 
 
+class RecordingSurface(:class:`Surface`)
+========================================
+
+A *RecordingSurface* is a surface that records all drawing operations at the
+highest level of the surface backend interface, (that is, the level of paint,
+mask, stroke, fill, and show_text_glyphs). The recording surface can then be
+"replayed" against any target surface by using it as a source surface.
+
+If you want to replay a surface so that the results in target will be
+identical to the results that would have been obtained if the original
+operations applied to the recording surface had instead been applied to the
+target surface, you can use code like this::
+
+  cr = cairo.Context(target)
+  cr.set_source_surface(recording_surface, 0.0, 0.0)
+  cr.paint()
+
+A *RecordingSurface* is logically unbounded, i.e. it has no implicit
+constraint on the size of the drawing surface. However, in practice this is
+rarely useful as you wish to replay against a particular target surface with
+known bounds. For this case, it is more efficient to specify the target
+extents to the recording surface upon creation.
+
+The recording phase of the recording surface is careful to snapshot all
+necessary objects (paths, patterns, etc.), in order to achieve accurate
+replay.
+
+.. class:: RecordingSurface(content, rectangle)
+
+   :param content: the :ref:`CONTENT <constants_CONTENT>` for the new  surface
+   :param rectangle: a 4-tuple of float, or None to record unbounded operations.
+   :returns: a new *RecordingSurface*
+
+   Creates a *RecordingSurface* which can be used to record all drawing
+   operations at the highest level (that is, the level of paint, mask, stroke,
+   fill and show_text_glyphs). The *RecordingSurface* can then be "replayed"
+   against any target surface by using it as a source to drawing operations.
+
+   The recording phase of the *RecordingSurface* is careful to snapshot all
+   necessary objects (paths, patterns, etc.), in order to achieve accurate
+   replay.
+
+   .. versionadded:: 1.11.0
+
+   .. method:: ink_extents()
+
+      :returns: (x0,y0,width,height) a 4-tuple of float
+
+	* x0: the x-coordinate of the top-left of the ink bounding box
+	* y0: the y-coordinate of the top-left of the ink bounding box
+	* width: the width of the ink bounding box
+	* height: the height of the ink bounding box
+
+      Measures the extents of the operations stored within the
+      *RecordingSurface*. This is useful to compute the required size of an
+      *ImageSurface* (or equivalent) into which to replay the full sequence of
+      drawing operations.
+
+      .. versionadded:: 1.11.0
+
+
 class SVGSurface(:class:`Surface`)
 ==================================
 
