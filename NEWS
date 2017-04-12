@@ -1,3 +1,10 @@
+1.11.1 - 2017-04-12
+-------------------
+
+This release fixes an ABI breakage. I missed that the original pycairo master
+had already broken ABI compared to 1.10.0.
+
+
 1.11.0 - 2017-04-09
 -------------------
 
