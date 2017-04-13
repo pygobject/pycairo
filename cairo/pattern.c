@@ -294,7 +294,7 @@ surface_pattern_get_filter (PycairoSurfacePattern *o) {
 static PyObject *
 surface_pattern_get_surface (PycairoSurfacePattern *o) {
   if (o->base != NULL) {
-    // surface_pattern was created using surface_pattern_new()
+    /* surface_pattern was created using surface_pattern_new() */
     return Py_BuildValue("O", o->base);
   } else {
     cairo_surface_t *surface;

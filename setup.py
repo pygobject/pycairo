@@ -45,7 +45,7 @@ def write_config_file(path, version):
 
     with open(path, 'w') as fo:
         fo.write("""\
-// Configuration header created by setup.py - do not edit
+/* Configuration header created by setup.py - do not edit */
 #ifndef _CONFIG_H
 #define _CONFIG_H 1
 
@@ -54,7 +54,7 @@ def write_config_file(path, version):
 #define PYCAIRO_VERSION_MICRO %s
 #define VERSION "%s"
 
-#endif // _CONFIG_H
+#endif /* _CONFIG_H */
 """ % (v[0], v[1], v[2], version)
         )
 

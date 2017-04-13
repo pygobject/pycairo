@@ -298,7 +298,7 @@ surface_write_to_png (PycairoSurface *o, PyObject *args) {
 
   if (PyObject_TypeCheck (file, &PYCAIRO_PyFilenameBase_Type)) {
     /* filename (str or unicode) argument */
-    char *name = NULL;  // the encoded filename
+    char *name = NULL;  /* the encoded filename */
 
     if (!PyArg_ParseTuple(args, PYCAIRO_ENC_TEXT_FORMAT ":Surface.write_to_png",
 			  Py_FileSystemDefaultEncoding, &name))
@@ -474,6 +474,7 @@ image_surface_create_for_data (PyTypeObject *type, PyObject *args) {
 static cairo_status_t
 _read_func (void *closure, unsigned char *data, unsigned int length) {
   char *buffer;
+  int ret;
   Py_ssize_t str_length;
   cairo_status_t status = CAIRO_STATUS_READ_ERROR;
   PyGILState_STATE gstate = PyGILState_Ensure();
@@ -486,7 +487,7 @@ _read_func (void *closure, unsigned char *data, unsigned int length) {
      */
     goto end;
   }
-  int ret = PYCAIRO_PyBytes_AsStringAndSize(pystr, &buffer, &str_length);
+  ret = PYCAIRO_PyBytes_AsStringAndSize(pystr, &buffer, &str_length);
   if (ret == -1 || str_length < length) {
     PyErr_Clear();
     goto end;
@@ -510,7 +511,7 @@ image_surface_create_from_png (PyTypeObject *type, PyObject *args) {
     return NULL;
 
   if (PyObject_TypeCheck (file, &PYCAIRO_PyFilenameBase_Type)) {
-    char *name = NULL;  // the encoded filename
+    char *name = NULL;  /* the encoded filename */
 
     if (!PyArg_ParseTuple(args, PYCAIRO_ENC_TEXT_FORMAT ":Surface.create_from_png",
 			  Py_FileSystemDefaultEncoding, &name))
@@ -556,7 +557,7 @@ static PyObject *
 image_surface_get_data (PycairoImageSurface *o) {
 #if PY_MAJOR_VERSION >= 3
   Py_buffer view;
-  cairo_surface_t *surface;;
+  cairo_surface_t *surface;
   int height, stride;
   unsigned char * buffer;
 
@@ -745,7 +746,7 @@ pdf_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 
   }else if (PyObject_TypeCheck (file, &PYCAIRO_PyFilenameBase_Type)) {
     /* filename (str or unicode) argument */
-    char *name = NULL;  // the encoded filename
+    char *name = NULL;  /* the encoded filename */
 
     if (!PyArg_ParseTuple(args, PYCAIRO_ENC_TEXT_FORMAT "dd:PDFSurface.__new__",
 			  Py_FileSystemDefaultEncoding,
@@ -867,7 +868,7 @@ ps_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 
   }else if (PyObject_TypeCheck (file, &PYCAIRO_PyFilenameBase_Type)) {
     /* filename (str or unicode) argument */
-    char *name = NULL;  // the encoded filename
+    char *name = NULL;  /* the encoded filename */
 
     if (!PyArg_ParseTuple(args, PYCAIRO_ENC_TEXT_FORMAT "dd:PSSurface.__new__",
 			  Py_FileSystemDefaultEncoding,
@@ -939,9 +940,10 @@ ps_surface_get_eps (PycairoPSSurface *o) {
 static PyObject *
 ps_surface_ps_level_to_string (PyObject *self, PyObject *args) {
   int level;
+  const char *s;
   if (!PyArg_ParseTuple(args, "i:ps_level_to_string", &level))
     return NULL;
-  const char *s = cairo_ps_level_to_string (level);
+  s = cairo_ps_level_to_string (level);
   if (s == NULL){
     PyErr_SetString(Pycairo_Error, "ps_level_to_string: "
 		    "invalid level argument");
@@ -1158,7 +1160,7 @@ svg_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 
   }else if (PyObject_TypeCheck (file, &PYCAIRO_PyFilenameBase_Type)) {
     /* filename (str or unicode) argument */
-    char *name = NULL;  // the encoded filename
+    char *name = NULL;  /* the encoded filename */
 
     if (!PyArg_ParseTuple(args, PYCAIRO_ENC_TEXT_FORMAT "dd:SVGSurface.__new__",
 			  Py_FileSystemDefaultEncoding,

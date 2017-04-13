@@ -149,6 +149,7 @@ PyTypeObject PycairoFontFace_Type = {
 static PyObject *
 toy_font_face_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   const char *utf8;
+  PyObject *o;
   cairo_font_slant_t slant   = CAIRO_FONT_SLANT_NORMAL;
   cairo_font_weight_t weight = CAIRO_FONT_WEIGHT_NORMAL;
 
@@ -156,7 +157,7 @@ toy_font_face_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 			 "utf-8", &utf8, &slant, &weight))
     return NULL;
 
-  PyObject *o = PycairoFontFace_FromFontFace (
+  o = PycairoFontFace_FromFontFace (
 		     cairo_toy_font_face_create (utf8, slant, weight));
   PyMem_Free((void *)utf8);
   return o;
