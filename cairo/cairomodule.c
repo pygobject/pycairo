@@ -95,16 +95,8 @@ Pycairo_Check_Status (cairo_status_t status) {
   case CAIRO_STATUS_WRITE_ERROR:
     PyErr_SetString(PyExc_IOError, cairo_status_to_string (status));
     break;
-  case CAIRO_STATUS_INVALID_RESTORE:
-    PyErr_SetString(Pycairo_Error, "Context.restore without matching "
-		    "Context.save");
-    break;
-  case CAIRO_STATUS_INVALID_POP_GROUP:
-    PyErr_SetString(Pycairo_Error, "Context.pop_group without matching "
-		    "Context.push_group");
-    break;
   default:
-    PyErr_SetString(Pycairo_Error, cairo_status_to_string (status));
+    Pycairo_Set_Error(status);
   }
   return 1;
 }
@@ -242,7 +234,7 @@ static struct PyModuleDef cairomoduledef = {
 
 PYCAIRO_MOD_INIT(_cairo)
 {
-  PyObject *m, *capi;
+  PyObject *m, *capi, *error;
 
   if (PyType_Ready(&PycairoContext_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
@@ -428,24 +420,29 @@ PYCAIRO_MOD_INIT(_cairo)
 
   /* Add 'cairo.Error' to the module */
 #if PY_MAJOR_VERSION >= 3
-  GETSTATE(m)->ErrorObject = PyErr_NewException("cairo.Error", NULL, NULL);
+  GETSTATE(m)->ErrorObject = error_get_type();
   if (GETSTATE(m)->ErrorObject == NULL) {
     Py_DECREF(m);
     return PYCAIRO_MOD_ERROR_VAL;
   }
-  Py_INCREF(GETSTATE(m)->ErrorObject);
-  if (PyModule_AddObject(m, "Error", GETSTATE(m)->ErrorObject) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+  error = GETSTATE(m)->ErrorObject;
 #else
   if (_CairoError == NULL) {
-    _CairoError = PyErr_NewException("cairo.Error", NULL, NULL);
+    _CairoError = error_get_type();
     if (_CairoError == NULL)
       return PYCAIRO_MOD_ERROR_VAL;
   }
-  Py_INCREF(_CairoError);
-  if (PyModule_AddObject(m, "Error", _CairoError) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+  error = _CairoError;
 #endif
+
+  Py_INCREF(error);
+  if (PyModule_AddObject(m, "Error", error) < 0)
+    return PYCAIRO_MOD_ERROR_VAL;
+
+  /* Alias for cairocffi */
+  Py_INCREF(error);
+  if (PyModule_AddObject(m, "CairoError", error) < 0)
+    return PYCAIRO_MOD_ERROR_VAL;
 
     /* constants */
 #if CAIRO_HAS_ATSUI_FONT
@@ -638,6 +635,47 @@ PYCAIRO_MOD_INIT(_cairo)
   CONSTANT(SUBPIXEL_ORDER_BGR);
   CONSTANT(SUBPIXEL_ORDER_VRGB);
   CONSTANT(SUBPIXEL_ORDER_VBGR);
+
+  CONSTANT(STATUS_SUCCESS);
+  CONSTANT(STATUS_NO_MEMORY);
+  CONSTANT(STATUS_INVALID_RESTORE);
+  CONSTANT(STATUS_INVALID_POP_GROUP);
+  CONSTANT(STATUS_NO_CURRENT_POINT);
+  CONSTANT(STATUS_INVALID_MATRIX);
+  CONSTANT(STATUS_INVALID_STATUS);
+  CONSTANT(STATUS_NULL_POINTER);
+  CONSTANT(STATUS_INVALID_STRING);
+  CONSTANT(STATUS_INVALID_PATH_DATA);
+  CONSTANT(STATUS_READ_ERROR);
+  CONSTANT(STATUS_WRITE_ERROR);
+  CONSTANT(STATUS_SURFACE_FINISHED);
+  CONSTANT(STATUS_SURFACE_TYPE_MISMATCH);
+  CONSTANT(STATUS_PATTERN_TYPE_MISMATCH);
+  CONSTANT(STATUS_INVALID_CONTENT);
+  CONSTANT(STATUS_INVALID_FORMAT);
+  CONSTANT(STATUS_INVALID_VISUAL);
+  CONSTANT(STATUS_FILE_NOT_FOUND);
+  CONSTANT(STATUS_INVALID_DASH);
+  CONSTANT(STATUS_INVALID_DSC_COMMENT);
+  CONSTANT(STATUS_INVALID_INDEX);
+  CONSTANT(STATUS_CLIP_NOT_REPRESENTABLE);
+  CONSTANT(STATUS_TEMP_FILE_ERROR);
+  CONSTANT(STATUS_INVALID_STRIDE);
+  CONSTANT(STATUS_FONT_TYPE_MISMATCH);
+  CONSTANT(STATUS_USER_FONT_IMMUTABLE);
+  CONSTANT(STATUS_USER_FONT_ERROR);
+  CONSTANT(STATUS_NEGATIVE_COUNT);
+  CONSTANT(STATUS_INVALID_CLUSTERS);
+  CONSTANT(STATUS_INVALID_SLANT);
+  CONSTANT(STATUS_INVALID_WEIGHT);
+  CONSTANT(STATUS_INVALID_SIZE);
+  CONSTANT(STATUS_USER_FONT_NOT_IMPLEMENTED);
+  CONSTANT(STATUS_DEVICE_TYPE_MISMATCH);
+  CONSTANT(STATUS_DEVICE_ERROR);
+  CONSTANT(STATUS_INVALID_MESH_CONSTRUCTION);
+  CONSTANT(STATUS_DEVICE_FINISHED);
+  CONSTANT(STATUS_LAST_STATUS);
+
 #undef CONSTANT
 
 #if PY_MAJOR_VERSION >= 3

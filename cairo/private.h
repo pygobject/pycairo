@@ -44,8 +44,7 @@
 
 
 PyObject *_Pycairo_Get_Error(void);
-
-#define Pycairo_Error (_Pycairo_Get_Error())
+void Pycairo_Set_Error (cairo_status_t status);
 
 extern PyTypeObject PycairoContext_Type;
 PyObject *PycairoContext_FromContext (cairo_t *ctx, PyTypeObject *type,
@@ -191,5 +190,7 @@ int Pycairo_Check_Status (cairo_status_t status);
     }								\
   } while (0)
 
+
+PyObject *error_get_type(void);
 
 #endif /* _PYCAIRO_PRIVATE_H_ */

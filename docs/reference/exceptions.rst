@@ -15,4 +15,15 @@ cairo.Error()
 
 .. exception:: Error
 
-   This exception is raised when a cairo object returns an error status.
+    This exception is raised when a cairo object returns an error status.
+
+    .. attribute:: status
+
+        :type: :ref:`constants_STATUS`
+
+
+.. data:: CairoError
+
+    An alias for :exc:`Error`
+
+    .. versionadded:: 1.12.0

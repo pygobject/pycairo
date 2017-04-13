@@ -210,6 +210,7 @@ def main():
     cairo_ext = Extension(
         name='cairo._cairo',
         sources=[
+            'cairo/error.c',
             'cairo/cairomodule.c',
             'cairo/context.c',
             'cairo/font.c',
