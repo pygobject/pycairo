@@ -88,6 +88,26 @@ shapes.
   Perform antialiasing by taking advantage of the order of subpixel elements
   on devices such as LCD panels.
 
+.. data:: ANTIALIAS_FAST
+
+    Hint that the backend should perform some antialiasing but prefer speed
+    over quality.
+
+    .. versionadded:: 1.12.0
+
+.. data:: ANTIALIAS_GOOD
+
+    The backend should balance quality against performance.
+
+    .. versionadded:: 1.12.0
+
+.. data:: ANTIALIAS_BEST
+
+    Hint that the backend should render at the highest quality, sacrificing
+    speed if necessary.
+
+    .. versionadded:: 1.12.0
+
 
 .. _constants_CONTENT:
 

@@ -212,3 +212,7 @@ def test_constants():
     assert cairo.REGION_OVERLAP_IN == 0
     assert cairo.REGION_OVERLAP_OUT == 1
     assert cairo.REGION_OVERLAP_PART == 2
+
+    assert cairo.ANTIALIAS_FAST == 4
+    assert cairo.ANTIALIAS_GOOD == 5
+    assert cairo.ANTIALIAS_BEST == 6
