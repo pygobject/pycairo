@@ -523,7 +523,6 @@ is a multi-page vector surface backend.
       :param level: a :ref:`PS_LEVEL <constants_PS_LEVEL>`
       :returns: the string associated to given level.
       :rtype: str
-      :raises: :exc:`cairo.Error` if *level* isn't valid.
 
       Get the string representation of the given *level*.  See
       :meth:`.ps_get_levels` for a way to get the list of valid level

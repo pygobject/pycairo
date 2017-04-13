@@ -11,6 +11,40 @@ import pytest
 import py.test as test
 
 
+def test_error_context():
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
+    ctx = cairo.Context(surface)
+    with pytest.raises(cairo.Error) as excinfo:
+        ctx.restore()
+    error = excinfo.value
+    assert error.status == cairo.STATUS_INVALID_RESTORE
+    assert str(error)
+
+
+def test_error():
+    with pytest.raises(cairo.Error) as excinfo:
+        raise cairo.Error
+    assert excinfo.value.status is None
+
+    with pytest.raises(cairo.Error) as excinfo:
+        raise cairo.Error("foo")
+    assert excinfo.value.status is None
+    assert excinfo.value.args[0] == "foo"
+
+    with pytest.raises(cairo.Error) as excinfo:
+        raise cairo.Error("foo", 42)
+    assert excinfo.value.status == 42
+
+    class Foo(cairo.Error):
+        pass
+
+    Foo("foo", 42)
+
+
+def test_error_alias():
+    assert cairo.Error is cairo.CairoError
+
+
 def test_context():
     if cairo.HAS_IMAGE_SURFACE:
         f, w, h = cairo.FORMAT_ARGB32, 100, 100
@@ -122,8 +156,10 @@ def test_image_surface_create_for_data():
     with pytest.raises(ValueError):
         cairo.ImageSurface.create_for_data(buf, format_, -1, 3)
 
-    with pytest.raises(cairo.Error):
+    with pytest.raises(cairo.Error) as excinfo:
         cairo.ImageSurface.create_for_data(buf, format_, 3, 3, 3)
+
+    assert excinfo.value.status == cairo.STATUS_INVALID_STRIDE
 
 
 def test_surface_file_obj_error():
