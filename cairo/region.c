@@ -62,8 +62,8 @@ static PyObject *
 rectangle_int_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
   static char *kwlist[] = { "x", "y", "width", "height", NULL };
   int x, y, w, h;
-  x = y = w = h = 0;
   cairo_rectangle_int_t rect;
+  x = y = w = h = 0;
 
   if (!PyArg_ParseTupleAndKeywords(args, kwds,
                                    "|iiii:RectangleInt.__new__", kwlist,

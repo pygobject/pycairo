@@ -53,7 +53,7 @@ PyObject *_CairoError = NULL;
 
 #else
 
-// Module initialization
+/* Module initialization */
 struct cairo_state {
   PyObject *ErrorObject;
 };
@@ -242,7 +242,7 @@ static struct PyModuleDef cairomoduledef = {
 
 PYCAIRO_MOD_INIT(_cairo)
 {
-  PyObject *m;
+  PyObject *m, *capi;
 
   if (PyType_Ready(&PycairoContext_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
@@ -621,13 +621,14 @@ PYCAIRO_MOD_INIT(_cairo)
 
 #if PY_MAJOR_VERSION >= 3
   /* Create a Capsule containing the CAPI pointer */
-  PyObject *T = PyCapsule_New((void *)(&CAPI), "cairo.CAPI", 0);
-  if (T != NULL) {
-    PyModule_AddObject(m, "CAPI", T);
-  }
+  capi = PyCapsule_New((void *)(&CAPI), "cairo.CAPI", 0);
 #else
-  PyModule_AddObject(m, "CAPI", PyCObject_FromVoidPtr(&CAPI, NULL));
+  capi = PyCObject_FromVoidPtr(&CAPI, NULL);
 #endif
+
+  if (capi != NULL) {
+    PyModule_AddObject(m, "CAPI", capi);
+  }
 
   return PYCAIRO_MOD_SUCCESS_VAL(m);
 }
