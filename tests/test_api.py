@@ -232,3 +232,6 @@ def test_constants():
     assert cairo.OPERATOR_HSL_SATURATION == 26
     assert cairo.OPERATOR_HSL_COLOR == 27
     assert cairo.OPERATOR_HSL_LUMINOSITY == 28
+
+    assert cairo.FORMAT_INVALID == -1
+    assert cairo.FORMAT_RGB30 == 5

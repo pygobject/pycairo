@@ -270,6 +270,12 @@ These constants are used to identify the memory format of
 
 New entries may be added in future versions.
 
+.. data:: FORMAT_INVALID
+
+    no such format exists or is supported.
+
+    .. versionadded:: 1.12.0
+
 .. data:: FORMAT_ARGB32
 
    each pixel is a 32-bit quantity, with alpha in the upper 8 bits, then red,
@@ -298,6 +304,12 @@ New entries may be added in future versions.
 
    each pixel is a 16-bit quantity with red in the upper 5 bits, then green in
    the middle 6 bits, and blue in the lower 5 bits.
+
+.. data:: FORMAT_RGB30
+
+    like :data:`FORMAT_RGB24` but with 10bpc.
+
+    .. versionadded:: 1.12.0
 
 
 .. _constants_HINT_METRICS:
