@@ -108,6 +108,10 @@ matrix_multiply (PycairoMatrix *o, PyObject *args) {
 static PyObject *
 matrix_operator_multiply (PycairoMatrix *o, PycairoMatrix *o2) {
   cairo_matrix_t result;
+  if (PyObject_IsInstance((PyObject *)o2, (PyObject *)&PycairoMatrix_Type) <= 0) {
+    PyErr_SetString(PyExc_TypeError, "matrix can only multiply another matrix");
+    return NULL;
+  }
   cairo_matrix_multiply (&result, &o->matrix, &o2->matrix);
   return PycairoMatrix_FromMatrix (&result);
 }
@@ -326,7 +330,12 @@ PyTypeObject PycairoMatrix_Type = {
   0,                                  /* tp_getattro */
   0,                                  /* tp_setattro */
   0,                                  /* tp_as_buffer */
+#if PY_MAJOR_VERSION < 3
+  Py_TPFLAGS_DEFAULT |
+    Py_TPFLAGS_CHECKTYPES,            /* tp_flags */
+#else
   Py_TPFLAGS_DEFAULT,                 /* tp_flags */
+#endif
   NULL,                               /* tp_doc */
   0,                                  /* tp_traverse */
   0,                                  /* tp_clear */

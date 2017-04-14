@@ -61,6 +61,16 @@ def test_matrix():
     m.scale(1.5, 2.5)
     m.translate(10, 20)
 
+    with pytest.raises(TypeError):
+        m * 42
+
+    with pytest.raises(TypeError):
+        m + 42
+
+    assert m != 42
+    assert m == m
+    assert m != cairo.Matrix()
+
 
 def test_path():
     # AttributeError: 'module' object has no attribute 'Path'
