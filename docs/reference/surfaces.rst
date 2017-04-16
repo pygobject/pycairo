@@ -287,6 +287,34 @@ class Surface()
 
       Writes the contents of *Surface* to *fobj* as a PNG image.
 
+   .. method:: create_for_rectangle(x, y, width, height)
+
+      :param float x: the x-origin of the sub-surface from the top-left of the
+         target surface (in device-space units)
+      :param float y: the y-origin of the sub-surface from the top-left of the
+         target surface (in device-space units)
+      :param float width: width of the sub-surface (in device-space units)
+      :param float height: height of the sub-surface (in device-space units)
+      :returns: a new surface
+      :rtype: cairo.Surface
+
+      Create a new surface that is a rectangle within the target surface. All
+      operations drawn to this surface are then clipped and translated onto
+      the target surface. Nothing drawn via this sub-surface outside of its
+      bounds is drawn onto the target surface, making this a useful method for
+      passing constrained child surfaces to library routines that draw
+      directly onto the parent surface, i.e. with no further backend
+      allocations, double buffering or copies.
+
+      .. note::
+
+         The semantics of subsurfaces have not been finalized yet unless the
+         rectangle is in full device units, is contained within the extents of
+         the target surface, and the target or subsurface's device transforms
+         are not changed.
+
+      .. versionadded:: 1.12.0
+
 
 class ImageSurface(:class:`Surface`)
 ====================================

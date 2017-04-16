@@ -312,6 +312,22 @@ surface_set_fallback_resolution (PycairoSurface *o, PyObject *args) {
 }
 
 static PyObject *
+surface_create_for_rectangle (PycairoSurface *o, PyObject *args) {
+  double x, y, width, height;
+  cairo_surface_t *new;
+
+  if (!PyArg_ParseTuple(args, "dddd:Surface.create_for_rectangle",
+                        &x, &y, &width, &height))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  new = cairo_surface_create_for_rectangle(o->surface, x, y, width, height);
+  Py_END_ALLOW_THREADS;
+
+  return PycairoSurface_FromSurface(new, NULL);
+}
+
+static PyObject *
 surface_show_page (PycairoSurface *o) {
   Py_BEGIN_ALLOW_THREADS;
   cairo_surface_show_page (o->surface);
@@ -515,6 +531,8 @@ static PyMethodDef surface_methods[] = {
   {"set_mime_data",  (PyCFunction)surface_set_mime_data,      METH_VARARGS},
   {"get_mime_data",  (PyCFunction)surface_get_mime_data,      METH_VARARGS},
   {"supports_mime_type", (PyCFunction)surface_supports_mime_type,
+   METH_VARARGS},
+  {"create_for_rectangle",(PyCFunction)surface_create_for_rectangle,
    METH_VARARGS},
   {NULL, NULL, 0, NULL},
 };
