@@ -48,8 +48,6 @@
  *   pattern has an error status.
  * base - the base object used to create the pattern, or NULL.
  *   It is referenced to keep it alive while the cairo_pattern_t is being used.
- *   For PycairoSurfacePattern base should be the PycairoSurface, for other
- #   patterns it should be NULL.
  * Return value: New reference or NULL on failure
  */
 PyObject *
@@ -283,7 +281,7 @@ surface_pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 			 &PycairoSurface_Type, &s))
     return NULL;
   return PycairoPattern_FromPattern (
-	     cairo_pattern_create_for_surface (s->surface), (PyObject *)s);
+	     cairo_pattern_create_for_surface (s->surface), NULL);
 }
 
 static PyObject *
@@ -293,14 +291,9 @@ surface_pattern_get_filter (PycairoSurfacePattern *o) {
 
 static PyObject *
 surface_pattern_get_surface (PycairoSurfacePattern *o) {
-  if (o->base != NULL) {
-    /* surface_pattern was created using surface_pattern_new() */
-    return Py_BuildValue("O", o->base);
-  } else {
-    cairo_surface_t *surface;
-    cairo_pattern_get_surface (o->pattern, &surface);
-    return PycairoSurface_FromSurface(cairo_surface_reference (surface), NULL);
-  }
+  cairo_surface_t *surface;
+  RETURN_NULL_IF_CAIRO_ERROR(cairo_pattern_get_surface (o->pattern, &surface));
+  return PycairoSurface_FromSurface(cairo_surface_reference (surface), NULL);
 }
 
 static PyObject *
