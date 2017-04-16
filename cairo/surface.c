@@ -161,6 +161,39 @@ surface_dealloc (PycairoSurface *o) {
   Py_TYPE(o)->tp_free(o);
 }
 
+static const cairo_user_data_key_t surface_base_object_key;
+
+static void
+_decref_destroy_func(void *user_data) {
+  PyGILState_STATE gstate = PyGILState_Ensure();
+  Py_DECREF(user_data);
+  PyGILState_Release(gstate);
+}
+
+/* Like PycairoSurface_FromSurface, but keeps the base object alive as long
+ * as cairo_surface_t exists and not as long as the wrapper exists.
+ */
+static PyObject *
+_surface_create_with_object(cairo_surface_t *surface, PyObject *base) {
+  PyObject *pysurface;
+  cairo_status_t status;
+
+  pysurface = PycairoSurface_FromSurface(surface, NULL);
+  if (pysurface == NULL)
+    return NULL;
+
+  if (base != NULL) {
+    status = cairo_surface_set_user_data(
+      surface, &surface_base_object_key, base, _decref_destroy_func);
+    if (status != CAIRO_STATUS_SUCCESS)
+      Py_DECREF(pysurface);
+    RETURN_NULL_IF_CAIRO_ERROR(status);
+    Py_INCREF(base);
+  }
+
+  return pysurface;
+}
+
 static PyObject *
 surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   PyErr_SetString(PyExc_TypeError,
@@ -591,7 +624,7 @@ image_surface_create_for_data (PyTypeObject *type, PyObject *args) {
   surface = cairo_image_surface_create_for_data (buffer, format, width,
 						 height, stride);
   Py_END_ALLOW_THREADS;
-  return PycairoSurface_FromSurface(surface, obj);
+  return _surface_create_with_object(surface, obj);
 }
 
 
@@ -905,7 +938,7 @@ pdf_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   sfc = cairo_pdf_surface_create_for_stream (_write_func, file,
 					     width_in_points, height_in_points);
   Py_END_ALLOW_THREADS;
-  return PycairoSurface_FromSurface (sfc, file);
+  return _surface_create_with_object (sfc, file);
 }
 
 static PyObject *
@@ -1026,7 +1059,7 @@ ps_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   sfc = cairo_ps_surface_create_for_stream (_write_func, file,
 					    width_in_points, height_in_points);
   Py_END_ALLOW_THREADS;
-  return PycairoSurface_FromSurface (sfc, file);
+  return _surface_create_with_object (sfc, file);
 }
 
 static PyObject *
@@ -1318,7 +1351,7 @@ svg_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   sfc = cairo_svg_surface_create_for_stream (_write_func, file,
 					     width_in_points, height_in_points);
   Py_END_ALLOW_THREADS;
-  return PycairoSurface_FromSurface (sfc, file);
+  return _surface_create_with_object (sfc, file);
 }
 
 static PyMethodDef svg_surface_methods[] = {

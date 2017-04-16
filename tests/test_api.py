@@ -136,6 +136,22 @@ def test_surface():
         s = cairo.SVGSurface(f, w, h)
 
 
+def test_surface_destroy_before_context():
+    for kind in [cairo.PDFSurface, cairo.PSSurface]:
+        surface = kind(io.BytesIO(), 1, 1)
+        ctx = cairo.Context(surface)
+        del surface
+        ctx.paint()
+
+
+def test_surface_destroy_before_surface_pattern():
+    surface = cairo.PDFSurface(io.BytesIO(), 1, 1)
+    pattern = cairo.SurfacePattern(surface)
+    del surface
+    ctx = cairo.Context(pattern.get_surface())
+    ctx.paint()
+
+
 def test_image_surface_get_data():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 3, 3)
     ctx = cairo.Context(surface)
