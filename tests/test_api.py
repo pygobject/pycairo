@@ -36,6 +36,16 @@ def test_context_in_clip():
     assert context.in_clip(50, 50)
 
 
+def test_surface_create_similar_image():
+    surface = cairo.PDFSurface(None, 1, 1)
+    image = surface.create_similar_image(cairo.FORMAT_ARGB32, 24, 42)
+    assert image
+    assert isinstance(image, cairo.ImageSurface)
+    del surface
+    assert image.get_width() == 24
+    assert image.get_height() == 42
+
+
 def test_error_context():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
     ctx = cairo.Context(surface)

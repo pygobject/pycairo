@@ -336,6 +336,23 @@ surface_show_page (PycairoSurface *o) {
   Py_RETURN_NONE;
 }
 
+static PyObject *
+surface_create_similar_image (PycairoSurface *o, PyObject *args) {
+  cairo_format_t format;
+  int width, height;
+  cairo_surface_t *new;
+
+  if (!PyArg_ParseTuple (args, "iii:Surface.create_similar_image",
+                         &format, &width, &height))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  new = cairo_surface_create_similar_image (o->surface, format, width, height);
+  Py_END_ALLOW_THREADS;
+
+  return PycairoSurface_FromSurface (new, NULL);
+}
+
 #ifdef CAIRO_HAS_PNG_FUNCTIONS
 static PyObject *
 surface_write_to_png (PycairoSurface *o, PyObject *args) {
@@ -511,6 +528,8 @@ static PyMethodDef surface_methods[] = {
    */
   {"copy_page",      (PyCFunction)surface_copy_page,          METH_NOARGS},
   {"create_similar", (PyCFunction)surface_create_similar,     METH_VARARGS},
+  {"create_similar_image", (PyCFunction)surface_create_similar_image,
+   METH_VARARGS},
   {"finish",         (PyCFunction)surface_finish,             METH_NOARGS},
   {"flush",          (PyCFunction)surface_flush,              METH_NOARGS},
   {"get_content",    (PyCFunction)surface_get_content,        METH_NOARGS},

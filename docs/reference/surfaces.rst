@@ -315,6 +315,23 @@ class Surface()
 
       .. versionadded:: 1.12.0
 
+   .. method:: create_similar_image(format, width, height)
+
+      :param format: the :ref:`FORMAT <constants_FORMAT>` for the new surface
+      :param int width: width of the new surface, (in device-space units)
+      :param int height: height of the new surface, (in device-space units)
+      :returns: a new image surface
+      :rtype: cairo.ImageSurface
+
+      Create a new image surface that is as compatible as possible for
+      uploading to and the use in conjunction with an existing surface.
+      However, this surface can still be used like any normal image surface.
+
+      Initially the surface contents are all 0 (transparent if contents have
+      transparency, black otherwise.)
+
+      .. versionadded:: 1.12.0
+
 
 class ImageSurface(:class:`Surface`)
 ====================================
