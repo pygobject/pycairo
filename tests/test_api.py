@@ -15,6 +15,17 @@ import pytest
 import py.test as test
 
 
+def test_surface_create_for_rectangle():
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
+    new = surface.create_for_rectangle(0, 0, 10, 10)
+    assert new
+    assert isinstance(new, cairo.Surface)
+
+    with pytest.raises(cairo.Error) as excinfo:
+        surface.create_for_rectangle(0, 0, 10, -1)
+    assert excinfo.value.status == cairo.STATUS_INVALID_SIZE
+
+
 def test_error_context():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
     ctx = cairo.Context(surface)
