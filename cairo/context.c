@@ -156,6 +156,21 @@ pycairo_clip_preserve (PycairoContext *o) {
 }
 
 static PyObject *
+pycairo_in_clip (PycairoContext *o, PyObject *args) {
+  double x, y;
+  cairo_bool_t result;
+
+  if (!PyArg_ParseTuple (args, "dd:Context.in_clip", &x, &y))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  result = cairo_in_clip (o->ctx, x, y);
+  Py_END_ALLOW_THREADS;
+
+  return PyBool_FromLong(result);
+}
+
+static PyObject *
 pycairo_close_path (PycairoContext *o) {
   Py_BEGIN_ALLOW_THREADS;
   cairo_close_path (o->ctx);
@@ -1276,6 +1291,7 @@ static PyMethodDef pycairo_methods[] = {
   {"glyph_path",      (PyCFunction)pycairo_glyph_path,       METH_VARARGS},
   {"has_current_point",(PyCFunction)pycairo_has_current_point, METH_NOARGS},
   {"identity_matrix", (PyCFunction)pycairo_identity_matrix,  METH_NOARGS},
+  {"in_clip",         (PyCFunction)pycairo_in_clip,          METH_VARARGS},
   {"in_fill",         (PyCFunction)pycairo_in_fill,          METH_VARARGS},
   {"in_stroke",       (PyCFunction)pycairo_in_stroke,        METH_VARARGS},
   {"line_to",         (PyCFunction)pycairo_line_to,          METH_VARARGS},

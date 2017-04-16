@@ -1483,3 +1483,18 @@ safely be changed, without loosing the current state. Use
       function is similar to :meth:`Context.user_to_device` except that the
       translation components of the CTM will be ignored when transforming
       *(dx,dy)*.
+
+   .. method:: in_clip(x, y)
+
+      :param float x: X coordinate of the point to test
+      :param float y: Y coordinate of the point to test
+      :returns: :obj:`True` if the point is inside, or :obj:`False` if outside.
+      :rtype: bool
+
+      Tests whether the given point is inside the area that would be visible
+      through the current clip, i.e. the area that would be filled by a
+      :meth:`paint` operation.
+
+      See :meth:`clip`, and :meth:`clip_preserve`.
+
+      .. versionadded:: 1.12.0
