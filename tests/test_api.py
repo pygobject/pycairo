@@ -46,6 +46,27 @@ def test_surface_create_similar_image():
     assert image.get_height() == 42
 
 
+def test_pdf_get_versions():
+    versions = cairo.PDFSurface.get_versions()
+    assert isinstance(versions, list)
+    assert all(isinstance(v, int) for v in versions)
+
+
+def test_pdf_surface_restrict_to_version():
+    surface = cairo.PDFSurface(None, 10, 10)
+    surface.restrict_to_version(cairo.PDF_VERSION_1_4)
+    surface.finish()
+    with pytest.raises(cairo.Error):
+        surface.restrict_to_version(cairo.PDF_VERSION_1_5)
+
+
+def test_pdf_version_to_string():
+    ver = cairo.PDFSurface.version_to_string(cairo.PDF_VERSION_1_4)
+    assert ver and isinstance(ver, str)
+    with pytest.raises(ValueError):
+        cairo.PDFSurface.version_to_string(-1)
+
+
 def test_error_context():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
     ctx = cairo.Context(surface)

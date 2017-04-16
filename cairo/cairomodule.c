@@ -39,6 +39,10 @@
 #ifdef CAIRO_HAS_PS_SURFACE
 #  include <cairo-ps.h>
 #endif
+/* to read CAIRO_PDF_VERSION_* constants */
+#ifdef CAIRO_HAS_PDF_SURFACE
+#  include <cairo-pdf.h>
+#endif
 
 /* for XCB api */
 #if defined(CAIRO_HAS_XCB_SURFACE) && defined(HAVE_XPYB)
@@ -625,6 +629,11 @@ PYCAIRO_MOD_INIT(_cairo)
   CONSTANT(PATH_LINE_TO);
   CONSTANT(PATH_CURVE_TO);
   CONSTANT(PATH_CLOSE_PATH);
+
+#ifdef CAIRO_HAS_PDF_SURFACE
+  CONSTANT(PDF_VERSION_1_4);
+  CONSTANT(PDF_VERSION_1_5);
+#endif
 
   CONSTANT(REGION_OVERLAP_IN);
   CONSTANT(REGION_OVERLAP_OUT);

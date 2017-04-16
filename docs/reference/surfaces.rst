@@ -473,6 +473,43 @@ multi-page vector surface backend.
 
       .. versionadded:: 1.2
 
+   .. method:: restrict_to_version(version)
+
+      :param version: PDF version
+      :type version: :ref:`constants_PDF_VERSION`
+
+      Restricts the generated PDF file to version . See :meth:`get_versions`
+      for a list of available version values that can be used here.
+
+      This function should only be called before any drawing operations have
+      been performed on the given surface. The simplest way to do this is to
+      call this function immediately after creating the surface.
+
+      .. versionadded:: 1.12.0
+
+   .. staticmethod:: get_versions()
+
+      :returns: supported version list
+      :rtype: list
+
+      Retrieve the list of supported versions. See
+      :meth:`restrict_to_version`.
+
+      .. versionadded:: 1.12.0
+
+   .. staticmethod:: version_to_string(version)
+
+      :param version: PDF version
+      :type version: :ref:`constants_PDF_VERSION`
+      :returns: the string associated to the given version
+      :rtype: str
+      :raises ValueError: if version isn't valid
+
+      Get the string representation of the given version id. See
+      :meth:`get_versions` for a way to get the list of valid version ids.
+
+      .. versionadded:: 1.12.0
+
 
 class PSSurface(:class:`Surface`)
 =================================

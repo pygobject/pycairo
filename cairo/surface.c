@@ -990,8 +990,74 @@ pdf_surface_set_size (PycairoPDFSurface *o, PyObject *args) {
   Py_RETURN_NONE;
 }
 
+static PyObject *
+pdf_get_versions (PyObject *self) {
+  PyObject *list, *num;
+  const cairo_pdf_version_t *versions;
+  int i, num_versions;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_pdf_get_versions (&versions, &num_versions);
+  Py_END_ALLOW_THREADS;
+
+  list = PyList_New (num_versions);
+  if (list == NULL)
+    return NULL;
+
+  for (i=0; i < num_versions; i++) {
+    num = PYCAIRO_PyLong_FromLong (versions[i]);
+    if (num == NULL) {
+      Py_DECREF (list);
+      return NULL;
+    }
+    PyList_SET_ITEM (list, i, num);
+  }
+
+  return list;
+}
+
+static PyObject *
+pdf_version_to_string (PyObject *self,  PyObject *args) {
+  cairo_pdf_version_t version;
+  const char *version_string;
+
+  if (!PyArg_ParseTuple(args, "i:PDFSurface.version_to_string", &version))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  version_string = cairo_pdf_version_to_string (version);
+  Py_END_ALLOW_THREADS;
+
+  if (version_string == NULL) {
+    PyErr_SetString (PyExc_ValueError, "invalid version");
+    return NULL;
+  }
+
+  return PYCAIRO_PyUnicode_FromString (version_string);
+}
+
+static PyObject *
+pdf_surface_restrict_to_version (PycairoPDFSurface *o, PyObject *args) {
+  cairo_pdf_version_t version;
+
+  if (!PyArg_ParseTuple(args, "i:PDFSurface.restrict_to_version", &version))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_pdf_surface_restrict_to_version (o->surface, version);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_NULL_IF_CAIRO_SURFACE_ERROR (o->surface);
+  Py_RETURN_NONE;
+}
+
 static PyMethodDef pdf_surface_methods[] = {
-  {"set_size", (PyCFunction)pdf_surface_set_size,    METH_VARARGS },
+  {"set_size", (PyCFunction)pdf_surface_set_size, METH_VARARGS},
+  {"get_versions", (PyCFunction)pdf_get_versions, METH_NOARGS | METH_STATIC},
+  {"version_to_string", (PyCFunction)pdf_version_to_string,
+   METH_VARARGS | METH_STATIC},
+  {"restrict_to_version", (PyCFunction)pdf_surface_restrict_to_version,
+   METH_VARARGS},
   {NULL, NULL, 0, NULL},
 };
 
