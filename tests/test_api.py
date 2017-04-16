@@ -212,3 +212,26 @@ def test_constants():
     assert cairo.REGION_OVERLAP_IN == 0
     assert cairo.REGION_OVERLAP_OUT == 1
     assert cairo.REGION_OVERLAP_PART == 2
+
+    assert cairo.ANTIALIAS_FAST == 4
+    assert cairo.ANTIALIAS_GOOD == 5
+    assert cairo.ANTIALIAS_BEST == 6
+
+    assert cairo.OPERATOR_MULTIPLY == 14
+    assert cairo.OPERATOR_SCREEN == 15
+    assert cairo.OPERATOR_OVERLAY == 16
+    assert cairo.OPERATOR_DARKEN == 17
+    assert cairo.OPERATOR_LIGHTEN == 18
+    assert cairo.OPERATOR_COLOR_DODGE == 19
+    assert cairo.OPERATOR_COLOR_BURN == 20
+    assert cairo.OPERATOR_HARD_LIGHT == 21
+    assert cairo.OPERATOR_SOFT_LIGHT == 22
+    assert cairo.OPERATOR_DIFFERENCE == 23
+    assert cairo.OPERATOR_EXCLUSION == 24
+    assert cairo.OPERATOR_HSL_HUE == 25
+    assert cairo.OPERATOR_HSL_SATURATION == 26
+    assert cairo.OPERATOR_HSL_COLOR == 27
+    assert cairo.OPERATOR_HSL_LUMINOSITY == 28
+
+    assert cairo.FORMAT_INVALID == -1
+    assert cairo.FORMAT_RGB30 == 5

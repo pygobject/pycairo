@@ -88,6 +88,26 @@ shapes.
   Perform antialiasing by taking advantage of the order of subpixel elements
   on devices such as LCD panels.
 
+.. data:: ANTIALIAS_FAST
+
+    Hint that the backend should perform some antialiasing but prefer speed
+    over quality.
+
+    .. versionadded:: 1.12.0
+
+.. data:: ANTIALIAS_GOOD
+
+    The backend should balance quality against performance.
+
+    .. versionadded:: 1.12.0
+
+.. data:: ANTIALIAS_BEST
+
+    Hint that the backend should render at the highest quality, sacrificing
+    speed if necessary.
+
+    .. versionadded:: 1.12.0
+
 
 .. _constants_CONTENT:
 
@@ -250,6 +270,12 @@ These constants are used to identify the memory format of
 
 New entries may be added in future versions.
 
+.. data:: FORMAT_INVALID
+
+    no such format exists or is supported.
+
+    .. versionadded:: 1.12.0
+
 .. data:: FORMAT_ARGB32
 
    each pixel is a 32-bit quantity, with alpha in the upper 8 bits, then red,
@@ -278,6 +304,12 @@ New entries may be added in future versions.
 
    each pixel is a 16-bit quantity with red in the upper 5 bits, then green in
    the middle 6 bits, and blue in the lower 5 bits.
+
+.. data:: FORMAT_RGB30
+
+    like :data:`FORMAT_RGB24` but with 10bpc.
+
+    .. versionadded:: 1.12.0
 
 
 .. _constants_HINT_METRICS:
@@ -455,6 +487,108 @@ mathematical definitions, see https://cairographics.org/operators.
 .. data:: OPERATOR_SATURATE
 
    like over, but assuming source and dest are disjoint geometries
+
+.. data:: OPERATOR_MULTIPLY
+
+    source and destination layers are multiplied. This causes the result to be
+    at least as dark as the darker inputs.
+
+    .. versionadded:: 1.12.0
+
+.. data:: OPERATOR_SCREEN
+
+    source and destination are complemented and multiplied. This causes the
+    result to be at least as light as the lighter inputs.
+
+    .. versionadded:: 1.12.0
+
+.. data:: OPERATOR_OVERLAY
+
+    multiplies or screens, depending on the lightness of the destination
+    color.
+
+    .. versionadded:: 1.12.0
+
+.. data:: OPERATOR_DARKEN
+
+    replaces the destination with the source if it is darker, otherwise keeps
+    the source.
+
+    .. versionadded:: 1.12.0
+
+.. data:: OPERATOR_LIGHTEN
+
+    replaces the destination with the source if it is lighter, otherwise keeps
+    the source.
+
+    .. versionadded:: 1.12.0
+
+.. data:: OPERATOR_COLOR_DODGE
+
+    brightens the destination color to reflect the source color.
+
+    .. versionadded:: 1.12.0
+
+.. data:: OPERATOR_COLOR_BURN
+
+    darkens the destination color to reflect the source color.
+
+    .. versionadded:: 1.12.0
+
+.. data:: OPERATOR_HARD_LIGHT
+
+    Multiplies or screens, dependent on source color.
+
+    .. versionadded:: 1.12.0
+
+.. data:: OPERATOR_SOFT_LIGHT
+
+    Darkens or lightens, dependent on source color.
+
+    .. versionadded:: 1.12.0
+
+.. data:: OPERATOR_DIFFERENCE
+
+    Takes the difference of the source and destination color.
+
+    .. versionadded:: 1.12.0
+
+.. data:: OPERATOR_EXCLUSION
+
+    Produces an effect similar to difference, but with lower contrast.
+
+    .. versionadded:: 1.12.0
+
+.. data:: OPERATOR_HSL_HUE
+
+    Creates a color with the hue of the source and the saturation and
+    luminosity of the target.
+
+    .. versionadded:: 1.12.0
+
+.. data:: OPERATOR_HSL_SATURATION
+
+    Creates a color with the saturation of the source and the hue and
+    luminosity of the target. Painting with this mode onto a gray area
+    produces no change.
+
+    .. versionadded:: 1.12.0
+
+.. data:: OPERATOR_HSL_COLOR
+
+    Creates a color with the hue and saturation of the source and the
+    luminosity of the target. This preserves the gray levels of the target and
+    is useful for coloring monochrome images or tinting color images.
+
+    .. versionadded:: 1.12.0
+
+.. data:: OPERATOR_HSL_LUMINOSITY
+
+    Creates a color with the luminosity of the source and the hue and
+    saturation of the target. This produces an inverse effect to
+    :data:`OPERATOR_HSL_COLOR`
+
+    .. versionadded:: 1.12.0
 
 
 .. _constants_PATH:
