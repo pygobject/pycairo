@@ -639,6 +639,28 @@ enabled.
    The language level 3 of the PostScript specification.
 
 
+.. _constants_PDF_VERSION:
+
+cairo.PDF_VERSION
+-----------------
+
+These constants are used to describe the version number of the PDF
+specification that a generated PDF file will conform to.
+
+.. data:: PDF_VERSION_1_4
+
+    The version 1.4 of the PDF specification.
+
+    .. versionadded:: 1.12.0
+
+
+.. data:: PDF_VERSION_1_5
+
+    The version 1.5 of the PDF specification.
+
+    .. versionadded:: 1.12.0
+
+
 .. _constants_SUBPIXEL_ORDER:
 
 cairo.SUBPIXEL_ORDER
