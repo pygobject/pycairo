@@ -1213,14 +1213,14 @@ ps_surface_get_eps (PycairoPSSurface *o) {
 
 /* METH_STATIC */
 static PyObject *
-ps_surface_ps_level_to_string (PyObject *self, PyObject *args) {
+ps_level_to_string (PyObject *self, PyObject *args) {
   int level;
   const char *s;
-  if (!PyArg_ParseTuple(args, "i:ps_level_to_string", &level))
+  if (!PyArg_ParseTuple(args, "i:PSSurface.level_to_string", &level))
     return NULL;
   s = cairo_ps_level_to_string (level);
   if (s == NULL){
-    PyErr_SetString(PyExc_ValueError, "ps_level_to_string: "
+    PyErr_SetString(PyExc_ValueError, "level_to_string: "
 		    "invalid level argument");
     return NULL;
   }
@@ -1260,19 +1260,47 @@ ps_surface_set_size (PycairoPSSurface *o, PyObject *args) {
   Py_RETURN_NONE;
 }
 
+static PyObject *
+ps_get_levels (PyObject *self) {
+  PyObject *list, *num;
+  const cairo_ps_level_t *levels;
+  int i, num_levels;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_ps_get_levels (&levels, &num_levels);
+  Py_END_ALLOW_THREADS;
+
+  list = PyList_New (num_levels);
+  if (list == NULL)
+    return NULL;
+
+  for (i=0; i < num_levels; i++) {
+    num = PYCAIRO_PyLong_FromLong (levels[i]);
+    if (num == NULL) {
+      Py_DECREF (list);
+      return NULL;
+    }
+    PyList_SET_ITEM (list, i, num);
+  }
+
+  return list;
+}
+
 static PyMethodDef ps_surface_methods[] = {
   {"dsc_begin_page_setup",
    (PyCFunction)ps_surface_dsc_begin_page_setup, METH_NOARGS },
   {"dsc_begin_setup", (PyCFunction)ps_surface_dsc_begin_setup, METH_NOARGS },
   {"dsc_comment", (PyCFunction)ps_surface_dsc_comment,        METH_VARARGS },
   {"get_eps", (PyCFunction)ps_surface_get_eps,                 METH_NOARGS },
-  /* ps_get_levels - not implemented yet*/
-  {"ps_level_to_string", (PyCFunction)ps_surface_ps_level_to_string,
+  {"ps_level_to_string", (PyCFunction)ps_level_to_string,
+   METH_VARARGS | METH_STATIC},
+  {"level_to_string", (PyCFunction)ps_level_to_string,
    METH_VARARGS | METH_STATIC},
   {"restrict_to_level", (PyCFunction)ps_surface_restrict_to_level,
    METH_VARARGS },
   {"set_eps", (PyCFunction)ps_surface_set_eps,                METH_VARARGS },
   {"set_size", (PyCFunction)ps_surface_set_size,              METH_VARARGS },
+  {"get_levels", (PyCFunction)ps_get_levels, METH_NOARGS | METH_STATIC},
   {NULL, NULL, 0, NULL},
 };
 

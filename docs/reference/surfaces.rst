@@ -672,15 +672,24 @@ is a multi-page vector surface backend.
 
       .. versionadded:: 1.6
 
-   .. staticmethod:: ps_level_to_string(level)
+   .. staticmethod:: level_to_string(level)
 
       :param level: a :ref:`PS_LEVEL <constants_PS_LEVEL>`
       :returns: the string associated to given level.
       :rtype: str
 
       Get the string representation of the given *level*.  See
-      :meth:`.ps_get_levels` for a way to get the list of valid level
+      :meth:`get_levels` for a way to get the list of valid level
       ids.
+
+      .. note:: Prior to 1.12 this was available under
+         :meth:`ps_level_to_string`
+
+      .. versionadded:: 1.12.0
+
+   .. data:: ps_level_to_string
+
+      Alias for :meth:`level_to_string`
 
       .. versionadded:: 1.6
 
@@ -689,7 +698,7 @@ is a multi-page vector surface backend.
       :param level: a :ref:`PS_LEVEL <constants_PS_LEVEL>`
 
       Restricts the generated PostSript file to *level*. See
-      :meth:`.ps_get_levels` for a list of available level values that
+      :meth:`get_levels` for a list of available level values that
       can be used here.
 
       This function should only be called before any drawing operations have
@@ -730,6 +739,16 @@ is a multi-page vector surface backend.
       :meth:`Context.show_page` or :meth:`Context.copy_page`.
 
       .. versionadded:: 1.2
+
+   .. staticmethod:: get_levels()
+
+      :returns: supported level list
+      :rtype: list
+
+      Retrieve the list of supported levels. See
+      :meth:`restrict_to_level`.
+
+      .. versionadded:: 1.12.0
 
 
 class RecordingSurface(:class:`Surface`)

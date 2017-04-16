@@ -15,6 +15,17 @@ import pytest
 import py.test as test
 
 
+def test_ps_surface_get_levels():
+    levels = cairo.PSSurface.get_levels()
+    assert isinstance(levels, list)
+    assert all(isinstance(v, int) for v in levels)
+
+def test_ps_surface_level_to_string():
+    level_id = cairo.PSSurface.level_to_string(cairo.PS_LEVEL_2)
+    assert isinstance(level_id, str)
+    assert cairo.PSSurface.ps_level_to_string(cairo.PS_LEVEL_2) == level_id
+
+
 def test_surface_has_show_text_glyphs():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
     assert not surface.has_show_text_glyphs()
