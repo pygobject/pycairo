@@ -1734,7 +1734,6 @@ xcb_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 #endif
 }
 
-#ifdef HAVE_XPYB
 static PyObject *
 xcb_surface_set_size (PycairoXCBSurface *o, PyObject *args) {
   int width, height;
@@ -1744,12 +1743,9 @@ xcb_surface_set_size (PycairoXCBSurface *o, PyObject *args) {
   cairo_xcb_surface_set_size (o->surface, width, height);
   Py_RETURN_NONE;
 }
-#endif
 
 static PyMethodDef xcb_surface_methods[] = {
-#ifdef HAVE_XPYB
   {"set_size", (PyCFunction)xcb_surface_set_size,    METH_VARARGS },
-#endif
   {NULL, NULL, 0, NULL},
 };
 
