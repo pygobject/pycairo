@@ -15,6 +15,14 @@ import pytest
 import py.test as test
 
 
+def test_surface_has_show_text_glyphs():
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
+    assert not surface.has_show_text_glyphs()
+    surface.finish()
+    with pytest.raises(cairo.Error) as excinfo:
+        surface.has_show_text_glyphs()
+
+
 def test_surface_create_for_rectangle():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
     new = surface.create_for_rectangle(0, 0, 10, 10)

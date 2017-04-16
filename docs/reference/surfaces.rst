@@ -332,6 +332,25 @@ class Surface()
 
       .. versionadded:: 1.12.0
 
+   .. method:: has_show_text_glyphs()
+
+      :returns: :obj:`True` if surface supports
+         :meth:`Context.show_text_glyphs`, :obj:`False` otherwise
+      :rtype: bool
+
+      Returns whether the surface supports sophisticated
+      :meth:`Context.show_text_glyphs` operations. That is, whether it
+      actually uses the provided text and cluster data to a
+      :meth:`Context.show_text_glyphs` call.
+
+      Note: Even if this function returns :obj:`False`, a
+      :meth:`Context.show_text_glyphs` operation targeted at surface will
+      still succeed. It just will act like a :meth:`Context.show_glyphs`
+      operation. Users can use this function to avoid computing UTF-8 text and
+      cluster mapping if the target surface does not use it.
+
+      .. versionadded:: 1.12.0
+
 
 class ImageSurface(:class:`Surface`)
 ====================================

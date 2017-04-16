@@ -518,6 +518,18 @@ surface_supports_mime_type (PycairoSurface *self, PyObject *args) {
     cairo_surface_supports_mime_type(self->surface, mime_type));
 }
 
+static PyObject *
+surface_has_show_text_glyphs (PycairoSurface *o) {
+  cairo_bool_t result;
+
+  Py_BEGIN_ALLOW_THREADS;
+  result = cairo_surface_has_show_text_glyphs (o->surface);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_NULL_IF_CAIRO_SURFACE_ERROR (o->surface);
+  return PyBool_FromLong (result);
+}
+
 static PyMethodDef surface_methods[] = {
   /* methods never exposed in a language binding:
    * cairo_surface_destroy()
@@ -553,6 +565,8 @@ static PyMethodDef surface_methods[] = {
    METH_VARARGS},
   {"create_for_rectangle",(PyCFunction)surface_create_for_rectangle,
    METH_VARARGS},
+  {"has_show_text_glyphs", (PyCFunction)surface_has_show_text_glyphs,
+   METH_NOARGS},
   {NULL, NULL, 0, NULL},
 };
 
