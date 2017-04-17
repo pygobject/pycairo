@@ -179,3 +179,39 @@ For more information on matrix transformation see https://www.cairographics.org/
       *Matrix*. The effect of the new transformation is to first translate the
       coordinates by *tx* and *ty*, then apply the original transformation to the
       coordinates.
+
+   .. data:: xx
+
+      :class:`float`: xx component of the affine transformation
+
+      .. versionadded:: 1.12.0
+
+   .. data:: yx
+
+      :class:`float`: yx component of the affine transformation
+
+      .. versionadded:: 1.12.0
+
+   .. data:: xy
+
+      :class:`float`: xy component of the affine transformation
+
+      .. versionadded:: 1.12.0
+
+   .. data:: yy
+
+      :class:`float`: yy component of the affine transformation
+
+      .. versionadded:: 1.12.0
+
+   .. data:: x0
+
+      :class:`float`: X translation component of the affine transformation
+
+      .. versionadded:: 1.12.0
+
+   .. data:: y0
+
+      :class:`float`: Y translation component of the affine transformation
+
+      .. versionadded:: 1.12.0

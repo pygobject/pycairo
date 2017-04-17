@@ -152,6 +152,15 @@ def test_matrix():
     assert m != cairo.Matrix()
 
 
+def test_matrix_properties():
+    m = cairo.Matrix(*range(6))
+    assert [m.xx, m.yx, m.xy, m.yy, m.x0, m.y0] == list(range(6))
+    m.xx = 42
+    assert m.xx == 42
+    m.scale(2, 2)
+    assert m.xx == 84
+
+
 def test_path():
     # AttributeError: 'module' object has no attribute 'Path'
     test.raises(AttributeError, "p = cairo.Path()")

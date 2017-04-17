@@ -30,6 +30,7 @@
 
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
+#include "structmember.h"
 
 #include "config.h"
 #include "private.h"
@@ -310,6 +311,22 @@ static PyMethodDef matrix_methods[] = {
   {NULL, NULL, 0, NULL},
 };
 
+static PyMemberDef matrix_tp_members[] = {
+  {"xx", T_DOUBLE, sizeof(PyObject) + sizeof(double) * 0, 0,
+   "xx component of the affine transformation"},
+  {"yx", T_DOUBLE, sizeof(PyObject) + sizeof(double) * 1, 0,
+   "yx component of the affine transformation"},
+  {"xy", T_DOUBLE, sizeof(PyObject) + sizeof(double) * 2, 0,
+   "xy component of the affine transformation"},
+  {"yy", T_DOUBLE, sizeof(PyObject) + sizeof(double) * 3, 0,
+   "yy component of the affine transformation"},
+  {"x0", T_DOUBLE, sizeof(PyObject) + sizeof(double) * 4, 0,
+   "X translation component of the affine transformation"},
+  {"y0", T_DOUBLE, sizeof(PyObject) + sizeof(double) * 5, 0,
+   "Y translation component of the affine transformation"},
+  {NULL}
+};
+
 PyTypeObject PycairoMatrix_Type = {
   PyVarObject_HEAD_INIT(NULL, 0)
   "cairo.Matrix",                     /* tp_name */
@@ -344,7 +361,7 @@ PyTypeObject PycairoMatrix_Type = {
   0,                                  /* tp_iter */
   0,                                  /* tp_iternext */
   matrix_methods,                     /* tp_methods */
-  0,                                  /* tp_members */
+  matrix_tp_members,                  /* tp_members */
   0,                                  /* tp_getset */
   0,                                  /* tp_base */
   0,                                  /* tp_dict */
