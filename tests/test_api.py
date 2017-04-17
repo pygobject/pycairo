@@ -20,10 +20,19 @@ except NameError:
     long = int
 
 
+def test_scaled_font_get_ctm():
+    surface = cairo.ImageSurface(0, 10, 10)
+    ctx = cairo.Context(surface)
+    sf = ctx.get_scaled_font()
+    matrix = sf.get_ctm()
+    assert isinstance(matrix, cairo.Matrix)
+
+
 def test_ps_surface_get_levels():
     levels = cairo.PSSurface.get_levels()
     assert isinstance(levels, list)
     assert all(isinstance(v, int) for v in levels)
+
 
 def test_ps_surface_level_to_string():
     level_id = cairo.PSSurface.level_to_string(cairo.PS_LEVEL_2)

@@ -151,7 +151,15 @@ use.
 
    .. method:: get_ctm()
 
-      Not implemented in pycairo (yet)
+      :returns: the CTM
+      :rtype: cairo.Matrix
+
+      Returns the CTM with which scaled_font was created into ctm. Note that
+      the translation offsets (x0, y0) of the CTM are ignored by
+      :func:`ScaledFont`. So, the matrix this function returns always has 0,
+      0 as x0, y0.
+
+      .. versionadded:: 1.12.0
 
    .. method:: get_font_face()
 
