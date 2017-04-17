@@ -502,17 +502,64 @@ font_options_set_subpixel_order (PycairoFontOptions *o, PyObject *args) {
   Py_RETURN_NONE;
 }
 
+static PyObject *
+font_options_copy (PycairoFontOptions *o) {
+  cairo_font_options_t *new;
+
+  Py_BEGIN_ALLOW_THREADS;
+  new = cairo_font_options_copy (o->font_options);
+  Py_END_ALLOW_THREADS;
+
+  return PycairoFontOptions_FromFontOptions (new);
+}
+
+static PyObject *
+font_options_hash (PycairoFontOptions *o) {
+  unsigned long hash;
+
+  Py_BEGIN_ALLOW_THREADS;
+  hash = cairo_font_options_hash (o->font_options);
+  Py_END_ALLOW_THREADS;
+
+  return PyLong_FromUnsignedLong (hash);
+}
+
+static PyObject *
+font_options_equal (PycairoFontOptions *o, PyObject *args) {
+  PycairoFontOptions *other;
+  cairo_bool_t result;
+
+  if (!PyArg_ParseTuple(args, "O!:FontOptions.equal",
+                        &PycairoFontOptions_Type, &other))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  result = cairo_font_options_equal (o->font_options, other->font_options);
+  Py_END_ALLOW_THREADS;
+
+  return PyBool_FromLong(result);
+}
+
+static PyObject *
+font_options_merge (PycairoFontOptions *o, PyObject *args) {
+  PycairoFontOptions *other;
+
+  if (!PyArg_ParseTuple(args, "O!:FontOptions.merge",
+                        &PycairoFontOptions_Type, &other))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_font_options_merge (o->font_options, other->font_options);
+  Py_END_ALLOW_THREADS;
+
+  Py_RETURN_NONE;
+}
 
 static PyMethodDef font_options_methods[] = {
   /* methods never exposed in a language binding:
    * cairo_font_options_destroy()
    * cairo_font_options_reference()
    */
-  /* TODO: */
-  /* copy */
-  /* hash */
-  /* merge */
-  /* equal (richcmp?) */
   {"get_antialias",     (PyCFunction)font_options_get_antialias,  METH_NOARGS},
   {"get_hint_metrics",  (PyCFunction)font_options_get_hint_metrics,
    METH_NOARGS},
@@ -525,6 +572,10 @@ static PyMethodDef font_options_methods[] = {
   {"set_hint_style",    (PyCFunction)font_options_set_hint_style, METH_VARARGS},
   {"set_subpixel_order",(PyCFunction)font_options_set_subpixel_order,
    METH_VARARGS},
+  {"copy",              (PyCFunction)font_options_copy,           METH_NOARGS},
+  {"hash",              (PyCFunction)font_options_hash,           METH_NOARGS},
+  {"equal",             (PyCFunction)font_options_equal,          METH_VARARGS},
+  {"merge",             (PyCFunction)font_options_merge,          METH_VARARGS},
   {NULL, NULL, 0, NULL},
 };
 

@@ -14,6 +14,11 @@ import cairo
 import pytest
 import py.test as test
 
+try:
+    long
+except NameError:
+    long = int
+
 
 def test_ps_surface_get_levels():
     levels = cairo.PSSurface.get_levels()
@@ -439,6 +444,35 @@ def test_supports_mime_type():
     surface = cairo.PDFSurface(None, 3, 3)
     assert surface.supports_mime_type(cairo.MIME_TYPE_JPEG)
     assert not surface.supports_mime_type("nope")
+
+
+def test_font_options_copy_equal():
+    surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
+    font_options = surface.get_font_options()
+    font_options.set_hint_metrics(cairo.HINT_METRICS_DEFAULT)
+    new = font_options.copy()
+    assert font_options.equal(new)
+    assert new.get_hint_metrics() == cairo.HINT_METRICS_DEFAULT
+    font_options.set_hint_metrics(cairo.HINT_METRICS_ON)
+    assert not font_options.equal(new)
+    assert new.get_hint_metrics() == cairo.HINT_METRICS_DEFAULT
+
+
+def test_font_options_hash():
+    surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
+    font_options = surface.get_font_options()
+    assert font_options.hash() == font_options.hash()
+    assert isinstance(font_options.hash(), long)
+
+
+def test_font_options_merge():
+    surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
+    font_options = surface.get_font_options()
+    font_options.set_hint_metrics(cairo.HINT_METRICS_DEFAULT)
+    new = font_options.copy()
+    new.set_hint_metrics(cairo.HINT_METRICS_ON)
+    font_options.merge(new)
+    assert font_options.get_hint_metrics() == cairo.HINT_METRICS_ON
 
 
 def test_surface_mime_data_for_pdf():

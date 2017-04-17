@@ -277,3 +277,46 @@ objects.
       The subpixel order specifies the order of color elements within each
       pixel on the display device when rendering with an antialiasing mode of
       :data:`cairo.ANTIALIAS_SUBPIXEL`.
+
+   .. method:: merge(other)
+
+      :param FontOptions other: another :class:`FontOptions`
+
+      Merges non-default options from other into options , replacing existing
+      values. This operation can be thought of as somewhat similar to
+      compositing other onto options with the operation of
+      :data:`OPERATOR_OVER`.
+
+      .. versionadded:: 1.12.0
+
+   .. method:: copy()
+
+      :returns: a new :class:`FontOptions`
+
+      Returns a new font options object copying the option values from
+      original.
+
+      .. versionadded:: 1.12.0
+
+   .. method:: hash()
+
+      :returns: the hash value for the font options object
+      :rtype: int
+
+      Compute a hash for the font options object; this value will be useful
+      when storing an object containing a :class:`FontOptions` in a hash
+      table.
+
+      .. versionadded:: 1.12.0
+
+   .. method:: equal(other)
+
+      :param FontOptions other: another :class:`FontOptions`
+      :returns: :obj:`True` if all fields of the two font options objects
+         match. Note that this function will return :obj:`False` if either
+         object is in error.
+      :rtype: bool
+
+      Compares two font options objects for equality.
+
+      .. versionadded:: 1.12.0
