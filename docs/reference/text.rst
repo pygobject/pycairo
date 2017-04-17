@@ -178,7 +178,12 @@ use.
 
    .. method:: get_font_options()
 
-      Not implemented in pycairo (yet)
+      :returns: font options
+      :rtype: cairo.FontOptions
+
+      Returns the font options with which scaled_font was created.
+
+      .. versionadded:: 1.12.0
 
    .. method:: get_scale_matrix()
 

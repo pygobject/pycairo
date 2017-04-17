@@ -36,6 +36,14 @@ def test_scaled_font_get_font_matrix():
     assert isinstance(matrix, cairo.Matrix)
 
 
+def test_scaled_font_get_font_options():
+    surface = cairo.ImageSurface(0, 10, 10)
+    ctx = cairo.Context(surface)
+    sf = ctx.get_scaled_font()
+    font_options = sf.get_font_options()
+    assert isinstance(font_options, cairo.FontOptions)
+
+
 def test_ps_surface_get_levels():
     levels = cairo.PSSurface.get_levels()
     assert isinstance(levels, list)

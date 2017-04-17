@@ -346,6 +346,17 @@ scaled_font_get_font_matrix (PycairoScaledFont *o) {
   return PycairoMatrix_FromMatrix (&matrix);
 }
 
+static PyObject *
+scaled_font_get_font_options (PycairoScaledFont *o) {
+  cairo_font_options_t *options = cairo_font_options_create();
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_scaled_font_get_font_options (o->scaled_font, options);
+  Py_END_ALLOW_THREADS;
+
+  return PycairoFontOptions_FromFontOptions (options);
+}
+
 static PyMethodDef scaled_font_methods[] = {
   /* methods never exposed in a language binding:
    * cairo_scaled_font_destroy()
@@ -353,7 +364,6 @@ static PyMethodDef scaled_font_methods[] = {
    * cairo_scaled_font_reference()
    *
    * TODO if requested:
-   * cairo_scaled_font_get_font_options
    * cairo_scaled_font_glyph_extents
    * cairo_scaled_font_text_to_glyphs
    */
@@ -361,6 +371,7 @@ static PyMethodDef scaled_font_methods[] = {
   {"get_font_face", (PyCFunction)scaled_font_get_font_face,  METH_NOARGS},
   {"get_ctm",       (PyCFunction)scaled_font_get_ctm,        METH_NOARGS},
   {"get_font_matrix",  (PyCFunction)scaled_font_get_font_matrix,  METH_NOARGS},
+  {"get_font_options", (PyCFunction)scaled_font_get_font_options, METH_NOARGS},
   {"get_scale_matrix", (PyCFunction)scaled_font_get_scale_matrix, METH_VARARGS},
   {"text_extents",  (PyCFunction)scaled_font_text_extents,   METH_VARARGS},
   {NULL, NULL, 0, NULL},
