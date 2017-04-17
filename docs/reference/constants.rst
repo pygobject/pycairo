@@ -201,7 +201,7 @@ New entries may be added in future versions.
 cairo.FILTER
 ------------
 These constants are used to indicate what filtering should be applied when
-reading pixel values from patterns. See :meth:`SurfacePattern.set_filter` for
+reading pixel values from patterns. See :meth:`Pattern.set_filter` for
 indicating the desired filter to be used with a particular pattern.
 
 .. data:: FILTER_FAST

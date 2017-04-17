@@ -36,6 +36,33 @@ derive. It cannot be instantiated directly.
 
       :returns: a new :class:`Matrix` which stores a copy of the *Pattern's* transformation matrix
 
+   .. method:: get_filter()
+
+      :returns: the current :ref:`FILTER <constants_filter>` used for
+        resizing the pattern.
+
+      .. versionadded:: 1.12.0
+
+         Used to be a method of :class:`SurfacePattern` before
+
+   .. method:: set_filter(filter)
+
+      :param filter: a :ref:`FILTER <constants_filter>` describing the filter
+        to use for resizing the pattern
+
+      Note that you might want to control filtering even when you do not have
+      an explicit *Pattern* object, (for example when using
+      :meth:`Context.set_source_surface`). In these cases, it is convenient to
+      use :meth:`Context.get_source` to get access to the pattern that cairo
+      creates implicitly. For example::
+
+        context.set_source_surface(image, x, y)
+        surfacepattern.set_filter(context.get_source(), cairo.FILTER_NEAREST)
+
+      .. versionadded:: 1.12.0
+
+         Used to be a method of :class:`SurfacePattern` before
+
    .. method:: set_extend(extend)
 
       :param extend: an :ref:`EXTEND <constants_EXTEND>` describing how the
@@ -116,30 +143,11 @@ class SurfacePattern(:class:`Pattern`)
    :returns: a newly created *SurfacePattern* for the given surface.
    :raises: *MemoryError* in case of no memory.
 
-   .. method:: get_filter()
-
-      :returns: the current :ref:`FILTER <constants_filter>` used for
-        resizing the *SurfacePattern*.
-
    .. method:: get_surface()
 
       :returns: the :class:`Surface` of the *SurfacePattern*.
 
       .. versionadded:: 1.4
-
-   .. method:: set_filter(filter)
-
-      :param filter: a :ref:`FILTER <constants_filter>` describing the filter
-        to use for resizing the *Pattern*
-
-      Note that you might want to control filtering even when you do not have
-      an explicit *Pattern* object, (for example when using
-      :meth:`Context.set_source_surface`). In these cases, it is convenient to use
-      :meth:`Context.get_source` to get access to the pattern that cairo creates
-      implicitly. For example::
-
-        context.set_source_surface(image, x, y)
-        surfacepattern.set_filter(context.get_source(), cairo.FILTER_NEAREST)
 
 
 class Gradient(:class:`Pattern`)

@@ -179,6 +179,13 @@ def test_pattern():
     p.add_color_stop_rgba(1, 0, 0, 0, 1)
 
 
+def test_pattern_filter():
+    pattern = cairo.SolidPattern(1, 2, 3)
+    assert pattern.get_filter() == cairo.FILTER_GOOD
+    pattern.set_filter(cairo.FILTER_NEAREST)
+    assert pattern.get_filter() == cairo.FILTER_NEAREST
+
+
 def test_surface():
     # TypeError: The Surface type cannot be instantiated
     test.raises(TypeError, "s = cairo.Surface()")

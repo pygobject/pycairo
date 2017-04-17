@@ -144,6 +144,31 @@ pattern_set_matrix (PycairoPattern *o, PyObject *args) {
   Py_RETURN_NONE;
 }
 
+static PyObject *
+pattern_get_filter (PycairoPattern *o) {
+  cairo_filter_t filter;
+
+  Py_BEGIN_ALLOW_THREADS;
+  filter = cairo_pattern_get_filter (o->pattern);
+  Py_END_ALLOW_THREADS;
+
+  return PYCAIRO_PyLong_FromLong (filter);
+}
+
+static PyObject *
+pattern_set_filter (PycairoPattern *o, PyObject *args) {
+  cairo_filter_t filter;
+
+  if (!PyArg_ParseTuple (args, "i:Pattern.set_filter", &filter))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_pattern_set_filter (o->pattern, filter);
+  Py_END_ALLOW_THREADS;
+
+  Py_RETURN_NONE;
+}
+
 static PyMethodDef pattern_methods[] = {
   /* methods never exposed in a language binding:
    * cairo_pattern_destroy()
@@ -157,6 +182,8 @@ static PyMethodDef pattern_methods[] = {
   {"get_matrix", (PyCFunction)pattern_get_matrix,          METH_NOARGS },
   {"set_extend", (PyCFunction)pattern_set_extend,          METH_VARARGS },
   {"set_matrix", (PyCFunction)pattern_set_matrix,          METH_VARARGS },
+  {"get_filter", (PyCFunction)pattern_get_filter,          METH_NOARGS },
+  {"set_filter", (PyCFunction)pattern_set_filter,          METH_VARARGS },
   {NULL, NULL, 0, NULL},
 };
 
@@ -285,32 +312,14 @@ surface_pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 }
 
 static PyObject *
-surface_pattern_get_filter (PycairoSurfacePattern *o) {
-  return PYCAIRO_PyLong_FromLong (cairo_pattern_get_filter (o->pattern));
-}
-
-static PyObject *
 surface_pattern_get_surface (PycairoSurfacePattern *o) {
   cairo_surface_t *surface;
   RETURN_NULL_IF_CAIRO_ERROR(cairo_pattern_get_surface (o->pattern, &surface));
   return PycairoSurface_FromSurface(cairo_surface_reference (surface), NULL);
 }
 
-static PyObject *
-surface_pattern_set_filter (PycairoSurfacePattern *o, PyObject *args) {
-  int filter;
-
-  if (!PyArg_ParseTuple (args, "i:SurfacePattern.set_filter", &filter))
-    return NULL;
-
-  cairo_pattern_set_filter (o->pattern, filter);
-  Py_RETURN_NONE;
-}
-
 static PyMethodDef surface_pattern_methods[] = {
-  {"get_filter",    (PyCFunction)surface_pattern_get_filter,  METH_NOARGS },
   {"get_surface",   (PyCFunction)surface_pattern_get_surface, METH_NOARGS },
-  {"set_filter",    (PyCFunction)surface_pattern_set_filter,  METH_VARARGS },
   {NULL, NULL, 0, NULL},
 };
 
