@@ -234,6 +234,8 @@ objects.
 
    Allocates a new *FontOptions* object with all options initialized to default values.
 
+   Implements ``__eq__`` and ``__ne__`` using :meth:`equal` since 1.12.0.
+
    .. method:: get_antialias()
 
       :returns: the :ref:`ANTIALIAS <constants_ANTIALIAS>` mode for the *FontOptions* object

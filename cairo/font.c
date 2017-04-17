@@ -579,6 +579,29 @@ static PyMethodDef font_options_methods[] = {
   {NULL, NULL, 0, NULL},
 };
 
+static PyObject *
+font_options_tp_richcompare (PyObject *a, PyObject *b, int op) {
+  PycairoFontOptions *other;
+  cairo_bool_t is_equal;
+
+  if (!PyObject_TypeCheck (b, &PycairoFontOptions_Type) ||
+      (op != Py_EQ && op != Py_NE)) {
+    Py_INCREF (Py_NotImplemented);
+    return Py_NotImplemented;
+  }
+
+  other = (PycairoFontOptions *)b;
+
+  Py_BEGIN_ALLOW_THREADS;
+  is_equal = cairo_font_options_equal (((PycairoFontOptions *)a)->font_options,
+                                       other->font_options);
+  Py_END_ALLOW_THREADS;
+
+  if (is_equal == (op == Py_EQ))
+    Py_RETURN_TRUE;
+  else
+    Py_RETURN_FALSE;
+}
 
 PyTypeObject PycairoFontOptions_Type = {
   PyVarObject_HEAD_INIT(NULL, 0)
@@ -604,7 +627,7 @@ PyTypeObject PycairoFontOptions_Type = {
   0,                                  /* tp_doc */
   0,                                  /* tp_traverse */
   0,                                  /* tp_clear */
-  0,                                  /* tp_richcompare */
+  font_options_tp_richcompare,        /* tp_richcompare */
   0,                                  /* tp_weaklistoffset */
   0,                                  /* tp_iter */
   0,                                  /* tp_iternext */

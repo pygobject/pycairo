@@ -475,6 +475,26 @@ def test_font_options_merge():
     assert font_options.get_hint_metrics() == cairo.HINT_METRICS_ON
 
 
+def test_font_options_hashable_protocol():
+    # make sure __eq__ and __ne__ work
+    surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
+    font_options = surface.get_font_options()
+    assert font_options == font_options.copy()
+    assert not font_options != font_options.copy()
+    font_options.set_hint_metrics(cairo.HINT_METRICS_DEFAULT)
+    different = font_options.copy()
+    different.set_hint_metrics(cairo.HINT_METRICS_ON)
+    assert font_options != different
+    assert not font_options == different
+    assert font_options != object()
+
+    # make sure the other operators are undefined
+    if sys.version_info[0] == 3:
+        with pytest.raises(TypeError):
+            font_options < font_options
+    assert font_options.__gt__(font_options) is NotImplemented
+
+
 def test_surface_mime_data_for_pdf():
     jpeg_bytes = zlib.decompress(base64.b64decode(
         b'eJz7f+P/AwYBLzdPNwZGRkYGDyBk+H+bwRnEowj8P8TAzcHACDJHkOH/EQYRIBsV'
