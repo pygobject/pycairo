@@ -1390,8 +1390,26 @@ recording_surface_ink_extents (PycairoRecordingSurface *o) {
   return Py_BuildValue("(dddd)", x0, y0, width, height);
 }
 
+static PyObject *
+recording_surface_get_extents (PycairoRecordingSurface *o) {
+  cairo_rectangle_t extents;
+  cairo_bool_t result;
+
+  Py_BEGIN_ALLOW_THREADS;
+  result = cairo_recording_surface_get_extents (o->surface, &extents);
+  Py_END_ALLOW_THREADS;
+
+  if (!result) {
+    Py_RETURN_NONE;
+  }
+
+  return Py_BuildValue(
+    "(dddd)", extents.x, extents.y, extents.width, extents.height);
+}
+
 static PyMethodDef recording_surface_methods[] = {
   {"ink_extents", (PyCFunction)recording_surface_ink_extents, METH_NOARGS },
+  {"get_extents", (PyCFunction)recording_surface_get_extents, METH_NOARGS },
   {NULL, NULL, 0, NULL},
 };
 

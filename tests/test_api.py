@@ -230,6 +230,18 @@ def test_surface_destroy_before_surface_pattern():
     ctx.paint()
 
 
+def test_recording_surface_get_extents():
+    surface = cairo.RecordingSurface(cairo.CONTENT_COLOR, None)
+    assert surface.get_extents() is None
+
+    surface = cairo.RecordingSurface(cairo.CONTENT_COLOR, (1, 2, 3, 4))
+    assert surface.get_extents() == (1, 2, 3, 4)
+
+    surface = cairo.RecordingSurface(cairo.CONTENT_COLOR, (1, 2, 3, 4))
+    surface.finish()
+    assert surface.get_extents() == (1, 2, 3, 4)
+
+
 def test_image_surface_get_data():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 3, 3)
     ctx = cairo.Context(surface)

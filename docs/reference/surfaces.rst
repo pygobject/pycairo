@@ -812,6 +812,16 @@ replay.
       .. versionadded:: 1.11.0
 
 
+   .. method:: get_extents()
+
+      :returns: (x, y, width, height) a 4-tuple of float or :obj:`None` if the
+         surface is unbounded.
+
+      Get the extents of the recording-surface.
+
+      .. versionadded:: 1.12.0
+
+
 class SVGSurface(:class:`Surface`)
 ==================================
 
