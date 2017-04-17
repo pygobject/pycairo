@@ -1517,12 +1517,73 @@ svg_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   return _surface_create_with_object (sfc, file);
 }
 
+static PyObject *
+svg_get_versions (PyObject *self) {
+  PyObject *list, *num;
+  const cairo_svg_version_t *versions;
+  int i, num_versions;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_svg_get_versions (&versions, &num_versions);
+  Py_END_ALLOW_THREADS;
+
+  list = PyList_New (num_versions);
+  if (list == NULL)
+    return NULL;
+
+  for (i=0; i < num_versions; i++) {
+    num = PYCAIRO_PyLong_FromLong (versions[i]);
+    if (num == NULL) {
+      Py_DECREF (list);
+      return NULL;
+    }
+    PyList_SET_ITEM (list, i, num);
+  }
+
+  return list;
+}
+
+static PyObject *
+svg_version_to_string (PyObject *self,  PyObject *args) {
+  cairo_svg_version_t version;
+  const char *version_string;
+
+  if (!PyArg_ParseTuple(args, "i:SVGSurface.version_to_string", &version))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  version_string = cairo_svg_version_to_string (version);
+  Py_END_ALLOW_THREADS;
+
+  if (version_string == NULL) {
+    PyErr_SetString (PyExc_ValueError, "invalid version");
+    return NULL;
+  }
+
+  return PYCAIRO_PyUnicode_FromString (version_string);
+}
+
+static PyObject *
+svg_surface_restrict_to_version (PycairoPDFSurface *o, PyObject *args) {
+  cairo_svg_version_t version;
+
+  if (!PyArg_ParseTuple(args, "i:SVGSurface.restrict_to_version", &version))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_svg_surface_restrict_to_version (o->surface, version);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_NULL_IF_CAIRO_SURFACE_ERROR (o->surface);
+  Py_RETURN_NONE;
+}
+
 static PyMethodDef svg_surface_methods[] = {
-  /* TODO
-   * cairo_svg_surface_restrict_to_version
-   * cairo_svg_get_versions
-   * cairo_svg_version_to_string
-   */
+  {"get_versions", (PyCFunction)svg_get_versions, METH_NOARGS | METH_STATIC},
+  {"version_to_string", (PyCFunction)svg_version_to_string,
+   METH_VARARGS | METH_STATIC},
+  {"restrict_to_version", (PyCFunction)svg_surface_restrict_to_version,
+   METH_VARARGS},
     {NULL, NULL, 0, NULL},
 };
 

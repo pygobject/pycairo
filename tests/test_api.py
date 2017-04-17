@@ -408,6 +408,9 @@ def test_constants():
 
     assert cairo.MIME_TYPE_JPEG == "image/jpeg"
 
+    assert cairo.SVG_VERSION_1_1 == 0
+    assert cairo.SVG_VERSION_1_2 == 1
+
 
 def test_surface_get_set_mime_data():
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
@@ -519,3 +522,24 @@ def test_surface_mime_data_for_pdf():
     context.paint()
     surface.finish()
     assert jpeg_bytes in file_like.getvalue()
+
+
+def test_svg_surface_get_versions():
+    versions = cairo.SVGSurface.get_versions()
+    assert isinstance(versions, list)
+    assert all(isinstance(v, int) for v in versions)
+
+
+def test_svg_version_to_string():
+    ver = cairo.SVGSurface.version_to_string(cairo.SVG_VERSION_1_1)
+    assert ver and isinstance(ver, str)
+    with pytest.raises(ValueError):
+        cairo.SVGSurface.version_to_string(-1)
+
+
+def test_svg_surface_restrict_to_version():
+    surface = cairo.SVGSurface(None, 10, 10)
+    surface.restrict_to_version(cairo.SVG_VERSION_1_1)
+    surface.finish()
+    with pytest.raises(cairo.Error):
+        surface.restrict_to_version(cairo.SVG_VERSION_1_2)

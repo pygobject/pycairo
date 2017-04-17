@@ -839,18 +839,43 @@ multi-page vector surface backend
    :returns: a new *SVGSurface* of the specified size in points to be written to *fobj*.
    :raises: *MemoryError* in case of no memory
 
+   .. method:: restrict_to_version(version)
 
-   .. method:: get_versions
+      :param version: SVG version
+      :type version: :ref:`constants_SVG_VERSION`
 
-      Not implemented in pycairo (yet)
+      Restricts the generated SVG file to version . See :meth:`get_versions`
+      for a list of available version values that can be used here.
 
-   .. method:: restrict_to_version
+      This function should only be called before any drawing operations have
+      been performed on the given surface. The simplest way to do this is to
+      call this function immediately after creating the surface.
 
-      Not implemented in pycairo (yet)
+      .. versionadded:: 1.12.0
 
-   .. method:: version_to_string
+   .. staticmethod:: get_versions()
 
-      Not implemented in pycairo (yet)
+      :returns: supported version list
+      :rtype: list
+
+      Retrieve the list of supported versions. See
+      :meth:`restrict_to_version`.
+
+      .. versionadded:: 1.12.0
+
+   .. staticmethod:: version_to_string(version)
+
+      :param version: SVG version
+      :type version: :ref:`constants_SVG_VERSION`
+      :returns: the string associated to the given version
+      :rtype: str
+      :raises ValueError: if version isn't valid
+
+      Get the string representation of the given version id. See
+      :meth:`get_versions` for a way to get the list of valid version ids.
+
+      .. versionadded:: 1.12.0
+
 
 
 class Win32Surface(:class:`Surface`)

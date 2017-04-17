@@ -661,6 +661,28 @@ specification that a generated PDF file will conform to.
     .. versionadded:: 1.12.0
 
 
+.. _constants_SVG_VERSION:
+
+cairo.SVG_VERSION
+-----------------
+
+These constants are used to describe the version number of the SVG
+specification that a generated SVG file will conform to.
+
+.. data:: SVG_VERSION_1_1
+
+    The version 1.1 of the SVG specification.
+
+    .. versionadded:: 1.12.0
+
+
+.. data:: SVG_VERSION_1_2
+
+    The version 1.2 of the SVG specification.
+
+    .. versionadded:: 1.12.0
+
+
 .. _constants_SUBPIXEL_ORDER:
 
 cairo.SUBPIXEL_ORDER
