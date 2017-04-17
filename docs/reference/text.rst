@@ -169,7 +169,12 @@ use.
 
    .. method:: get_font_matrix()
 
-      Not implemented in pycairo (yet)
+      :returns: the matrix
+      :rtype: cairo.Matrix
+
+      Returns the font matrix with which scaled_font was created.
+
+      .. versionadded:: 1.12.0
 
    .. method:: get_font_options()
 
