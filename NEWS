@@ -1,3 +1,77 @@
+1.12.0 - 2017-??-??
+-------------------
+
+General:
+  * Require cairo 1.12.0
+  * Use C90 and enforce it on travis-ci. :bug:`5`, :fdobug:`22940`
+
+Constants:
+  * Add various new :ref:`constants_OPERATOR`, :ref:`constants_ANTIALIAS` and
+    :ref:`constants_FORMAT` constants. :bug:`1`
+  * Add :data:`HAS_MIME_SURFACE` and :ref:`constants_MIME_TYPE`. :bug:`7`,
+    :fdobug:`58771`
+  * Add :ref:`constants_PDF_VERSION`. :pr:`16`
+  * Add :ref:`constants_SVG_VERSION`
+
+:exc:`Error`:
+  * Add a :data:`Error.status` attribute exposing :ref:`constants_STATUS`
+  * Add :exc:`CairoError` alias for :exc:`Error` for cairocffi compatibility
+
+:class:`Matrix`:
+  * Expose matrix components as read/write properties. e.g. :data:`Matrix.xx`
+  * Fix type checking of the multiplication operator under
+    Python 3. :bug:`8`, :fdobug:`89162` (Lawrence D'Oliveiro)
+
+:class:`Surface`:
+  * Add :meth:`Surface.set_mime_data`. :bug:`7`, :fdobug:`58771`
+  * Add :meth:`Surface.get_mime_data`. :bug:`7`, :fdobug:`58771`
+  * Add :meth:`Surface.supports_mime_type`. :bug:`7`, :fdobug:`58771`
+  * Add :meth:`Surface.create_for_rectangle`. :pr:`13`
+  * Add :meth:`Surface.create_similar_image`. :pr:`15`
+  * Add :meth:`Surface.has_show_text_glyphs`
+  * Fix crash when the surface wrapper gets deallocated before the surface
+    object. :bug:`11`
+
+:class:`Context`:
+  * Add :meth:`Context.in_clip`. :pr:`14`
+
+:class:`PDFSurface`:
+  * Add :meth:`PDFSurface.restrict_to_version`. :pr:`16`
+  * Add :meth:`PDFSurface.get_versions`. :pr:`16`
+  * Add :meth:`PDFSurface.version_to_string`. :pr:`16`
+
+:class:`SVGSurface`:
+  * Add :meth:`SVGSurface.restrict_to_version`
+  * Add :meth:`SVGSurface.get_versions`
+  * Add :meth:`SVGSurface.version_to_string`
+
+:class:`XCBSurface`:
+  * Add :meth:`XCBSurface.set_size`
+
+:class:`PSSurface`:
+  * Add :meth:`PSSurface.get_levels`
+  * Add :meth:`PSSurface.level_to_string`
+
+:class:`Pattern`:
+  * Add :meth:`Pattern.set_filter`
+  * Add :meth:`Pattern.get_filter`
+
+:class:`RecordingSurface`:
+  * Add :meth:`RecordingSurface.get_extents`
+
+:class:`FontOptions`:
+  * Implement ``__eq__`` and ``__ne__``
+  * Add :meth:`FontOptions.copy`
+  * Add :meth:`FontOptions.hash`
+  * Add :meth:`FontOptions.equal`
+  * Add :meth:`FontOptions.merge`
+
+:class:`ScaledFont`:
+  * Add :meth:`ScaledFont.get_ctm`
+  * Add :meth:`ScaledFont.get_font_matrix`
+  * Add :meth:`ScaledFont.get_font_options`
+
+
 1.11.1 - 2017-04-12
 -------------------
 
@@ -33,7 +107,7 @@ Bug Fixes:
     * Fix crash when read()/write() methods of file objects passed to pycairo
       raise exceptions.
     * Fix possible value truncation of handles passed to Win32Surface and
-      Win32PrintingSurface on 64bit Windows.
+      Win32PrintingSurface on 64bit Windows. :fdobug:`57493`
 
 
 1.10.0 - 2011-05-01

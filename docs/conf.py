@@ -29,5 +29,7 @@ html_static_path = [
 ]
 
 extlinks = {
-    'fdobug': ('https://bugs.freedesktop.org/show_bug.cgi?id=%s', '#'),
+    'fdobug': ('https://bugs.freedesktop.org/show_bug.cgi?id=%s', '#fdo-'),
+    'bug': ('https://github.com/pygobject/pycairo/issues/%s', '#'),
+    'pr': ('https://github.com/pygobject/pycairo/pull/%s', '#pr-'),
 }
