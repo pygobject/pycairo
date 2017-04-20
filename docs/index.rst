@@ -8,6 +8,7 @@ Pycairo - Python bindings for cairo
    :hidden:
 
    changelog
+   Tutorial <tutorial>
    reference/index
    pycairo_c_api
    faq
