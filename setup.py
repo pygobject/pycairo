@@ -207,6 +207,12 @@ class install_data(du_install_data):
 
 def main():
 
+    extra_compile_args = []
+    if sys.version_info[0] == 2:
+        # Some python setups don't pass -fno-strict-aliasing, while MACROS like
+        # Py_RETURN_TRUE require it. This makes sure these cases are ignores.
+        extra_compile_args.append("-Wno-strict-aliasing")
+
     cairo_ext = Extension(
         name='cairo._cairo',
         sources=[
@@ -223,6 +229,7 @@ def main():
         include_dirs=pkg_config_parse('--cflags-only-I', 'cairo'),
         library_dirs=pkg_config_parse('--libs-only-L', 'cairo'),
         libraries=pkg_config_parse('--libs-only-l', 'cairo'),
+        extra_compile_args=extra_compile_args,
     )
 
     setup(

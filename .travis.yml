@@ -4,7 +4,7 @@ matrix:
       dist: trusty
       language: python
       python: "2.7"
-      env: CFLAGS="-std=c90 -pedantic -Wno-long-long -Werror -Wno-strict-aliasing"
+      env: CFLAGS="-std=c90 -pedantic -Wno-long-long -Werror"
     - os: linux
       dist: trusty
       language: python
