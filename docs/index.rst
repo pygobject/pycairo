@@ -11,6 +11,7 @@ Pycairo - Python bindings for cairo
    Tutorial <tutorial>
    reference/index
    pycairo_c_api
+   resources
    faq
 
 .. currentmodule:: cairo
