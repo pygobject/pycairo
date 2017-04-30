@@ -10,6 +10,12 @@ interesting because they don't lose clarity when resized or transformed.
 Pycairo is a set of bindings for cairo. It provides the cairo module which can
 be used to call cairo commands from Python.
 
+.. toctree::
+    :titlesonly:
+
+    integration
+
+
 Understanding How to use Cairo
 ------------------------------
 

@@ -30,11 +30,6 @@ cairo.Context can be subclassed.
 All other pycairo subclasses cannot be subclassed.
 
 
-Q: How do I use pycairo with numpy?
-
-A: See test/isurface_create_for_data2.py
-
-
 Q: How do I use pycairo with pygame?
 
 A: See test/pygame-test1.py
