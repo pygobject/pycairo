@@ -809,9 +809,9 @@ image_surface_get_width (PycairoImageSurface *o) {
 #if PY_MAJOR_VERSION < 3
 
 /* Buffer interface functions, used by ImageSurface.get_data() */
-static int
-image_surface_buffer_getreadbuf (PycairoImageSurface *o, int segment,
-				 const void **ptr) {
+static Py_ssize_t
+image_surface_buffer_getreadbuf (PycairoImageSurface *o, Py_ssize_t segment,
+                                 const void **ptr) {
   cairo_surface_t *surface = o->surface;
   int height, stride;
 
@@ -826,9 +826,9 @@ image_surface_buffer_getreadbuf (PycairoImageSurface *o, int segment,
   return height * stride;
 }
 
-static int
-image_surface_buffer_getwritebuf (PycairoImageSurface *o, int segment,
-				  const void **ptr) {
+static Py_ssize_t
+image_surface_buffer_getwritebuf (PycairoImageSurface *o, Py_ssize_t segment,
+                                  const void **ptr) {
   cairo_surface_t *surface = o->surface;
   int height, stride;
 
@@ -843,8 +843,8 @@ image_surface_buffer_getwritebuf (PycairoImageSurface *o, int segment,
   return height * stride;
 }
 
-static int
-image_surface_buffer_getsegcount (PycairoImageSurface *o, int *lenp) {
+static Py_ssize_t
+image_surface_buffer_getsegcount (PycairoImageSurface *o, Py_ssize_t *lenp) {
   if (lenp) {
     /* report the sum of the sizes (in bytes) of all segments */
     cairo_surface_t *surface = o->surface;
