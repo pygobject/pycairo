@@ -28,9 +28,3 @@ problems and is best avoided.
 
 cairo.Context can be subclassed.
 All other pycairo subclasses cannot be subclassed.
-
-
-Q: How do I use pycairo with pygame?
-
-A: See test/pygame-test1.py
-       test/pygame-test2.py
