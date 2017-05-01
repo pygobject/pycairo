@@ -855,12 +855,28 @@ image_surface_buffer_getsegcount (PycairoImageSurface *o, Py_ssize_t *lenp) {
   return 1;  /* surface data is all in one segment */
 }
 
+static Py_ssize_t
+image_surface_buffer_getcharbuffer (PycairoImageSurface *o,
+                                    Py_ssize_t segment,
+                                    char **ptrptr) {
+  Py_ssize_t segment_size;
+
+  if (segment != 0) {
+    PyErr_SetString(PyExc_SystemError,
+      "accessing non-existent ImageSurface segment");
+    return -1;
+  }
+
+  image_surface_buffer_getsegcount (o, &segment_size);
+  return segment_size;
+}
+
 /* See Python C API Manual 10.7 */
 static PyBufferProcs image_surface_as_buffer = {
   (readbufferproc) image_surface_buffer_getreadbuf,
   (writebufferproc)image_surface_buffer_getwritebuf,
   (segcountproc)   image_surface_buffer_getsegcount,
-  (charbufferproc) NULL,
+  (charbufferproc) image_surface_buffer_getcharbuffer,
 };
 #endif
 
@@ -907,7 +923,12 @@ PyTypeObject PycairoImageSurface_Type = {
 #else
   0,                                  /* tp_as_buffer */
 #endif
+#if PY_MAJOR_VERSION < 3
+  Py_TPFLAGS_DEFAULT |
+     Py_TPFLAGS_HAVE_GETCHARBUFFER,   /* tp_flags */
+#else
   Py_TPFLAGS_DEFAULT,                 /* tp_flags */
+#endif
   0,                                  /* tp_doc */
   0,                                  /* tp_traverse */
   0,                                  /* tp_clear */
