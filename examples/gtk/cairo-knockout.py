@@ -4,7 +4,6 @@
 
 from __future__ import division
 import math
-import sys
 
 import cairo
 import gi

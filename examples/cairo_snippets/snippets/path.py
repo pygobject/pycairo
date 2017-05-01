@@ -1,5 +1,3 @@
-import cairo
-
 
 def draw(cr, width, height):
     cr.scale(width, height)

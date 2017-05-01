@@ -2,7 +2,6 @@
 """cairo/cairo-demo/png/hering.c translated into Python"""
 
 import math
-import cairo
 
 
 def draw(ctx, width, height):

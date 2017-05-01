@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 """cairo/cairo-demo/png/spiral.c translated into Python"""
 
-import cairo
-
 
 def draw(ctx, width, height):
     wd = .02 * width

@@ -1,5 +1,4 @@
 from math import pi
-import cairo
 
 
 def draw(cr, width, height):

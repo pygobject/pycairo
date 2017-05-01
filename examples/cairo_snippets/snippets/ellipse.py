@@ -1,5 +1,4 @@
 from math import pi
-import cairo
 
 
 def path_ellipse(cr, x, y, width, height, angle=0):
