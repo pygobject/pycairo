@@ -45,9 +45,15 @@
 #define PYCAIRO_PyUnicode_FromString PyString_FromString
 #define PYCAIRO_PyUnicode_Join _PyString_Join
 #define PYCAIRO_PyUnicode_InternFromString PyString_InternFromString
+#define PYCAIRO_PyUnicode_Astring PyString_AsString
+#define PYCAIRO_PyUnicode_FromFormat PyString_FromFormat
+
+#define PYCAIRO_PyNumber_Long PyNumber_Int
 
 #define PYCAIRO_PyBytes_AsStringAndSize PyString_AsStringAndSize
 
+#define PYCAIRO_PyLong_Type PyInt_Type
+#define PYCAIRO_PyLongObject PyIntObject
 #define PYCAIRO_PyLong_FromLong PyInt_FromLong
 #define PYCAIRO_PyLong_AsLong PyInt_AsLong
 
@@ -65,9 +71,15 @@
 #define PYCAIRO_PyUnicode_FromString PyUnicode_FromString
 #define PYCAIRO_PyUnicode_Join PyUnicode_Join
 #define PYCAIRO_PyUnicode_InternFromString PyUnicode_InternFromString
+#define PYCAIRO_PyUnicode_Astring _PyUnicode_AsString
+#define PYCAIRO_PyUnicode_FromFormat PyUnicode_FromFormat
+
+#define PYCAIRO_PyNumber_Long PyNumber_Long
 
 #define PYCAIRO_PyBytes_AsStringAndSize PyBytes_AsStringAndSize
 
+#define PYCAIRO_PyLong_Type PyLong_Type
+#define PYCAIRO_PyLongObject PyLongObject
 #define PYCAIRO_PyLong_FromLong PyLong_FromLong
 #define PYCAIRO_PyLong_AsLong PyLong_AsLong
 

@@ -193,4 +193,19 @@ int Pycairo_Check_Status (cairo_status_t status);
 
 PyObject *error_get_type(void);
 
+/* int enums */
+
+int init_enums(PyObject *module);
+PyObject *int_enum_create(PyTypeObject *type, long value);
+
+#define DECL_ENUM(name) PyTypeObject Pycairo_##name##_Type;
+
+#define RETURN_INT_ENUM(type_name, value) \
+    return int_enum_create(&Pycairo_##type_name##_Type, value);
+
+DECL_ENUM(Antialias)
+DECL_ENUM(Content)
+DECL_ENUM(Extend)
+DECL_ENUM(FillRule)
+
 #endif /* _PYCAIRO_PRIVATE_H_ */

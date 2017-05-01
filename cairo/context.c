@@ -311,7 +311,7 @@ pycairo_font_extents (PycairoContext *o) {
 
 static PyObject *
 pycairo_get_antialias (PycairoContext *o) {
-  return PYCAIRO_PyLong_FromLong (cairo_get_antialias (o->ctx));
+  RETURN_INT_ENUM (Antialias, cairo_get_antialias (o->ctx));
 }
 
 static PyObject *
