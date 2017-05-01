@@ -28,7 +28,8 @@ matrix:
 install:
   - travis_retry sudo apt-get update -q
   - travis_retry sudo apt-get install -y libcairo2-dev
-  - python -m pip install --upgrade pytest
+  - python -m pip install --upgrade pytest flake8
 
 script:
   - python setup.py test
+  - python -m flake8 .
