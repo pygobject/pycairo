@@ -4,11 +4,13 @@ from __future__ import division
 from __future__ import absolute_import
 from __future__ import print_function
 
+import os
 import io
 import sys
 import tempfile as tfi
 import base64
 import zlib
+import shutil
 
 import cairo
 import pytest
@@ -18,6 +20,38 @@ try:
     long
 except NameError:
     long = int
+
+
+def test_show_unicode_text():
+    width, height = 300, 300
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+    ctx = cairo.Context(surface)
+
+    ctx.scale(width, height)
+    ctx.set_line_width(0.04)
+
+    ctx.select_font_face(
+        "Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
+    ctx.set_font_size(0.20)
+    ctx.move_to(0.05, 0.5)
+    ctx.show_text(u"ēxāmple.")
+
+
+def test_unicode_filenames():
+    # FIXME: cairo does not support wchar on Windows and byte support is
+    # missing under Python 3
+
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
+    dirname = tfi.mkdtemp()
+    old_dir = os.getcwd()
+    try:
+        os.chdir(dirname)
+        surface.write_to_png("foobar")
+        new = cairo.ImageSurface.create_from_png(u"foobar")
+        assert surface.get_data() == new.get_data()
+    finally:
+        os.chdir(old_dir)
+        shutil.rmtree(dirname)
 
 
 def test_scaled_font_get_ctm():
