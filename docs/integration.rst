@@ -28,3 +28,17 @@ Creating a NumPy array from an ImageSurface:
         data = numpy.ndarray(shape=(width, height),
                              dtype=numpy.uint32,
                              buffer=buf)
+
+
+Pygame & ImageSurface
+---------------------
+
+Creating a pygame.image from an ImageSurface:
+    .. code:: python
+
+        import pygame
+        import cairo
+
+        width, height = 255, 255
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+        image = pygame.image.frombuffer(buf, (width, height), "ARGB")
