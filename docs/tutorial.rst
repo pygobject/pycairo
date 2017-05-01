@@ -14,6 +14,7 @@ be used to call cairo commands from Python.
     :titlesonly:
 
     integration
+    examples
 
 
 Understanding How to use Cairo
