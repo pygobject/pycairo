@@ -7,7 +7,9 @@ import math
 import sys
 
 import cairo
-import gtk
+import gi
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk
 
 
 def oval_path(ctx, xc, yc, xr, yr):
@@ -103,26 +105,23 @@ def draw (ctx, width, height):
     ctx.set_source_surface (overlay, 0, 0)
     ctx.paint()
 
-def expose(drawingarea, event):
-    ctx = drawingarea.window.cairo_create()
-
-    _, _, width, height = drawingarea.allocation
-    draw (ctx, width, height)
-
+def draw_event(drawingarea, ctx):
+    alloc = drawingarea.get_allocation()
+    draw (ctx, alloc.width, alloc.height)
     return False
 
 def main():
-    win = gtk.Window()
-    win.connect('destroy', gtk.main_quit)
+    win = Gtk.Window()
+    win.connect('destroy', Gtk.main_quit)
     win.set_title('Knockout Groups')
     win.set_default_size(400, 400)
 
-    drawingarea = gtk.DrawingArea()
+    drawingarea = Gtk.DrawingArea()
     win.add(drawingarea)
-    drawingarea.connect('expose_event', expose)
+    drawingarea.connect('draw', draw_event)
 
     win.show_all()
-    gtk.main()
+    Gtk.main()
 
 if __name__ == '__main__':
     main()
