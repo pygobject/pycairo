@@ -4,40 +4,44 @@ import os.path
 import sys
 
 import cairo
-import gtk
-import pango
+
+import gi
+gi.require_version("Gtk", "3.0")
+gi.require_foreign("cairo")
+from gi.repository import Gtk, Pango
+
 
 from snippets import get_snippets
 
 
-class Window(gtk.Window):
+class Window(Gtk.Window):
     """Composite widget"""
 
     WIDTH, HEIGHT = 400, 400
 
-    def __init__(self, title=None, type=gtk.WINDOW_TOPLEVEL):
-        gtk.Window.__init__(self, type)
+    def __init__(self, title=None):
+        super(Window, self).__init__()
         self.set_default_size(self.WIDTH, self.HEIGHT)
 
-        self.da = gtk.DrawingArea()
-        self.da.connect('expose-event', self.da_expose_event)
+        self.da = Gtk.DrawingArea()
+        self.da.connect('draw', self.da_draw_event)
 
         def put_in_frame(widget):
-            frame = gtk.Frame(label=None)
-            frame.set_property('shadow_type', gtk.SHADOW_IN)
+            frame = Gtk.Frame(label=None)
+            frame.set_property('shadow_type', Gtk.ShadowType.IN)
             frame.add(widget)
             return frame
 
         self.current_snippet = None
 
-        vpaned = gtk.VPaned()
+        vpaned = Gtk.VPaned()
         self.add(vpaned)
 
         sv = self.create_text_view()
         vpaned.pack1(put_in_frame(sv), True, True)
         sv.set_size_request(self.WIDTH, int(self.HEIGHT / 2))
 
-        hpaned = gtk.HPaned()
+        hpaned = Gtk.HPaned()
         vpaned.pack2(hpaned, True, False)
 
         sl = self.create_snippet_list()
@@ -49,27 +53,25 @@ class Window(gtk.Window):
         # set focus to snippet list
         sl.get_child().grab_focus()
 
-    def da_expose_event(self, da, event, data=None):
-        x, y, width, height = da.allocation
-
+    def da_draw_event(self, da, cr):
         if self.current_snippet is None:
             return False
 
-        cr = da.window.cairo_create()
-        self.current_snippet.draw_func(cr, width, height)
+        alloc = da.get_allocation()
+        self.current_snippet.draw_func(cr, alloc.width, alloc.height)
 
         return True
 
     def create_text_view(self):
-        sw = gtk.ScrolledWindow()
-        sw.set_property('shadow-type', gtk.SHADOW_IN)
-        sw.set_policy(hscrollbar_policy=gtk.POLICY_AUTOMATIC,
-                      vscrollbar_policy=gtk.POLICY_AUTOMATIC)
+        sw = Gtk.ScrolledWindow()
+        sw.set_property('shadow-type', Gtk.ShadowType.IN)
+        sw.set_policy(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC,
+                      vscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
 
-        text_view = gtk.TextView()
+        text_view = Gtk.TextView()
         sw.add(text_view)
         # set a fixed width font, so any tabs line up
-        text_view.modify_font(pango.FontDescription("Fixed"))
+        text_view.override_font(Pango.FontDescription.from_string("Fixed"))
 
         self.text_buffer = text_view.get_buffer()
 
@@ -83,17 +85,17 @@ class Window(gtk.Window):
             self.da.queue_draw()
 
     def create_snippet_list(self):
-        sw = gtk.ScrolledWindow()
-        sw.set_property('shadow-type', gtk.SHADOW_IN)
-        sw.set_policy(hscrollbar_policy=gtk.POLICY_NEVER,
-                      vscrollbar_policy=gtk.POLICY_AUTOMATIC)
+        sw = Gtk.ScrolledWindow()
+        sw.set_property('shadow-type', Gtk.ShadowType.IN)
+        sw.set_policy(hscrollbar_policy=Gtk.PolicyType.NEVER,
+                      vscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
 
         snippets = get_snippets()
-        model = gtk.ListStore(str, object)
+        model = Gtk.ListStore(str, object)
         for name, s in snippets.items():
             model.append(row=(name, s))
 
-        tree_view = gtk.TreeView(model)
+        tree_view = Gtk.TreeView(model)
         sw.add(tree_view)
         tree_view.set_property('headers-visible', False)
         tree_view.set_property('search-column', 0)
@@ -101,10 +103,10 @@ class Window(gtk.Window):
 
         tselection = tree_view.get_selection()
         tselection.connect("changed", self.cb_selection_changed)
-        tselection.set_mode(gtk.SELECTION_BROWSE)
+        tselection.set_mode(Gtk.SelectionMode.BROWSE)
 
-        cr = gtk.CellRendererText()
-        tvc = gtk.TreeViewColumn(None, cr, text=0)
+        cr = Gtk.CellRendererText()
+        tvc = Gtk.TreeViewColumn(None, cr, text=0)
         tree_view.append_column(tvc)
 
         tselection.select_path(0,)  # select first item
@@ -114,6 +116,6 @@ class Window(gtk.Window):
 
 if __name__ == '__main__':
     app = Window()
-    app.connect('destroy', gtk.main_quit)
+    app.connect('destroy', Gtk.main_quit)
     app.show_all()
-    gtk.main()
+    Gtk.main()
