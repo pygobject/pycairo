@@ -20,10 +20,10 @@ def test_image_surface_create_for_data_array():
             offset = (x + (y * width)) * 4
             alpha = y
 
-            b = int(x * alpha/255.0)
-            g = int(y * alpha/255.0)
+            b = int(x * alpha / 255.0)
+            g = int(y * alpha / 255.0)
             # cairo.FORMAT_ARGB32 uses pre-multiplied alpha
-            data[offset:offset+3] = array.array(
+            data[offset:offset + 3] = array.array(
                 "B", struct.pack("=I", b | g << 8 | alpha << 24))
 
     surface = cairo.ImageSurface.create_for_data(
@@ -50,6 +50,7 @@ def test_image_surface_write_to_png_filename_and_obj_compare():
         assert h.read() == fileobj.getvalue()
 
     os.unlink(filename)
+
 
 @pytest.mark.skipif(not cairo.HAS_PNG_FUNCTIONS, reason="not png support")
 def test_image_surface_png_obj_roundtrip():

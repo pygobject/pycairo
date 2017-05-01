@@ -17,8 +17,8 @@ def test_image_surface_create_for_data_numpy_array():
     for y in range(height):
         for x in range(width):
             alpha = y
-            b = int(x * alpha/255.0)
-            g = int(y * alpha/255.0)
+            b = int(x * alpha / 255.0)
+            g = int(y * alpha / 255.0)
             data[y][x] = (b | g << 8 | alpha << 24)
 
     surface = cairo.ImageSurface.create_for_data(

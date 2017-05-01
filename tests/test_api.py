@@ -94,7 +94,7 @@ def test_surface_has_show_text_glyphs():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
     assert not surface.has_show_text_glyphs()
     surface.finish()
-    with pytest.raises(cairo.Error) as excinfo:
+    with pytest.raises(cairo.Error):
         surface.has_show_text_glyphs()
 
 
