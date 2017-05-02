@@ -67,68 +67,6 @@ cairo.HAS
     .. versionadded:: 1.12.0
 
 
-.. _constants_EXTEND:
-
-cairo.EXTEND
-------------
-These constants are used to describe how :class:`Pattern` color/alpha will be
-determined for areas "outside" the pattern's natural area, (for example,
-outside the surface bounds or outside the gradient geometry).
-
-The default extend mode is *EXTEND_NONE* for :class:`SurfacePattern` and
-*EXTEND_PAD* for :class:`Gradient` patterns.
-
-.. data:: EXTEND_NONE
-
-   pixels outside of the source pattern are fully transparent
-
-.. data:: EXTEND_REPEAT
-
-   the pattern is tiled by repeating
-
-.. data:: EXTEND_REFLECT
-
-   the pattern is tiled by reflecting at the edges (Implemented for surface
-   patterns since 1.6)
-
-.. data:: EXTEND_PAD
-
-   pixels outside of the pattern copy the closest pixel from the source (Since
-   1.2; but only implemented for surface patterns since 1.6)
-
-New entries may be added in future versions.
-
-
-.. _constants_FILL_RULE:
-
-cairo.FILL_RULE
----------------
-These constants are used to select how paths are filled. For both fill
-rules, whether or not a point is included in the fill is determined by taking
-a ray from that point to infinity and looking at intersections with the
-path. The ray can be in any direction, as long as it doesn't pass through the
-end point of a segment or have a tricky intersection such as intersecting
-tangent to the path. (Note that filling is not actually implemented in this
-way. This is just a description of the rule that is applied.)
-
-The default fill rule is *FILL_RULE_WINDING*.
-
-.. data:: FILL_RULE_WINDING
-
-   If the path crosses the ray from left-to-right, counts +1. If the path
-   crosses the ray from right to left, counts -1. (Left and right are
-   determined from the perspective of looking along the ray from the starting
-   point.) If the total count is non-zero, the point will be filled.
-
-.. data::  FILL_RULE_EVEN_ODD
-
-   Counts the total number of intersections, without regard to the orientation
-   of the contour. If the total number of intersections is odd, the point will
-   be filled.
-
-New entries may be added in future versions.
-
-
 .. _constants_FILTER:
 
 cairo.FILTER

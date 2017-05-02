@@ -139,7 +139,7 @@ safely be changed, without loosing the current state. Use
 
       Establishes a new clip region by intersecting the current clip region
       with the current path as it would be filled by :meth:`Context.fill` and
-      according to the current :ref:`FILL RULE <constants_FILL_RULE>` (see
+      according to the current :class:`fill rule <cairo.FillRule>` (see
       :meth:`Context.set_fill_rule`).
 
       After :meth:`.clip`, the current path will be cleared from the
@@ -175,7 +175,7 @@ safely be changed, without loosing the current state. Use
 
       Establishes a new clip region by intersecting the current clip region
       with the current path as it would be filled by :meth:`Context.fill` and
-      according to the current :ref:`FILL RULE <constants_FILL_RULE>` (see
+      according to the current :class:`fill rule <cairo.FillRule>` (see
       :meth:`Context.set_fill_rule`).
 
       Unlike :meth:`Context.clip`, :meth:`.clip_preserve` preserves the path
@@ -314,7 +314,7 @@ safely be changed, without loosing the current state. Use
    .. method:: fill()
 
       A drawing operator that fills the current path according to the current
-      :ref:`FILL RULE <constants_FILL_RULE>`, (each sub-path is implicitly
+      :class:`fill rule <cairo.FillRule>`, (each sub-path is implicitly
       closed before being filled). After :meth:`.fill`, the current path will
       be cleared from the :class:`Context`. See :meth:`Context.set_fill_rule`
       and :meth:`Context.fill_preserve`.
@@ -350,7 +350,7 @@ safely be changed, without loosing the current state. Use
    .. method:: fill_preserve()
 
       A drawing operator that fills the current path according to the current
-      :ref:`FILL RULE <constants_FILL_RULE>`, (each sub-path is implicitly
+      :class:`fill rule <cairo.FillRule>`, (each sub-path is implicitly
       closed before being filled). Unlike :meth:`Context.fill`,
       :meth:`.fill_preserve` preserves the path within the :class:`Context`.
 
@@ -426,8 +426,9 @@ safely be changed, without loosing the current state. Use
 
    .. method:: get_fill_rule()
 
-      :returns: the current :ref:`FILL RULE <constants_FILL_RULE>`, as
+      :returns: the current fill rule, as
         set by :meth:`Context.set_fill_rule`.
+      :rtype: cairo.FillRule
 
    .. method:: get_font_face()
 
@@ -1016,13 +1017,13 @@ safely be changed, without loosing the current state. Use
 
    .. method:: set_fill_rule(fill_rule)
 
-      :param fill_rule: a :ref:`FILL RULE <constants_FILL_RULE>` to set the
+      :param cairo.FillRule fill_rule: a fill rule to set the
         within the cairo context. The fill rule is used to determine which
         regions are inside or outside a complex (potentially
         self-intersecting) path. The current fill rule affects both
         :meth:`.fill` and :meth:`.clip`.
 
-      The default fill rule is :data:`cairo.FILL_RULE_WINDING`.
+      The default fill rule is :attr:`cairo.FillRule.WINDING`.
 
    .. method:: set_font_face(font_face)
 

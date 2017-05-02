@@ -26,11 +26,11 @@ derive. It cannot be instantiated directly.
    .. method:: get_extend()
 
       :returns: the current extend strategy used for drawing the *Pattern*.
-      :rtype: int
+      :rtype: cairo.Extend
 
       Gets the current extend mode for the *Pattern*. See
-      :ref:`EXTEND attributes <constants_EXTEND>`
-      for details on the semantics of each extend strategy.
+      :class:`cairo.Extend` attributes for details on the semantics of each
+      extend strategy.
 
    .. method:: get_matrix()
 
@@ -65,7 +65,7 @@ derive. It cannot be instantiated directly.
 
    .. method:: set_extend(extend)
 
-      :param extend: an :ref:`EXTEND <constants_EXTEND>` describing how the
+      :param cairo.Extend extend: an extend describing how the
         area outside of the *Pattern* will be drawn
 
       Sets the mode to be used for drawing outside the area of a *Pattern*.

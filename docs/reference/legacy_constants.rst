@@ -54,3 +54,27 @@ They might still be useful if you need to support older Pycairo versions.
 .. data:: CONTENT_COLOR_ALPHA
 
     See :attr:`Content.COLOR_ALPHA`
+
+.. data:: EXTEND_NONE
+
+    See :attr:`Extend.NONE`
+
+.. data:: EXTEND_REPEAT
+
+    See :attr:`Extend.REPEAT`
+
+.. data:: EXTEND_REFLECT
+
+    See :attr:`Extend.REFLECT`
+
+.. data:: EXTEND_PAD
+
+    See :attr:`Extend.PAD`
+
+.. data:: FILL_RULE_WINDING
+
+    See :attr:`FillRule.WINDING`
+
+.. data:: FILL_RULE_EVEN_ODD
+
+    See :attr:`FillRule.EVEN_ODD`
