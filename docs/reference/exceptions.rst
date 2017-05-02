@@ -19,7 +19,7 @@ cairo.Error()
 
     .. attribute:: status
 
-        :type: :ref:`constants_STATUS`
+        :type: :class:`cairo.Status`
 
 
 .. data:: CairoError

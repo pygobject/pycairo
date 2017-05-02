@@ -29,7 +29,6 @@ Surfaces
      :exc:`cairo.Error`
      :meth:`.copy_page`
      :meth:`Context.copy_page`
-     :ref:`LINE_CAP <constants_LINE_CAP>`
 
      ``ctx.rel_move_to(dx, dy)``   # code snippet
 
@@ -318,7 +317,7 @@ class Surface()
 
    .. method:: create_similar_image(format, width, height)
 
-      :param format: the :ref:`FORMAT <constants_FORMAT>` for the new surface
+      :param cairo.Format format: the format for the new surface
       :param int width: width of the new surface, (in device-space units)
       :param int height: height of the new surface, (in device-space units)
       :returns: a new image surface
@@ -358,11 +357,11 @@ class ImageSurface(:class:`Surface`)
 
 A *cairo.ImageSurface* provides the ability to render to memory buffers either
 allocated by cairo or by the calling code. The supported image formats are
-those defined in :ref:`FORMAT attributes <constants_FORMAT>`.
+those defined in :class:`cairo.Format`.
 
 .. class:: ImageSurface(format, width, height)
 
-   :param format: :ref:`FORMAT <constants_FORMAT>` of pixels in the surface to create
+   :param cairo.Format format: format of pixels in the surface to create
    :param width: width of the surface, in pixels
    :param height: height of the surface, in pixels
    :returns: a new *ImageSurface*
@@ -376,7 +375,7 @@ those defined in :ref:`FORMAT attributes <constants_FORMAT>`.
    .. classmethod:: create_for_data(data, format, width, height[, stride])
 
       :param data: a writable Python buffer/memoryview object
-      :param format: the :ref:`FORMAT <constants_FORMAT>` of pixels in the
+      :param cairo.Format format: the format of pixels in the
         buffer
       :param width: the width of the image to be stored in the buffer
       :param height: the height of the image to be stored in the buffer
@@ -410,7 +409,7 @@ those defined in :ref:`FORMAT attributes <constants_FORMAT>`.
 
    .. staticmethod:: format_stride_for_width(format, width)
 
-      :param format: a cairo :ref:`FORMAT <constants_FORMAT>` value
+      :param cairo.Format format: a cairo format value
       :param width: the desired width of an *ImageSurface* to be created.
       :returns: the appropriate stride to use given the desired format and
         width, or -1 if either the format is invalid or the width too large.
@@ -435,7 +434,8 @@ those defined in :ref:`FORMAT attributes <constants_FORMAT>`.
 
    .. method:: get_format()
 
-      :returns: the :ref:`FORMAT <constants_FORMAT>` of the *ImageSurface*.
+      :returns: the format of the *ImageSurface*.
+      :rtype: cairo.Format
 
       .. versionadded:: 1.2
 
@@ -496,7 +496,7 @@ multi-page vector surface backend.
    .. method:: restrict_to_version(version)
 
       :param version: PDF version
-      :type version: :ref:`constants_PDF_VERSION`
+      :type cairo.PDFVersion version: PDF version
 
       Restricts the generated PDF file to version . See :meth:`get_versions`
       for a list of available version values that can be used here.
@@ -520,7 +520,7 @@ multi-page vector surface backend.
    .. staticmethod:: version_to_string(version)
 
       :param version: PDF version
-      :type version: :ref:`constants_PDF_VERSION`
+      :type cairo.PDFVersion version: PDF version
       :returns: the string associated to the given version
       :rtype: str
       :raises ValueError: if version isn't valid
@@ -675,7 +675,7 @@ is a multi-page vector surface backend.
 
    .. staticmethod:: level_to_string(level)
 
-      :param level: a :ref:`PS_LEVEL <constants_PS_LEVEL>`
+      :param cairo.PSLevel level: a PS level
       :returns: the string associated to given level.
       :rtype: str
 
@@ -696,7 +696,7 @@ is a multi-page vector surface backend.
 
    .. method:: restrict_to_level(level)
 
-      :param level: a :ref:`PS_LEVEL <constants_PS_LEVEL>`
+      :param cairo.PSLevel level: a PS level
 
       Restricts the generated PostSript file to *level*. See
       :meth:`get_levels` for a list of available level values that
@@ -843,7 +843,7 @@ multi-page vector surface backend
    .. method:: restrict_to_version(version)
 
       :param version: SVG version
-      :type version: :ref:`constants_SVG_VERSION`
+      :type cairo.SVGVersion version: SVG version
 
       Restricts the generated SVG file to version . See :meth:`get_versions`
       for a list of available version values that can be used here.
@@ -867,7 +867,7 @@ multi-page vector surface backend
    .. staticmethod:: version_to_string(version)
 
       :param version: SVG version
-      :type version: :ref:`constants_SVG_VERSION`
+      :type cairo.SVGVersion version: SVG version
       :returns: the string associated to the given version
       :rtype: str
       :raises ValueError: if version isn't valid
@@ -894,7 +894,7 @@ Windows windows, bitmaps, and printing device contexts.
    Creates a cairo surface that targets the given DC. The DC will be queried
    for its initial clip extents, and this will be used as the size of the
    cairo surface. The resulting surface will always be of format
-   cairo.FORMAT_RGB24, see :ref:`FORMAT attributes <constants_FORMAT>`.
+   cairo.FORMAT_RGB24, see :class:`cairo.Format`.
 
 
 

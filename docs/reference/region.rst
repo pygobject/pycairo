@@ -63,7 +63,8 @@ areas of interest, such as change or clip areas.
     .. method:: contains_rectangle(rectangle)
 
         :param RectangleInt rectangle:
-        :returns: :ref:`REGION_OVERLAP <constants_REGION_OVERLAP>`
+        :returns: region overlap
+        :rtype: cairo.RegionOverlap
 
         Checks whether rectangle is inside, outside or partially contained in
         region
