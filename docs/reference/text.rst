@@ -256,7 +256,8 @@ objects.
 
    .. method:: get_antialias()
 
-      :returns: the :ref:`ANTIALIAS <constants_ANTIALIAS>` mode for the *FontOptions* object
+      :returns: the antialias mode for the *FontOptions* object
+      :rtype: cairo.Antialias
 
    .. method:: get_hint_metrics()
 
@@ -272,7 +273,7 @@ objects.
 
    .. method:: set_antialias(antialias)
 
-      :param antialias: the :ref:`ANTIALIAS <constants_ANTIALIAS>` mode
+      :param cairo.Antialias antialias: the antialias mode
 
       This specifies the type of antialiasing to do when rendering text.
 

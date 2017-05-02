@@ -1,4 +1,4 @@
-<.. _constants:
+.. _constants:
 
 ******************************
 Module Functions and Constants
@@ -65,73 +65,6 @@ cairo.HAS
 .. data:: HAS_MIME_SURFACE
 
     .. versionadded:: 1.12.0
-
-
-.. _constants_ANTIALIAS:
-
-cairo.ANTIALIAS
----------------
-ANTIALIAS specifies the type of antialiasing to do when rendering text or
-shapes.
-
-.. data:: ANTIALIAS_DEFAULT
-
-   Use the default antialiasing for the subsystem and target device
-
-.. data:: ANTIALIAS_NONE
-
-   Use a bilevel alpha mask
-
-.. data:: ANTIALIAS_GRAY
-
-   Perform single-color antialiasing (using shades of gray for black text on a
-   white background, for example).
-
-.. data:: ANTIALIAS_SUBPIXEL
-
-  Perform antialiasing by taking advantage of the order of subpixel elements
-  on devices such as LCD panels.
-
-.. data:: ANTIALIAS_FAST
-
-    Hint that the backend should perform some antialiasing but prefer speed
-    over quality.
-
-    .. versionadded:: 1.12.0
-
-.. data:: ANTIALIAS_GOOD
-
-    The backend should balance quality against performance.
-
-    .. versionadded:: 1.12.0
-
-.. data:: ANTIALIAS_BEST
-
-    Hint that the backend should render at the highest quality, sacrificing
-    speed if necessary.
-
-    .. versionadded:: 1.12.0
-
-
-.. _constants_CONTENT:
-
-cairo.CONTENT
--------------
-These constants are used to describe the content that a :class:`Surface` will
-contain, whether color information, alpha information (translucence
-vs. opacity), or both.
-
-.. data:: CONTENT_COLOR
-
-   The surface will hold color content only.
-
-.. data:: CONTENT_ALPHA
-
-   The surface will hold alpha content only.
-
-.. data:: CONTENT_COLOR_ALPHA
-
-   The surface will hold color and alpha content.
 
 
 .. _constants_EXTEND:

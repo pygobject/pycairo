@@ -62,7 +62,7 @@ class Surface()
 
    .. method:: create_similar(content, width, height)
 
-      :param content: the :ref:`CONTENT <constants_CONTENT>` for the new
+      :param cairo.Content content: the content for the new
         surface
       :param width: width of the new surface, (in device-space units)
       :type width: int
@@ -99,9 +99,10 @@ class Surface()
 
    .. method:: get_content()
 
-      :returns: The :ref:`CONTENT <constants_CONTENT>` type of *Surface*,
+      :returns: The content type of *Surface*,
         which indicates whether the *Surface* contains color and/or alpha
         information.
+      :rtype: cairo.Content
 
       .. versionadded:: 1.2
 
@@ -780,7 +781,7 @@ replay.
 
 .. class:: RecordingSurface(content, rectangle)
 
-   :param content: the :ref:`CONTENT <constants_CONTENT>` for the new  surface
+   :param cairo.Content content: the content for the new  surface
    :param rectangle: a 4-tuple of float, or None to record unbounded operations.
    :returns: a new *RecordingSurface*
 

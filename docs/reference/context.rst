@@ -365,8 +365,9 @@ safely be changed, without loosing the current state. Use
 
    .. method:: get_antialias()
 
-      :returns: the current :ref:`ANTIALIAS <constants_ANTIALIAS>` mode,
+      :returns: the current antialias mode,
         as set by :meth:`Context.set_antialias`.
+      :rtype: cairo.Antialias
 
    .. method:: get_current_point()
 
@@ -757,10 +758,10 @@ safely be changed, without loosing the current state. Use
       changes to the graphics state will not be visible outside the group,
       (the pop_group functions call :meth:`Context.restore`).
 
-      By default the intermediate group will have a :ref:`CONTENT
-      <constants_CONTENT>` type of cairo.CONTENT_COLOR_ALPHA. Other content
-      types can be chosen for the group by using
-      :meth:`Context.push_group_with_content` instead.
+      By default the intermediate group will have a :class:`cairo.Content`
+      type of :attr:`cairo.Content.COLOR_ALPHA`. Other content types can be
+      chosen for the group by using :meth:`Context.push_group_with_content`
+      instead.
 
       As an example, here is how one might fill and stroke a path with
       translucence, but without any portion of the fill being visible
@@ -778,7 +779,7 @@ safely be changed, without loosing the current state. Use
 
    .. method:: push_group_with_content(content)
 
-      :param content: a :ref:`CONTENT <constants_CONTENT>` indicating the
+      :param cairo.Content content: a content indicating the
         type of group that will be created
 
       Temporarily redirects drawing to an intermediate surface known as a
@@ -971,7 +972,7 @@ safely be changed, without loosing the current state. Use
 
    .. method:: set_antialias(antialias)
 
-      :param antialias: the new :ref:`ANTIALIAS <constants_ANTIALIAS>` mode
+      :param cairo.Antialias antialias: the new antialias mode
 
       Set the antialiasing mode of the rasterizer used for drawing shapes.
       This value is a hint, and a particular backend may or may not support a
