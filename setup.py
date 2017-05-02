@@ -210,8 +210,8 @@ def main():
     extra_compile_args = []
     if sys.version_info[0] == 2:
         # Some python setups don't pass -fno-strict-aliasing, while MACROS like
-        # Py_RETURN_TRUE require it. This makes sure these cases are ignores.
-        extra_compile_args.append("-Wno-strict-aliasing")
+        # Py_RETURN_TRUE require it.
+        extra_compile_args.append("-fno-strict-aliasing")
 
     cairo_ext = Extension(
         name='cairo._cairo',
