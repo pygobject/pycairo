@@ -140,8 +140,8 @@ For more information on matrix transformation see https://www.cairographics.org/
       :type dx: float
       :param dy: Y component of a distance vector.
       :type dy: float
-      :returns: the transformed distance vector (dx,dy)
-      :rtype: (float, float)
+      :returns: the transformed distance vector (dx,dy), both float
+      :rtype: tuple
 
       Transforms the distance vector *(dx,dy)* by *Matrix*. This is similar to
       :meth:`.transform_point` except that the translation components of
@@ -163,8 +163,8 @@ For more information on matrix transformation see https://www.cairographics.org/
       :type x: float
       :param y: Y position.
       :type y: float
-      :returns: the transformed point (x,y)
-      :rtype: (float, float)
+      :returns: the transformed point (x,y), both float
+      :rtype: tuple
 
       Transforms the point *(x, y)* by *Matrix*.
 

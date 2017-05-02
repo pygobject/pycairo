@@ -54,68 +54,66 @@ Example showing how to import the pycairo API::
 
 Pycairo Objects
 ===============
-Objects::
 
-  PycairoContext
-  PycairoFontFace
-  PycairoToyFontFace
-  PycairoFontOptions
-  PycairoMatrix
-  PycairoPath
-  PycairoPattern
-  PycairoRegion
-  PycairoRectangleInt
-  PycairoSolidPattern
-  PycairoSurfacePattern
-  PycairoGradient
-  PycairoLinearGradient
-  PycairoRadialGradient
-  PycairoScaledFont
-  PycairoSurface
-  PycairoImageSurface
-  PycairoPDFSurface
-  PycairoPSSurface
-  PycairoRecordingSurface
-  PycairoSVGSurface
-  PycairoWin32Surface
-  PycairoXCBSurface
-  PycairoXlibSurface
+.. c:type:: PycairoContext
+.. c:type:: PycairoFontFace
+.. c:type:: PycairoToyFontFace
+.. c:type:: PycairoFontOptions
+.. c:type:: PycairoMatrix
+.. c:type:: PycairoPath
+.. c:type:: PycairoPattern
+.. c:type:: PycairoRegion
+.. c:type:: PycairoRectangleInt
+.. c:type:: PycairoSolidPattern
+.. c:type:: PycairoSurfacePattern
+.. c:type:: PycairoGradient
+.. c:type:: PycairoLinearGradient
+.. c:type:: PycairoRadialGradient
+.. c:type:: PycairoScaledFont
+.. c:type:: PycairoSurface
+.. c:type:: PycairoImageSurface
+.. c:type:: PycairoPDFSurface
+.. c:type:: PycairoPSSurface
+.. c:type:: PycairoRecordingSurface
+.. c:type:: PycairoSVGSurface
+.. c:type:: PycairoWin32Surface
+.. c:type:: PycairoXCBSurface
+.. c:type:: PycairoXlibSurface
 
 
 Pycairo Types
 =============
-Types::
 
-  PyTypeObject *Context_Type;
-  PyTypeObject *FontFace_Type;
-  PyTypeObject *ToyFontFace_Type;
-  PyTypeObject *FontOptions_Type;
-  PyTypeObject *Matrix_Type;
-  PyTypeObject *Path_Type;
-  PyTypeObject *Pattern_Type;
-  PyTypeObject *Region_Type;
-  PyTypeObject *RectangleInt_Type;
-  PyTypeObject *SolidPattern_Type;
-  PyTypeObject *SurfacePattern_Type;
-  PyTypeObject *Gradient_Type;
-  PyTypeObject *LinearGradient_Type;
-  PyTypeObject *RadialGradient_Type;
-  PyTypeObject *ScaledFont_Type;
-  PyTypeObject *Surface_Type;
-  PyTypeObject *ImageSurface_Type;
-  PyTypeObject *PDFSurface_Type;
-  PyTypeObject *PSSurface_Type;
-  PyTypeObject *RecordingSurface_Type;
-  PyTypeObject *SVGSurface_Type;
-  PyTypeObject *Win32Surface_Type;
-  PyTypeObject *XCBSurface_Type;
-  PyTypeObject *XlibSurface_Type;
+.. c:type:: PyTypeObject *Context_Type
+.. c:type:: PyTypeObject *FontFace_Type
+.. c:type:: PyTypeObject *ToyFontFace_Type
+.. c:type:: PyTypeObject *FontOptions_Type
+.. c:type:: PyTypeObject *Matrix_Type
+.. c:type:: PyTypeObject *Path_Type
+.. c:type:: PyTypeObject *Pattern_Type
+.. c:type:: PyTypeObject *Region_Type
+.. c:type:: PyTypeObject *RectangleInt_Type
+.. c:type:: PyTypeObject *SolidPattern_Type
+.. c:type:: PyTypeObject *SurfacePattern_Type
+.. c:type:: PyTypeObject *Gradient_Type
+.. c:type:: PyTypeObject *LinearGradient_Type
+.. c:type:: PyTypeObject *RadialGradient_Type
+.. c:type:: PyTypeObject *ScaledFont_Type
+.. c:type:: PyTypeObject *Surface_Type
+.. c:type:: PyTypeObject *ImageSurface_Type
+.. c:type:: PyTypeObject *PDFSurface_Type
+.. c:type:: PyTypeObject *PSSurface_Type
+.. c:type:: PyTypeObject *RecordingSurface_Type
+.. c:type:: PyTypeObject *SVGSurface_Type
+.. c:type:: PyTypeObject *Win32Surface_Type
+.. c:type:: PyTypeObject *XCBSurface_Type
+.. c:type:: PyTypeObject *XlibSurface_Type
 
 
 Functions
 =========
 
-.. c:function::  cairo_t * PycairoContext_GET(obj)
+.. c:macro::  cairo_t * PycairoContext_GET(PycairoContext *obj)
 
    get the C cairo_t \* object out of the PycairoContext \*obj
 
@@ -151,3 +149,21 @@ Functions
 
 
 .. c:function::  int Pycairo_Check_Status(cairo_status_t status)
+
+
+Cairo Types
+===========
+
+These are only listed here so they can be referenced in the documentation.
+
+.. c:type:: cairo_t
+    cairo_status_t
+    cairo_surface_t
+    cairo_scaled_font_t
+    cairo_rectangle_int_t
+    cairo_region_t
+    cairo_pattern_t
+    cairo_matrix_t
+    cairo_font_options_t
+    cairo_path_t
+    cairo_font_face_t
