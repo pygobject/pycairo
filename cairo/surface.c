@@ -242,7 +242,7 @@ surface_flush (PycairoSurface *o) {
 
 static PyObject *
 surface_get_content (PycairoSurface *o) {
-  return PYCAIRO_PyLong_FromLong (cairo_surface_get_content (o->surface));
+  RETURN_INT_ENUM (Content, cairo_surface_get_content (o->surface));
 }
 
 static PyObject *
@@ -788,7 +788,7 @@ image_surface_get_data (PycairoImageSurface *o) {
 
 static PyObject *
 image_surface_get_format (PycairoImageSurface *o) {
-  return PYCAIRO_PyLong_FromLong (cairo_image_surface_get_format (o->surface));
+  RETURN_INT_ENUM (Format, cairo_image_surface_get_format (o->surface));
 }
 
 static PyObject *
@@ -1040,7 +1040,7 @@ pdf_get_versions (PyObject *self) {
     return NULL;
 
   for (i=0; i < num_versions; i++) {
-    num = PYCAIRO_PyLong_FromLong (versions[i]);
+    num = CREATE_INT_ENUM (PDFVersion, versions[i]);
     if (num == NULL) {
       Py_DECREF (list);
       return NULL;
@@ -1296,7 +1296,7 @@ ps_get_levels (PyObject *self) {
     return NULL;
 
   for (i=0; i < num_levels; i++) {
-    num = PYCAIRO_PyLong_FromLong (levels[i]);
+    num = CREATE_INT_ENUM (PSLevel, levels[i]);
     if (num == NULL) {
       Py_DECREF (list);
       return NULL;
@@ -1553,7 +1553,7 @@ svg_get_versions (PyObject *self) {
     return NULL;
 
   for (i=0; i < num_versions; i++) {
-    num = PYCAIRO_PyLong_FromLong (versions[i]);
+    num = CREATE_INT_ENUM (SVGVersion, versions[i]);
     if (num == NULL) {
       Py_DECREF (list);
       return NULL;

@@ -170,12 +170,12 @@ toy_font_get_family (PycairoToyFontFace *o) {
 
 static PyObject *
 toy_font_get_slant (PycairoToyFontFace *o) {
-  return PYCAIRO_PyLong_FromLong (cairo_toy_font_face_get_slant (o->font_face));
+  RETURN_INT_ENUM (FontSlant, cairo_toy_font_face_get_slant (o->font_face));
 }
 
 static PyObject *
 toy_font_get_weight (PycairoToyFontFace *o) {
-  return PYCAIRO_PyLong_FromLong (cairo_toy_font_face_get_weight (o->font_face));
+  RETURN_INT_ENUM (FontWeight, cairo_toy_font_face_get_weight (o->font_face));
 }
 
 static PyMethodDef toy_font_face_methods[] = {
@@ -466,25 +466,25 @@ font_options_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 
 static PyObject *
 font_options_get_antialias (PycairoFontOptions *o) {
-  return PYCAIRO_PyLong_FromLong (cairo_font_options_get_antialias (o->font_options));
+  RETURN_INT_ENUM (Antialias, cairo_font_options_get_antialias (o->font_options));
 }
 
 static PyObject *
 font_options_get_hint_metrics (PycairoFontOptions *o) {
-  return PYCAIRO_PyLong_FromLong (cairo_font_options_get_hint_metrics
-			 (o->font_options));
+  RETURN_INT_ENUM (HintMetrics,
+                   cairo_font_options_get_hint_metrics (o->font_options));
 }
 
 static PyObject *
 font_options_get_hint_style (PycairoFontOptions *o) {
-  return PYCAIRO_PyLong_FromLong (cairo_font_options_get_hint_style
-			 (o->font_options));
+  RETURN_INT_ENUM (HintStyle,
+                   cairo_font_options_get_hint_style (o->font_options));
 }
 
 static PyObject *
 font_options_get_subpixel_order (PycairoFontOptions *o) {
-  return PYCAIRO_PyLong_FromLong (cairo_font_options_get_subpixel_order
-			 (o->font_options));
+  RETURN_INT_ENUM (SubpixelOrder,
+                   cairo_font_options_get_subpixel_order (o->font_options));
 }
 
 static PyObject *

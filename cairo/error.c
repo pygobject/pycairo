@@ -54,7 +54,8 @@ Pycairo_Set_Error(cairo_status_t status)
 {
     PyObject *args, *v;
 
-    args = Py_BuildValue("(si)", status_to_string(status), status);
+    args = Py_BuildValue("(sO)", status_to_string(status),
+                         CREATE_INT_ENUM(Status, status));
     v = PyObject_Call(_Pycairo_Get_Error(), args, NULL);
     Py_DECREF(args);
     if (v != NULL) {

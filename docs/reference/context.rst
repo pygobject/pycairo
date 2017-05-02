@@ -29,7 +29,6 @@ Cairo Context
      :exc:`cairo.Error`
      :meth:`.copy_page`
      :meth:`Context.copy_page`
-     :ref:`LINE_CAP <constants_LINE_CAP>`
 
 
 class Context()
@@ -139,7 +138,7 @@ safely be changed, without loosing the current state. Use
 
       Establishes a new clip region by intersecting the current clip region
       with the current path as it would be filled by :meth:`Context.fill` and
-      according to the current :ref:`FILL RULE <constants_FILL_RULE>` (see
+      according to the current :class:`fill rule <cairo.FillRule>` (see
       :meth:`Context.set_fill_rule`).
 
       After :meth:`.clip`, the current path will be cleared from the
@@ -175,7 +174,7 @@ safely be changed, without loosing the current state. Use
 
       Establishes a new clip region by intersecting the current clip region
       with the current path as it would be filled by :meth:`Context.fill` and
-      according to the current :ref:`FILL RULE <constants_FILL_RULE>` (see
+      according to the current :class:`fill rule <cairo.FillRule>` (see
       :meth:`Context.set_fill_rule`).
 
       Unlike :meth:`Context.clip`, :meth:`.clip_preserve` preserves the path
@@ -314,7 +313,7 @@ safely be changed, without loosing the current state. Use
    .. method:: fill()
 
       A drawing operator that fills the current path according to the current
-      :ref:`FILL RULE <constants_FILL_RULE>`, (each sub-path is implicitly
+      :class:`fill rule <cairo.FillRule>`, (each sub-path is implicitly
       closed before being filled). After :meth:`.fill`, the current path will
       be cleared from the :class:`Context`. See :meth:`Context.set_fill_rule`
       and :meth:`Context.fill_preserve`.
@@ -350,7 +349,7 @@ safely be changed, without loosing the current state. Use
    .. method:: fill_preserve()
 
       A drawing operator that fills the current path according to the current
-      :ref:`FILL RULE <constants_FILL_RULE>`, (each sub-path is implicitly
+      :class:`fill rule <cairo.FillRule>`, (each sub-path is implicitly
       closed before being filled). Unlike :meth:`Context.fill`,
       :meth:`.fill_preserve` preserves the path within the :class:`Context`.
 
@@ -365,8 +364,9 @@ safely be changed, without loosing the current state. Use
 
    .. method:: get_antialias()
 
-      :returns: the current :ref:`ANTIALIAS <constants_ANTIALIAS>` mode,
+      :returns: the current antialias mode,
         as set by :meth:`Context.set_antialias`.
+      :rtype: cairo.Antialias
 
    .. method:: get_current_point()
 
@@ -425,8 +425,9 @@ safely be changed, without loosing the current state. Use
 
    .. method:: get_fill_rule()
 
-      :returns: the current :ref:`FILL RULE <constants_FILL_RULE>`, as
+      :returns: the current fill rule, as
         set by :meth:`Context.set_fill_rule`.
+      :rtype: cairo.FillRule
 
    .. method:: get_font_face()
 
@@ -461,13 +462,15 @@ safely be changed, without loosing the current state. Use
 
    .. method:: get_line_cap()
 
-      :returns: the current :ref:`LINE_CAP <constants_LINE_CAP>` style, as
+      :returns: the current line cap style, as
         set by :meth:`Context.set_line_cap`.
+      :rtype: cairo.LineCap
 
    .. method:: get_line_join()
 
-      :returns: the current :ref:`LINE_JOIN <constants_LINE_JOIN>` style, as
+      :returns: the current line join style, as
         set by :meth:`Context.set_line_join`.
+      :rtype: cairo.LineJoin
 
    .. method:: get_line_width()
 
@@ -491,8 +494,9 @@ safely be changed, without loosing the current state. Use
 
    .. method:: get_operator()
 
-      :returns: the current compositing :ref:`OPERATOR <constants_OPERATOR>`
+      :returns: the current compositing operator
         for a :class:`Context`.
+      :rtype: cairo.Operator
 
    .. method:: get_scaled_font()
 
@@ -757,10 +761,10 @@ safely be changed, without loosing the current state. Use
       changes to the graphics state will not be visible outside the group,
       (the pop_group functions call :meth:`Context.restore`).
 
-      By default the intermediate group will have a :ref:`CONTENT
-      <constants_CONTENT>` type of cairo.CONTENT_COLOR_ALPHA. Other content
-      types can be chosen for the group by using
-      :meth:`Context.push_group_with_content` instead.
+      By default the intermediate group will have a :class:`cairo.Content`
+      type of :attr:`cairo.Content.COLOR_ALPHA`. Other content types can be
+      chosen for the group by using :meth:`Context.push_group_with_content`
+      instead.
 
       As an example, here is how one might fill and stroke a path with
       translucence, but without any portion of the fill being visible
@@ -778,7 +782,7 @@ safely be changed, without loosing the current state. Use
 
    .. method:: push_group_with_content(content)
 
-      :param content: a :ref:`CONTENT <constants_CONTENT>` indicating the
+      :param cairo.Content content: a content indicating the
         type of group that will be created
 
       Temporarily redirects drawing to an intermediate surface known as a
@@ -928,10 +932,10 @@ safely be changed, without loosing the current state. Use
 
       :param family: a font family name
       :type family: text
-      :param slant: the :ref:`FONT_SLANT <constants_FONT_SLANT>` of the font,
-        defaults to :data:`cairo.FONT_SLANT_NORMAL`.
-      :param weight: the :ref:`FONT_WEIGHT <constants_FONT_WEIGHT>` of the
-        font, defaults to :data:`cairo.FONT_WEIGHT_NORMAL`.
+      :param cairo.FontSlant slant: the font slant of the font,
+        defaults to :attr:`cairo.FontSlant.NORMAL`.
+      :param cairo.FontWeight weight: the font weight of the
+        font, defaults to :attr:`cairo.FontWeight.NORMAL`.
 
       Note: The :meth:`.select_font_face` function call is part of what the
       cairo designers call the "toy" text API. It is convenient for short
@@ -963,20 +967,20 @@ safely be changed, without loosing the current state. Use
       If text is drawn without a call to :meth:`.select_font_face`, (nor
       :meth:`.set_font_face` nor :meth:`.set_scaled_font`), the default family
       is platform-specific, but is essentially "sans-serif".  Default slant is
-      cairo.FONT_SLANT_NORMAL, and default weight is
-      cairo.FONT_WEIGHT_NORMAL.
+      :attr:`cairo.FontSlant.NORMAL`, and default weight is
+      :attr:`cairo.FontWeight.NORMAL`.
 
       This function is equivalent to a call to :class:`ToyFontFace`
       followed by :meth:`.set_font_face`.
 
    .. method:: set_antialias(antialias)
 
-      :param antialias: the new :ref:`ANTIALIAS <constants_ANTIALIAS>` mode
+      :param cairo.Antialias antialias: the new antialias mode
 
       Set the antialiasing mode of the rasterizer used for drawing shapes.
       This value is a hint, and a particular backend may or may not support a
       particular value.  At the current time, no backend supports
-      :data:`cairo.ANTIALIAS_SUBPIXEL` when drawing shapes.
+      :attr:`cairo.Antialias.SUBPIXEL` when drawing shapes.
 
       Note that this option does not affect text rendering, instead see
       :meth:`FontOptions.set_antialias`.
@@ -1000,7 +1004,7 @@ safely be changed, without loosing the current state. Use
 
       Each "on" segment will have caps applied as if the segment were a
       separate sub-path. In particular, it is valid to use an "on" length of
-      0.0 with :data:`cairo.LINE_CAP_ROUND` or :data:`cairo.LINE_CAP_SQUARE`
+      0.0 with :attr:`cairo.LineCap.ROUND` or :attr:`cairo.LineCap.SQUARE`
       in order to distributed dots or squares along a path.
 
       Note: The length values are in user-space units as evaluated at the time
@@ -1015,13 +1019,13 @@ safely be changed, without loosing the current state. Use
 
    .. method:: set_fill_rule(fill_rule)
 
-      :param fill_rule: a :ref:`FILL RULE <constants_FILL_RULE>` to set the
+      :param cairo.FillRule fill_rule: a fill rule to set the
         within the cairo context. The fill rule is used to determine which
         regions are inside or outside a complex (potentially
         self-intersecting) path. The current fill rule affects both
         :meth:`.fill` and :meth:`.clip`.
 
-      The default fill rule is :data:`cairo.FILL_RULE_WINDING`.
+      The default fill rule is :attr:`cairo.FillRule.WINDING`.
 
    .. method:: set_font_face(font_face)
 
@@ -1049,7 +1053,7 @@ safely be changed, without loosing the current state. Use
       Sets a set of custom font rendering options for the :class:`Context`.
       Rendering options are derived by merging these options with the options
       derived from underlying surface; if the value in *options* has a default
-      value (like :data:`cairo.ANTIALIAS_DEFAULT`), then the value from the
+      value (like :attr:`cairo.Antialias.DEFAULT`), then the value from the
       surface is used.
 
    .. method:: set_font_size(size)
@@ -1069,7 +1073,7 @@ safely be changed, without loosing the current state. Use
 
    .. method:: set_line_cap(line_cap)
 
-      :param line_cap: a :ref:`LINE_CAP <constants_LINE_CAP>` style
+      :param cairo.LineCap line_cap: a line cap style
 
       Sets the current line cap style within the :class:`Context`.
 
@@ -1078,11 +1082,11 @@ safely be changed, without loosing the current state. Use
       :meth:`.stroke_to_path`, but does not have any effect during path
       construction.
 
-      The default line cap style is :data:`cairo.LINE_CAP_BUTT`.
+      The default line cap style is :attr:`cairo.LineCap.BUTT`.
 
    .. method:: set_line_join(line_join)
 
-      :param line_join: a :ref:`LINE_JOIN <constants_LINE_JOIN>` style
+      :param cairo.LineJoin line_join: a line join style
 
       Sets the current line join style within the :class:`Context`.
 
@@ -1091,7 +1095,7 @@ safely be changed, without loosing the current state. Use
       :meth:`.stroke_to_path`, but does not have any effect during path
       construction.
 
-      The default line join style is :data:`cairo.LINE_JOIN_MITER`.
+      The default line join style is :attr:`cairo.LineJoin.MITER`.
 
    .. method:: set_line_width(width)
 
@@ -1134,7 +1138,7 @@ safely be changed, without loosing the current state. Use
 
       Sets the current miter limit within the :class:`Context`.
 
-      If the current line join style is set to :data:`cairo.LINE_JOIN_MITER`
+      If the current line join style is set to :attr:`cairo.LineJoin.MITER`
       (see :meth:`.set_line_join`), the miter limit is used to determine
       whether the lines should be joined with a bevel instead of a miter.
       Cairo divides the length of the miter by the line width. If the result
@@ -1156,10 +1160,10 @@ safely be changed, without loosing the current state. Use
 
    .. method:: set_operator(op)
 
-      :param op: the compositing :ref:`OPERATOR <constants_OPERATOR>` to set
+      :param cairo.Operator op: the compositing operator to set
         for use in all drawing operations.
 
-      The default operator is :data:`cairo.OPERATOR_OVER`.
+      The default operator is :attr:`cairo.Operator.OVER`.
 
    .. method:: set_scaled_font(scaled_font)
 
@@ -1330,21 +1334,21 @@ safely be changed, without loosing the current state. Use
       provide a useful result. These can result in two different situations:
 
       1. Zero-length "on" segments set in :meth:`.set_dash`. If the cap
-      style is :data:`cairo.LINE_CAP_ROUND` or :data:`cairo.LINE_CAP_SQUARE`
+      style is :attr:`cairo.LineCap.ROUND` or :attr:`cairo.LineCap.SQUARE`
       then these segments will be drawn as circular dots or squares
-      respectively. In the case of :data:`cairo.LINE_CAP_SQUARE`, the
+      respectively. In the case of :attr:`cairo.LineCap.SQUARE`, the
       orientation of the squares is determined by the direction of the
       underlying path.
 
       2. A sub-path created by :meth:`.move_to` followed by either a
       :meth:`.close_path` or one or more calls to :meth:`.line_to` to the same
       coordinate as the :meth:`.move_to`. If the cap style is
-      :data:`cairo.LINE_CAP_ROUND` then these sub-paths will be drawn as
-      circular dots. Note that in the case of :data:`cairo.LINE_CAP_SQUARE` a
+      :attr:`cairo.LineCap.ROUND` then these sub-paths will be drawn as
+      circular dots. Note that in the case of :attr:`cairo.LineCap.SQUARE` a
       degenerate sub-path will not be drawn at all, (since the correct
       orientation is indeterminate).
 
-      In no case will a cap style of :data:`cairo.LINE_CAP_BUTT` cause anything
+      In no case will a cap style of :attr:`cairo.LineCap.BUTT` cause anything
       to be drawn in the case of either degenerate segments or sub-paths.
 
    .. method:: stroke_extents()

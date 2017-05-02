@@ -295,7 +295,7 @@ region_num_rectangles (PycairoRegion *o) {
   Py_BEGIN_ALLOW_THREADS;
   res = cairo_region_num_rectangles(o->region);
   Py_END_ALLOW_THREADS;
-  return Py_BuildValue("i", res);
+  return PYCAIRO_PyLong_FromLong(res);
 }
 
 
@@ -360,7 +360,8 @@ region_contains_rectangle (PycairoRegion *o, PyObject *args) {
   Py_BEGIN_ALLOW_THREADS;
   res = cairo_region_contains_rectangle(o->region, &(rect_int->rectangle_int));
   Py_END_ALLOW_THREADS;
-  return Py_BuildValue("i", res);
+
+  RETURN_INT_ENUM(RegionOverlap, res);
 }
 
 

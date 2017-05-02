@@ -6,15 +6,15 @@ General:
   * Use C90 and enforce it on travis-ci. :bug:`5`, :fdobug:`22940`
 
 Constants:
-  * Add various new :ref:`constants_OPERATOR`, :ref:`constants_ANTIALIAS` and
-    :ref:`constants_FORMAT` constants. :bug:`1`
-  * Add :data:`HAS_MIME_SURFACE` and :ref:`constants_MIME_TYPE`. :bug:`7`,
+  * Add various new cairo.OPERATOR_*, cairo.ANTIALIAS_* and
+    cairo.FORMAT_* constants. :bug:`1`
+  * Add :data:`HAS_MIME_SURFACE` and cairo.MIME_TYPE_*. :bug:`7`,
     :fdobug:`58771`
-  * Add :ref:`constants_PDF_VERSION`. :pr:`16`
-  * Add :ref:`constants_SVG_VERSION`
+  * Add cairo.PDF_VERSION_*. :pr:`16`
+  * Add cairo.SVG_VERSION_*
 
 :exc:`Error`:
-  * Add a :data:`Error.status` attribute exposing :ref:`constants_STATUS`
+  * Add a :data:`Error.status` attribute exposing cairo.STATUS_*
   * Add :exc:`CairoError` alias for :exc:`Error` for cairocffi compatibility
 
 :class:`Matrix`:
@@ -100,7 +100,7 @@ New Features:
     * :class:`cairo.RecordingSurface` (:fdobug:`36854`,
       `Torsten Landschoff <t.landschoff@gmx.net>`__)
     * :class:`cairo.Region`, :class:`cairo.RectangleInt` and
-      :ref:`cairo.REGION_OVERLAP <constants_REGION_OVERLAP>`
+      cairo.REGION_OVERLAP_*
       (:fdobug:`44336`, `Bug Fly <mozbugbox@yahoo.com.au>`__)
 
 Bug Fixes:

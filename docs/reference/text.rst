@@ -66,10 +66,10 @@ The *cairo.ToyFontFace* class can be used instead of :meth:`Context.select_font_
 
    :param family: a font family name
    :type family: text
-   :param slant: the :ref:`FONT_SLANT <constants_FONT_SLANT>` of the font,
-     defaults to :data:`cairo.FONT_SLANT_NORMAL`.
-   :param weight: the :ref:`FONT_WEIGHT <constants_FONT_WEIGHT>` of the font,
-     defaults to :data:`cairo.FONT_WEIGHT_NORMAL`.
+   :param cairo.FontSlant slant: the font slant of the font,
+     defaults to :attr:`cairo.FontSlant.NORMAL`.
+   :param cairo.FontWeight weight: the font weight of the font,
+     defaults to :attr:`cairo.FontWeight.NORMAL`.
    :returns: a new *ToyFontFace*
 
    Creates a *ToyFontFace* from a triplet of family, slant, and weight. These
@@ -93,13 +93,15 @@ The *cairo.ToyFontFace* class can be used instead of :meth:`Context.select_font_
 
    .. method:: get_slant()
 
-      :returns: the :ref:`FONT_SLANT <constants_FONT_SLANT>` value
+      :returns: the font slant value
+      :rtype: cairo.FontSlant
 
       .. versionadded:: 1.8.4
 
    .. method:: get_weight()
 
-      :returns: the :ref:`FONT_WEIGHT <constants_FONT_WEIGHT>` value
+      :returns: the font weight value
+      :rtype: cairo.FontWeight
 
       .. versionadded:: 1.8.4
 
@@ -256,47 +258,51 @@ objects.
 
    .. method:: get_antialias()
 
-      :returns: the :ref:`ANTIALIAS <constants_ANTIALIAS>` mode for the *FontOptions* object
+      :returns: the antialias mode for the *FontOptions* object
+      :rtype: cairo.Antialias
 
    .. method:: get_hint_metrics()
 
-      :returns: the :ref:`HINT METRICS <constants_HINT_METRICS>` mode for the *FontOptions* object
+      :returns: the hint metrics mode for the *FontOptions* object
+      :rtype: cairo.HintMetrics
 
    .. method:: get_hint_style()
 
-      :returns: the :ref:`HINT STYLE <constants_HINT_STYLE>` for the *FontOptions* object
+      :returns: the hint style for the *FontOptions* object
+      :rtype: cairo.HintStyle
 
    .. method:: get_subpixel_order()
 
-      :returns: the :ref:`SUBPIXEL_ORDER <constants_SUBPIXEL_ORDER>` for the *FontOptions* object
+      :returns: the subpixel order for the *FontOptions* object
+      :rtype: cairo.SubpixelOrder
 
    .. method:: set_antialias(antialias)
 
-      :param antialias: the :ref:`ANTIALIAS <constants_ANTIALIAS>` mode
+      :param cairo.Antialias antialias: the antialias mode
 
       This specifies the type of antialiasing to do when rendering text.
 
    .. method:: set_hint_metrics(hint_metrics)
 
-      :param hint_metrics: the :ref:`HINT METRICS <constants_HINT_METRICS>` mode
+      :param cairo.HintMetrics hint_metrics: the hint metrics mode
 
       This controls whether metrics are quantized to integer values in device
       units.
 
    .. method:: set_hint_style(hint_style)
 
-      :param hint_style: the :ref:`HINT STYLE <constants_HINT_STYLE>`
+      :param cairo.HintStyle hint_style: the hint style
 
       This controls whether to fit font outlines to the pixel grid, and if so,
       whether to optimize for fidelity or contrast.
 
    .. method:: set_subpixel_order(subpixel_order)
 
-      :param subpixel_order: the :ref:`SUBPIXEL_ORDER <constants_SUBPIXEL_ORDER>`
+      :param cairo.SubpixelOrder subpixel_order: the subpixel order
 
       The subpixel order specifies the order of color elements within each
       pixel on the display device when rendering with an antialiasing mode of
-      :data:`cairo.ANTIALIAS_SUBPIXEL`.
+      :attr:`cairo.Antialias.SUBPIXEL`.
 
    .. method:: merge(other)
 
@@ -305,7 +311,7 @@ objects.
       Merges non-default options from other into options , replacing existing
       values. This operation can be thought of as somewhat similar to
       compositing other onto options with the operation of
-      :data:`OPERATOR_OVER`.
+      :attr:`Operator.OVER`.
 
       .. versionadded:: 1.12.0
 

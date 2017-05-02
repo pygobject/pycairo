@@ -16,7 +16,7 @@ class Path()
 
    str(path) lists the path elements.
 
-   See :ref:`PATH attributes <constants_PATH>`
+   See :class:`path attributes <cairo.PathDataType>`
 
    Path is an iterator.
 

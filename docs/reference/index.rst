@@ -10,6 +10,7 @@ API Reference
    :maxdepth: 2
 
    constants
+   enums
    context
    exceptions
    matrix
@@ -18,3 +19,4 @@ API Reference
    region
    surfaces
    text
+   legacy_constants

@@ -26,11 +26,11 @@ derive. It cannot be instantiated directly.
    .. method:: get_extend()
 
       :returns: the current extend strategy used for drawing the *Pattern*.
-      :rtype: int
+      :rtype: cairo.Extend
 
       Gets the current extend mode for the *Pattern*. See
-      :ref:`EXTEND attributes <constants_EXTEND>`
-      for details on the semantics of each extend strategy.
+      :class:`cairo.Extend` attributes for details on the semantics of each
+      extend strategy.
 
    .. method:: get_matrix()
 
@@ -38,8 +38,9 @@ derive. It cannot be instantiated directly.
 
    .. method:: get_filter()
 
-      :returns: the current :ref:`FILTER <constants_filter>` used for
+      :returns: the current filter used for
         resizing the pattern.
+      :rtype: cairo.Filter
 
       .. versionadded:: 1.12.0
 
@@ -47,7 +48,7 @@ derive. It cannot be instantiated directly.
 
    .. method:: set_filter(filter)
 
-      :param filter: a :ref:`FILTER <constants_filter>` describing the filter
+      :param cairo.Filter filter: a filter describing the filter
         to use for resizing the pattern
 
       Note that you might want to control filtering even when you do not have
@@ -65,13 +66,13 @@ derive. It cannot be instantiated directly.
 
    .. method:: set_extend(extend)
 
-      :param extend: an :ref:`EXTEND <constants_EXTEND>` describing how the
+      :param cairo.Extend extend: an extend describing how the
         area outside of the *Pattern* will be drawn
 
       Sets the mode to be used for drawing outside the area of a *Pattern*.
 
-      The default extend mode is :data:`cairo.EXTEND_NONE` for
-      :class:`SurfacePattern` and :data:`cairo.EXTEND_PAD` for
+      The default extend mode is :attr:`cairo.Extend.NONE` for
+      :class:`SurfacePattern` and :attr:`cairo.Extend.PAD` for
       :class:`Gradient` Patterns.
 
    .. method:: set_matrix(matrix)
