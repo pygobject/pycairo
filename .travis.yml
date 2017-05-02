@@ -28,8 +28,9 @@ matrix:
 install:
   - travis_retry sudo apt-get update -q
   - travis_retry sudo apt-get install -y libcairo2-dev
-  - python -m pip install --upgrade pytest flake8
+  - python -m pip install --upgrade pytest flake8 sphinx sphinx_rtd_theme
 
 script:
   - python setup.py test
   - python -m flake8 .
+  - if [ "$TRAVIS_PYTHON_VERSION" != "3.3" ]; then python -m sphinx -W -a -E -b html -n docs docs/_build; fi

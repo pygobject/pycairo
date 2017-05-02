@@ -207,8 +207,9 @@ use.
 
       :param text: text
       :type text: text
-      :returns: (x_bearing, y_bearing, width, height, x_advance, y_advance)
-      :rtype: 6-tuple of float
+      :returns: 6-tuple of float:
+        (x_bearing, y_bearing, width, height, x_advance, y_advance)
+      :rtype: tuple
 
       Gets the extents for a string of text. The extents describe a user-space
       rectangle that encloses the "inked" portion of the text drawn at the

@@ -157,8 +157,8 @@ safely be changed, without loosing the current state. Use
 
    .. method:: clip_extents()
 
-      :returns: (x1, y1, x2, y2)
-      :rtype: (float, float, float, float)
+      :returns: (x1, y1, x2, y2), all float
+      :rtype: tuple
 
       * *x1*: left of the resulting extents
       * *y1*: top of the resulting extents
@@ -217,8 +217,8 @@ safely be changed, without loosing the current state. Use
    .. method:: copy_clip_rectangle_list()
 
       :returns: the current clip region as a list of rectangles in user
-        coordinates
-      :rtype: list of 4-tuples of float
+        coordinates. Returns a list of 4-tuples of float.
+      :rtype: list
 
       (The status in the list may be %CAIRO_STATUS_CLIP_NOT_REPRESENTABLE to
       indicate that the clip region cannot be represented as a list of
@@ -289,8 +289,8 @@ safely be changed, without loosing the current state. Use
       :type x: float
       :param y: Y value of coordinate
       :type y: float
-      :returns: (x, y)
-      :rtype: (float, float)
+      :returns: (x, y), both float
+      :rtype: tuple
 
       Transform a coordinate from device space to user space by multiplying
       the given point by the inverse of the current transformation matrix
@@ -302,8 +302,8 @@ safely be changed, without loosing the current state. Use
       :type dx: float
       :param dy: Y component of a distance vector
       :type dy: float
-      :returns: (dx, dy)
-      :rtype: (float, float)
+      :returns: (dx, dy), both float
+      :rtype: tuple
 
       Transform a distance vector from device space to user space. This
       function is similar to :meth:`Context.device_to_user` except that the
@@ -320,8 +320,8 @@ safely be changed, without loosing the current state. Use
 
    .. method:: fill_extents()
 
-      :returns: (x1, y1, x2, y2)
-      :rtype: (float, float, float, float)
+      :returns: (x1, y1, x2, y2), all float
+      :rtype: tuple
 
       * *x1*: left of the resulting extents
       * *y1*: top of the resulting extents
@@ -357,8 +357,9 @@ safely be changed, without loosing the current state. Use
 
    .. method:: font_extents()
 
-      :returns: (ascent, descent, height, max_x_advance, max_y_advance)
-      :rtype: (float, float, float, float, float)
+      :returns: (ascent, descent, height, max_x_advance, max_y_advance),
+        all float
+      :rtype: tuple
 
       Gets the font extents for the currently selected font.
 
@@ -370,8 +371,8 @@ safely be changed, without loosing the current state. Use
 
    .. method:: get_current_point()
 
-      :returns: (x, y)
-      :rtype: (float, float)
+      :returns: (x, y), both float
+      :rtype: tuple
 
       * *x*: X coordinate of the current point
       * *y*: Y coordinate of the current point
@@ -405,10 +406,10 @@ safely be changed, without loosing the current state. Use
    .. method:: get_dash()
 
       :returns: (dashes, offset)
-      :rtype: (tuple, float)
+      :rtype: tuple
 
-      * *dashes*: return value for the dash array
-      * *offset*: return value for the current dash offset
+      * *dashes*: return value as a tuple for the dash array
+      * *offset*: return value as float for the current dash offset
 
       Gets the current dash array.
 
@@ -520,12 +521,12 @@ safely be changed, without loosing the current state. Use
 
    .. method:: glyph_extents(glyphs, [num_glyphs])
 
-      :param glyphs: glyphs
-      :type glyphs: a sequence of (int, float, float)
+      :param glyphs: glyphs, a sequence of (int, float, float)
       :param num_glyphs: number of glyphs to measure, defaults to using all
       :type num_glyphs: int
-      :returns: x_bearing, y_bearing, width, height, x_advance, y_advance
-      :rtype: 6-tuple of float
+      :returns: (x_bearing, y_bearing, width, height, x_advance, y_advance),
+        6-tuple of float
+      :rtype: tuple
 
       Gets the extents for an array of glyphs. The extents describe a
       user-space rectangle that encloses the "inked" portion of the glyphs,
@@ -538,8 +539,7 @@ safely be changed, without loosing the current state. Use
 
    .. method:: glyph_path(glyphs[, num_glyphs])
 
-      :param glyphs: glyphs to show
-      :type glyphs: a sequence of (int, float, float)
+      :param glyphs: glyphs to show, a sequence of (int, float, float)
       :param num_glyphs: number of glyphs to show, defaults to showing all
       :type num_glyphs: int
 
@@ -671,8 +671,8 @@ safely be changed, without loosing the current state. Use
 
    .. method:: path_extents()
 
-      :returns: (x1, y1, x2, y2)
-      :rtype: (float, float, float, float)
+      :returns: (x1, y1, x2, y2), all float
+      :rtype: tuple
 
       * *x1*: left of the resulting extents
       * *y1*: top of the resulting extents
@@ -988,8 +988,7 @@ safely be changed, without loosing the current state. Use
    .. method:: set_dash(dashes, [offset=0])
 
       :param dashes: a sequence specifying alternate lengths of on and off
-        stroke portions.
-      :type dashes: sequence of float
+        stroke portions as float.
       :param offset: an offset into the dash pattern at which the stroke
         should start, defaults to 0.
       :type offset: int
@@ -1278,8 +1277,7 @@ safely be changed, without loosing the current state. Use
 
    .. method:: show_glyphs(glyphs[, num_glyphs])
 
-      :param glyphs: glyphs to show
-      :type glyphs: a sequence of (int, float, float)
+      :param glyphs: glyphs to show as a sequence of (int, float, float)
       :param num_glyphs: number of glyphs to show, defaults to showing all
         glyphs
       :type num_glyphs: int
@@ -1353,8 +1351,8 @@ safely be changed, without loosing the current state. Use
 
    .. method:: stroke_extents()
 
-      :returns: (x1, y1, x2, y2)
-      :rtype: (float, float, float, float)
+      :returns: (x1, y1, x2, y2), all float
+      :rtype: tuple
 
       * *x1*: left of the resulting extents
       * *y1*: top of the resulting extents
@@ -1394,8 +1392,9 @@ safely be changed, without loosing the current state. Use
 
       :param text: text to get extents for
       :type text: text
-      :returns: x_bearing, y_bearing, width, height, x_advance, y_advance
-      :rtype: 6-tuple of float
+      :returns: (x_bearing, y_bearing, width, height, x_advance, y_advance)
+        , 6-tuple of float
+      :rtype: tuple
 
       Gets the extents for a string of text. The extents describe a user-space
       rectangle that encloses the "inked" portion of the text, (as it would be
@@ -1462,8 +1461,8 @@ safely be changed, without loosing the current state. Use
       :type x: float
       :param y: Y value of coordinate
       :type y: float
-      :returns: (x, y)
-      :rtype: (float, float)
+      :returns: (x, y), both float
+      :rtype: tuple
 
       * *x*: X value of coordinate
       * *y*: Y value of coordinate
@@ -1477,8 +1476,8 @@ safely be changed, without loosing the current state. Use
       :type dx: float
       :param dy: Y value of a distance vector
       :type dy: float
-      :returns: (dx, dy)
-      :rtype: (float, float)
+      :returns: (dx, dy), both float
+      :rtype: tuple
 
       * *dx*: X value of a distance vector
       * *dy*: Y value of a distance vector
@@ -1502,3 +1501,12 @@ safely be changed, without loosing the current state. Use
       See :meth:`clip`, and :meth:`clip_preserve`.
 
       .. versionadded:: 1.12.0
+
+    .. method:: show_text_glyphs()
+
+        .. note:: This functions is not implemented in Pycairo yet
+
+    .. method:: stroke_to_path()
+
+        .. note:: This function is not implemented in cairo, but still
+            mentioned in the documentation.

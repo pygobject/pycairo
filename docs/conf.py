@@ -33,3 +33,4 @@ extlinks = {
     'bug': ('https://github.com/pygobject/pycairo/issues/%s', '#'),
     'pr': ('https://github.com/pygobject/pycairo/pull/%s', '#pr-'),
 }
+suppress_warnings = ["image.nonlocal_uri"]
