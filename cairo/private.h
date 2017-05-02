@@ -200,12 +200,37 @@ PyObject *int_enum_create(PyTypeObject *type, long value);
 
 #define DECL_ENUM(name) PyTypeObject Pycairo_##name##_Type;
 
+#define CREATE_INT_ENUM(type_name, value) \
+    (int_enum_create(&Pycairo_##type_name##_Type, value))
+
 #define RETURN_INT_ENUM(type_name, value) \
-    return int_enum_create(&Pycairo_##type_name##_Type, value);
+    return CREATE_INT_ENUM(type_name, value);
 
 DECL_ENUM(Antialias)
 DECL_ENUM(Content)
 DECL_ENUM(Extend)
 DECL_ENUM(FillRule)
+DECL_ENUM(Filter)
+DECL_ENUM(FontSlant)
+DECL_ENUM(FontWeight)
+DECL_ENUM(Format)
+DECL_ENUM(HintMetrics)
+DECL_ENUM(HintStyle)
+DECL_ENUM(LineCap)
+DECL_ENUM(LineJoin)
+DECL_ENUM(Operator)
+DECL_ENUM(PathDataType)
+DECL_ENUM(RegionOverlap)
+DECL_ENUM(Status)
+DECL_ENUM(SubpixelOrder)
+#ifdef CAIRO_HAS_SVG_SURFACE
+DECL_ENUM(SVGVersion)
+#endif
+#ifdef CAIRO_HAS_PDF_SURFACE
+DECL_ENUM(PDFVersion)
+#endif
+#ifdef CAIRO_HAS_PS_SURFACE
+DECL_ENUM(PSLevel)
+#endif
 
 #endif /* _PYCAIRO_PRIVATE_H_ */

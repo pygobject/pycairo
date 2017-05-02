@@ -358,7 +358,7 @@ pycairo_get_dash_count (PycairoContext *o) {
 
 static PyObject *
 pycairo_get_fill_rule (PycairoContext *o) {
-  return PYCAIRO_PyLong_FromLong(cairo_get_fill_rule (o->ctx));
+  RETURN_INT_ENUM(FillRule, cairo_get_fill_rule (o->ctx));
 }
 
 static PyObject *
@@ -393,12 +393,12 @@ pycairo_get_group_target (PycairoContext *o) {
 
 static PyObject *
 pycairo_get_line_cap (PycairoContext *o) {
-  return PYCAIRO_PyLong_FromLong(cairo_get_line_cap (o->ctx));
+  RETURN_INT_ENUM(LineCap, cairo_get_line_cap (o->ctx));
 }
 
 static PyObject *
 pycairo_get_line_join (PycairoContext *o) {
-  return PYCAIRO_PyLong_FromLong(cairo_get_line_join (o->ctx));
+  RETURN_INT_ENUM(LineJoin, cairo_get_line_join (o->ctx));
 }
 
 static PyObject *
@@ -420,7 +420,7 @@ pycairo_get_miter_limit (PycairoContext *o) {
 
 static PyObject *
 pycairo_get_operator (PycairoContext *o) {
-  return PYCAIRO_PyLong_FromLong (cairo_get_operator (o->ctx));
+  RETURN_INT_ENUM(Operator, cairo_get_operator (o->ctx));
 }
 
 static PyObject *

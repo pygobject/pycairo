@@ -111,7 +111,7 @@ pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 
 static PyObject *
 pattern_get_extend (PycairoPattern *o) {
-  return PYCAIRO_PyLong_FromLong (cairo_pattern_get_extend (o->pattern));
+  RETURN_INT_ENUM (Extend, cairo_pattern_get_extend (o->pattern));
 }
 
 static PyObject *
@@ -152,7 +152,7 @@ pattern_get_filter (PycairoPattern *o) {
   filter = cairo_pattern_get_filter (o->pattern);
   Py_END_ALLOW_THREADS;
 
-  return PYCAIRO_PyLong_FromLong (filter);
+  RETURN_INT_ENUM (Filter, filter);
 }
 
 static PyObject *

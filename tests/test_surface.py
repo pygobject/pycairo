@@ -10,6 +10,36 @@ import cairo
 import pytest
 
 
+def test_surface_get_content():
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
+    assert surface.get_content() == cairo.Content.COLOR_ALPHA
+    assert isinstance(surface.get_content(), cairo.Content)
+
+
+def test_surface_get_format():
+    surface = cairo.ImageSurface(cairo.Format.ARGB32, 10, 10)
+    assert surface.get_format() == cairo.Format.ARGB32
+    assert isinstance(surface.get_format(), cairo.Format)
+
+
+def test_pdf_get_versions():
+    versions = cairo.PDFSurface.get_versions()
+    assert isinstance(versions, list)
+    assert all(isinstance(v, cairo.PDFVersion) for v in versions)
+
+
+def test_ps_surface_get_levels():
+    levels = cairo.PSSurface.get_levels()
+    assert isinstance(levels, list)
+    assert all(isinstance(v, cairo.PSLevel) for v in levels)
+
+
+def test_svg_surface_get_versions():
+    versions = cairo.SVGSurface.get_versions()
+    assert isinstance(versions, list)
+    assert all(isinstance(v, cairo.SVGVersion) for v in versions)
+
+
 @pytest.mark.skipif(not cairo.HAS_PNG_FUNCTIONS, reason="not png support")
 def test_image_surface_create_for_data_array():
     width, height = 255, 255

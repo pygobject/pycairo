@@ -78,12 +78,6 @@ def test_scaled_font_get_font_options():
     assert isinstance(font_options, cairo.FontOptions)
 
 
-def test_ps_surface_get_levels():
-    levels = cairo.PSSurface.get_levels()
-    assert isinstance(levels, list)
-    assert all(isinstance(v, int) for v in levels)
-
-
 def test_ps_surface_level_to_string():
     level_id = cairo.PSSurface.level_to_string(cairo.PS_LEVEL_2)
     assert isinstance(level_id, str)
@@ -129,12 +123,6 @@ def test_surface_create_similar_image():
     assert image.get_height() == 42
 
 
-def test_pdf_get_versions():
-    versions = cairo.PDFSurface.get_versions()
-    assert isinstance(versions, list)
-    assert all(isinstance(v, int) for v in versions)
-
-
 def test_pdf_surface_restrict_to_version():
     surface = cairo.PDFSurface(None, 10, 10)
     surface.restrict_to_version(cairo.PDF_VERSION_1_4)
@@ -157,6 +145,8 @@ def test_error_context():
         ctx.restore()
     error = excinfo.value
     assert error.status == cairo.STATUS_INVALID_RESTORE
+    assert error.status == cairo.Status.INVALID_RESTORE
+    assert isinstance(error.status, cairo.Status)
     assert str(error)
 
 
@@ -581,12 +571,6 @@ def test_surface_mime_data_for_pdf():
     context.paint()
     surface.finish()
     assert jpeg_bytes in file_like.getvalue()
-
-
-def test_svg_surface_get_versions():
-    versions = cairo.SVGSurface.get_versions()
-    assert isinstance(versions, list)
-    assert all(isinstance(v, int) for v in versions)
 
 
 def test_svg_version_to_string():
