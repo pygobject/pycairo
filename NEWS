@@ -1,3 +1,38 @@
+1.13.0 - 2017-05-03
+-------------------
+
+New Features:
+  * The buffer returned by :meth:`ImageSurface.get_data` under Python 2 now
+    implements the character buffer interface to make it work with
+    pygame.image.frombuffer(). :pr:`29`
+  * All C enum types now have their own corresponding Python enum type:
+    :class:`Antialias`, :class:`Content`, :class:`Extend`, :class:`FillRule`,
+    :class:`Filter`, :class:`FontSlant`, :class:`FontWeight`, :class:`Format`,
+    :class:`HintMetrics`, :class:`HintStyle`, :class:`LineCap`,
+    :class:`LineJoin`, :class:`Operator`, :class:`PDFVersion`,
+    :class:`PSLevel`, :class:`PathDataType`, :class:`RegionOverlap`,
+    :class:`SVGVersion`, :class:`Status`, :class:`SubpixelOrder`. :bug:`26`
+
+    All relevant constants are now an alias to attributes of those types e.g.
+    :data:`ANTIALIAS_DEFAULT` is the same as :attr:`Antialias.DEFAULT`.
+
+    All functions returning enum values now return instances of the new types
+    e.g. :meth:`Context.get_antialias` returns a :class:`Antialias`.
+
+    :attr:`Error.status` is now a :class:`Status`.
+  * All included examples now work with Python 2 & 3
+  * All included examples using GTK+ have been ported to GTK+ 3/PyGObject 3
+
+Fixes:
+  * Fix the signature of the :class:`ImageSurface` buffer interface for Python 2
+    (int -> Py_ssize_t)
+  * setup.py: Ensure "-fno-strict-aliasing" is used with Python 2.
+
+Testing:
+  * Added travis-ci tests for flake8 and sphinx. :pr:`30`, :pr:`32`
+  * The test suite now has optional tests for numpy and pygame integration.
+
+
 1.12.0 - 2017-04-18
 -------------------
 
