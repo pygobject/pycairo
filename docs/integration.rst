@@ -41,6 +41,7 @@ Creating a pygame.image from an ImageSurface:
 
         width, height = 255, 255
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+        buf = surface.get_data()
         image = pygame.image.frombuffer(buf, (width, height), "ARGB")
 
 
