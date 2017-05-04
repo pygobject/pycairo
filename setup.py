@@ -93,14 +93,14 @@ class install_pkgconfig(Command):
 
     def initialize_options(self):
         self.install_data = None
-        self.prefix = None
+        self.install_base = None
         self.outfiles = []
 
     def finalize_options(self):
         self.set_undefined_options(
             'install',
             ('install_data', 'install_data'),
-            ('prefix', 'prefix'),
+            ('install_base', 'install_base'),
         )
 
     def get_outputs(self):
@@ -129,7 +129,7 @@ Requires: cairo
 Cflags: -I${prefix}/include/pycairo
 Libs:
 """ % {
-                "prefix": self.prefix, "version": PYCAIRO_VERSION,
+                "prefix": self.install_base, "version": PYCAIRO_VERSION,
                 "py_version": sys.version_info[0]}).encode("utf-8"))
 
         self.outfiles.append(target)
