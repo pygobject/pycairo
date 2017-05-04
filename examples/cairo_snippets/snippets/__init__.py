@@ -1,4 +1,5 @@
 import os
+import inspect
 import importlib
 
 
@@ -30,7 +31,9 @@ def get_snippets():
         s.name = name
         mod = importlib.import_module("." + name, __package__)
         s.draw_func = getattr(mod, "draw")
-        with open(mod.__file__, "rb") as h:
-            s.code = h.read().decode("utf-8")
+        code = inspect.getsource(mod)
+        if isinstance(code, bytes):
+            code = code.decode("utf-8")
+        s.code = code
         snippets[s.name] = s
     return snippets
