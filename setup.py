@@ -233,12 +233,33 @@ def main():
         extra_compile_args=extra_compile_args,
     )
 
+    with open('README.rst') as h:
+        long_description = h.read()
+
     setup(
         name="pycairo",
         version=PYCAIRO_VERSION,
-        description="python interface for cairo",
+        url="https://pycairo.readthedocs.io",
+        description="Python interface for cairo",
+        long_description=long_description,
+        maintainer="Christoph Reiter",
+        maintainer_email="reiter.christoph@gmail.com",
         ext_modules=[cairo_ext],
         packages=["cairo"],
+        classifiers=[
+            'Operating System :: OS Independent',
+            'Programming Language :: Python :: 2',
+            'Programming Language :: Python :: 2.7',
+            'Programming Language :: Python :: 3',
+            'Programming Language :: Python :: 3.3',
+            'Programming Language :: Python :: 3.4',
+            'Programming Language :: Python :: 3.5',
+            'Programming Language :: Python :: 3.6',
+            'Programming Language :: Python :: Implementation :: CPython',
+            ('License :: OSI Approved :: '
+             'GNU Lesser General Public License v2 (LGPLv2)'),
+            'License :: OSI Approved :: Mozilla Public License 1.1 (MPL 1.1)',
+        ],
         data_files=[
             ('include/pycairo', ['cairo/pycairo.h']),
         ],
