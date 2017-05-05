@@ -198,7 +198,7 @@ PyObject *error_get_type(void);
 int init_enums(PyObject *module);
 PyObject *int_enum_create(PyTypeObject *type, long value);
 
-#define DECL_ENUM(name) PyTypeObject Pycairo_##name##_Type;
+#define DECL_ENUM(name) extern PyTypeObject Pycairo_##name##_Type;
 
 #define CREATE_INT_ENUM(type_name, value) \
     (int_enum_create(&Pycairo_##type_name##_Type, value))
