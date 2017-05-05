@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import io
 import subprocess
 import sys
 import os
@@ -233,7 +234,7 @@ def main():
         extra_compile_args=extra_compile_args,
     )
 
-    with open('README.rst') as h:
+    with io.open('README.rst', encoding="utf-8") as h:
         long_description = h.read()
 
     setup(
