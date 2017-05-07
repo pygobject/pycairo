@@ -11,7 +11,7 @@ from distutils.command.install_data import install_data as du_install_data
 from distutils.command.build import build as du_build
 
 
-PYCAIRO_VERSION = '1.13.1'
+PYCAIRO_VERSION = '1.13.2'
 CAIRO_VERSION_REQUIRED = '1.12.0'
 XPYB_VERSION_REQUIRED = '1.3'
 
