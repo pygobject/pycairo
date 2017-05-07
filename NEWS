@@ -1,3 +1,17 @@
+1.13.1 - 2017-05-07
+-------------------
+
+Fixes:
+  * setup.py install: Fix generated pkg-config file if ``--home`` or
+    ``--user`` is specified. :bug:`34`
+  * Fix a build error on macOS Sierra. :pr:`36`
+    (:user:`Nicolas P. Rougier <rougier>`)
+  * examples: Fix snippet examples when .pyc files are present. :bug:`35`
+
+Documentation:
+  * Add Pyglet integration example. :pr:`33` (:user:`Stuart Axon <stuaxo>`)
+
+
 1.13.0 - 2017-05-03
 -------------------
 

@@ -32,5 +32,6 @@ extlinks = {
     'fdobug': ('https://bugs.freedesktop.org/show_bug.cgi?id=%s', '#fdo-'),
     'bug': ('https://github.com/pygobject/pycairo/issues/%s', '#'),
     'pr': ('https://github.com/pygobject/pycairo/pull/%s', '#pr-'),
+    'user': ('https://github.com/%s', ''),
 }
 suppress_warnings = ["image.nonlocal_uri"]
