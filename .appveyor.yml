@@ -1,0 +1,29 @@
+environment:
+  matrix:
+    - MSYS2_ARCH: x86_64
+      MSYSTEM: MINGW64
+      PYTHON: python2
+    - MSYS2_ARCH: i686
+      MSYSTEM: MINGW32
+      PYTHON: python2
+    - MSYS2_ARCH: x86_64
+      MSYSTEM: MINGW64
+      PYTHON: python3
+    - MSYS2_ARCH: i686
+      MSYSTEM: MINGW32
+      PYTHON: python3
+
+init:
+  - set PATH=C:\msys64\%MSYSTEM%\bin;C:\msys64\usr\bin;%PATH%
+
+install:
+  - bash -xlc "pacman --noconfirm -S --needed mingw-w64-%MSYS2_ARCH%-cairo mingw-w64-%MSYS2_ARCH%-%PYTHON% mingw-w64-%MSYS2_ARCH%-%PYTHON%-pip"
+  - bash -xlc "%PYTHON% -m pip install pytest"
+
+build_script:
+  - set CHERE_INVOKING=yes
+  - set CFLAGS=-std=c90 -Wall -Wno-long-long -Werror
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - bash -xlc "%PYTHON% setup.py test"
+
+deploy: off
