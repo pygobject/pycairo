@@ -26,3 +26,6 @@ For more information visit https://pycairo.readthedocs.io
 
 .. image:: https://travis-ci.org/pygobject/pycairo.svg?branch=master
     :target: https://travis-ci.org/pygobject/pycairo
+
+.. image:: https://ci.appveyor.com/api/projects/status/9hurdbb19lg2i9xm/branch/master?svg=true
+    :target: https://ci.appveyor.com/project/lazka/pycairo/branch/master
