@@ -1,3 +1,9 @@
+.. image:: https://cdn.rawgit.com/pygobject/pycairo/master/docs/images/pycairo.svg
+   :align: center
+   :width: 370px
+
+|
+
 Pycairo is a Python module providing bindings for the `cairo graphics library
 <https://cairographics.org/>`__.
 

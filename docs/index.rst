@@ -18,7 +18,9 @@
 
 .. currentmodule:: cairo
 .. title:: Overview
+
 .. include:: ../README.rst
+    :start-after: |
 
 ----
 
