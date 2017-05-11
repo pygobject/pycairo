@@ -3,7 +3,7 @@ include NEWS
 include README.rst
 include MANIFEST.in
 include setup.cfg
-recursive-include docs *.py Makefile *.rst *.css
+recursive-include docs *.py Makefile *.rst *.css *.svg
 prune docs/_build
 recursive-include tests *.py README
 recursive-include examples *.py README

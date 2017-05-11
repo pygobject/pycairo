@@ -1,6 +1,9 @@
-===================================
-Pycairo - Python bindings for cairo
-===================================
+.. image:: images/pycairo.svg
+   :align: center
+   :width: 370px
+
+|
+|
 
 .. toctree::
    :maxdepth: 1
