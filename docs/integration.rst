@@ -112,7 +112,7 @@ Creating an ImageSurface from a PIL Image:
             """
             assert format in (cairo.FORMAT_RGB24, cairo.FORMAT_ARGB32), "Unsupported pixel format: %s" % format
             if 'A' not in im.getbands():
-                im.putalpha(int(alpha * 256.))
+                im.putalpha(int(alpha * 255.))
             arr = np.array(im.tobytes('raw', 'BGRa'))
             surface = cairo.ImageSurface.create_for_data(arr, format, im.width, im.height)
             return surface
