@@ -4,16 +4,17 @@ import io
 import subprocess
 import sys
 import os
-from distutils.core import Extension, setup, Command
-from distutils.command.build_ext import build_ext as du_build_ext
-from distutils.command.install import install as du_install
-from distutils.command.install_data import install_data as du_install_data
-from distutils.command.build import build as du_build
+from distutils.core import Extension, setup, Command, Distribution
 
 
 PYCAIRO_VERSION = '1.13.2'
 CAIRO_VERSION_REQUIRED = '1.12.0'
 XPYB_VERSION_REQUIRED = '1.3'
+
+
+def get_command_class(name):
+    # in case pip loads with setuptools this returns the extended commands
+    return Distribution({}).get_command_class(name)
 
 
 def pkg_config_version_check(pkg, version):
@@ -136,11 +137,17 @@ Libs:
         self.outfiles.append(target)
 
 
+du_install = get_command_class("install")
+
+
 class install(du_install):
 
     sub_commands = du_install.sub_commands + [
         ("install_pkgconfig", lambda self: True),
     ]
+
+
+du_build_ext = get_command_class("build_ext")
 
 
 class build_ext(du_build_ext):
@@ -182,6 +189,9 @@ class build_ext(du_build_ext):
         du_build_ext.run(self)
 
 
+du_build = get_command_class("build")
+
+
 class build(du_build):
 
     user_options = du_build.user_options + [
@@ -195,6 +205,9 @@ class build(du_build):
     def finalize_options(self):
         du_build.finalize_options(self)
         self.enable_xpyb = bool(self.enable_xpyb)
+
+
+du_install_data = get_command_class("install_data")
 
 
 class install_data(du_install_data):
