@@ -1,3 +1,13 @@
+1.13.2 - 2017-05-21
+-------------------
+
+Fixes:
+  * Fix pip failing to install pycairo in some cases. :bug:`39`
+
+Testing:
+  * Added continuous testing for Windows using MSYS2 and appveyor. :bug:`19`
+
+
 1.13.1 - 2017-05-07
 -------------------
 
