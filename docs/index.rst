@@ -1,3 +1,7 @@
+.. raw:: html
+
+    <div class=section>
+
 .. image:: images/pycairo.svg
    :align: center
    :width: 370px
