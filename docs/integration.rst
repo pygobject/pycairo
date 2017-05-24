@@ -96,13 +96,14 @@ Draw pyglet.Texture bound to ImageSurface
         # call clock.schedule_update here to update the ImageSurface every frame
         app.run()
 
+
 Pillow (PIL) & Cairo
 --------------------
 
 Creating an ImageSurface from a PIL Image:
     .. code:: python
+        
         import PIL.Image as Image
-        import numpy as np
 
         def from_pil(im, alpha=1.0, format=cairo.FORMAT_ARGB32):
             """
@@ -112,7 +113,7 @@ Creating an ImageSurface from a PIL Image:
             """
             assert format in (cairo.FORMAT_RGB24, cairo.FORMAT_ARGB32), "Unsupported pixel format: %s" % format
             if 'A' not in im.getbands():
-                im.putalpha(int(alpha * 255.))
+                im.putalpha(int(alpha * 256.))
             arr = np.array(im.tobytes('raw', 'BGRa'))
             surface = cairo.ImageSurface.create_for_data(arr, format, im.width, im.height)
             return surface
