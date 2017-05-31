@@ -193,6 +193,10 @@ int Pycairo_Check_Status (cairo_status_t status);
 
 PyObject *error_get_type(void);
 
+int init_buffer_proxy(void);
+
+PyObject *buffer_proxy_create_view(PyObject *exporter, void *buf, Py_ssize_t len);
+
 /* int enums */
 
 int init_enums(PyObject *module);

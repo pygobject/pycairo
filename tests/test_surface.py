@@ -2,12 +2,22 @@
 
 import io
 import os
+import sys
 import array
 import tempfile
 import struct
 
 import cairo
 import pytest
+
+
+def test_image_surface_get_data_refcount():
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
+    assert sys.getrefcount(surface) == 2
+    d = surface.get_data()
+    assert sys.getrefcount(surface) == 3
+    del d
+    assert sys.getrefcount(surface) == 2
 
 
 def test_surface_get_content():

@@ -765,7 +765,6 @@ image_surface_format_stride_for_width (PyObject *self, PyObject *args) {
 static PyObject *
 image_surface_get_data (PycairoImageSurface *o) {
 #if PY_MAJOR_VERSION >= 3
-  Py_buffer view;
   cairo_surface_t *surface;
   int height, stride;
   unsigned char * buffer;
@@ -777,10 +776,8 @@ image_surface_get_data (PycairoImageSurface *o) {
   }
   height = cairo_image_surface_get_height (surface);
   stride = cairo_image_surface_get_stride (surface);
-  if (PyBuffer_FillInfo (&view, (PyObject *)o, buffer, height * stride, 0, 0) < 0)
-    return NULL;
 
-  return PyMemoryView_FromBuffer (&view);
+  return buffer_proxy_create_view((PyObject *)o, buffer, height * stride);
 #else
   return PyBuffer_FromReadWriteObject((PyObject *)o, 0, Py_END_OF_BUFFER);
 #endif

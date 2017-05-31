@@ -315,6 +315,9 @@ PYCAIRO_MOD_INIT(_cairo)
   if (m == NULL)
     return PYCAIRO_MOD_ERROR_VAL;
 
+  if(init_buffer_proxy() < 0)
+    return PYCAIRO_MOD_ERROR_VAL;
+
   if(init_enums(m) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
 
