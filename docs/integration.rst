@@ -137,4 +137,4 @@ Creating an ImageSurface from a PIL Image:
 Freetype-py & Cairo
 -------------------
 
-See https://github.com/rougier/freetype-py/tree/master/examples for examples.
+See https://github.com/rougier/freetype-py/tree/master/examples for examples. Most of the ``*-cairo.py`` examples illustrate conversion from FreeType bitmaps to Cairo surfaces; the two examples, ``glyph-vector-cairo.py`` and ``glyph-vector-2-cairo.py``, illustrate conversion from FreeType glyph contours to Cairo paths.
