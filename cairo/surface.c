@@ -777,7 +777,7 @@ image_surface_get_data (PycairoImageSurface *o) {
   height = cairo_image_surface_get_height (surface);
   stride = cairo_image_surface_get_stride (surface);
 
-  return buffer_proxy_create_view((PyObject *)o, buffer, height * stride);
+  return buffer_proxy_create_view((PyObject *)o, buffer, height * stride, 0);
 #else
   return PyBuffer_FromReadWriteObject((PyObject *)o, 0, Py_END_OF_BUFFER);
 #endif

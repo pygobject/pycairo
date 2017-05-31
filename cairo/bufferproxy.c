@@ -41,6 +41,7 @@ typedef struct {
     PyObject *exporter;
     void *buf;
     Py_ssize_t len;
+    int readonly;
 } Pycairo_BufferProxy;
 
 static PyTypeObject Pycairo_BufferProxyType = {
@@ -54,7 +55,8 @@ buffer_proxy_getbuffer(PyObject *exporter, Py_buffer *view, int flags)
 {
     Pycairo_BufferProxy *self = (Pycairo_BufferProxy *)exporter;
 
-    return PyBuffer_FillInfo (view, exporter, self->buf, self->len, 0, 0);
+    return PyBuffer_FillInfo (view, exporter, self->buf, self->len,
+                              self->readonly, flags);
 }
 
 static PyBufferProcs Pycairo_BufferProxy_as_buffer = {
@@ -63,7 +65,8 @@ static PyBufferProcs Pycairo_BufferProxy_as_buffer = {
 };
 
 PyObject *
-buffer_proxy_create_view(PyObject *exporter, void *buf, Py_ssize_t len) {
+buffer_proxy_create_view(PyObject *exporter, void *buf, Py_ssize_t len,
+                         int readonly) {
     PyObject *memoryview;
     PyObject *obj;
     Pycairo_BufferProxy *self;
@@ -78,6 +81,7 @@ buffer_proxy_create_view(PyObject *exporter, void *buf, Py_ssize_t len) {
     self->exporter = exporter;
     self->buf = buf;
     self->len = len;
+    self->readonly = readonly;
     PyObject_GC_Track(obj);
 
     memoryview = PyMemoryView_FromObject (obj);
@@ -113,6 +117,7 @@ buffer_proxy_dealloc(PyObject* obj)
 
     self->buf = NULL;
     self->len = 0;
+    self->readonly = 0;
     Py_DECREF(self->exporter);
 
     Py_TYPE(obj)->tp_free(obj);
