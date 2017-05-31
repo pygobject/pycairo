@@ -132,3 +132,9 @@ Creating an ImageSurface from a PIL Image:
         # Open image to an ARGB32 ImageSurface, 50% opacity
         im = Image.open(filename)
         surface3 = from_pil(im, alpha=0.5, format=cairo.FORMAT_ARGB32)
+
+
+Freetype-py & Cairo
+-------------------
+
+See https://github.com/rougier/freetype-py/tree/master/examples for examples.
