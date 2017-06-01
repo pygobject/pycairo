@@ -1,3 +1,16 @@
+1.13.3 - 2017-06-01
+-------------------
+
+Fixes:
+  * Fix ImageSurface leaking in case :meth:`get_data() <ImageSurface.get_data>` is used under Python 3.
+    :bug:`41`
+
+Documentation:
+  * Add Pillow to ImageSurface example. :pr:`40` (:user:`Stuart Axon <stuaxo>`)
+  * Describe Freetype-py intergration. :bug:`25` :pr:`43`
+    (:user:`Hin-Tak Leung <HinTak>`)
+
+
 1.13.2 - 2017-05-21
 -------------------
 
