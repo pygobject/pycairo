@@ -17,8 +17,9 @@ Features of the Pycairo bindings:
 * Queries the error status of objects and translates them to exceptions.
 * Provides a C API that can be used by other Python extensions.
 
-Pycairo depends on **cairo >= 1.12** and works with **Python 2.7+** as well as
-**Python 3.3+**. Pycairo, including this documentation, is licensed under the
+Pycairo depends on **cairo >= 1.14** (the 1.13 git snapshot present in Ubuntu
+14.04 works as well) and works with **Python 2.7+** as well as **Python
+3.3+**. Pycairo, including this documentation, is licensed under the
 **LGPLv2.1** as well as the **MPLv1.1**.
 
 If Pycairo is not what you need, have a look at `cairocffi
