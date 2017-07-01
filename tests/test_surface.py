@@ -50,6 +50,18 @@ def test_svg_surface_get_versions():
     assert all(isinstance(v, cairo.SVGVersion) for v in versions)
 
 
+def test_surface_get_device_scale():
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
+    device_scale = surface.get_device_scale()
+    assert all(isinstance(s, float) for s in device_scale)
+
+
+def test_surface_set_device_scale():
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
+    ret = surface.set_device_scale(5.0, 3.0)
+    assert ret is None
+
+
 @pytest.mark.skipif(not cairo.HAS_PNG_FUNCTIONS, reason="not png support")
 def test_image_surface_create_for_data_array():
     width, height = 255, 255

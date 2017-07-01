@@ -253,6 +253,13 @@ surface_get_device_offset (PycairoSurface *o) {
 }
 
 static PyObject *
+surface_get_device_scale (PycairoSurface *o) {
+  double x_scale, y_scale;
+  cairo_surface_get_device_scale (o->surface, &x_scale, &y_scale);
+  return Py_BuildValue("(dd)", x_scale, y_scale);
+}
+
+static PyObject *
 surface_get_fallback_resolution (PycairoSurface *o) {
   double x_ppi, y_ppi;
   cairo_surface_get_fallback_resolution (o->surface, &x_ppi, &y_ppi);
@@ -298,6 +305,19 @@ surface_set_device_offset (PycairoSurface *o, PyObject *args) {
 
   cairo_surface_set_device_offset (o->surface, x_offset, y_offset);
   Py_RETURN_NONE;
+}
+
+static PyObject *
+surface_set_device_scale (PycairoSurface *o, PyObject *args) {
+  double x_scale, y_scale;
+
+  if (!PyArg_ParseTuple (args, "dd:Surface.set_device_scale",
+			 &x_scale, &y_scale))
+    return NULL;
+
+  cairo_surface_set_device_scale (o->surface, x_scale, y_scale);
+  Py_RETURN_NONE;
+
 }
 
 static PyObject *
@@ -546,6 +566,7 @@ static PyMethodDef surface_methods[] = {
   {"flush",          (PyCFunction)surface_flush,              METH_NOARGS},
   {"get_content",    (PyCFunction)surface_get_content,        METH_NOARGS},
   {"get_device_offset",(PyCFunction)surface_get_device_offset,METH_NOARGS},
+  {"get_device_scale", (PyCFunction)surface_get_device_scale, METH_NOARGS},
   {"get_fallback_resolution",(PyCFunction)surface_get_fallback_resolution,
    METH_NOARGS},
   {"get_font_options",(PyCFunction)surface_get_font_options,  METH_NOARGS},
@@ -553,6 +574,7 @@ static PyMethodDef surface_methods[] = {
   {"mark_dirty_rectangle", (PyCFunction)surface_mark_dirty_rectangle,
    METH_VARARGS},
   {"set_device_offset",(PyCFunction)surface_set_device_offset,METH_VARARGS},
+  {"set_device_scale", (PyCFunction)surface_set_device_scale, METH_VARARGS},
   {"set_fallback_resolution",(PyCFunction)surface_set_fallback_resolution,
    METH_VARARGS},
   {"show_page",      (PyCFunction)surface_show_page,          METH_NOARGS},
