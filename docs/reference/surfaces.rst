@@ -351,6 +351,30 @@ class Surface()
 
       .. versionadded:: 1.12.0
 
+   .. method:: set_device_scale(x_scale, y_scale)
+
+      :param float x_scale: a scale factor in the X direction
+      :param float y_scale: a scale factor in the Y direction
+
+      Sets a scale that is multiplied to the device coordinates determined by
+      the CTM when drawing to surface . One common use for this is to render
+      to very high resolution display devices at a scale factor, so that code
+      that assumes 1 pixel will be a certain size will still work. Setting a
+      transformation via :meth:`Context.translate` isn't sufficient to do
+      this, since functions like ``Device.to_user()`` will expose the hidden
+      scale.
+
+      .. versionadded:: 1.14.0
+
+   .. method:: get_device_scale()
+
+      :returns: (x_scale,y_scale) a 2-tuple of float
+
+      This function returns the previous device offset set by
+      :meth:`Surface.set_device_scale`.
+
+      .. versionadded:: 1.14.0
+
 
 class ImageSurface(:class:`Surface`)
 ====================================

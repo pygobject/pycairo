@@ -1,3 +1,11 @@
+1.14.0 - ????-??-??
+-------------------
+
+New Features:
+  * Add :meth:`Surface.set_device_scale` and :meth:`Surface.get_device_scale`.
+    :pr:`44` (:user:`Sander Sweers <infirit>`)
+
+
 1.13.3 - 2017-06-01
 -------------------
 
