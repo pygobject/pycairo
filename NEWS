@@ -1,3 +1,5 @@
+.. _v1.14.0:
+
 1.14.0 - ????-??-??
 -------------------
 
@@ -5,6 +7,7 @@ New Features:
   * Add :meth:`Surface.set_device_scale` and :meth:`Surface.get_device_scale`.
     :pr:`44` (:user:`Sander Sweers <infirit>`)
 
+.. _v1.13.3:
 
 1.13.3 - 2017-06-01
 -------------------
@@ -19,6 +22,8 @@ Documentation:
     (:user:`Hin-Tak Leung <HinTak>`)
 
 
+.. _v1.13.2:
+
 1.13.2 - 2017-05-21
 -------------------
 
@@ -28,6 +33,8 @@ Fixes:
 Testing:
   * Added continuous testing for Windows using MSYS2 and appveyor. :bug:`19`
 
+
+.. _v1.13.1:
 
 1.13.1 - 2017-05-07
 -------------------
@@ -42,6 +49,8 @@ Fixes:
 Documentation:
   * Add Pyglet integration example. :pr:`33` (:user:`Stuart Axon <stuaxo>`)
 
+
+.. _v1.13.0:
 
 1.13.0 - 2017-05-03
 -------------------
@@ -77,6 +86,8 @@ Testing:
   * Added travis-ci tests for flake8 and sphinx. :pr:`30`, :pr:`32`
   * The test suite now has optional tests for numpy and pygame integration.
 
+
+.. _v1.12.0:
 
 1.12.0 - 2017-04-18
 -------------------
@@ -152,12 +163,16 @@ Constants:
   * Add :meth:`ScaledFont.get_font_options`
 
 
+.. _v1.11.1:
+
 1.11.1 - 2017-04-12
 -------------------
 
 This release fixes an ABI breakage. I missed that the original pycairo master
 had already broken ABI compared to 1.10.0.
 
+
+.. _v1.11.0:
 
 1.11.0 - 2017-04-09
 -------------------
