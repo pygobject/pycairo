@@ -230,6 +230,7 @@ def main():
     cairo_ext = Extension(
         name='cairo._cairo',
         sources=[
+            'cairo/device.c',
             'cairo/bufferproxy.c',
             'cairo/error.c',
             'cairo/cairomodule.c',

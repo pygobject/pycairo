@@ -276,6 +276,14 @@ surface_get_font_options (PycairoSurface *o) {
 }
 
 static PyObject *
+surface_get_device (PycairoSurface *o) {
+  cairo_device_t *device = cairo_surface_get_device (o->surface);
+  if (device == NULL)
+    Py_RETURN_NONE;
+  return PycairoDevice_FromDevice (device);
+}
+
+static PyObject *
 surface_mark_dirty (PycairoSurface *o) {
   cairo_surface_mark_dirty (o->surface);
   RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
@@ -570,6 +578,7 @@ static PyMethodDef surface_methods[] = {
   {"get_fallback_resolution",(PyCFunction)surface_get_fallback_resolution,
    METH_NOARGS},
   {"get_font_options",(PyCFunction)surface_get_font_options,  METH_NOARGS},
+  {"get_device",     (PyCFunction)surface_get_device,         METH_NOARGS},
   {"mark_dirty",     (PyCFunction)surface_mark_dirty,         METH_NOARGS},
   {"mark_dirty_rectangle", (PyCFunction)surface_mark_dirty_rectangle,
    METH_VARARGS},

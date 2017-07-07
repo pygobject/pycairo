@@ -375,6 +375,16 @@ class Surface()
 
       .. versionadded:: 1.14.0
 
+   .. method:: get_device()
+
+      :returns: the device or :obj:`None` if the surface does not have an
+         associated device
+      :rtype: Device
+
+      This function returns the device for a surface.
+
+      .. versionadded:: 1.14.0
+
 
 class ImageSurface(:class:`Surface`)
 ====================================
