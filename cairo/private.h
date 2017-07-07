@@ -82,6 +82,9 @@ PyObject *PycairoRectangleInt_FromRectangleInt (
 extern PyTypeObject PycairoRegion_Type;
 PyObject *PycairoRegion_FromRegion (cairo_region_t *region);
 
+extern PyTypeObject PycairoDevice_Type;
+PyObject *PycairoDevice_FromDevice (cairo_device_t *device);
+
 extern PyTypeObject PycairoScaledFont_Type;
 PyObject *PycairoScaledFont_FromScaledFont (cairo_scaled_font_t *scaled_font);
 
@@ -166,6 +169,15 @@ int Pycairo_Check_Status (cairo_status_t status);
 #define RETURN_NULL_IF_CAIRO_SURFACE_ERROR(surface)	        \
   do {								\
     cairo_status_t status = cairo_surface_status (surface);	\
+    if (status != CAIRO_STATUS_SUCCESS) {			\
+      Pycairo_Check_Status (status);				\
+      return NULL;						\
+    }								\
+  } while (0)
+
+#define RETURN_NULL_IF_CAIRO_DEVICE_ERROR(device)	        \
+  do {								\
+    cairo_status_t status = cairo_device_status (device);	\
     if (status != CAIRO_STATUS_SUCCESS) {			\
       Pycairo_Check_Status (status);				\
       return NULL;						\

@@ -19,4 +19,5 @@ API Reference
    region
    surfaces
    text
+   devices
    legacy_constants

@@ -264,6 +264,9 @@ PYCAIRO_MOD_INIT(_cairo)
   if (PyType_Ready(&PycairoRectangleInt_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
 
+  if (PyType_Ready(&PycairoDevice_Type) < 0)
+    return PYCAIRO_MOD_ERROR_VAL;
+
   if (PyType_Ready(&PycairoRegion_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
 
@@ -371,6 +374,9 @@ PYCAIRO_MOD_INIT(_cairo)
 
   Py_INCREF(&PycairoSurface_Type);
   PyModule_AddObject(m, "Surface", (PyObject *)&PycairoSurface_Type);
+
+  Py_INCREF(&PycairoDevice_Type);
+  PyModule_AddObject(m, "Device", (PyObject *)&PycairoDevice_Type);
 
 #ifdef CAIRO_HAS_IMAGE_SURFACE
   Py_INCREF(&PycairoImageSurface_Type);
