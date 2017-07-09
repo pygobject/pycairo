@@ -664,3 +664,18 @@ as constants on the module level. See :ref:`legacy_constants`.
         INVALID_MESH_CONSTRUCTION
         DEVICE_FINISHED
         LAST_STATUS
+
+
+.. class:: ScriptMode
+
+    A set of script output variants.
+
+    .. versionadded:: 1.14
+
+    .. attribute:: ASCII
+
+        the output will be in readable text (default)
+
+    .. attribute:: BINARY
+
+        the output will use byte codes.

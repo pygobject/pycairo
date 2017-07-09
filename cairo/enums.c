@@ -47,6 +47,10 @@
 #ifdef CAIRO_HAS_PS_SURFACE
 #  include <cairo-ps.h>
 #endif
+/* For the CAIRO_SCRIPT_* defines */
+#ifdef CAIRO_HAS_SCRIPT_SURFACE
+#  include <cairo-script.h>
+#endif
 
 typedef struct {
     PYCAIRO_PyLongObject base;
@@ -190,6 +194,9 @@ DEFINE_ENUM(PDFVersion)
 #endif
 #ifdef CAIRO_HAS_PS_SURFACE
 DEFINE_ENUM(PSLevel)
+#endif
+#ifdef CAIRO_HAS_SCRIPT_SURFACE
+DEFINE_ENUM(ScriptMode)
 #endif
 
 #undef DEFINE_ENUM
@@ -409,6 +416,12 @@ init_enums (PyObject *module) {
     ENUM(PSLevel);
     CONSTANT(PSLevel, PS, LEVEL_2);
     CONSTANT(PSLevel, PS, LEVEL_3);
+#endif
+
+#ifdef CAIRO_HAS_SCRIPT_SURFACE
+    ENUM(ScriptMode);
+    CONSTANT(ScriptMode, SCRIPT_MODE, ASCII);
+    CONSTANT(ScriptMode, SCRIPT_MODE, BINARY);
 #endif
 
 #undef ENUM
