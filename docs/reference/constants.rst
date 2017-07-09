@@ -66,6 +66,10 @@ cairo.HAS
 
     .. versionadded:: 1.12.0
 
+.. data:: HAS_SCRIPT_SURFACE
+
+    .. versionadded:: 1.12.0
+
 
 .. _constants_MIME_TYPE:
 

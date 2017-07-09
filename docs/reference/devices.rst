@@ -75,3 +75,44 @@ class Device()
         function for details.
 
         .. versionadded:: 1.14
+
+
+class ScriptDevice(:class:`Device`)
+===================================
+
+.. class:: ScriptDevice(fobj)
+
+    :param fobj: a filename or writable file object.
+    :type fobj: :obj:`text`, file or file-like object
+
+    Creates a output device for emitting the script, used when creating the
+    individual surfaces.
+
+    .. versionadded:: 1.14
+
+    .. method:: set_mode(mode)
+
+        :param cairo.ScriptMode mode: the new mode
+
+        Change the output mode of the script
+
+    .. method:: get_mode()
+
+        :returns: the current output mode of the script
+        :rtype: cairo.ScriptMode
+
+        Queries the script for its current output mode.
+
+    .. method:: write_comment(comment)
+
+        :param text comment: the string to emit
+
+        Emit a string verbatim into the script.
+
+    .. method:: from_recording_surface(recording_surface)
+
+        :param cairo.RecordingSurface recording_surface:
+            the recording surface to replay
+        :raises cairo.Error:
+
+        Converts the record operations in recording_surface into a script.

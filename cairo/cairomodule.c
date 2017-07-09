@@ -266,6 +266,8 @@ PYCAIRO_MOD_INIT(_cairo)
 
   if (PyType_Ready(&PycairoDevice_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
+  if (PyType_Ready(&PycairoScriptDevice_Type) < 0)
+    return PYCAIRO_MOD_ERROR_VAL;
 
   if (PyType_Ready(&PycairoRegion_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
@@ -377,6 +379,9 @@ PYCAIRO_MOD_INIT(_cairo)
 
   Py_INCREF(&PycairoDevice_Type);
   PyModule_AddObject(m, "Device", (PyObject *)&PycairoDevice_Type);
+
+  Py_INCREF(&PycairoScriptDevice_Type);
+  PyModule_AddObject(m, "ScriptDevice", (PyObject *)&PycairoScriptDevice_Type);
 
 #ifdef CAIRO_HAS_IMAGE_SURFACE
   Py_INCREF(&PycairoImageSurface_Type);
@@ -532,6 +537,11 @@ PYCAIRO_MOD_INIT(_cairo)
   PyModule_AddIntConstant(m, "HAS_MIME_SURFACE", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_MIME_SURFACE", 0);
+#endif
+#ifdef CAIRO_HAS_SCRIPT_SURFACE
+  PyModule_AddIntConstant(m, "HAS_SCRIPT_SURFACE", 1);
+#else
+  PyModule_AddIntConstant(m, "HAS_SCRIPT_SURFACE", 0);
 #endif
 
 #define STRCONSTANT(x) PyModule_AddStringConstant(m, #x, CAIRO_##x)

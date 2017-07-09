@@ -84,6 +84,7 @@ PyObject *PycairoRegion_FromRegion (cairo_region_t *region);
 
 extern PyTypeObject PycairoDevice_Type;
 PyObject *PycairoDevice_FromDevice (cairo_device_t *device);
+extern PyTypeObject PycairoScriptDevice_Type;
 
 extern PyTypeObject PycairoScaledFont_Type;
 PyObject *PycairoScaledFont_FromScaledFont (cairo_scaled_font_t *scaled_font);
@@ -248,6 +249,9 @@ DECL_ENUM(PDFVersion)
 #endif
 #ifdef CAIRO_HAS_PS_SURFACE
 DECL_ENUM(PSLevel)
+#endif
+#ifdef CAIRO_HAS_SCRIPT_SURFACE
+DECL_ENUM(ScriptMode)
 #endif
 
 #endif /* _PYCAIRO_PRIVATE_H_ */
