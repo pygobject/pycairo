@@ -211,6 +211,16 @@ derive. It cannot be instantiated directly.
       be useful for reliably making sharp color transitions instead of the
       typical blend.
 
+   .. method:: get_color_stops_rgba()
+
+      :returns: a list of (offset, red, green, blue, alpha) tuples of float
+      :rtype: list
+
+      Gets the color and offset information for all color stops specified in
+      the given gradient pattern.
+
+      .. versionadded:: 1.14
+
 
 class LinearGradient(:class:`Gradient`)
 =======================================

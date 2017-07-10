@@ -399,11 +399,52 @@ gradient_add_color_stop_rgba (PycairoGradient *o, PyObject *args) {
   Py_RETURN_NONE;
 }
 
+static PyObject *
+gradient_get_color_stops_rgba (PycairoGradient *obj) {
+  cairo_status_t status;
+  double offset, red, green, blue, alpha;
+  int count;
+  PyObject *list, *tuple;
+  int result;
+
+  status = cairo_pattern_get_color_stop_count (obj->pattern, &count);
+  RETURN_NULL_IF_CAIRO_ERROR (status);
+
+  list = PyList_New (0);
+  if (list == NULL)
+    return NULL;
+
+  for (int i = 0; i < count; i++) {
+    status = cairo_pattern_get_color_stop_rgba (
+      obj->pattern, i, &offset, &red, &green, &blue, &alpha);
+    if (status != CAIRO_STATUS_SUCCESS)
+      goto error;
+
+    tuple = Py_BuildValue("(ddddd)", offset, red, green, blue, alpha);
+    if (tuple == NULL)
+      goto error;
+
+    result = PyList_Append (list, tuple);
+    Py_DECREF (tuple);
+    if (result == -1)
+      goto error;
+  }
+
+  return list;
+error:
+  Py_DECREF (list);
+  if (status != CAIRO_STATUS_SUCCESS)
+    Pycairo_Check_Status (status);
+  return NULL;
+}
+
 static PyMethodDef gradient_methods[] = {
   {"add_color_stop_rgb",(PyCFunction)gradient_add_color_stop_rgb,
    METH_VARARGS },
   {"add_color_stop_rgba",(PyCFunction)gradient_add_color_stop_rgba,
    METH_VARARGS },
+  {"get_color_stops_rgba",(PyCFunction)gradient_get_color_stops_rgba,
+   METH_NOARGS },
   {NULL, NULL, 0, NULL},
 };
 
