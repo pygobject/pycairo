@@ -665,6 +665,10 @@ as constants on the module level. See :ref:`legacy_constants`.
         DEVICE_FINISHED
         LAST_STATUS
 
+    .. attribute:: JBIG2_GLOBAL_MISSING
+
+        .. versionadded:: 1.14
+
 
 .. class:: ScriptMode
 

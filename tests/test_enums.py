@@ -31,6 +31,10 @@ def test_type():
     assert isinstance(cairo.ANTIALIAS_DEFAULT, t)
 
 
+def test_misc():
+    cairo.Status.JBIG2_GLOBAL_MISSING
+
+
 def test_aliases():
     types_ = [
         cairo.Antialias,
