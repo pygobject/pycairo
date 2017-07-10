@@ -186,6 +186,7 @@ DEFINE_ENUM(PathDataType)
 DEFINE_ENUM(RegionOverlap)
 DEFINE_ENUM(Status)
 DEFINE_ENUM(SubpixelOrder)
+DEFINE_ENUM(TextClusterFlags)
 #ifdef CAIRO_HAS_SVG_SURFACE
 DEFINE_ENUM(SVGVersion)
 #endif
@@ -422,6 +423,9 @@ init_enums (PyObject *module) {
     CONSTANT(SubpixelOrder, SUBPIXEL_ORDER, BGR);
     CONSTANT(SubpixelOrder, SUBPIXEL_ORDER, VRGB);
     CONSTANT(SubpixelOrder, SUBPIXEL_ORDER, VBGR);
+
+    ENUM(TextClusterFlags);
+    CONSTANT(TextClusterFlags, TEXT_CLUSTER_FLAG, BACKWARD);
 
 #ifdef CAIRO_HAS_SVG_SURFACE
     ENUM(SVGVersion);

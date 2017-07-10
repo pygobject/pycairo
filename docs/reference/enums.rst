@@ -706,3 +706,15 @@ as constants on the module level. See :ref:`legacy_constants`.
     .. attribute:: BINARY
 
         the output will use byte codes.
+
+
+.. class:: TextClusterFlags
+
+    Specifies properties of a text cluster mapping.
+
+    .. versionadded:: 1.14
+
+    .. attribute:: BACKWARD
+
+        The clusters in the cluster array map to glyphs in the glyph array
+        from end to start.

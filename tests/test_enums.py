@@ -40,6 +40,10 @@ def test_format_methods():
     assert cairo.Format.stride_for_width(cairo.Format.RGB24, 8) == 32
 
 
+def test_text_cluster_flags():
+    assert cairo.TextClusterFlags.BACKWARD == 1
+
+
 def test_aliases():
     types_ = [
         cairo.Antialias,

@@ -251,6 +251,7 @@ DECL_ENUM(PathDataType)
 DECL_ENUM(RegionOverlap)
 DECL_ENUM(Status)
 DECL_ENUM(SubpixelOrder)
+DECL_ENUM(TextClusterFlags)
 #ifdef CAIRO_HAS_SVG_SURFACE
 DECL_ENUM(SVGVersion)
 #endif
