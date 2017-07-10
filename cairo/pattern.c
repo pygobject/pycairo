@@ -405,7 +405,7 @@ gradient_get_color_stops_rgba (PycairoGradient *obj) {
   double offset, red, green, blue, alpha;
   int count;
   PyObject *list, *tuple;
-  int result;
+  int result, i;
 
   status = cairo_pattern_get_color_stop_count (obj->pattern, &count);
   RETURN_NULL_IF_CAIRO_ERROR (status);
@@ -414,7 +414,7 @@ gradient_get_color_stops_rgba (PycairoGradient *obj) {
   if (list == NULL)
     return NULL;
 
-  for (int i = 0; i < count; i++) {
+  for (i = 0; i < count; i++) {
     status = cairo_pattern_get_color_stop_rgba (
       obj->pattern, i, &offset, &red, &green, &blue, &alpha);
     if (status != CAIRO_STATUS_SUCCESS)
