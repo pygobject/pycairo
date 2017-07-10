@@ -35,6 +35,11 @@ def test_misc():
     cairo.Status.JBIG2_GLOBAL_MISSING
 
 
+def test_format_methods():
+    assert cairo.Format.RGB24.stride_for_width(8) == 32
+    assert cairo.Format.stride_for_width(cairo.Format.RGB24, 8) == 32
+
+
 def test_aliases():
     types_ = [
         cairo.Antialias,

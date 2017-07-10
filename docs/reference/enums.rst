@@ -208,6 +208,29 @@ as constants on the module level. See :ref:`legacy_constants`.
 
     .. versionadded:: 1.13
 
+    .. method:: stride_for_width(width)
+
+        :param int width: the desired width of an :class:`ImageSurface`
+            to be created.
+        :returns: the appropriate stride to use given the desired format and
+            width, or -1 if either the format is invalid or the width too
+            large.
+        :rtype: int
+
+        This method provides a stride value that will respect all alignment
+        requirements of the accelerated image-rendering code within cairo.
+        Typical usage will be of the form::
+
+            format = cairo.Format.RGB24
+            stride = format.stride_for_width(width)
+            surface = cairo.ImageSurface.create_for_data(
+                data, format, width, height, stride)
+
+        Also available under
+        :meth:`cairo.ImageSurface.format_stride_for_width`.
+
+        .. versionadded:: 1.14
+
     .. attribute:: INVALID
 
         no such format exists or is supported.

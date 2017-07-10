@@ -415,7 +415,7 @@ those defined in :class:`cairo.Format`.
       :param height: the height of the image to be stored in the buffer
       :param stride: the number of bytes between the start of rows in the
         buffer as allocated. If not given the value from
-        ``format_stride_for_width(format, width)`` is used.
+        :meth:`cairo.Format.stride_for_width` is used.
       :returns: a new *ImageSurface*
       :raises: *MemoryError* in case of no memory.
 
@@ -430,10 +430,10 @@ those defined in :class:`cairo.Format`.
       provide proper alignment for each pixel and row. This alignment is
       required to allow high-performance rendering within cairo. The correct
       way to obtain a legal stride value is to call
-      :meth:`.format_stride_for_width` with the desired format and maximum
-      image width value, and use the resulting stride value to allocate the
-      data and to create the *ImageSurface*. See
-      :meth:`.format_stride_for_width` for example code.
+      :meth:`cairo.Format.stride_for_width` with the desired format and
+      maximum image width value, and use the resulting stride value to
+      allocate the data and to create the :class:`ImageSurface`. See
+      :meth:`cairo.Format.stride_for_width` for example code.
 
    .. classmethod:: create_from_png(fobj)
 
@@ -443,18 +443,7 @@ those defined in :class:`cairo.Format`.
 
    .. staticmethod:: format_stride_for_width(format, width)
 
-      :param cairo.Format format: a cairo format value
-      :param width: the desired width of an *ImageSurface* to be created.
-      :returns: the appropriate stride to use given the desired format and
-        width, or -1 if either the format is invalid or the width too large.
-      :rtype: int
-
-      This method provides a stride value that will respect all alignment
-      requirements of the accelerated image-rendering code within
-      cairo. Typical usage will be of the form::
-
-        stride = cairo.ImageSurface.format_stride_for_width (format, width)
-        surface = cairo.ImageSurface.create_for_data (data, format, width, height, stride)
+      See :meth:`cairo.Format.stride_for_width`.
 
       .. versionadded:: 1.6
 

@@ -216,6 +216,27 @@ init_enum_type (PyObject *module, const char *name, PyTypeObject *type) {
     return 0;
 }
 
+static PyObject *
+format_stride_for_width (PyObject *self, PyObject *args) {
+  cairo_format_t format;
+  int width;
+
+  if (!PyArg_ParseTuple(args, "i:stride_for_width", &width))
+    return NULL;
+
+  format = PyLong_AsLong (self);
+  if (PyErr_Occurred())
+    return NULL;
+
+  return PYCAIRO_PyLong_FromLong (
+    cairo_format_stride_for_width (format, width));
+}
+
+static PyMethodDef format_methods[] = {
+  {"stride_for_width", (PyCFunction)format_stride_for_width, METH_VARARGS},
+  {NULL, NULL, 0, NULL},
+};
+
 int
 init_enums (PyObject *module) {
     PyObject *ev;
@@ -279,6 +300,7 @@ init_enums (PyObject *module) {
     CONSTANT(FontSlant, FONT_SLANT, ITALIC);
     CONSTANT(FontSlant, FONT_SLANT, OBLIQUE);
 
+    Pycairo_Format_Type.tp_methods = format_methods;
     ENUM(Format);
     CONSTANT(Format, FORMAT, INVALID);
     CONSTANT(Format, FORMAT, ARGB32);
