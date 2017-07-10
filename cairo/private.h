@@ -252,6 +252,7 @@ DECL_ENUM(RegionOverlap)
 DECL_ENUM(Status)
 DECL_ENUM(SubpixelOrder)
 DECL_ENUM(TextClusterFlags)
+DECL_ENUM(SurfaceObserverMode)
 #ifdef CAIRO_HAS_SVG_SURFACE
 DECL_ENUM(SVGVersion)
 #endif

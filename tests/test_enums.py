@@ -44,6 +44,9 @@ def test_text_cluster_flags():
     assert cairo.TextClusterFlags.BACKWARD == 1
 
 
+def test_surface_observer_mode():
+    assert cairo.SurfaceObserverMode.NORMAL == 0
+
 def test_aliases():
     types_ = [
         cairo.Antialias,

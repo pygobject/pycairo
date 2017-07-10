@@ -718,3 +718,18 @@ as constants on the module level. See :ref:`legacy_constants`.
 
         The clusters in the cluster array map to glyphs in the glyph array
         from end to start.
+
+
+.. class:: SurfaceObserverMode
+
+    Whether operations should be recorded.
+
+    .. versionadded:: 1.14
+
+    .. attribute:: NORMAL
+
+        no recording is done
+
+    .. attribute:: RECORD_OPERATIONS
+
+        operations are recorded

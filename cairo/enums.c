@@ -187,6 +187,7 @@ DEFINE_ENUM(RegionOverlap)
 DEFINE_ENUM(Status)
 DEFINE_ENUM(SubpixelOrder)
 DEFINE_ENUM(TextClusterFlags)
+DEFINE_ENUM(SurfaceObserverMode)
 #ifdef CAIRO_HAS_SVG_SURFACE
 DEFINE_ENUM(SVGVersion)
 #endif
@@ -426,6 +427,10 @@ init_enums (PyObject *module) {
 
     ENUM(TextClusterFlags);
     CONSTANT(TextClusterFlags, TEXT_CLUSTER_FLAG, BACKWARD);
+
+    ENUM(SurfaceObserverMode);
+    CONSTANT(SurfaceObserverMode, SURFACE_OBSERVER, NORMAL);
+    CONSTANT(SurfaceObserverMode, SURFACE_OBSERVER, RECORD_OPERATIONS);
 
 #ifdef CAIRO_HAS_SVG_SURFACE
     ENUM(SVGVersion);
