@@ -113,6 +113,11 @@ PycairoSurface_FromSurface (cairo_surface_t *surface, PyObject *base) {
     type = &PycairoXlibSurface_Type;
     break;
 #endif
+#if CAIRO_HAS_SCRIPT_SURFACE
+  case CAIRO_SURFACE_TYPE_SCRIPT:
+    type = &PycairoScriptSurface_Type;
+    break;
+#endif
   default:
     type = &PycairoSurface_Type;
     break;
@@ -1168,6 +1173,93 @@ PyTypeObject PycairoPDFSurface_Type = {
   0,                                  /* tp_bases */
 };
 #endif /* CAIRO_HAS_PDF_SURFACE */
+
+#ifdef CAIRO_HAS_SCRIPT_SURFACE
+#include <cairo-script.h>
+
+typedef PycairoSurface PycairoScriptSurface;
+
+static PyObject *
+script_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
+  cairo_content_t content;
+  double width, height;
+  PyObject *pydevice;
+
+  if (!PyArg_ParseTuple (args, "O!idd:ScriptSurface.__new__",
+      &PycairoScriptDevice_Type, &pydevice, &content, &width, &height))
+    return NULL;
+
+  return PycairoSurface_FromSurface (
+    cairo_script_surface_create (
+      ((PycairoDevice*)pydevice)->device, content, width, height),
+    NULL);
+}
+
+static PyObject *
+script_surface_create_for_target (PyTypeObject *type, PyObject *args) {
+  PyObject *pydevice, *target;
+
+  if (!PyArg_ParseTuple (args, "O!O!:ScriptSurface.create_for_target",
+        &PycairoScriptDevice_Type, &pydevice, &PycairoSurface_Type, &target))
+    return NULL;
+
+  return PycairoSurface_FromSurface (
+    cairo_script_surface_create_for_target (
+      ((PycairoDevice*)pydevice)->device, ((PycairoSurface*)target)->surface),
+    NULL);
+}
+
+static PyMethodDef script_surface_methods[] = {
+  {"create_for_target",
+    (PyCFunction)script_surface_create_for_target, METH_VARARGS | METH_CLASS},
+  {NULL, NULL, 0, NULL},
+};
+
+PyTypeObject PycairoScriptSurface_Type = {
+  PyVarObject_HEAD_INIT(NULL, 0)
+  "cairo.ScriptSurface",              /* tp_name */
+  sizeof(PycairoScriptSurface),      /* tp_basicsize */
+  0,                                  /* tp_itemsize */
+  0,                                  /* tp_dealloc */
+  0,                                  /* tp_print */
+  0,                                  /* tp_getattr */
+  0,                                  /* tp_setattr */
+  0,                                  /* tp_compare */
+  0,                                  /* tp_repr */
+  0,                                  /* tp_as_number */
+  0,                                  /* tp_as_sequence */
+  0,                                  /* tp_as_mapping */
+  0,                                  /* tp_hash */
+  0,                                  /* tp_call */
+  0,                                  /* tp_str */
+  0,                                  /* tp_getattro */
+  0,                                  /* tp_setattro */
+  0,                                  /* tp_as_buffer */
+  Py_TPFLAGS_DEFAULT,                 /* tp_flags */
+  0,                                  /* tp_doc */
+  0,                                  /* tp_traverse */
+  0,                                  /* tp_clear */
+  0,                                  /* tp_richcompare */
+  0,                                  /* tp_weaklistoffset */
+  0,                                  /* tp_iter */
+  0,                                  /* tp_iternext */
+  script_surface_methods,             /* tp_methods */
+  0,                                  /* tp_members */
+  0,                                  /* tp_getset */
+  &PycairoSurface_Type,               /* tp_base */
+  0,                                  /* tp_dict */
+  0,                                  /* tp_descr_get */
+  0,                                  /* tp_descr_set */
+  0,                                  /* tp_dictoffset */
+  0,                                  /* tp_init */
+  0,                                  /* tp_alloc */
+  (newfunc)script_surface_new,        /* tp_new */
+  0,                                  /* tp_free */
+  0,                                  /* tp_is_gc */
+  0,                                  /* tp_bases */
+};
+
+#endif /* CAIRO_HAS_SCRIPT_SURFACE */
 
 
 /* Class PSSurface(Surface) ----------------------------------------------- */
