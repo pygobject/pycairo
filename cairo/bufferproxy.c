@@ -118,7 +118,7 @@ buffer_proxy_dealloc(PyObject* obj)
     self->buf = NULL;
     self->len = 0;
     self->readonly = 0;
-    Py_DECREF(self->exporter);
+    buffer_proxy_clear(obj);
 
     Py_TYPE(obj)->tp_free(obj);
 }
