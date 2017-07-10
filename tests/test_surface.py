@@ -20,6 +20,14 @@ def test_image_surface_get_data_refcount():
     assert sys.getrefcount(surface) == 2
 
 
+def test_image_surface_get_data_crasher():
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
+    try:
+        assert 0, surface.get_data()
+    except Exception:
+        pass
+
+
 def test_surface_get_content():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
     assert surface.get_content() == cairo.Content.COLOR_ALPHA
