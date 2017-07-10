@@ -3,9 +3,21 @@
 1.14.0 - ????-??-??
 -------------------
 
+General:
+  * Requires at least cairo 1.13.1 (The snapshop in Ubuntu 14.04)
+
 New Features:
   * Add :meth:`Surface.set_device_scale` and :meth:`Surface.get_device_scale`.
     :pr:`44` (:user:`Sander Sweers <infirit>`)
+  * Add :class:`Device` :pr:`45`
+  * Add :meth:`Surface.get_device` :pr:`45`
+  * Add :class:`ScriptDevice` and :class:`ScriptMode` :pr:`46`
+  * Add :class:`ScriptSurface` :bug:`17`
+  * Add :attr:`Status.JBIG2_GLOBAL_MISSING`
+  * Add :meth:`Format.stride_for_width`
+  * Add :class:`TextClusterFlags` and :class:`SurfaceObserverMode`
+  * Add :meth:`Gradient.get_color_stops_rgba`
+
 
 .. _v1.13.3:
 
