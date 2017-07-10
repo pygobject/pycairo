@@ -32,12 +32,6 @@
 #include "config.h"
 #include "private.h"
 
-
-typedef struct {
-    PyObject_HEAD
-    cairo_device_t *device;
-} PycairoDevice;
-
 static void
 device_dealloc(PycairoDevice *obj) {
     if (obj->device) {
@@ -138,10 +132,6 @@ PyTypeObject PycairoDevice_Type = {
 
 #if CAIRO_HAS_SCRIPT_SURFACE
 #include <cairo-script.h>
-
-typedef struct {
-  PycairoDevice base;
-} PycairoScriptDevice;
 
 static const cairo_user_data_key_t device_base_object_key;
 

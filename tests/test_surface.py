@@ -141,3 +141,37 @@ def test_surface_from_stream_closed_before_finished():
         fileobj.close()
         with pytest.raises(IOError):
             surface.finish()
+
+
+def test_script_surface():
+    f = io.BytesIO()
+    dev = cairo.ScriptDevice(f)
+    surface = cairo.ScriptSurface(dev, cairo.Content.COLOR_ALPHA, 42, 10)
+    assert isinstance(surface, cairo.ScriptSurface)
+    cairo.Context(surface).paint()
+    dev.flush()
+    assert b"42" in f.getvalue()
+    assert b"paint" in f.getvalue()
+
+
+def test_script_surface_create_for_target():
+    # paint the script proxy
+    f = io.BytesIO()
+    dev = cairo.ScriptDevice(f)
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
+    script = cairo.ScriptSurface.create_for_target(dev, surface)
+    assert isinstance(script, cairo.ScriptSurface)
+    ctx = cairo.Context(script)
+    ctx.set_source_rgb(0.25, 0.5, 1.0)
+    ctx.paint()
+    assert b"paint" in f.getvalue()
+    surface.flush()
+    image_data = bytes(surface.get_data())
+
+    # check if the result is the same
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
+    ctx = cairo.Context(surface)
+    ctx.set_source_rgb(0.25, 0.5, 1.0)
+    ctx.paint()
+    surface.flush()
+    assert bytes(surface.get_data()) == image_data
