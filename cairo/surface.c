@@ -323,10 +323,17 @@ surface_set_device_offset (PycairoSurface *o, PyObject *args) {
 static PyObject *
 surface_set_device_scale (PycairoSurface *o, PyObject *args) {
   double x_scale, y_scale;
+  cairo_matrix_t transform;
 
   if (!PyArg_ParseTuple (args, "dd:Surface.set_device_scale",
 			 &x_scale, &y_scale))
     return NULL;
+
+  /* cairo asserts the following without reporting an error back.
+   * Since we don't want things to crash in Python replicate the logic here.
+   */
+  cairo_matrix_init_scale (&transform, x_scale, y_scale);
+  RETURN_NULL_IF_CAIRO_ERROR (cairo_matrix_invert (&transform));
 
   cairo_surface_set_device_scale (o->surface, x_scale, y_scale);
   Py_RETURN_NONE;

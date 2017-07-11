@@ -69,6 +69,10 @@ def test_surface_set_device_scale():
     ret = surface.set_device_scale(5.0, 3.0)
     assert ret is None
 
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
+    with pytest.raises(cairo.Error):
+        surface.set_device_scale(1, 0)
+
 
 @pytest.mark.skipif(not cairo.HAS_PNG_FUNCTIONS, reason="not png support")
 def test_image_surface_create_for_data_array():
