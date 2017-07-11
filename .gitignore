@@ -18,6 +18,7 @@
 .cache
 MANIFEST
 dist
+.hypothesis
 
 # image files
 *.pdf
