@@ -18,6 +18,7 @@ New Features:
   * Add :class:`TextClusterFlags` and :class:`SurfaceObserverMode`
   * Add :meth:`Gradient.get_color_stops_rgba`
   * Add :class:`TeeSurface`
+  * Add :class:`MeshPattern`
 
 
 .. _v1.13.3:

@@ -75,6 +75,9 @@ PycairoPattern_FromPattern (cairo_pattern_t *pattern, PyObject *base) {
   case CAIRO_PATTERN_TYPE_RADIAL:
     type = &PycairoRadialGradient_Type;
     break;
+  case CAIRO_PATTERN_TYPE_MESH:
+    type = &PycairoMeshPattern_Type;
+    break;
   default:
     type = &PycairoPattern_Type;
     break;
@@ -627,6 +630,276 @@ PyTypeObject PycairoRadialGradient_Type = {
   0,                                  /* tp_init */
   0,                                  /* tp_alloc */
   (newfunc)radial_gradient_new,       /* tp_new */
+  0,                                  /* tp_free */
+  0,                                  /* tp_is_gc */
+  0,                                  /* tp_bases */
+};
+
+static PyObject *
+mesh_pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
+  if (!PyArg_ParseTuple (args, ":Mesh.__new__"))
+    return NULL;
+
+  return PycairoPattern_FromPattern (cairo_pattern_create_mesh (), NULL);
+}
+
+static PyObject *
+mesh_pattern_begin_patch (PycairoMeshPattern *obj) {
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_mesh_pattern_begin_patch (obj->pattern);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_NULL_IF_CAIRO_PATTERN_ERROR (obj->pattern);
+
+  Py_RETURN_NONE;
+}
+
+static PyObject *
+mesh_pattern_end_patch (PycairoMeshPattern *obj) {
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_mesh_pattern_end_patch (obj->pattern);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_NULL_IF_CAIRO_PATTERN_ERROR (obj->pattern);
+
+  Py_RETURN_NONE;
+}
+
+static PyObject *
+mesh_pattern_curve_to (PycairoMeshPattern *obj, PyObject *args) {
+  double x1, y1, x2, y2, x3, y3;
+
+  if (!PyArg_ParseTuple(args, "dddddd:MeshPattern.curve_to",
+      &x1, &y1, &x2, &y2, &x3, &y3))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_mesh_pattern_curve_to (obj->pattern, x1, y1, x2, y2, x3, y3);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_NULL_IF_CAIRO_PATTERN_ERROR (obj->pattern);
+
+  Py_RETURN_NONE;
+}
+
+static PyObject *
+mesh_pattern_get_control_point (PycairoMeshPattern *obj, PyObject *args) {
+  double x, y;
+  unsigned int patch_num, point_num;
+  cairo_status_t status;
+
+  if (!PyArg_ParseTuple(args, "II:MeshPattern.get_control_point",
+      &patch_num, &point_num))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  status = cairo_mesh_pattern_get_control_point (
+    obj->pattern, patch_num, point_num, &x, &y);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_NULL_IF_CAIRO_ERROR (status);
+
+  return Py_BuildValue("(dd)", x, y);
+}
+
+static PyObject *
+mesh_pattern_get_corner_color_rgba (PycairoMeshPattern *obj, PyObject *args) {
+  double red, green, blue, alpha;
+  unsigned int patch_num, corner_num;
+  cairo_status_t status;
+
+  if (!PyArg_ParseTuple(args, "II:MeshPattern.get_corner_color_rgba",
+      &patch_num, &corner_num))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  status = cairo_mesh_pattern_get_corner_color_rgba (
+    obj->pattern, patch_num, corner_num, &red, &green, &blue, &alpha);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_NULL_IF_CAIRO_ERROR (status);
+
+  return Py_BuildValue("(dddd)", red, green, blue, alpha);
+}
+
+static PyObject *
+mesh_pattern_get_patch_count (PycairoMeshPattern *obj) {
+  unsigned int count;
+  cairo_status_t status;
+
+  Py_BEGIN_ALLOW_THREADS;
+  status = cairo_mesh_pattern_get_patch_count (obj->pattern, &count);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_NULL_IF_CAIRO_ERROR (status);
+
+  return PYCAIRO_PyLong_FromLong (count);
+}
+
+static PyObject *
+mesh_pattern_get_path (PycairoMeshPattern *obj, PyObject *args) {
+  unsigned int patch_num;
+  cairo_path_t *path;
+
+  if (!PyArg_ParseTuple(args, "I:MeshPattern.get_path", &patch_num))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  path = cairo_mesh_pattern_get_path (obj->pattern, patch_num);
+  Py_END_ALLOW_THREADS;
+
+  return PycairoPath_FromPath (path);
+}
+
+static PyObject *
+mesh_pattern_line_to (PycairoMeshPattern *obj, PyObject *args) {
+  double x, y;
+
+  if (!PyArg_ParseTuple(args, "dd:MeshPattern.line_to", &x, &y))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_mesh_pattern_line_to (obj->pattern, x, y);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_NULL_IF_CAIRO_PATTERN_ERROR (obj->pattern);
+
+  Py_RETURN_NONE;
+}
+
+static PyObject *
+mesh_pattern_move_to (PycairoMeshPattern *obj, PyObject *args) {
+  double x, y;
+
+  if (!PyArg_ParseTuple(args, "dd:MeshPattern.move_to", &x, &y))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_mesh_pattern_move_to (obj->pattern, x, y);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_NULL_IF_CAIRO_PATTERN_ERROR (obj->pattern);
+
+  Py_RETURN_NONE;
+}
+
+static PyObject *
+mesh_pattern_set_control_point (PycairoMeshPattern *obj, PyObject *args) {
+  double x, y;
+  unsigned int point_num;
+
+  if (!PyArg_ParseTuple(args, "Idd:MeshPattern.set_control_point",
+      &point_num, &x, &y))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_mesh_pattern_set_control_point (obj->pattern, point_num, x, y);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_NULL_IF_CAIRO_PATTERN_ERROR (obj->pattern);
+
+  Py_RETURN_NONE;
+}
+
+static PyObject *
+mesh_pattern_set_corner_color_rgb (PycairoMeshPattern *obj, PyObject *args) {
+  double red, green, blue;
+  unsigned int corner_num;
+
+  if (!PyArg_ParseTuple(args, "Iddd:MeshPattern.set_corner_color_rgb",
+      &corner_num, &red, &green, &blue))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_mesh_pattern_set_corner_color_rgb (
+    obj->pattern, corner_num, red, green, blue);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_NULL_IF_CAIRO_PATTERN_ERROR (obj->pattern);
+
+  Py_RETURN_NONE;
+}
+
+static PyObject *
+mesh_pattern_set_corner_color_rgba (PycairoMeshPattern *obj, PyObject *args) {
+  double red, green, blue, alpha;
+  unsigned int corner_num;
+
+  if (!PyArg_ParseTuple(args, "Idddd:MeshPattern.set_corner_color_rgba",
+      &corner_num, &red, &green, &blue, &alpha))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_mesh_pattern_set_corner_color_rgba (
+    obj->pattern, corner_num, red, green, blue, alpha);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_NULL_IF_CAIRO_PATTERN_ERROR (obj->pattern);
+
+  Py_RETURN_NONE;
+}
+
+static PyMethodDef mesh_pattern_methods[] = {
+  {"begin_patch",       (PyCFunction)mesh_pattern_begin_patch, METH_NOARGS},
+  {"end_patch",         (PyCFunction)mesh_pattern_end_patch,   METH_NOARGS},
+  {"curve_to",          (PyCFunction)mesh_pattern_curve_to,    METH_VARARGS},
+  {"get_control_point",
+   (PyCFunction)mesh_pattern_get_control_point, METH_VARARGS},
+  {"get_corner_color_rgba",
+   (PyCFunction)mesh_pattern_get_corner_color_rgba, METH_VARARGS},
+  {"get_patch_count",
+   (PyCFunction)mesh_pattern_get_patch_count, METH_NOARGS},
+  {"get_path",          (PyCFunction)mesh_pattern_get_path,    METH_VARARGS},
+  {"line_to",           (PyCFunction)mesh_pattern_line_to,     METH_VARARGS},
+  {"move_to",           (PyCFunction)mesh_pattern_move_to,     METH_VARARGS},
+  {"set_control_point",
+   (PyCFunction)mesh_pattern_set_control_point, METH_VARARGS},
+  {"set_corner_color_rgb",
+   (PyCFunction)mesh_pattern_set_corner_color_rgb, METH_VARARGS},
+  {"set_corner_color_rgba",
+   (PyCFunction)mesh_pattern_set_corner_color_rgba, METH_VARARGS},
+  {NULL, NULL, 0, NULL},
+};
+
+PyTypeObject PycairoMeshPattern_Type = {
+  PyVarObject_HEAD_INIT(NULL, 0)
+  "cairo.MeshPattern",                /* tp_name */
+  sizeof(PycairoMeshPattern),         /* tp_basicsize */
+  0,                                  /* tp_itemsize */
+  0,                                  /* tp_dealloc */
+  0,                                  /* tp_print */
+  0,                                  /* tp_getattr */
+  0,                                  /* tp_setattr */
+  0,                                  /* tp_compare */
+  0,                                  /* tp_repr */
+  0,                                  /* tp_as_number */
+  0,                                  /* tp_as_sequence */
+  0,                                  /* tp_as_mapping */
+  0,                                  /* tp_hash */
+  0,                                  /* tp_call */
+  0,                                  /* tp_str */
+  0,                                  /* tp_getattro */
+  0,                                  /* tp_setattro */
+  0,                                  /* tp_as_buffer */
+  Py_TPFLAGS_DEFAULT,                 /* tp_flags */
+  0,                                  /* tp_doc */
+  0,                                  /* tp_traverse */
+  0,                                  /* tp_clear */
+  0,                                  /* tp_richcompare */
+  0,                                  /* tp_weaklistoffset */
+  0,                                  /* tp_iter */
+  0,                                  /* tp_iternext */
+  mesh_pattern_methods,               /* tp_methods */
+  0,                                  /* tp_members */
+  0,                                  /* tp_getset */
+  &PycairoPattern_Type,               /* tp_base */
+  0,                                  /* tp_dict */
+  0,                                  /* tp_descr_get */
+  0,                                  /* tp_descr_set */
+  0,                                  /* tp_dictoffset */
+  0,                                  /* tp_init */
+  0,                                  /* tp_alloc */
+  (newfunc)mesh_pattern_new,          /* tp_new */
   0,                                  /* tp_free */
   0,                                  /* tp_is_gc */
   0,                                  /* tp_bases */

@@ -75,6 +75,9 @@ extern PyTypeObject PycairoRadialGradient_Type;
 PyObject *PycairoPattern_FromPattern (cairo_pattern_t *pattern,
 				      PyObject *base);
 
+typedef PycairoPattern PycairoMeshPattern;
+extern PyTypeObject PycairoMeshPattern_Type;
+
 extern PyTypeObject PycairoRectangleInt_Type;
 PyObject *PycairoRectangleInt_FromRectangleInt (
     const cairo_rectangle_int_t *rectangle_int);
