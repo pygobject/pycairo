@@ -11,6 +11,20 @@ import cairo
 import pytest
 
 
+def test_tee_surface():
+    main = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
+    tee = cairo.TeeSurface(main)
+    assert isinstance(tee, cairo.TeeSurface)
+
+    # the API is horrible, passing a wrong arg sets the surface to an error
+    # state instead of returning the status.
+    s1 = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
+    tee.add(s1)
+    assert tee.index(0)
+    assert tee.index(1)
+    tee.remove(s1)
+
+
 def test_image_surface_get_data_refcount():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
     assert sys.getrefcount(surface) == 2

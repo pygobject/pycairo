@@ -17,6 +17,7 @@ New Features:
   * Add :meth:`Format.stride_for_width`
   * Add :class:`TextClusterFlags` and :class:`SurfaceObserverMode`
   * Add :meth:`Gradient.get_color_stops_rgba`
+  * Add :class:`TeeSurface`
 
 
 .. _v1.13.3:

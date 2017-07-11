@@ -316,6 +316,10 @@ PYCAIRO_MOD_INIT(_cairo)
   if (PyType_Ready(&PycairoXlibSurface_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
 #endif
+#ifdef CAIRO_HAS_TEE_SURFACE
+  if (PyType_Ready(&PycairoTeeSurface_Type) < 0)
+    return PYCAIRO_MOD_ERROR_VAL;
+#endif
 
 #if PY_MAJOR_VERSION < 3
   m = Py_InitModule("cairo._cairo", cairo_functions);
@@ -438,6 +442,12 @@ PYCAIRO_MOD_INIT(_cairo)
   Py_INCREF(&PycairoXlibSurface_Type);
   PyModule_AddObject(m, "XlibSurface",
 		     (PyObject *)&PycairoXlibSurface_Type);
+#endif
+
+#ifdef CAIRO_HAS_TEE_SURFACE
+  Py_INCREF(&PycairoTeeSurface_Type);
+  PyModule_AddObject(m, "TeeSurface",
+		     (PyObject *)&PycairoTeeSurface_Type);
 #endif
 
   /* Add 'cairo.Error' to the module */

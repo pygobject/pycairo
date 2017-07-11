@@ -1045,3 +1045,46 @@ the util/cairo-script directory, or with cairo-perf-trace.
         operations to ``device``.
 
         .. versionadded:: 1.14
+
+
+class TeeSurface(:class:`Surface`)
+=====================================
+
+This surface supports redirecting all its input to multiple surfaces.
+
+.. class:: TeeSurface(master)
+
+    :param cairo.Surface master:
+    :rtype: cairo.TeeSurface
+    :raises cairo.Error:
+
+    .. versionadded:: 1.14
+
+    .. method:: add(target)
+
+        :param cairo.Surface target:
+        :raises cairo.Error:
+
+        Add the surface
+
+        .. versionadded:: 1.14
+
+    .. method:: remove(target)
+
+        :param cairo.Surface target:
+        :raises cairo.Error:
+
+        Remove the surface
+
+        .. versionadded:: 1.14
+
+    .. method:: index(index)
+
+        :param int index:
+        :rtype: cairo.Surface
+        :raises cairo.Error:
+
+        Returns the surface at index ``index``. The master surface is
+        at index 0.
+
+        .. versionadded:: 1.14

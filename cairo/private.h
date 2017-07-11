@@ -136,6 +136,11 @@ extern PyObject *xpybVISUALTYPE_type;
 extern PyTypeObject PycairoXlibSurface_Type;
 #endif
 
+#if CAIRO_HAS_TEE_SURFACE
+typedef PycairoSurface PycairoTeeSurface;
+extern PyTypeObject PycairoTeeSurface_Type;
+#endif
+
 PyObject *PycairoSurface_FromSurface (cairo_surface_t *surface,
                                       PyObject *base);
 

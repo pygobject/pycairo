@@ -118,6 +118,11 @@ PycairoSurface_FromSurface (cairo_surface_t *surface, PyObject *base) {
     type = &PycairoScriptSurface_Type;
     break;
 #endif
+#if CAIRO_HAS_TEE_SURFACE
+  case CAIRO_SURFACE_TYPE_TEE:
+    type = &PycairoTeeSurface_Type;
+    break;
+#endif
   default:
     type = &PycairoSurface_Type;
     break;
@@ -2141,3 +2146,111 @@ PyTypeObject PycairoXlibSurface_Type = {
   0,                                  /* tp_bases */
 };
 #endif  /* CAIRO_HAS_XLIB_SURFACE */
+
+#ifdef CAIRO_HAS_TEE_SURFACE
+#include <cairo-tee.h>
+
+static PyObject *
+tee_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
+  PyObject *pysurface;
+
+  if (!PyArg_ParseTuple (args, "O!:TeeSurface.__new__",
+      &PycairoSurface_Type, &pysurface))
+    return NULL;
+
+  return PycairoSurface_FromSurface (
+    cairo_tee_surface_create(((PycairoSurface*)pysurface)->surface),
+    NULL);
+}
+
+static PyObject *
+tee_surface_add (PycairoTeeSurface *obj, PyObject *args) {
+  PyObject *pysurface;
+
+  if (!PyArg_ParseTuple(args, "O!:TeeSurface.add",
+      &PycairoSurface_Type, &pysurface))
+    return NULL;
+
+  cairo_tee_surface_add (obj->surface, ((PycairoSurface*)pysurface)->surface);
+  RETURN_NULL_IF_CAIRO_SURFACE_ERROR (obj->surface);
+
+  Py_RETURN_NONE;
+}
+
+static PyObject *
+tee_surface_remove (PycairoTeeSurface *obj, PyObject *args) {
+  PyObject *pysurface;
+
+  if (!PyArg_ParseTuple(args, "O!:TeeSurface.remove",
+      &PycairoSurface_Type, &pysurface))
+    return NULL;
+
+  cairo_tee_surface_remove (obj->surface, ((PycairoSurface*)pysurface)->surface);
+  RETURN_NULL_IF_CAIRO_SURFACE_ERROR (obj->surface);
+
+  Py_RETURN_NONE;
+}
+
+static PyObject *
+tee_surface_index (PycairoTeeSurface *obj, PyObject *args) {
+  unsigned int index;
+
+  if (!PyArg_ParseTuple(args, "I:TeeSurface.index", &index))
+    return NULL;
+
+  return PycairoSurface_FromSurface (
+    cairo_surface_reference (cairo_tee_surface_index (obj->surface, index)),
+    NULL);
+}
+
+static PyMethodDef tee_surface_methods[] = {
+  {"add",    (PyCFunction)tee_surface_add,    METH_VARARGS },
+  {"remove", (PyCFunction)tee_surface_remove, METH_VARARGS },
+  {"index",  (PyCFunction)tee_surface_index,  METH_VARARGS },
+  {NULL, NULL, 0, NULL},
+};
+
+PyTypeObject PycairoTeeSurface_Type = {
+  PyVarObject_HEAD_INIT(NULL, 0)
+  "cairo.TeeSurface",                 /* tp_name */
+  sizeof(PycairoTeeSurface),          /* tp_basicsize */
+  0,                                  /* tp_itemsize */
+  0,                                  /* tp_dealloc */
+  0,                                  /* tp_print */
+  0,                                  /* tp_getattr */
+  0,                                  /* tp_setattr */
+  0,                                  /* tp_compare */
+  0,                                  /* tp_repr */
+  0,                                  /* tp_as_number */
+  0,                                  /* tp_as_sequence */
+  0,                                  /* tp_as_mapping */
+  0,                                  /* tp_hash */
+  0,                                  /* tp_call */
+  0,                                  /* tp_str */
+  0,                                  /* tp_getattro */
+  0,                                  /* tp_setattro */
+  0,                                  /* tp_as_buffer */
+  Py_TPFLAGS_DEFAULT,                 /* tp_flags */
+  0,                                  /* tp_doc */
+  0,                                  /* tp_traverse */
+  0,                                  /* tp_clear */
+  0,                                  /* tp_richcompare */
+  0,                                  /* tp_weaklistoffset */
+  0,                                  /* tp_iter */
+  0,                                  /* tp_iternext */
+  tee_surface_methods,                /* tp_methods */
+  0,                                  /* tp_members */
+  0,                                  /* tp_getset */
+  &PycairoSurface_Type,               /* tp_base */
+  0,                                  /* tp_dict */
+  0,                                  /* tp_descr_get */
+  0,                                  /* tp_descr_set */
+  0,                                  /* tp_dictoffset */
+  0,                                  /* tp_init */
+  0,                                  /* tp_alloc */
+  (newfunc)tee_surface_new,           /* tp_new */
+  0,                                  /* tp_free */
+  0,                                  /* tp_is_gc */
+  0,                                  /* tp_bases */
+};
+#endif  /* CAIRO_HAS_TEE_SURFACE */
