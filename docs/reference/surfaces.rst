@@ -361,8 +361,8 @@ class Surface()
       to very high resolution display devices at a scale factor, so that code
       that assumes 1 pixel will be a certain size will still work. Setting a
       transformation via :meth:`Context.translate` isn't sufficient to do
-      this, since functions like ``Device.to_user()`` will expose the hidden
-      scale.
+      this, since functions like :meth:`Context.device_to_user` will expose
+      the hidden scale.
 
       .. versionadded:: 1.14.0
 
