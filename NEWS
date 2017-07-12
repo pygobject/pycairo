@@ -21,6 +21,16 @@ New Features:
   * Add :class:`MeshPattern`
 
 
+.. _v1.13.4:
+
+1.13.4 - 2017-07-12
+-------------------
+
+Fixes:
+  * Fix a rare crash with :meth:`get_data() <ImageSurface.get_data>` under
+    Python 3 (1.13.3 regression).
+
+
 .. _v1.13.3:
 
 1.13.3 - 2017-06-01
