@@ -287,6 +287,8 @@ PYCAIRO_MOD_INIT(_cairo)
 #ifdef CAIRO_HAS_IMAGE_SURFACE
   if (PyType_Ready(&PycairoImageSurface_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
+  if (PyType_Ready(&PycairoMappedImageSurface_Type) < 0)
+    return PYCAIRO_MOD_ERROR_VAL;
 #endif
 #ifdef CAIRO_HAS_PDF_SURFACE
   if (PyType_Ready(&PycairoPDFSurface_Type) < 0)

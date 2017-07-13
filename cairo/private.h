@@ -94,6 +94,7 @@ PyObject *PycairoScaledFont_FromScaledFont (cairo_scaled_font_t *scaled_font);
 
 extern PyTypeObject PycairoSurface_Type;
 extern PyTypeObject PycairoImageSurface_Type;
+extern PyTypeObject PycairoMappedImageSurface_Type;
 
 typedef struct {
     PyObject_HEAD
