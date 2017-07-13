@@ -160,18 +160,22 @@ _write_func (void *closure, const unsigned char *data, unsigned int length) {
   return CAIRO_STATUS_SUCCESS;
 }
 
+static const cairo_user_data_key_t surface_base_object_key;
+static const cairo_user_data_key_t surface_is_mapped_image;
+
 static void
 surface_dealloc (PycairoSurface *o) {
   if (o->surface) {
-    cairo_surface_destroy(o->surface);
+    if (cairo_surface_get_user_data (
+        o->surface, &surface_is_mapped_image) == NULL) {
+      cairo_surface_destroy(o->surface);
+    }
     o->surface = NULL;
   }
   Py_CLEAR(o->base);
 
   Py_TYPE(o)->tp_free(o);
 }
-
-static const cairo_user_data_key_t surface_base_object_key;
 
 static void
 _decref_destroy_func(void *user_data) {
@@ -575,6 +579,106 @@ surface_has_show_text_glyphs (PycairoSurface *o) {
   return PyBool_FromLong (result);
 }
 
+#ifdef CAIRO_HAS_IMAGE_SURFACE
+
+static PyObject *
+surface_map_to_image (PycairoSurface *self, PyObject *args) {
+  PyObject *pyextents, *pymapped;
+  cairo_rectangle_int_t *extents;
+  cairo_surface_t *mapped_surface;
+  int result;
+
+  if (!PyArg_ParseTuple(args, "O:Surface.map_to_image", &pyextents))
+    return NULL;
+
+  result = PyObject_IsInstance (
+    pyextents, (PyObject*)&PycairoRectangleInt_Type);
+
+  if (result == -1) {
+    return NULL;
+  } else if (result == 1) {
+    extents = &(((PycairoRectangleInt *)pyextents)->rectangle_int);
+  } else {
+    if (pyextents == Py_None) {
+      extents = NULL;
+    } else {
+      PyErr_SetString (PyExc_TypeError,
+        "argument must be a RectangleInt or None.");
+      return NULL;
+    }
+  }
+
+  Py_BEGIN_ALLOW_THREADS;
+  mapped_surface = cairo_surface_map_to_image (self->surface, extents);
+  Py_END_ALLOW_THREADS;
+
+  if (Pycairo_Check_Status (cairo_surface_status (mapped_surface))) {
+    cairo_surface_destroy (mapped_surface);
+    return NULL;
+  }
+
+  /* So we can skip the destroy() call in the base tp_dealloc */
+  cairo_surface_set_user_data (
+    mapped_surface, &surface_is_mapped_image, (void*)1, NULL);
+
+  pymapped = PycairoMappedImageSurface_Type.tp_alloc (
+    &PycairoMappedImageSurface_Type, 0);
+
+  if (pymapped == NULL) {
+    Py_BEGIN_ALLOW_THREADS;
+    cairo_surface_unmap_image (self->surface, mapped_surface);
+    Py_END_ALLOW_THREADS;
+    return NULL;
+  }
+
+  ((PycairoSurface *)pymapped)->surface = mapped_surface;
+  Py_XINCREF (self);
+  ((PycairoSurface *)pymapped)->base = (PyObject *)self;
+
+  return pymapped;
+}
+
+static PyObject *
+surface_unmap_image (PycairoSurface *self, PyObject *args) {
+  PycairoSurface *pymapped;
+  cairo_surface_t *base_surface, *fake_surface;
+
+  if (!PyArg_ParseTuple(args, "O!:Surface.unmap_image",
+      &PycairoMappedImageSurface_Type, &pymapped))
+    return NULL;
+
+  if (cairo_surface_get_user_data (pymapped->surface,
+      &surface_is_mapped_image) == NULL) {
+    PyErr_SetString (PyExc_RuntimeError,
+      "MappedImageSurface was already unmapped");
+    return NULL;
+  }
+
+  base_surface = ((PycairoSurface *)(pymapped->base))->surface;
+  if (base_surface != self->surface) {
+    PyErr_SetString (PyExc_ValueError,
+      "ImageSurface isn't mapped from this surface");
+    return NULL;
+  }
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_surface_unmap_image (self->surface, pymapped->surface);
+  Py_END_ALLOW_THREADS;
+
+  /* Replace the mapped image surface with a fake one and finish it so
+   * that any operation on it fails.
+   */
+  fake_surface = cairo_image_surface_create (CAIRO_FORMAT_INVALID, 0, 0);
+  cairo_surface_finish (fake_surface);
+  pymapped->surface = fake_surface;
+  /* We no longer need the base surface */
+  Py_CLEAR(pymapped->base);
+
+  Py_RETURN_NONE;
+}
+
+#endif /* CAIRO_HAS_IMAGE_SURFACE */
+
 static PyMethodDef surface_methods[] = {
   /* methods never exposed in a language binding:
    * cairo_surface_destroy()
@@ -615,6 +719,10 @@ static PyMethodDef surface_methods[] = {
    METH_VARARGS},
   {"has_show_text_glyphs", (PyCFunction)surface_has_show_text_glyphs,
    METH_NOARGS},
+#ifdef CAIRO_HAS_IMAGE_SURFACE
+  {"map_to_image", (PyCFunction)surface_map_to_image, METH_VARARGS},
+  {"unmap_image", (PyCFunction)surface_unmap_image, METH_VARARGS},
+#endif
   {NULL, NULL, 0, NULL},
 };
 
@@ -996,6 +1104,88 @@ PyTypeObject PycairoImageSurface_Type = {
   0,                                  /* tp_is_gc */
   0,                                  /* tp_bases */
 };
+
+
+/* Mapped Image Type*/
+
+static PyObject *
+mapped_image_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
+  PyErr_SetString(PyExc_TypeError,
+                  "The MappedImage type cannot be instantiated");
+  return NULL;
+}
+
+static void
+mapped_image_surface_dealloc (PycairoImageSurface *self) {
+  PycairoSurface *pybasesurface = (PycairoSurface *)(self->base);
+
+  if (cairo_surface_get_user_data (
+      self->surface, &surface_is_mapped_image) != NULL) {
+    cairo_surface_unmap_image (pybasesurface->surface, self->surface);
+  }
+
+  Py_TYPE (self)->tp_free (self);
+}
+
+static PyObject *
+mapped_image_surface_finish (PycairoSurface *self) {
+  PyErr_SetString(PyExc_RuntimeError,
+    "The MappedImage type cannot be finished, "
+    "use Surface.unmap_image instead");
+  return NULL;
+}
+
+static PyMethodDef mapped_image_surface_methods[] = {
+  {"finish",       (PyCFunction)mapped_image_surface_finish,     METH_NOARGS},
+  {NULL, NULL, 0, NULL},
+};
+
+PyTypeObject PycairoMappedImageSurface_Type = {
+  PyVarObject_HEAD_INIT(NULL, 0)
+  "__cairo__.MappedImageSurface",     /* tp_name */
+  sizeof(PycairoImageSurface),        /* tp_basicsize */
+  0,                                  /* tp_itemsize */
+  (destructor)
+    mapped_image_surface_dealloc,     /* tp_dealloc */
+  0,                                  /* tp_print */
+  0,                                  /* tp_getattr */
+  0,                                  /* tp_setattr */
+  0,                                  /* tp_compare */
+  0,                                  /* tp_repr */
+  0,                                  /* tp_as_number */
+  0,                                  /* tp_as_sequence */
+  0,                                  /* tp_as_mapping */
+  0,                                  /* tp_hash */
+  0,                                  /* tp_call */
+  0,                                  /* tp_str */
+  0,                                  /* tp_getattro */
+  0,                                  /* tp_setattro */
+  0,                                  /* tp_as_buffer */
+  Py_TPFLAGS_DEFAULT,                 /* tp_flags */
+  0,                                  /* tp_doc */
+  0,                                  /* tp_traverse */
+  0,                                  /* tp_clear */
+  0,                                  /* tp_richcompare */
+  0,                                  /* tp_weaklistoffset */
+  0,                                  /* tp_iter */
+  0,                                  /* tp_iternext */
+  mapped_image_surface_methods,       /* tp_methods */
+  0,                                  /* tp_members */
+  0,                                  /* tp_getset */
+  &PycairoImageSurface_Type,          /* tp_base */
+  0,                                  /* tp_dict */
+  0,                                  /* tp_descr_get */
+  0,                                  /* tp_descr_set */
+  0,                                  /* tp_dictoffset */
+  0,                                  /* tp_init */
+  0,                                  /* tp_alloc */
+  (newfunc)mapped_image_surface_new,  /* tp_new */
+  0,                                  /* tp_free */
+  0,                                  /* tp_is_gc */
+  0,                                  /* tp_bases */
+};
+
+
 #endif /* CAIRO_HAS_IMAGE_SURFACE */
 
 

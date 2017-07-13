@@ -385,6 +385,44 @@ class Surface()
 
       .. versionadded:: 1.14.0
 
+   .. method:: map_to_image(extents)
+
+      :param RectangleInt extents: limit the extraction to an rectangular
+         region or :obj:`None` for the whole surface
+
+      :returns: newly allocated image surface
+      :rtype: ImageSurface
+      :raises Error:
+
+      Returns an image surface that is the most efficient mechanism for
+      modifying the backing store of the target surface.
+
+      Note, the use of the original surface as a target or source whilst it is
+      mapped is undefined. The result of mapping the surface multiple times is
+      undefined. Calling :meth:`Surface.finish` on the resulting image surface
+      results in undefined behavior. Changing the device transform of the
+      image surface or of surface before the image surface is unmapped results
+      in undefined behavior.
+
+      The caller must use :meth:`Surface.unmap_image` to destroy this image
+      surface.
+
+      .. versionadded:: 1.15.0
+
+   .. method:: unmap_image(image)
+
+      :param ImageSurface image: the currently mapped image
+
+      Unmaps the image surface as returned from :meth:`Surface.map_to_image`.
+
+      The content of the image will be uploaded to the target surface.
+      Afterwards, the image is destroyed.
+
+      Using an image surface which wasn't returned by
+      :meth:`Surface.map_to_image` results in undefined behavior.
+
+      .. versionadded:: 1.15.0
+
 
 class ImageSurface(:class:`Surface`)
 ====================================

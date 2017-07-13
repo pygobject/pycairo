@@ -11,6 +11,53 @@ import cairo
 import pytest
 
 
+def test_surface_map_to_image():
+    main = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
+    image = main.map_to_image(None)
+
+    other = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
+    with pytest.raises(ValueError):
+        other.unmap_image(image)
+
+    with pytest.raises(TypeError):
+        main.unmap_image(other)
+
+    with pytest.raises(RuntimeError):
+        image.finish()
+
+    main.unmap_image(image)
+
+    with pytest.raises(RuntimeError):
+        main.unmap_image(image)
+
+    # from here on everything should fail
+    with pytest.raises(cairo.Error):
+        cairo.Context(image)
+
+
+def test_surface_map_to_image_data():
+    main = cairo.ImageSurface(cairo.Format.RGB24, 2, 1)
+
+    main.flush()
+    assert bytes(main.get_data()) == b"\x00\x00\x00\x00\x00\x00\x00\x00"
+    image = main.map_to_image(None)
+    ctx = cairo.Context(image)
+    ctx.set_source_rgb(1, 1, 1)
+    ctx.paint()
+    main.unmap_image(image)
+    main.flush()
+    assert bytes(main.get_data()) == b"\xff\xff\xff\xff\xff\xff\xff\xff"
+
+    main = cairo.ImageSurface(cairo.Format.RGB24, 2, 1)
+    image = main.map_to_image(cairo.RectangleInt(0, 0, 1, 1))
+    ctx = cairo.Context(image)
+    ctx.set_source_rgb(1, 1, 1)
+    ctx.paint()
+    main.unmap_image(image)
+    main.flush()
+    assert bytes(main.get_data()) == b"\xff\xff\xff\xff\x00\x00\x00\x00"
+
+
 def test_tee_surface():
     main = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
     tee = cairo.TeeSurface(main)
