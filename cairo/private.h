@@ -46,6 +46,8 @@
 PyObject *_Pycairo_Get_Error(void);
 void Pycairo_Set_Error (cairo_status_t status);
 
+PyObject* Pycairo_richcompare (void* a, void *b, int op);
+
 extern PyTypeObject PycairoContext_Type;
 PyObject *PycairoContext_FromContext (cairo_t *ctx, PyTypeObject *type,
 				      PyObject *base);

@@ -174,6 +174,26 @@ Done:
 static PyObject * path_iter(PyObject *seq); /* forward declaration */
 
 
+static PyObject*
+path_richcompare (PyObject *self, PyObject *other, int op)
+{
+  if (Py_TYPE(self) == Py_TYPE(other))
+    return Pycairo_richcompare (
+      ((PycairoPath *)self)->path,
+      ((PycairoPath *)other)->path,
+      op);
+  else {
+    Py_INCREF(Py_NotImplemented);
+    return Py_NotImplemented;
+  }
+}
+
+static PYCAIRO_Py_hash_t
+path_hash (PyObject *self)
+{
+  return PYCAIRO_Py_hash_t_FromVoidPtr (((PycairoPath *)self)->path);
+}
+
 PyTypeObject PycairoPath_Type = {
   PyVarObject_HEAD_INIT(NULL, 0)
   "cairo.Path",			/* tp_name */
@@ -188,7 +208,7 @@ PyTypeObject PycairoPath_Type = {
   0,					/* tp_as_number */
   0,              			/* tp_as_sequence */
   0,					/* tp_as_mapping */
-  0,					/* tp_hash */
+  path_hash,				/* tp_hash */
   0,					/* tp_call */
   (reprfunc)path_str,			/* tp_str */
   0,	                        	/* tp_getattro */
@@ -198,7 +218,7 @@ PyTypeObject PycairoPath_Type = {
   0,      				/* tp_doc */
   0,					/* tp_traverse */
   0,					/* tp_clear */
-  0,					/* tp_richcompare */
+  path_richcompare,			/* tp_richcompare */
   0,					/* tp_weaklistoffset */
   (getiterfunc)path_iter,   		/* tp_iter */
   0,					/* tp_iternext */

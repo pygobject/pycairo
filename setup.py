@@ -242,6 +242,7 @@ def main():
             'cairo/region.c',
             'cairo/surface.c',
             'cairo/enums.c',
+            'cairo/misc.c',
         ],
         include_dirs=pkg_config_parse('--cflags-only-I', 'cairo'),
         library_dirs=pkg_config_parse('--libs-only-L', 'cairo'),

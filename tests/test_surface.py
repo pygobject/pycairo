@@ -11,6 +11,21 @@ import cairo
 import pytest
 
 
+def test_surface_cmp_hash():
+    main = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
+    ctx = cairo.Context(main)
+    assert ctx.get_target() == main
+    assert not ctx.get_target() != main
+    assert hash(ctx.get_target()) == hash(main)
+
+    # we implement some hackery to change the underlying object after unmap
+    # which would change the hash. Make sure this type is unhashable.
+    mapped = main.map_to_image(None)
+    with pytest.raises(TypeError):
+        hash(mapped)
+    main.unmap_image(mapped)
+
+
 def test_surface_map_to_image():
     main = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
     image = main.map_to_image(None)

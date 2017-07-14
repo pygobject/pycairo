@@ -62,6 +62,8 @@
 
 #define PYCAIRO_PyFilenameBase_Type PyBaseString_Type
 
+#define PYCAIRO_Py_hash_t long
+
 #else
 
 #define PYCAIRO_MOD_ERROR_VAL NULL
@@ -88,6 +90,10 @@
 
 #define PYCAIRO_PyFilenameBase_Type PyUnicode_Type
 
+#define PYCAIRO_Py_hash_t Py_hash_t
+
 #endif
+
+#define PYCAIRO_Py_hash_t_FromVoidPtr(p) ((PYCAIRO_Py_hash_t)(Py_ssize_t)(p))
 
 #endif /* __PYCAIRO_COMPAT_H__ */

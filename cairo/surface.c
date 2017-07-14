@@ -726,6 +726,25 @@ static PyMethodDef surface_methods[] = {
   {NULL, NULL, 0, NULL},
 };
 
+static PyObject*
+surface_richcompare (PyObject *self, PyObject *other, int op)
+{
+  if (Py_TYPE(self) == Py_TYPE(other))
+    return Pycairo_richcompare (
+      ((PycairoSurface *)self)->surface,
+      ((PycairoSurface *)other)->surface,
+      op);
+  else {
+    Py_INCREF(Py_NotImplemented);
+    return Py_NotImplemented;
+  }
+}
+
+static PYCAIRO_Py_hash_t
+surface_hash (PyObject *self)
+{
+  return PYCAIRO_Py_hash_t_FromVoidPtr (((PycairoSurface *)self)->surface);
+}
 
 PyTypeObject PycairoSurface_Type = {
   PyVarObject_HEAD_INIT(NULL, 0)
@@ -741,7 +760,7 @@ PyTypeObject PycairoSurface_Type = {
   0,                                  /* tp_as_number */
   0,                                  /* tp_as_sequence */
   0,                                  /* tp_as_mapping */
-  0,                                  /* tp_hash */
+  surface_hash,                       /* tp_hash */
   0,                                  /* tp_call */
   0,                                  /* tp_str */
   0,                                  /* tp_getattro */
@@ -751,7 +770,7 @@ PyTypeObject PycairoSurface_Type = {
   0,                                  /* tp_doc */
   0,                                  /* tp_traverse */
   0,                                  /* tp_clear */
-  0,                                  /* tp_richcompare */
+  surface_richcompare,                /* tp_richcompare */
   0,                                  /* tp_weaklistoffset */
   0,                                  /* tp_iter */
   0,                                  /* tp_iternext */
@@ -1155,7 +1174,7 @@ PyTypeObject PycairoMappedImageSurface_Type = {
   0,                                  /* tp_as_number */
   0,                                  /* tp_as_sequence */
   0,                                  /* tp_as_mapping */
-  0,                                  /* tp_hash */
+  PyObject_HashNotImplemented,        /* tp_hash */
   0,                                  /* tp_call */
   0,                                  /* tp_str */
   0,                                  /* tp_getattro */
