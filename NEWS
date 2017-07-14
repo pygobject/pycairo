@@ -1,3 +1,22 @@
+.. _v1.15.0:
+
+1.15.0 - 2017-??-??
+-------------------
+
+New Features:
+  * Add :meth:`Surface.map_to_image` and :meth:`Surface.unmap_image` :bug:`51`
+
+Changes:
+  * Pycairo instances wrapping the same underlying cairo object now compare
+    equally.
+  * Functions which returned a cairo error with cairo.Status.NO_MEMORY no
+    longer raise MemoryError, but a subclass of cairo.Error and MemoryError
+    :bug:`55`
+
+Fixes:
+  * Fix a crash with :meth:`Surface.get_device` :bug:`57`
+
+
 .. _v1.14.0:
 
 1.14.0 - 2017-07-12
