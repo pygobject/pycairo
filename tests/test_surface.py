@@ -180,6 +180,15 @@ def test_script_surface():
     assert b"paint" in f.getvalue()
 
 
+def test_script_device_device_ref():
+    f = io.BytesIO()
+    dev = cairo.ScriptDevice(f)
+    surface = cairo.ScriptSurface(dev, cairo.Content.COLOR_ALPHA, 42, 10)
+    del dev
+    for i in range(10):
+        surface.get_device()
+
+
 def test_script_surface_create_for_target():
     # paint the script proxy
     f = io.BytesIO()
