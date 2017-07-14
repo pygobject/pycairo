@@ -281,7 +281,7 @@ class Surface()
 
       :param fobj: the file to write to
       :type fobj: filename (:obj:`text`), file or file-like object
-      :raises: *MemoryError* if memory could not be allocated for the operation
+      :raises: :exc:`MemoryError` if memory could not be allocated for the operation
 
                *IOError* if an I/O error occurs while attempting to write the file
 
@@ -437,7 +437,7 @@ those defined in :class:`cairo.Format`.
    :param width: width of the surface, in pixels
    :param height: height of the surface, in pixels
    :returns: a new *ImageSurface*
-   :raises: *MemoryError* in case of no memory
+   :raises: :exc:`MemoryError` in case of no memory
 
    Creates an *ImageSurface* of the specified format and dimensions. Initially
    the surface contents are all 0. (Specifically, within each pixel, each
@@ -455,7 +455,7 @@ those defined in :class:`cairo.Format`.
         buffer as allocated. If not given the value from
         :meth:`cairo.Format.stride_for_width` is used.
       :returns: a new *ImageSurface*
-      :raises: *MemoryError* in case of no memory.
+      :raises: :exc:`MemoryError` in case of no memory.
 
                :exc:`cairo.Error` in case of invalid *stride* value.
 
@@ -531,7 +531,7 @@ multi-page vector surface backend.
    :type  height_in_points: float
    :returns: a new *PDFSurface* of the specified size in points to be written
      to *fobj*.
-   :raises: *MemoryError* in case of no memory
+   :raises: :exc:`MemoryError` in case of no memory
 
    .. versionadded:: 1.2
 
@@ -610,7 +610,7 @@ is a multi-page vector surface backend.
    :type  height_in_points: float
    :returns: a new *PDFSurface* of the specified size in points to be written
      to *fobj*.
-   :raises: *MemoryError* in case of no memory
+   :raises: :exc:`MemoryError` in case of no memory
 
    Note that the size of individual pages of the PostScript output can
    vary. See :meth:`.set_size`.
@@ -899,7 +899,7 @@ multi-page vector surface backend
    :param height_in_points: height of the surface, in points (1 point == 1/72.0 inch)
    :type  height_in_points: float
    :returns: a new *SVGSurface* of the specified size in points to be written to *fobj*.
-   :raises: *MemoryError* in case of no memory
+   :raises: :exc:`MemoryError` in case of no memory
 
    .. method:: restrict_to_version(version)
 

@@ -72,32 +72,6 @@ _Pycairo_Get_Error(void) {
 #endif
 }
 
-
-int
-Pycairo_Check_Status (cairo_status_t status) {
-  if (PyErr_Occurred() != NULL)
-    return 1;
-
-  switch (status) {
-  case CAIRO_STATUS_SUCCESS:
-    return 0;
-    /* if appropriate - translate the status string into Python,
-     * else - use cairo_status_to_string()
-     */
-  case CAIRO_STATUS_NO_MEMORY:
-    PyErr_NoMemory();
-    break;
-  case CAIRO_STATUS_READ_ERROR:
-  case CAIRO_STATUS_WRITE_ERROR:
-    PyErr_SetString(PyExc_IOError, cairo_status_to_string (status));
-    break;
-  default:
-    Pycairo_Set_Error(status);
-  }
-  return 1;
-}
-
-
 /* C API.  Clients get at this via Pycairo_IMPORT or import_cairo(), defined in pycairo.h.
  */
 static Pycairo_CAPI_t CAPI = {
@@ -458,20 +432,14 @@ PYCAIRO_MOD_INIT(_cairo)
 #endif
 
   /* Add 'cairo.Error' to the module */
-#if PY_MAJOR_VERSION >= 3
-  GETSTATE(m)->ErrorObject = error_get_type();
-  if (GETSTATE(m)->ErrorObject == NULL) {
-    Py_DECREF(m);
+  error = error_get_type();
+  if (error == NULL)
     return PYCAIRO_MOD_ERROR_VAL;
-  }
-  error = GETSTATE(m)->ErrorObject;
+
+#if PY_MAJOR_VERSION >= 3
+  GETSTATE(m)->ErrorObject = error;
 #else
-  if (_CairoError == NULL) {
-    _CairoError = error_get_type();
-    if (_CairoError == NULL)
-      return PYCAIRO_MOD_ERROR_VAL;
-  }
-  error = _CairoError;
+  _CairoError = error;
 #endif
 
   Py_INCREF(error);

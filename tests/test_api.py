@@ -11,6 +11,7 @@ import tempfile as tfi
 import base64
 import zlib
 import shutil
+import ctypes
 
 import cairo
 import pytest
@@ -20,6 +21,26 @@ try:
     long
 except NameError:
     long = int
+
+
+def test_error_check_status():
+    check_status = ctypes.PyDLL(cairo._cairo.__file__).Pycairo_Check_Status
+
+    with pytest.raises(cairo.Error) as e:
+        check_status(cairo.Status.DEVICE_FINISHED)
+    assert e.value.status == cairo.Status.DEVICE_FINISHED
+
+    with pytest.raises(cairo.Error) as e:
+        check_status(cairo.Status.NO_MEMORY)
+    assert e.value.status == cairo.Status.NO_MEMORY
+    with pytest.raises(MemoryError) as e:
+        check_status(cairo.Status.NO_MEMORY)
+
+    # TODO: https://github.com/pygobject/pycairo/issues/55
+    with pytest.raises(IOError) as e:
+        check_status(cairo.Status.READ_ERROR)
+    with pytest.raises(IOError) as e:
+        check_status(cairo.Status.WRITE_ERROR)
 
 
 def test_show_unicode_text():

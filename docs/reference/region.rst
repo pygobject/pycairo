@@ -28,7 +28,7 @@ areas of interest, such as change or clip areas.
     .. method:: copy()
 
         :returns: A newly allocated :class:`Region`.
-        :raises: :exc:`MemoryError` if memory cannot be allocated.
+        :raises Error: if memory cannot be allocated.
 
         Allocates a new *Region* object copying the area from original.
 

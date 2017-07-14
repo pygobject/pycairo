@@ -119,7 +119,7 @@ class SolidPattern(:class:`Pattern`)
    :param alpha: alpha component of the color
    :type alpha: float
    :returns: a new *SolidPattern*
-   :raises: *MemoryError* in case of no memory
+   :raises: :exc:`MemoryError` in case of no memory
 
    Creates a new *SolidPattern* corresponding to a translucent color. The
    color components are floating point numbers in the range 0 to 1. If the
@@ -142,7 +142,7 @@ class SurfacePattern(:class:`Pattern`)
 
    :param surface: a cairo :class:`Surface`
    :returns: a newly created *SurfacePattern* for the given surface.
-   :raises: *MemoryError* in case of no memory.
+   :raises: :exc:`MemoryError` in case of no memory.
 
    .. method:: get_surface()
 
@@ -235,7 +235,7 @@ class LinearGradient(:class:`Gradient`)
    :param y1: y coordinate of the end point
    :type y1: float
    :returns: a new *LinearGradient*
-   :raises: *MemoryError* in case of no memory
+   :raises: :exc:`MemoryError` in case of no memory
 
    Create a new *LinearGradient* along the line defined by (x0, y0) and (x1,
    y1).  Before using the *Gradient* pattern, a number of color stops should
@@ -277,7 +277,7 @@ class RadialGradient(:class:`Gradient`)
    :param radius1: radius of the end circle
    :type radius1: float
    :returns: the newly created *RadialGradient*
-   :raises: *MemoryError* in case of no memory
+   :raises: :exc:`MemoryError` in case of no memory
 
    Creates a new *RadialGradient* pattern between the two circles defined by
    (cx0, cy0, radius0) and (cx1, cy1, radius1).  Before using the gradient

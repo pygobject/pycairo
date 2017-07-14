@@ -48,7 +48,7 @@ safely be changed, without loosing the current state. Use
 
    :param target: target :class:`Surface` for the context
    :returns: a newly allocated *Context*
-   :raises: *MemoryError* in case of no memory
+   :raises: :exc:`MemoryError` in case of no memory
 
    Creates a new *Context* with all graphics state parameters set to default
    values and with *target* as a target surface. The target surface should be
@@ -240,7 +240,7 @@ safely be changed, without loosing the current state. Use
    .. method:: copy_path()
 
       :returns: :class:`Path`
-      :raises: *MemoryError* in case of no memory
+      :raises: :exc:`MemoryError` in case of no memory
 
       Creates a copy of the current path and returns it to the user as a
       :class:`Path`.
@@ -248,7 +248,7 @@ safely be changed, without loosing the current state. Use
    .. method:: copy_path_flat()
 
       :returns: :class:`Path`
-      :raises: *MemoryError* in case of no memory
+      :raises: :exc:`MemoryError` in case of no memory
 
       Gets a flattened copy of the current path and returns it to the
       user as a :class:`Path`.

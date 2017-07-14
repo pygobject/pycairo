@@ -33,6 +33,8 @@
 #include "private.h"
 
 static PyTypeObject PycairoError_Type;
+static PyObject *error_get_type_combined (
+    PyObject *error, PyObject *other, char *name);
 
 /* Like cairo_status_to_string(), but translates some C function names to
  * Python function names.
@@ -49,19 +51,46 @@ status_to_string(cairo_status_t status)
 }
 
 /* Sets an exception based on a cairo_status_t */
-void
-Pycairo_Set_Error(cairo_status_t status)
+static void
+set_error (PyObject *error_type, cairo_status_t status)
 {
     PyObject *args, *v;
 
     args = Py_BuildValue("(sO)", status_to_string(status),
                          CREATE_INT_ENUM(Status, status));
-    v = PyObject_Call(_Pycairo_Get_Error(), args, NULL);
+    v = PyObject_Call(error_type, args, NULL);
     Py_DECREF(args);
     if (v != NULL) {
         PyErr_SetObject((PyObject *)Py_TYPE(v), v);
         Py_DECREF(v);
     }
+}
+
+int
+Pycairo_Check_Status (cairo_status_t status) {
+    PyObject *suberror;
+
+    if (PyErr_Occurred() != NULL)
+        return 1;
+
+    switch (status) {
+        case CAIRO_STATUS_SUCCESS:
+            return 0;
+        case CAIRO_STATUS_NO_MEMORY:
+            suberror = error_get_type_combined (
+                _Pycairo_Get_Error(), PyExc_MemoryError, "MemoryError");
+            set_error (suberror, status);
+            Py_DECREF (suberror);
+            break;
+        case CAIRO_STATUS_READ_ERROR:
+        case CAIRO_STATUS_WRITE_ERROR:
+            PyErr_SetString(PyExc_IOError, cairo_status_to_string (status));
+            break;
+        default:
+            set_error (_Pycairo_Get_Error(), status);
+    }
+
+    return 1;
 }
 
 typedef struct {
@@ -195,4 +224,23 @@ error_get_type(void) {
         return NULL;
     Py_INCREF(&PycairoError_Type);
     return (PyObject*)&PycairoError_Type;
+}
+
+static PyObject *
+error_get_type_combined (PyObject *error, PyObject *other, char* name) {
+    PyObject *class_dict, *new_type_args;
+    PyObject *new_type;
+
+    class_dict = PyDict_New ();
+    if (class_dict == NULL)
+        return NULL;
+
+    new_type_args = Py_BuildValue ("s(OO)O", name,
+                                   error, other, class_dict);
+    Py_DECREF (class_dict);
+    if (new_type_args == NULL)
+        return NULL;
+
+    new_type = PyType_Type.tp_new (&PyType_Type, new_type_args, NULL);
+    return new_type;
 }
