@@ -190,6 +190,26 @@ static PyMethodDef pattern_methods[] = {
   {NULL, NULL, 0, NULL},
 };
 
+static PyObject*
+pattern_richcompare (PyObject *self, PyObject *other, int op)
+{
+  if (Py_TYPE(self) == Py_TYPE(other))
+    return Pycairo_richcompare (
+      ((PycairoPattern *)self)->pattern,
+      ((PycairoPattern *)other)->pattern,
+      op);
+  else {
+    Py_INCREF(Py_NotImplemented);
+    return Py_NotImplemented;
+  }
+}
+
+static PYCAIRO_Py_hash_t
+pattern_hash (PyObject *self)
+{
+  return PYCAIRO_Py_hash_t_FromVoidPtr (((PycairoPattern *)self)->pattern);
+}
+
 PyTypeObject PycairoPattern_Type = {
   PyVarObject_HEAD_INIT(NULL, 0)
   "cairo.Pattern",                    /* tp_name */
@@ -204,7 +224,7 @@ PyTypeObject PycairoPattern_Type = {
   0,                                  /* tp_as_number */
   0,                                  /* tp_as_sequence */
   0,                                  /* tp_as_mapping */
-  0,                                  /* tp_hash */
+  pattern_hash,                       /* tp_hash */
   0,                                  /* tp_call */
   0,                                  /* tp_str */
   0,                                  /* tp_getattro */
@@ -214,7 +234,7 @@ PyTypeObject PycairoPattern_Type = {
   0,                                  /* tp_doc */
   0,                                  /* tp_traverse */
   0,                                  /* tp_clear */
-  0,                                  /* tp_richcompare */
+  pattern_richcompare,                /* tp_richcompare */
   0,                                  /* tp_weaklistoffset */
   0,                                  /* tp_iter */
   0,                                  /* tp_iternext */

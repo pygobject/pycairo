@@ -88,6 +88,26 @@ device_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
     return NULL;
 }
 
+static PyObject*
+device_richcompare (PyObject *self, PyObject *other, int op)
+{
+  if (Py_TYPE(self) == Py_TYPE(other))
+    return Pycairo_richcompare (
+      ((PycairoDevice *)self)->device,
+      ((PycairoDevice *)other)->device,
+      op);
+  else {
+    Py_INCREF(Py_NotImplemented);
+    return Py_NotImplemented;
+  }
+}
+
+static PYCAIRO_Py_hash_t
+device_hash (PyObject *self)
+{
+  return PYCAIRO_Py_hash_t_FromVoidPtr (((PycairoDevice *)self)->device);
+}
+
 PyTypeObject PycairoDevice_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
     "cairo.Device",                     /* tp_name */
@@ -102,7 +122,7 @@ PyTypeObject PycairoDevice_Type = {
     0,                                  /* tp_as_number */
     0,                                  /* tp_as_sequence */
     0,                                  /* tp_as_mapping */
-    0,                                  /* tp_hash */
+    device_hash,                        /* tp_hash */
     0,                                  /* tp_call */
     0,                                  /* tp_str */
     0,                                  /* tp_getattro */
@@ -113,11 +133,11 @@ PyTypeObject PycairoDevice_Type = {
     0,                                  /* tp_doc */
     0,                                  /* tp_traverse */
     0,                                  /* tp_clear */
-    0,                                  /* tp_richcompare */
+    device_richcompare,                 /* tp_richcompare */
     0,                                  /* tp_weaklistoffset */
     0,                                  /* tp_iter */
     0,                                  /* tp_iternext */
-    device_methods,                    /* tp_methods */
+    device_methods,                     /* tp_methods */
     0,                                  /* tp_members */
     0,                                  /* tp_getset */
     0,                                  /* tp_base */

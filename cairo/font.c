@@ -99,6 +99,27 @@ static PyMethodDef font_face_methods[] = {
 };
 */
 
+
+static PyObject*
+font_face_richcompare (PyObject *self, PyObject *other, int op)
+{
+  if (Py_TYPE(self) == Py_TYPE(other))
+    return Pycairo_richcompare (
+      ((PycairoFontFace *)self)->font_face,
+      ((PycairoFontFace *)other)->font_face,
+      op);
+  else {
+    Py_INCREF(Py_NotImplemented);
+    return Py_NotImplemented;
+  }
+}
+
+static PYCAIRO_Py_hash_t
+font_face_hash (PyObject *self)
+{
+  return PYCAIRO_Py_hash_t_FromVoidPtr (((PycairoFontFace *)self)->font_face);
+}
+
 PyTypeObject PycairoFontFace_Type = {
   PyVarObject_HEAD_INIT(NULL, 0)
   "cairo.FontFace",                   /* tp_name */
@@ -113,7 +134,7 @@ PyTypeObject PycairoFontFace_Type = {
   0,                                  /* tp_as_number */
   0,                                  /* tp_as_sequence */
   0,                                  /* tp_as_mapping */
-  0,                                  /* tp_hash */
+  font_face_hash,                     /* tp_hash */
   0,                                  /* tp_call */
   0,                                  /* tp_str */
   0,                                  /* tp_getattro */
@@ -123,7 +144,7 @@ PyTypeObject PycairoFontFace_Type = {
   0,                                  /* tp_doc */
   0,                                  /* tp_traverse */
   0,                                  /* tp_clear */
-  0,                                  /* tp_richcompare */
+  font_face_richcompare,              /* tp_richcompare */
   0,                                  /* tp_weaklistoffset */
   0,                                  /* tp_iter */
   0,                                  /* tp_iternext */
@@ -377,6 +398,26 @@ static PyMethodDef scaled_font_methods[] = {
   {NULL, NULL, 0, NULL},
 };
 
+static PyObject*
+scaled_font_richcompare (PyObject *self, PyObject *other, int op)
+{
+  if (Py_TYPE(self) == Py_TYPE(other))
+    return Pycairo_richcompare (
+      ((PycairoScaledFont *)self)->scaled_font,
+      ((PycairoScaledFont *)other)->scaled_font,
+      op);
+  else {
+    Py_INCREF(Py_NotImplemented);
+    return Py_NotImplemented;
+  }
+}
+
+static PYCAIRO_Py_hash_t
+scaled_font_hash (PyObject *self)
+{
+  return PYCAIRO_Py_hash_t_FromVoidPtr (
+    ((PycairoScaledFont *)self)->scaled_font);
+}
 
 PyTypeObject PycairoScaledFont_Type = {
   PyVarObject_HEAD_INIT(NULL, 0)
@@ -392,7 +433,7 @@ PyTypeObject PycairoScaledFont_Type = {
   0,                                  /* tp_as_number */
   0,                                  /* tp_as_sequence */
   0,                                  /* tp_as_mapping */
-  0,                                  /* tp_hash */
+  scaled_font_hash,                   /* tp_hash */
   0,                                  /* tp_call */
   0,                                  /* tp_str */
   0,                                  /* tp_getattro */
@@ -402,7 +443,7 @@ PyTypeObject PycairoScaledFont_Type = {
   0,                                  /* tp_doc */
   0,                                  /* tp_traverse */
   0,                                  /* tp_clear */
-  0,                                  /* tp_richcompare */
+  scaled_font_richcompare,            /* tp_richcompare */
   0,                                  /* tp_weaklistoffset */
   0,                                  /* tp_iter */
   0,                                  /* tp_iternext */

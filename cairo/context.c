@@ -1354,6 +1354,26 @@ static PyMethodDef pycairo_methods[] = {
   {NULL, NULL, 0, NULL},
 };
 
+static PyObject*
+pycairo_richcompare (PyObject *self, PyObject *other, int op)
+{
+  if (Py_TYPE(self) == Py_TYPE(other))
+    return Pycairo_richcompare (
+      ((PycairoContext *)self)->ctx,
+      ((PycairoContext *)other)->ctx,
+      op);
+  else {
+    Py_INCREF(Py_NotImplemented);
+    return Py_NotImplemented;
+  }
+}
+
+static PYCAIRO_Py_hash_t
+pycairo_hash (PyObject *self)
+{
+  return PYCAIRO_Py_hash_t_FromVoidPtr (((PycairoContext *)self)->ctx);
+}
+
 PyTypeObject PycairoContext_Type = {
   PyVarObject_HEAD_INIT(NULL, 0)
   "cairo.Context",                    /* tp_name */
@@ -1368,7 +1388,7 @@ PyTypeObject PycairoContext_Type = {
   0,                                  /* tp_as_number */
   0,                                  /* tp_as_sequence */
   0,                                  /* tp_as_mapping */
-  0,                                  /* tp_hash */
+  pycairo_hash,                       /* tp_hash */
   0,                                  /* tp_call */
   0,                                  /* tp_str */
   0,                                  /* tp_getattro */
@@ -1378,7 +1398,7 @@ PyTypeObject PycairoContext_Type = {
   0,                                  /* tp_doc */
   0,                                  /* tp_traverse */
   0,                                  /* tp_clear */
-  0,                                  /* tp_richcompare */
+  pycairo_richcompare,                /* tp_richcompare */
   0,                                  /* tp_weaklistoffset */
   0,                                  /* tp_iter */
   0,                                  /* tp_iternext */

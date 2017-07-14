@@ -2,6 +2,28 @@ import cairo
 import pytest
 
 
+def test_font_face_cmp_hash():
+    surface = cairo.ImageSurface(0, 10, 10)
+    context = cairo.Context(surface)
+    ff = context.get_font_face()
+    other = context.get_font_face()
+    assert ff == other
+    assert not ff != other
+    assert hash(ff) == hash(other)
+
+    sf = context.get_scaled_font()
+    other = context.get_scaled_font()
+    assert sf == other
+    assert not sf != other
+    assert hash(sf) == hash(other)
+
+    fo = context.get_font_options()
+    # FontOptions compare by their content and they are mutable, so not
+    # hashable.
+    with pytest.raises(TypeError):
+        hash(fo)
+
+
 def test_toy_font_get_slant():
     font_face = cairo.ToyFontFace("")
     assert font_face.get_slant() == cairo.FontSlant.NORMAL

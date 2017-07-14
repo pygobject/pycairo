@@ -8,6 +8,12 @@ def context():
     return cairo.Context(surface)
 
 
+def text_cmp_hash(context):
+    other = cairo.Context(context.get_target())
+    assert context != other
+    hash(context)
+
+
 def test_get_antialias(context):
     assert context.get_antialias() == cairo.Antialias.DEFAULT
     assert isinstance(context.get_antialias(), cairo.Antialias)

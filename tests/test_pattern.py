@@ -2,6 +2,15 @@ import cairo
 import pytest
 
 
+def test_cmp_hash():
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
+    context = cairo.Context(surface)
+    pattern = context.get_source()
+    other = context.get_source()
+    assert pattern == other
+    assert not pattern != other
+
+
 def test_get_extend():
     pattern = cairo.SolidPattern(1, 2, 4)
     assert pattern.get_extend() == cairo.Extend.PAD

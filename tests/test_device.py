@@ -5,6 +5,16 @@ import cairo
 import pytest
 
 
+def test_cmp_hash():
+    f = io.BytesIO()
+    dev = cairo.ScriptDevice(f)
+    surface = cairo.ScriptSurface(dev, cairo.Content.COLOR_ALPHA, 42, 10)
+    other = surface.get_device()
+    assert dev == other
+    assert not dev != other
+    assert hash(dev) == hash(other)
+
+
 def test_get_device():
     surface = cairo.ImageSurface(cairo.Format.ARGB32, 10, 10)
     assert surface.get_device() is None

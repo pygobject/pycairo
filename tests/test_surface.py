@@ -23,6 +23,7 @@ def test_surface_cmp_hash():
     mapped = main.map_to_image(None)
     with pytest.raises(TypeError):
         hash(mapped)
+    assert mapped == mapped
     main.unmap_image(mapped)
 
 
