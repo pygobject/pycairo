@@ -294,7 +294,7 @@ surface_get_device (PycairoSurface *o) {
   cairo_device_t *device = cairo_surface_get_device (o->surface);
   if (device == NULL)
     Py_RETURN_NONE;
-  return PycairoDevice_FromDevice (device);
+  return PycairoDevice_FromDevice (cairo_device_reference (device));
 }
 
 static PyObject *
