@@ -171,6 +171,24 @@ error_dealloc(PycairoErrorObject* self)
     PycairoError_Type.tp_base->tp_dealloc((PyObject*)self);
 }
 
+static PyObject *
+error_check_status (PyTypeObject *type, PyObject *args) {
+    cairo_status_t status;
+
+    if (!PyArg_ParseTuple(args, "i:Error._check_status", &status))
+        return NULL;
+
+    if (Pycairo_Check_Status (status))
+        return NULL;
+
+    Py_RETURN_NONE;
+}
+
+static PyMethodDef error_methods[] = {
+  {"_check_status", (PyCFunction)error_check_status, METH_VARARGS | METH_CLASS},
+  {NULL, NULL, 0, NULL},
+};
+
 static PyTypeObject PycairoError_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
     "cairo.Error",           /* tp_name */
@@ -201,7 +219,7 @@ static PyTypeObject PycairoError_Type = {
     0,                       /* tp_weaklistoffset */
     0,                       /* tp_iter */
     0,                       /* tp_iternext */
-    0,                       /* tp_methods */
+    error_methods,           /* tp_methods */
     0,                       /* tp_members */
     error_getset,            /* tp_getset */
     0,                       /* tp_base */
