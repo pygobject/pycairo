@@ -78,13 +78,16 @@ Pycairo_Check_Status (cairo_status_t status) {
             return 0;
         case CAIRO_STATUS_NO_MEMORY:
             suberror = error_get_type_combined (
-                _Pycairo_Get_Error(), PyExc_MemoryError, "MemoryError");
+                _Pycairo_Get_Error(), PyExc_MemoryError, "cairo.MemoryError");
             set_error (suberror, status);
             Py_DECREF (suberror);
             break;
         case CAIRO_STATUS_READ_ERROR:
         case CAIRO_STATUS_WRITE_ERROR:
-            PyErr_SetString(PyExc_IOError, cairo_status_to_string (status));
+            suberror = error_get_type_combined (
+                _Pycairo_Get_Error(), PyExc_IOError, "cairo.IOError");
+            set_error (suberror, status);
+            Py_DECREF (suberror);
             break;
         default:
             set_error (_Pycairo_Get_Error(), status);
@@ -95,29 +98,32 @@ Pycairo_Check_Status (cairo_status_t status) {
 
 typedef struct {
     PyBaseExceptionObject base;
-    PyObject *status;
 } PycairoErrorObject;
 
 static int
 error_init(PycairoErrorObject *self, PyObject *args, PyObject *kwds)
 {
+    PyObject *status_obj;
+
     if (PycairoError_Type.tp_base->tp_init((PyObject *)self, args, kwds) < 0)
         return -1;
 
     if(PyTuple_GET_SIZE(self->base.args) >= 2) {
-        self->status = PyTuple_GET_ITEM(self->base.args, 1);
+        status_obj = PyTuple_GET_ITEM(self->base.args, 1);
     } else {
-        self->status = Py_None;
+        status_obj = Py_None;
     }
-    Py_INCREF(self->status);
+
+    if (PyObject_SetAttrString ((PyObject *)self, "__status", status_obj) < 0)
+        return -1;
+
     return 0;
 }
 
 static PyObject *
 error_get_status(PycairoErrorObject *self, void *closure)
 {
-    Py_INCREF(self->status);
-    return self->status;
+    return PyObject_GetAttrString ((PyObject *)self, "__status");
 }
 
 static int
@@ -127,9 +133,9 @@ error_set_status(PycairoErrorObject *self, PyObject *value, void *closure)
         PyErr_SetString(PyExc_TypeError, "Cannot delete attribute");
         return -1;
     }
-    Py_DECREF(self->status);
-    Py_INCREF(value);
-    self->status = value;
+
+    if (PyObject_SetAttrString ((PyObject *)self, "__status", value) < 0)
+        return -1;
 
     return 0;
 }
@@ -148,27 +154,6 @@ error_str(PycairoErrorObject *self)
     } else {
         return PycairoError_Type.tp_base->tp_str((PyObject*)self);
     }
-}
-
-static int
-error_traverse(PycairoErrorObject *self, visitproc visit, void *arg)
-{
-    Py_VISIT(self->status);
-    return PycairoError_Type.tp_base->tp_traverse((PyObject*)self, visit, arg);
-}
-
-static int
-error_clear(PycairoErrorObject *self)
-{
-    Py_CLEAR(self->status);
-    return PycairoError_Type.tp_base->tp_clear((PyObject*)self);
-}
-
-static void
-error_dealloc(PycairoErrorObject* self)
-{
-    error_clear(self);
-    PycairoError_Type.tp_base->tp_dealloc((PyObject*)self);
 }
 
 static PyObject *
@@ -194,7 +179,7 @@ static PyTypeObject PycairoError_Type = {
     "cairo.Error",           /* tp_name */
     sizeof(PycairoErrorObject),/* tp_basicsize */
     0,                       /* tp_itemsize */
-    (destructor)error_dealloc,/* tp_dealloc */
+    0,                       /* tp_dealloc */
     0,                       /* tp_print */
     0,                       /* tp_getattr */
     0,                       /* tp_setattr */
@@ -210,11 +195,10 @@ static PyTypeObject PycairoError_Type = {
     0,                       /* tp_setattro */
     0,                       /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT |
-        Py_TPFLAGS_HAVE_GC |
         Py_TPFLAGS_BASETYPE, /* tp_flags */
     0,                       /* tp_doc */
-    (traverseproc)error_traverse,/* tp_traverse */
-    (inquiry)error_clear,    /* tp_clear */
+    0,                       /* tp_traverse */
+    0,                       /* tp_clear */
     0,                       /* tp_richcompare */
     0,                       /* tp_weaklistoffset */
     0,                       /* tp_iter */

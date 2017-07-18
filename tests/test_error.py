@@ -19,12 +19,19 @@ def test_error_check_status():
     assert e.value.status == cairo.Status.NO_MEMORY
     with pytest.raises(MemoryError) as e:
         check_status(cairo.Status.NO_MEMORY)
+    assert type(e.value).__name__ == "cairo.MemoryError"
 
-    # TODO: https://github.com/pygobject/pycairo/issues/55
-    with pytest.raises(IOError) as e:
+    with pytest.raises(cairo.Error) as e:
         check_status(cairo.Status.READ_ERROR)
     with pytest.raises(IOError) as e:
+        check_status(cairo.Status.READ_ERROR)
+    assert e.value.status == cairo.Status.READ_ERROR
+    with pytest.raises(cairo.Error) as e:
         check_status(cairo.Status.WRITE_ERROR)
+    with pytest.raises(IOError) as e:
+        check_status(cairo.Status.WRITE_ERROR)
+    assert e.value.status == cairo.Status.WRITE_ERROR
+    assert type(e.value).__name__ == "cairo.IOError"
 
 
 def test_error_context():

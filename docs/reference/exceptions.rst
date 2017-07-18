@@ -6,8 +6,8 @@ Exceptions
 
 .. currentmodule:: cairo
 
-When a cairo function or method call fails an exception is raised. I/O errors
-raise IOError, and all other errors raise cairo.Error.
+When a cairo function or method call fails an cairo.Error exception, or a
+subclass thereof, is raised.
 
 cairo.Error()
 =============
@@ -32,4 +32,12 @@ cairo.Error()
 
     .. versionadded:: 1.15
         Prior to 1.15 :exc:`python3:MemoryError` was raised instead of this
+        type.
+
+.. exception:: IOError
+
+    :bases: :exc:`Error`, :exc:`python3:IOError`
+
+    .. versionadded:: 1.15
+        Prior to 1.15 :exc:`python3:IOError` was raised instead of this
         type.

@@ -10,7 +10,9 @@ Changes:
   * Pycairo instances wrapping the same underlying cairo object now compare
     equally.
   * Functions which returned a cairo error with cairo.Status.NO_MEMORY no
-    longer raise MemoryError, but a subclass of cairo.Error and MemoryError
+    longer raise MemoryError, but a subclass of cairo.Error and MemoryError.
+    Similarly errors with cairo.Status.READ_ERROR and cairo.Status.WRITE_ERROR
+    no longer raise IOError, but a subclass of cairo.Error and IOError.
     :bug:`55`
 
 Fixes:

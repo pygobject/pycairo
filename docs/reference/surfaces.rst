@@ -283,7 +283,8 @@ class Surface()
       :type fobj: filename (:obj:`text`), file or file-like object
       :raises: :exc:`MemoryError` if memory could not be allocated for the operation
 
-               *IOError* if an I/O error occurs while attempting to write the file
+               :exc:`IOError` if an I/O error occurs while attempting to write
+               the file
 
       Writes the contents of *Surface* to *fobj* as a PNG image.
 
