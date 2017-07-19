@@ -37,12 +37,6 @@
 
 /* class cairo.FontFace --------------------------------------------------- */
 
-/* PycairoFontFace_FromFontFace
- * Create a new PycairoFontFace from a cairo_font_face_t
- * font_face - a cairo_font_face_t to 'wrap' into a Python object.
- *             it is unreferenced if the PycairoFontFace creation fails
- * Return value: New reference or NULL on failure
- */
 PyObject *
 PycairoFontFace_FromFontFace (cairo_font_face_t *font_face) {
   PyTypeObject *type = NULL;
@@ -254,12 +248,6 @@ PyTypeObject PycairoToyFontFace_Type = {
 
 /* class cairo.ScaledFont ------------------------------------------------- */
 
-/* PycairoScaledFont_FromScaledFont
- * Create a new PycairoScaledFont from a cairo_scaled_font_t
- * scaled_font - a cairo_scaled_font_t to 'wrap' into a Python object.
- *               it is unreferenced if the PycairoScaledFont creation fails
- * Return value: New reference or NULL on failure
- */
 PyObject *
 PycairoScaledFont_FromScaledFont (cairo_scaled_font_t *scaled_font) {
   PyObject *o;
@@ -466,12 +454,6 @@ PyTypeObject PycairoScaledFont_Type = {
 
 /* class cairo.FontOptions ------------------------------------------------ */
 
-/* PycairoFontOptions_FromFontOptions
- * Create a new PycairoFontOptions from a cairo_font_options_t
- * font_options - a cairo_font_options_t to 'wrap' into a Python object.
- *                it is unreferenced if the PycairoFontOptions creation fails
- * Return value: New reference or NULL on failure
- */
 PyObject *
 PycairoFontOptions_FromFontOptions (cairo_font_options_t *font_options) {
   PyObject *o;

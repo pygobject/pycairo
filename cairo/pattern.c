@@ -37,19 +37,6 @@
 
 /* Class Pattern ---------------------------------------------------------- */
 
-/* PycairoPattern_FromPattern
- * Create a new
- *   PycairoSolidPattern,
- *   PycairoSurfacePattern,
- *   PycairoLinearGradient, or
- *   PycairoRadialGradient from a cairo_pattern_t.
- * pattern - a cairo_pattern_t to 'wrap' into a Python object.
- *   It is unreferenced if the PycairoPattern creation fails, or if the
- *   pattern has an error status.
- * base - the base object used to create the pattern, or NULL.
- *   It is referenced to keep it alive while the cairo_pattern_t is being used.
- * Return value: New reference or NULL on failure
- */
 PyObject *
 PycairoPattern_FromPattern (cairo_pattern_t *pattern, PyObject *base) {
   PyTypeObject *type = NULL;

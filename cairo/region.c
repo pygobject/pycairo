@@ -34,13 +34,6 @@
 
 #include "private.h"
 
-/* PycairoRectangleInt_FromRectangleInt
- * Create a new PycairoRectangleInt from a cairo_rectangle_int_t
- * rectangle_int - a cairo_rectangle_int_t to 'wrap' into a Python object.
- *        rectangle_int is unreferenced if the PycairoRectangleInt creation
- *        fails.
- * Return value: New reference or NULL on failure
- */
 PyObject *
 PycairoRectangleInt_FromRectangleInt (const cairo_rectangle_int_t *rectangle_int) {
   PyObject *o;
@@ -170,13 +163,6 @@ PyTypeObject PycairoRectangleInt_Type = {
   (newfunc)rectangle_int_new,           /* tp_new */
 };
 
-/* PycairoRegion_FromRegion
- * Create a new PycairoRegion from a cairo_region_t
- * region - a cairo_region_t to 'wrap' into a Python object.
- *        region is unreferenced if the PycairoRegion creation fails, or if
- *        region is in an error status.
- * Return value: New reference or NULL on failure
- */
 PyObject *
 PycairoRegion_FromRegion (cairo_region_t *region) {
   PyObject *o;

@@ -34,19 +34,6 @@
 #include "config.h"
 #include "private.h"
 
-
-/* PycairoContext_FromContext
- * Create a new PycairoContext from a cairo_t
- * ctx  - a cairo_t to 'wrap' into a Python object.
- *        It is unreferenced if the PycairoContext creation fails, or if
- *        the cairo_t has an error status.
- * type - a pointer to the type to instantiate.
- *        It can be &PycairoContext_Type, or a PycairoContext_Type subtype.
- *        (cairo.Context or a cairo.Context subclass)
- * base - the base object used to create the context, or NULL.
- *        it is referenced to keep it alive while the cairo_t is being used
- * Return value: New reference or NULL on failure
- */
 PyObject *
 PycairoContext_FromContext(cairo_t *ctx, PyTypeObject *type, PyObject *base) {
   PyObject *o;

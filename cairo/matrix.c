@@ -36,12 +36,6 @@
 #include "private.h"
 
 
-/* PycairoMatrix_FromMatrix
- * Create a new PycairoMatrix from a cairo_matrix_t
- * matrix - a cairo_matrix_t to 'wrap' into a Python object.
- *          the cairo_matrix_t values are copied.
- * Return value: New reference or NULL on failure
- */
 PyObject *
 PycairoMatrix_FromMatrix (const cairo_matrix_t *matrix) {
   PyObject *o;

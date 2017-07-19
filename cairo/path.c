@@ -39,13 +39,6 @@
  * modelled on Python-2.4/Objects/rangeobject.c and tupleobject.c
  */
 
-/* PycairoPath_FromPath
- * Create a new PycairoPath from a cairo_path_t
- * path - a cairo_path_t to 'wrap' into a Python object.
- *        path is unreferenced if the PycairoPath creation fails, or if path
- *        is in an error status.
- * Return value: New reference or NULL on failure
- */
 PyObject *
 PycairoPath_FromPath (cairo_path_t *path) {
   PyObject *o;

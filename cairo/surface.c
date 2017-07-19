@@ -38,25 +38,6 @@
 
 /* Class Surface ---------------------------------------------------------- */
 
-/* PycairoSurface_FromSurface
- * Create a new
- *   PycairoImageSurface,
- *   PycairoPDFSurface,
- *   PycairoPSSurface,
- *   PycairoRecordingSurface,
- *   PycairoSVGSurface,
- *   PycairoWin32Surface,
- *   PycairoWin32PrintingSurface,
- *   PycairoXCBSurface, or
- *   PycairoXlibSurface
- * from a cairo_surface_t.
- * surface - a cairo_surface_t to 'wrap' into a Python object.
- *   It is unreferenced if the PycairoSurface creation fails, or if the
- *   cairo_surface_t has an error status.
- * base - the base object used to create the surface, or NULL.
- *   It is referenced to keep it alive while the cairo_surface_t is being used.
- * Return value: New reference or NULL on failure
- */
 PyObject *
 PycairoSurface_FromSurface (cairo_surface_t *surface, PyObject *base) {
   PyTypeObject *type = NULL;
