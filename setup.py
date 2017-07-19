@@ -4,6 +4,7 @@ import io
 import subprocess
 import sys
 import os
+import errno
 from distutils.core import Extension, setup, Command, Distribution
 
 
@@ -17,6 +18,18 @@ def get_command_class(name):
     return Distribution({}).get_command_class(name)
 
 
+def _check_output(command):
+    try:
+        return subprocess.check_output(command)
+    except OSError as e:
+        if e.errno == errno.ENOENT:
+            raise SystemExit(
+                "%r not found.\nCommand %r" % (command[0], command))
+        raise SystemExit(e)
+    except subprocess.CalledProcessError as e:
+        raise SystemExit(e)
+
+
 def pkg_config_version_check(pkg, version):
     command = [
         "pkg-config",
@@ -24,19 +37,13 @@ def pkg_config_version_check(pkg, version):
         "--exists",
         '%s >= %s' % (pkg, version),
     ]
-    try:
-        subprocess.check_output(command)
-    except subprocess.CalledProcessError as e:
-        raise SystemExit(e)
+
+    _check_output(command)
 
 
 def pkg_config_parse(opt, pkg):
     command = ["pkg-config", opt, pkg]
-    try:
-        ret = subprocess.check_output(command)
-    except subprocess.CalledProcessError as e:
-        raise SystemExit(e)
-
+    ret = _check_output(command)
     output = ret.decode()
     opt = opt[-2:]
     return [x.lstrip(opt) for x in output.split()]
