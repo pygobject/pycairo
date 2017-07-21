@@ -2,6 +2,52 @@ import cairo
 import pytest
 
 
+def test_raster_source():
+    pattern = cairo.RasterSourcePattern(cairo.Content.COLOR, 2, 2)
+    assert isinstance(pattern, cairo.RasterSourcePattern)
+    assert issubclass(cairo.RasterSourcePattern, cairo.Pattern)
+
+    was_called = []
+
+    def acquire_callback(pattern, target, extents):
+        surface = target.create_similar_image(
+            cairo.FORMAT_ARGB32, extents.width, extents.height)
+        surface.set_device_offset(extents.x, extents.y)
+        context = cairo.Context(surface)
+        context.set_source_rgb(1, 0, 0)
+        context.paint()
+        was_called.append("acquire")
+        return surface
+
+    def release_callback(surface):
+        was_called.append("release")
+        return None
+
+    pattern.set_acquire(None, release_callback)
+    assert pattern.get_acquire() == (None, release_callback)
+
+    pattern.set_acquire(acquire_callback, None)
+    assert pattern.get_acquire() == (acquire_callback, None)
+
+    pattern.set_acquire(None, None)
+    assert pattern.get_acquire() == (None, None)
+
+    pattern.set_acquire(acquire_callback, release_callback)
+    assert pattern.get_acquire() == (acquire_callback, release_callback)
+
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
+    context = cairo.Context(surface)
+    context.set_source(pattern)
+    context.paint()
+    assert was_called == ["acquire", "release"]
+
+    with pytest.raises(TypeError):
+        pattern.set_acquire(None, object())
+
+    with pytest.raises(TypeError):
+        pattern.set_acquire(object(), None)
+
+
 def test_cmp_hash():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
     context = cairo.Context(surface)

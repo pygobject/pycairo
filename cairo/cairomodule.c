@@ -236,6 +236,8 @@ PYCAIRO_MOD_INIT(_cairo)
     return PYCAIRO_MOD_ERROR_VAL;
   if (PyType_Ready(&PycairoMeshPattern_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
+  if (PyType_Ready(&PycairoRasterSourcePattern_Type) < 0)
+    return PYCAIRO_MOD_ERROR_VAL;
 
   if (PyType_Ready(&PycairoRectangleInt_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
@@ -354,6 +356,9 @@ PYCAIRO_MOD_INIT(_cairo)
   Py_INCREF(&PycairoRadialGradient_Type);
   PyModule_AddObject(m, "MeshPattern",
                      (PyObject *)&PycairoMeshPattern_Type);
+  Py_INCREF(&PycairoRasterSourcePattern_Type);
+  PyModule_AddObject(m, "RasterSourcePattern",
+                     (PyObject *)&PycairoRasterSourcePattern_Type);
 
   Py_INCREF(&PycairoRectangleInt_Type);
   PyModule_AddObject(m, "RectangleInt",  (PyObject *)&PycairoRectangleInt_Type);

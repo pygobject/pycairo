@@ -607,3 +607,107 @@ class MeshPattern(:class:`Pattern`)
 
         Valid values for corner_num are from 0 to 3 and identify the corners
         as explained in :class:`MeshPattern`.
+
+
+class RasterSourcePattern(:class:`Pattern`)
+===========================================
+
+The raster source provides the ability to supply arbitrary pixel data whilst
+rendering. The pixels are queried at the time of rasterisation by means of
+user callback functions, allowing for the ultimate flexibility. For example,
+in handling compressed image sources, you may keep a MRU cache of decompressed
+images and decompress sources on the fly and discard old ones to conserve
+memory.
+
+For the raster source to be effective, you must at least specify the acquire
+and release callbacks which are used to retrieve the pixel data for the region
+of interest and demark when it can be freed afterwards. Other callbacks are
+provided for when the pattern is copied temporarily during rasterisation, or
+more permanently as a snapshot in order to keep the pixel data available for
+printing.
+
+
+.. class:: RasterSourcePattern(content, width, height)
+
+    :param Content content:
+        content type for the pixel data that will be returned. Knowing the
+        content type ahead of time is used for analysing the operation and
+        picking the appropriate rendering path.
+    :param int width:
+        maximum size of the sample area
+    :param int height:
+        maximum size of the sample area
+    :raises Error:
+    :rtype: RasterSourcePattern
+
+    Creates a new user pattern for providing pixel data.
+
+    Use the setter functions to associate callbacks with the returned pattern.
+
+    .. versionadded:: 1.15
+
+    .. method:: set_acquire(acquire, release)
+
+        :param callable acquire:
+            acquire callback or :obj:`None` to unset it
+        :param callable release:
+            (optional) release callback or :obj:`None`
+        :raises Error:
+
+        Specifies the callbacks used to generate the image surface for a
+        rendering operation (acquire) and the function used to cleanup that
+        surface afterwards.
+
+        The acquire callback should create a surface (preferably an image
+        surface created to match the target using
+        :meth:`Surface.create_similar_image`) that defines at least the region
+        of interest specified by extents. The surface is allowed to be the
+        entire sample area, but if it does contain a subsection of the sample
+        area, the surface extents should be provided by setting the device
+        offset (along with its width and height) using
+        :meth:`Surface.set_device_offset`.
+
+        .. function:: acquire(pattern, target, extents)
+
+            :param Pattern pattern:
+                the pattern being rendered from
+            :param Surface target:
+                the rendering target surface
+            :param RectangleInt extents:
+                rectangular region of interest in pixels in sample space
+            :rtype: Surface
+
+            This function is called when a pattern is being rendered from. It
+            should create a surface that provides the pixel data for the
+            region of interest as defined by extents, though the surface
+            itself does not have to be limited to that area. For convenience
+            the surface should probably be of image type, created with
+            :meth:`Surface.create_similar_image` for the target (which enables
+            the number of copies to be reduced during transfer to the device).
+            Another option, might be to return a similar surface to the target
+            for explicit handling by the application of a set of cached
+            sources on the device. The region of sample data provided should
+            be defined using :meth:`Surface.set_device_offset` to specify the
+            top-left corner of the sample data (along with width and height of
+            the surface).
+
+        .. function:: release(pattern, surface)
+
+            :param Pattern pattern:
+                the pattern being rendered from
+            :param Surface surface:
+                the surface created during acquire
+
+            This function is called when the pixel data is no longer being
+            accessed by the pattern for the rendering operation.
+
+        .. versionadded:: 1.15
+
+    .. method:: get_acquire()
+
+        :returns: a (acquire, release) tuple of callables or None as set
+            through :meth:`set_acquire`
+
+        Queries the current acquire and release callbacks.
+
+        .. versionadded:: 1.15

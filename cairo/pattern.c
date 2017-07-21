@@ -65,6 +65,9 @@ PycairoPattern_FromPattern (cairo_pattern_t *pattern, PyObject *base) {
   case CAIRO_PATTERN_TYPE_MESH:
     type = &PycairoMeshPattern_Type;
     break;
+  case CAIRO_PATTERN_TYPE_RASTER_SOURCE:
+    type = &PycairoRasterSourcePattern_Type;
+    break;
   default:
     type = &PycairoPattern_Type;
     break;
@@ -907,6 +910,321 @@ PyTypeObject PycairoMeshPattern_Type = {
   0,                                  /* tp_init */
   0,                                  /* tp_alloc */
   (newfunc)mesh_pattern_new,          /* tp_new */
+  0,                                  /* tp_free */
+  0,                                  /* tp_is_gc */
+  0,                                  /* tp_bases */
+};
+
+
+static PyObject *
+raster_source_pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
+  cairo_content_t content;
+  int width, height;
+
+  if (!PyArg_ParseTuple (args, "iii:RasterSourcePattern.__new__",
+      &content, &width, &height))
+    return NULL;
+
+  return PycairoPattern_FromPattern (
+    cairo_pattern_create_raster_source (NULL, content, width, height), NULL);
+}
+
+static const cairo_user_data_key_t raster_source_acquire_key;
+static const cairo_user_data_key_t raster_source_release_key;
+
+static void
+_decref_destroy_func (void *user_data) {
+  PyGILState_STATE gstate = PyGILState_Ensure ();
+  Py_DECREF (user_data);
+  PyGILState_Release (gstate);
+}
+
+static void
+_raster_source_release_func (cairo_pattern_t *pattern,
+                             void *callback_data,
+                             cairo_surface_t *surface) {
+  void *user_data;
+  PyObject *pysurface, *result;
+  PyGILState_STATE gstate;
+
+  pattern = (cairo_pattern_t *)callback_data;
+
+  user_data = cairo_pattern_get_user_data (
+    pattern, &raster_source_release_key);
+  /* in case there is a acquire callback but no release one, this gets called
+   * anyway so we can free the surface
+   */
+  if (user_data == NULL) {
+    cairo_surface_destroy (surface);
+    return;
+  }
+
+  gstate = PyGILState_Ensure ();
+
+  pysurface = PycairoSurface_FromSurface (
+    cairo_surface_reference (surface), NULL);
+  if (pysurface == NULL)
+    goto error;
+
+  result = PyObject_CallFunction ((PyObject *)user_data, "(O)", pysurface);
+  if (result == NULL)
+    goto error;
+
+  if (result != Py_None) {
+    Py_DECREF (result);
+    PyErr_SetString (PyExc_TypeError,
+      "Return value of release callback needs to be None");
+    result = NULL;
+    goto error;
+  }
+
+  Py_DECREF (pysurface);
+  PyGILState_Release (gstate);
+  cairo_surface_destroy (surface);
+  return;
+error:
+  if (PyErr_Occurred ()) {
+    PyErr_Print ();
+    PyErr_Clear ();
+  }
+  Py_XDECREF (pysurface);
+  PyGILState_Release (gstate);
+  cairo_surface_destroy (surface);
+  return;
+}
+
+static cairo_surface_t*
+_raster_source_acquire_func (cairo_pattern_t *pattern, void *callback_data,
+                             cairo_surface_t *target,
+                             const cairo_rectangle_int_t *extents) {
+  void *user_data;
+  PyGILState_STATE gstate;
+  PyObject *result;
+  PyObject *pypattern = NULL, *pysurface = NULL, *pyrect = NULL;
+  cairo_surface_t *result_surface;
+
+  /* https://bugs.freedesktop.org/show_bug.cgi?id=101866
+   * If something changes the callback data, we are screwed, but not much
+   * we can do to detect that..
+   */
+  pattern = (cairo_pattern_t *)callback_data;
+
+  gstate = PyGILState_Ensure ();
+
+  user_data = cairo_pattern_get_user_data (
+    pattern, &raster_source_acquire_key);
+  if (user_data == NULL)
+    goto error;
+
+  pypattern = PycairoPattern_FromPattern (
+    cairo_pattern_reference (pattern), NULL);
+  if (pattern == NULL)
+    goto error;
+
+  pysurface = PycairoSurface_FromSurface (
+    cairo_surface_reference (target), NULL);
+  if (pysurface == NULL)
+    goto error;
+
+  pyrect = PycairoRectangleInt_FromRectangleInt (extents);
+  if (pyrect == NULL)
+    goto error;
+
+  result = PyObject_CallFunction (
+    (PyObject *)user_data, "(OOO)", pypattern, pysurface, pyrect);
+
+  if (result != NULL) {
+    if (!PyObject_TypeCheck (result, &PycairoSurface_Type)) {
+      Py_DECREF (result);
+      PyErr_SetString (PyExc_TypeError,
+        "Return value of acquire callback needs to be of type Surface");
+      result = NULL;
+    }
+  }
+
+  if (result == NULL)
+    goto error;
+
+  Py_DECREF (pypattern);
+  Py_DECREF (pysurface);
+  Py_DECREF (pyrect);
+  result_surface = ((PycairoSurface *)result)->surface;
+  cairo_surface_reference (result_surface);
+  Py_DECREF (result);
+  PyGILState_Release (gstate);
+  return result_surface;
+
+error:
+  if (PyErr_Occurred ()) {
+    PyErr_Print ();
+    PyErr_Clear ();
+  }
+  Py_XDECREF (pypattern);
+  Py_XDECREF (pysurface);
+  Py_XDECREF (pyrect);
+  PyGILState_Release (gstate);
+  return NULL;
+}
+
+static PyObject *
+raster_source_pattern_set_acquire (PycairoRasterSourcePattern *obj,
+                                   PyObject *args) {
+  PyObject *acquire_callable, *release_callable;
+  cairo_status_t status;
+  cairo_pattern_t *pattern;
+  void *callback_data;
+  cairo_raster_source_acquire_func_t acquire_func;
+  cairo_raster_source_release_func_t release_func;
+  void *acquire_user_data, *release_user_data;
+
+  if (!PyArg_ParseTuple (args, "OO:RasterSourcePattern.set_acquire",
+      &acquire_callable, &release_callable))
+    return NULL;
+
+  pattern = obj->pattern;
+
+  callback_data = cairo_raster_source_pattern_get_callback_data (pattern);
+  if (callback_data != NULL && callback_data != pattern) {
+    PyErr_SetString (PyExc_RuntimeError,
+      "Callback is set, but not through Pycairo. Replacing not supported.");
+    return NULL;
+  }
+
+  if (!PyCallable_Check (acquire_callable) && acquire_callable != Py_None) {
+    PyErr_SetString (
+      PyExc_TypeError, "argument needs to be a callable or None");
+    return NULL;
+  }
+
+  if (!PyCallable_Check (release_callable) && release_callable != Py_None) {
+    PyErr_SetString (
+      PyExc_TypeError, "argument needs to be a callable or None");
+    return NULL;
+  }
+
+  if (acquire_callable == Py_None) {
+    acquire_func = NULL;
+    acquire_user_data = NULL;
+  } else {
+    acquire_func = _raster_source_acquire_func;
+    acquire_user_data = acquire_callable;
+  }
+
+  if (release_callable == Py_None) {
+    release_func = NULL;
+    release_user_data = NULL;
+  } else {
+    release_func = _raster_source_release_func;
+    release_user_data = release_callable;
+  }
+
+  /* in case acquire is set we have to clean up anyway */
+  if (acquire_func != NULL && release_func == NULL) {
+    release_func = _raster_source_release_func;
+  }
+
+  status = cairo_pattern_set_user_data (
+    pattern, &raster_source_acquire_key, acquire_user_data,
+    (acquire_user_data) ? _decref_destroy_func : NULL);
+  RETURN_NULL_IF_CAIRO_ERROR (status);
+  if (acquire_user_data != NULL)
+    Py_INCREF (acquire_user_data);
+
+  status = cairo_pattern_set_user_data (
+    pattern, &raster_source_release_key, release_user_data,
+    (release_user_data) ? _decref_destroy_func : NULL);
+  if (status != CAIRO_STATUS_SUCCESS) {
+    cairo_pattern_set_user_data (
+      pattern, &raster_source_acquire_key, NULL, NULL);
+    RETURN_NULL_IF_CAIRO_ERROR (status);
+  }
+  if (release_user_data != NULL)
+    Py_INCREF (release_user_data);
+
+  cairo_raster_source_pattern_set_callback_data (pattern, pattern);
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_raster_source_pattern_set_acquire (
+    pattern, acquire_func, release_func);
+  Py_END_ALLOW_THREADS;
+
+  Py_RETURN_NONE;
+}
+
+static PyObject *
+raster_source_pattern_get_acquire (PycairoRasterSourcePattern *obj) {
+  cairo_pattern_t *pattern;
+  void *user_data;
+  PyObject *acquire_callable, *release_callable;
+
+  pattern = obj->pattern;
+
+  user_data = cairo_pattern_get_user_data (
+    pattern, &raster_source_acquire_key);
+  if (user_data == NULL) {
+    acquire_callable = Py_None;
+  } else {
+    acquire_callable = user_data;
+  }
+
+  user_data = cairo_pattern_get_user_data (
+    pattern, &raster_source_release_key);
+  if (user_data == NULL) {
+    release_callable = Py_None;
+  } else {
+    release_callable = user_data;
+  }
+
+  return Py_BuildValue ("(OO)", acquire_callable, release_callable);
+}
+
+static PyMethodDef raster_source_pattern_methods[] = {
+  {"set_acquire",
+   (PyCFunction)raster_source_pattern_set_acquire, METH_VARARGS},
+  {"get_acquire",
+   (PyCFunction)raster_source_pattern_get_acquire, METH_NOARGS},
+  {NULL, NULL, 0, NULL},
+};
+
+PyTypeObject PycairoRasterSourcePattern_Type = {
+  PyVarObject_HEAD_INIT(NULL, 0)
+  "cairo.RasterSourcePattern",        /* tp_name */
+  sizeof(PycairoRasterSourcePattern), /* tp_basicsize */
+  0,                                  /* tp_itemsize */
+  0,                                  /* tp_dealloc */
+  0,                                  /* tp_print */
+  0,                                  /* tp_getattr */
+  0,                                  /* tp_setattr */
+  0,                                  /* tp_compare */
+  0,                                  /* tp_repr */
+  0,                                  /* tp_as_number */
+  0,                                  /* tp_as_sequence */
+  0,                                  /* tp_as_mapping */
+  0,                                  /* tp_hash */
+  0,                                  /* tp_call */
+  0,                                  /* tp_str */
+  0,                                  /* tp_getattro */
+  0,                                  /* tp_setattro */
+  0,                                  /* tp_as_buffer */
+  Py_TPFLAGS_DEFAULT,                 /* tp_flags */
+  0,                                  /* tp_doc */
+  0,                                  /* tp_traverse */
+  0,                                  /* tp_clear */
+  0,                                  /* tp_richcompare */
+  0,                                  /* tp_weaklistoffset */
+  0,                                  /* tp_iter */
+  0,                                  /* tp_iternext */
+  raster_source_pattern_methods,      /* tp_methods */
+  0,                                  /* tp_members */
+  0,                                  /* tp_getset */
+  &PycairoPattern_Type,               /* tp_base */
+  0,                                  /* tp_dict */
+  0,                                  /* tp_descr_get */
+  0,                                  /* tp_descr_set */
+  0,                                  /* tp_dictoffset */
+  0,                                  /* tp_init */
+  0,                                  /* tp_alloc */
+  (newfunc)raster_source_pattern_new, /* tp_new */
   0,                                  /* tp_free */
   0,                                  /* tp_is_gc */
   0,                                  /* tp_bases */

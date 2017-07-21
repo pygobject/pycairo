@@ -79,6 +79,9 @@ PyObject *PycairoPattern_FromPattern (cairo_pattern_t *pattern,
 typedef PycairoPattern PycairoMeshPattern;
 extern PyTypeObject PycairoMeshPattern_Type;
 
+typedef PycairoPattern PycairoRasterSourcePattern;
+extern PyTypeObject PycairoRasterSourcePattern_Type;
+
 extern PyTypeObject PycairoRectangleInt_Type;
 PyObject *PycairoRectangleInt_FromRectangleInt (
     const cairo_rectangle_int_t *rectangle_int);
