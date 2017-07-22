@@ -60,3 +60,44 @@ def test_font_options_get_hint_style(font_options):
 def test_font_options_get_subpixel_order(font_options):
     assert font_options.get_subpixel_order() == cairo.SubpixelOrder.DEFAULT
     assert isinstance(font_options.get_subpixel_order(), cairo.SubpixelOrder)
+
+
+def test_scaled_font_get_ctm():
+    surface = cairo.ImageSurface(0, 10, 10)
+    ctx = cairo.Context(surface)
+    sf = ctx.get_scaled_font()
+    matrix = sf.get_ctm()
+    assert isinstance(matrix, cairo.Matrix)
+
+
+def test_scaled_font_get_font_matrix():
+    surface = cairo.ImageSurface(0, 10, 10)
+    ctx = cairo.Context(surface)
+    sf = ctx.get_scaled_font()
+    matrix = sf.get_font_matrix()
+    assert isinstance(matrix, cairo.Matrix)
+
+
+def test_scaled_font_get_font_options():
+    surface = cairo.ImageSurface(0, 10, 10)
+    ctx = cairo.Context(surface)
+    sf = ctx.get_scaled_font()
+    font_options = sf.get_font_options()
+    assert isinstance(font_options, cairo.FontOptions)
+
+
+def test_scaled_font_text_to_glyphs():
+    surface = cairo.ImageSurface(0, 10, 10)
+    ctx = cairo.Context(surface)
+    sf = ctx.get_scaled_font()
+    assert sf.text_to_glyphs(0, 0, u"") == ([], [], 0)
+    glyphs, clusters, flags = sf.text_to_glyphs(0, 0, u"a")
+    assert len(glyphs) == 1
+    assert isinstance(glyphs[0], cairo.Glyph)
+    assert len(clusters) == 1
+    assert isinstance(clusters[0], cairo.TextCluster)
+    assert flags == 0
+    glyphs, clusters, flags = sf.text_to_glyphs(0, 0, u"a b")
+    assert len(glyphs) == 3
+    assert glyphs[0] != glyphs[1]
+    assert len(clusters) == 3

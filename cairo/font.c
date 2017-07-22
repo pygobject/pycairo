@@ -366,6 +366,96 @@ scaled_font_get_font_options (PycairoScaledFont *o) {
   return PycairoFontOptions_FromFontOptions (options);
 }
 
+static PyObject *
+scaled_font_text_to_glyphs (PycairoScaledFont *o, PyObject *args) {
+  const char *utf8;
+  double x, y;
+
+  cairo_status_t status;
+  cairo_glyph_t *glyphs = NULL;
+  int num_glyphs;
+  cairo_text_cluster_t *clusters = NULL;
+  int num_clusters;
+  cairo_text_cluster_flags_t cluster_flags;
+
+  int i;
+  PyObject *glyph_list = NULL;
+  PyObject *cluster_list = NULL;
+  PyObject *flags = NULL;
+  PyObject *pyglyph, *glyph_args;
+  PyObject *pycluster, *cluster_args;
+
+  if (!PyArg_ParseTuple (args,
+      "dd" PYCAIRO_ENC_TEXT_FORMAT ":ScaledFont.text_to_glyphs",
+      &x, &y, "utf-8", &utf8))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  status = cairo_scaled_font_text_to_glyphs (
+    o->scaled_font,
+    x, y,
+    utf8, -1,
+    &glyphs, &num_glyphs,
+    &clusters, &num_clusters, &cluster_flags);
+  Py_END_ALLOW_THREADS;
+
+  PyMem_Free ((void *)utf8);
+  RETURN_NULL_IF_CAIRO_ERROR (status);
+
+  glyph_list = PyList_New (num_glyphs);
+  if (glyph_list == NULL)
+    goto error;
+  for(i=0; i < num_glyphs; i++) {
+    cairo_glyph_t *glyph = &glyphs[i];
+    glyph_args = Py_BuildValue(
+      "(kdd)", glyph->index, glyph->x, glyph->y);
+    if (glyph_args == NULL)
+      goto error;
+    pyglyph = PyObject_Call(
+      (PyObject *)&PycairoGlyph_Type, glyph_args, NULL);
+    if (pyglyph == NULL) {
+      Py_DECREF (glyph_args);
+      goto error;
+    }
+    PyList_SET_ITEM (glyph_list, i, pyglyph);
+  }
+  cairo_glyph_free (glyphs);
+  glyphs = NULL;
+
+  cluster_list = PyList_New (num_clusters);
+  if (cluster_list == NULL)
+    goto error;
+  for(i=0; i < num_clusters; i++) {
+    cairo_text_cluster_t *cluster = &clusters[i];
+    cluster_args = Py_BuildValue(
+      "(ii)", cluster->num_bytes, cluster->num_glyphs);
+    if (cluster_args == NULL)
+      goto error;
+    pycluster = PyObject_Call(
+      (PyObject *)&PycairoTextCluster_Type, cluster_args, NULL);
+    if (pycluster == NULL) {
+      Py_DECREF (cluster_args);
+      goto error;
+    }
+    PyList_SET_ITEM (cluster_list, i, pycluster);
+  }
+  cairo_text_cluster_free (clusters);
+  clusters = NULL;
+
+  flags = CREATE_INT_ENUM (TextClusterFlags, cluster_flags);
+  if (flags == NULL)
+    goto error;
+
+  return Py_BuildValue ("(NNN)", glyph_list, cluster_list, flags);
+error:
+  cairo_glyph_free (glyphs);
+  cairo_text_cluster_free (clusters);
+  Py_XDECREF (glyph_list);
+  Py_XDECREF (cluster_list);
+  Py_XDECREF (flags);
+  return NULL;
+}
+
 static PyMethodDef scaled_font_methods[] = {
   /* methods never exposed in a language binding:
    * cairo_scaled_font_destroy()
@@ -374,7 +464,6 @@ static PyMethodDef scaled_font_methods[] = {
    *
    * TODO if requested:
    * cairo_scaled_font_glyph_extents
-   * cairo_scaled_font_text_to_glyphs
    */
   {"extents",       (PyCFunction)scaled_font_extents,        METH_NOARGS},
   {"get_font_face", (PyCFunction)scaled_font_get_font_face,  METH_NOARGS},
@@ -383,6 +472,7 @@ static PyMethodDef scaled_font_methods[] = {
   {"get_font_options", (PyCFunction)scaled_font_get_font_options, METH_NOARGS},
   {"get_scale_matrix", (PyCFunction)scaled_font_get_scale_matrix, METH_VARARGS},
   {"text_extents",  (PyCFunction)scaled_font_text_extents,   METH_VARARGS},
+  {"text_to_glyphs",  (PyCFunction)scaled_font_text_to_glyphs,    METH_VARARGS},
   {NULL, NULL, 0, NULL},
 };
 

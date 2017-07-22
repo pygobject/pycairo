@@ -227,10 +227,29 @@ use.
 
       .. versionadded:: 1.2
 
-   .. method:: text_to_glyphs()
+   .. method:: text_to_glyphs(x, y, utf8)
 
-      Not implemented in pycairo (yet)
+      :param float x: X position to place first glyph
+      :param float y: Y position to place first glyph
+      :param text utf8: a string of text
+      :returns:
+         a tuple of ([:class:`Glyph`], [:class:`TextCluster`],
+         :class:`TextClusterFlags`)
+      :rtype: tuple
+      :raises Error:
 
+      .. versionadded:: 1.15
+
+      Converts UTF-8 text to a list of glyphs, with cluster mapping, that can
+      be used to render later.
+
+      For details of how clusters, and cluster_flags map input UTF-8 text to
+      the output glyphs see :meth:`Context.show_text_glyphs`.
+
+      The output values can be readily passed to
+      :meth:`Context.show_text_glyphs` :meth:`Context.show_glyphs`, or related
+      functions, assuming that the exact same scaled font is used for the
+      operation.
 
 
 class FontOptions()

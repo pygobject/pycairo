@@ -54,30 +54,6 @@ def test_unicode_filenames():
         shutil.rmtree(dirname)
 
 
-def test_scaled_font_get_ctm():
-    surface = cairo.ImageSurface(0, 10, 10)
-    ctx = cairo.Context(surface)
-    sf = ctx.get_scaled_font()
-    matrix = sf.get_ctm()
-    assert isinstance(matrix, cairo.Matrix)
-
-
-def test_scaled_font_get_font_matrix():
-    surface = cairo.ImageSurface(0, 10, 10)
-    ctx = cairo.Context(surface)
-    sf = ctx.get_scaled_font()
-    matrix = sf.get_font_matrix()
-    assert isinstance(matrix, cairo.Matrix)
-
-
-def test_scaled_font_get_font_options():
-    surface = cairo.ImageSurface(0, 10, 10)
-    ctx = cairo.Context(surface)
-    sf = ctx.get_scaled_font()
-    font_options = sf.get_font_options()
-    assert isinstance(font_options, cairo.FontOptions)
-
-
 def test_ps_surface_level_to_string():
     level_id = cairo.PSSurface.level_to_string(cairo.PS_LEVEL_2)
     assert isinstance(level_id, str)
