@@ -105,6 +105,9 @@ extern PyTypeObject PycairoMappedImageSurface_Type;
 extern PyTypeObject PycairoGlyph_Type;
 typedef PyTupleObject PycairGlyph;
 
+extern PyTypeObject PycairoRectangle_Type;
+typedef PyTupleObject PycairRectangle;
+
 typedef struct {
     PyObject_HEAD
     cairo_device_t *device;

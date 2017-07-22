@@ -217,13 +217,8 @@ safely be changed, without loosing the current state. Use
    .. method:: copy_clip_rectangle_list()
 
       :returns: the current clip region as a list of rectangles in user
-        coordinates. Returns a list of 4-tuples of float.
+        coordinates. Returns a list of :class:`Rectangle`
       :rtype: list
-
-      (The status in the list may be %CAIRO_STATUS_CLIP_NOT_REPRESENTABLE to
-      indicate that the clip region cannot be represented as a list of
-      user-space rectangles. The status may have other values to indicate
-      other errors. - not implemented in pycairo)
 
       .. versionadded:: 1.4
 

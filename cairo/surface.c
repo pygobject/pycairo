@@ -1729,7 +1729,9 @@ recording_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 static PyObject *
 recording_surface_ink_extents (PycairoRecordingSurface *o) {
   double x0, y0, width, height;
+
   cairo_recording_surface_ink_extents(o->surface, &x0, &y0, &width, &height);
+
   return Py_BuildValue("(dddd)", x0, y0, width, height);
 }
 
@@ -1737,6 +1739,7 @@ static PyObject *
 recording_surface_get_extents (PycairoRecordingSurface *o) {
   cairo_rectangle_t extents;
   cairo_bool_t result;
+  PyObject *rect, *args;
 
   Py_BEGIN_ALLOW_THREADS;
   result = cairo_recording_surface_get_extents (o->surface, &extents);
@@ -1746,8 +1749,13 @@ recording_surface_get_extents (PycairoRecordingSurface *o) {
     Py_RETURN_NONE;
   }
 
-  return Py_BuildValue(
+  args = Py_BuildValue(
     "(dddd)", extents.x, extents.y, extents.width, extents.height);
+  if (args == NULL)
+    return NULL;
+  rect = PyObject_Call((PyObject *)&PycairoRectangle_Type, args, NULL);
+  Py_DECREF (args);
+  return rect;
 }
 
 static PyMethodDef recording_surface_methods[] = {

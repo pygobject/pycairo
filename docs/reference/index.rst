@@ -21,4 +21,5 @@ API Reference
    text
    devices
    glyph
+   rectangle
    legacy_constants

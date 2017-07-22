@@ -170,25 +170,33 @@ static PyObject *
 pycairo_copy_clip_rectangle_list (PycairoContext *o) {
   int i;
   PyObject *rv = NULL;
+  PyObject *rect = NULL;
   cairo_rectangle_t *r;
+
   cairo_rectangle_list_t *rlist = cairo_copy_clip_rectangle_list (o->ctx);
   if (rlist->status != CAIRO_STATUS_SUCCESS) {
     Pycairo_Check_Status (rlist->status);
     goto exit;
   }
 
-  rv = PyTuple_New(rlist->num_rectangles);
+  rv = PyList_New(rlist->num_rectangles);
   if (rv == NULL)
     goto exit;
 
   for (i = 0, r = rlist->rectangles; i < rlist->num_rectangles; i++, r++) {
     PyObject *py_rect = Py_BuildValue("(dddd)", r->x, r->y,
-				      r->width, r->height);
+                                      r->width, r->height);
     if (py_rect == NULL) {
       Py_CLEAR(rv);
       goto exit;
     }
-    PyTuple_SET_ITEM (rv, i, py_rect);
+    rect = PyObject_Call((PyObject *)&PycairoRectangle_Type, py_rect, NULL);
+    Py_DECREF (py_rect);
+    if (rect == NULL) {
+        Py_CLEAR(rv);
+        goto exit;
+    }
+    PyList_SET_ITEM (rv, i, rect);
   }
  exit:
   cairo_rectangle_list_destroy(rlist);

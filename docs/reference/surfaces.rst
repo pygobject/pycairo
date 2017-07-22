@@ -844,7 +844,7 @@ replay.
 .. class:: RecordingSurface(content, rectangle)
 
    :param cairo.Content content: the content for the new  surface
-   :param rectangle: a 4-tuple of float, or None to record unbounded operations.
+   :param cairo.Rectangle rectangle: or None to record unbounded operations.
    :returns: a new *RecordingSurface*
 
    Creates a *RecordingSurface* which can be used to record all drawing
@@ -860,7 +860,7 @@ replay.
 
    .. method:: ink_extents()
 
-      :returns: (x0,y0,width,height) a 4-tuple of float
+      ::rtype: (x0,y0,width,height) a 4-tuple of float
 
 	* x0: the x-coordinate of the top-left of the ink bounding box
 	* y0: the y-coordinate of the top-left of the ink bounding box
@@ -877,8 +877,8 @@ replay.
 
    .. method:: get_extents()
 
-      :returns: (x, y, width, height) a 4-tuple of float or :obj:`None` if the
-         surface is unbounded.
+      :returns: a rectangle or :obj:`None` if the surface is unbounded.
+      :rtype: Rectangle
 
       Get the extents of the recording-surface.
 

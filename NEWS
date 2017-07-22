@@ -7,6 +7,7 @@ New Features:
   * Add :meth:`Surface.map_to_image` and :meth:`Surface.unmap_image` :bug:`51`
   * Add :class:`RasterSourcePattern` :bug:`48`
   * Add :class:`Glyph` :bug:`53`
+  * Add :class:`Rectangle` :bug:`54`
 
 Changes:
   * Pycairo instances wrapping the same underlying cairo object now compare
@@ -16,6 +17,8 @@ Changes:
     Similarly errors with cairo.Status.READ_ERROR and cairo.Status.WRITE_ERROR
     no longer raise IOError, but a subclass of cairo.Error and IOError.
     :bug:`55`
+  * Some functions which previously returned a tuple now return the tuple
+    subclass :class:`Rectangle`
 
 Fixes:
   * Fix a crash with :meth:`Surface.get_device` :bug:`57`
