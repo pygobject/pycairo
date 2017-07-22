@@ -1000,7 +1000,7 @@ _raster_source_acquire_func (cairo_pattern_t *pattern, void *callback_data,
   void *user_data;
   PyGILState_STATE gstate;
   PyObject *result;
-  PyObject *pypattern = NULL, *pysurface = NULL, *pyrect = NULL;
+  PyObject *pysurface = NULL, *pyrect = NULL;
   cairo_surface_t *result_surface;
 
   /* https://bugs.freedesktop.org/show_bug.cgi?id=101866
@@ -1016,11 +1016,6 @@ _raster_source_acquire_func (cairo_pattern_t *pattern, void *callback_data,
   if (user_data == NULL)
     goto error;
 
-  pypattern = PycairoPattern_FromPattern (
-    cairo_pattern_reference (pattern), NULL);
-  if (pattern == NULL)
-    goto error;
-
   pysurface = PycairoSurface_FromSurface (
     cairo_surface_reference (target), NULL);
   if (pysurface == NULL)
@@ -1031,7 +1026,7 @@ _raster_source_acquire_func (cairo_pattern_t *pattern, void *callback_data,
     goto error;
 
   result = PyObject_CallFunction (
-    (PyObject *)user_data, "(OOO)", pypattern, pysurface, pyrect);
+    (PyObject *)user_data, "(OO)", pysurface, pyrect);
 
   if (result != NULL) {
     if (!PyObject_TypeCheck (result, &PycairoSurface_Type)) {
@@ -1045,7 +1040,6 @@ _raster_source_acquire_func (cairo_pattern_t *pattern, void *callback_data,
   if (result == NULL)
     goto error;
 
-  Py_DECREF (pypattern);
   Py_DECREF (pysurface);
   Py_DECREF (pyrect);
   result_surface = ((PycairoSurface *)result)->surface;
@@ -1059,7 +1053,6 @@ error:
     PyErr_Print ();
     PyErr_Clear ();
   }
-  Py_XDECREF (pypattern);
   Py_XDECREF (pysurface);
   Py_XDECREF (pyrect);
   PyGILState_Release (gstate);

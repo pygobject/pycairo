@@ -667,10 +667,8 @@ printing.
         offset (along with its width and height) using
         :meth:`Surface.set_device_offset`.
 
-        .. function:: acquire(pattern, target, extents)
+        .. function:: acquire(target, extents)
 
-            :param Pattern pattern:
-                the pattern being rendered from
             :param Surface target:
                 the rendering target surface
             :param RectangleInt extents:
@@ -691,10 +689,8 @@ printing.
             top-left corner of the sample data (along with width and height of
             the surface).
 
-        .. function:: release(pattern, surface)
+        .. function:: release(surface)
 
-            :param Pattern pattern:
-                the pattern being rendered from
             :param Surface surface:
                 the surface created during acquire
 

@@ -9,7 +9,7 @@ def test_raster_source():
 
     was_called = []
 
-    def acquire_callback(pattern, target, extents):
+    def acquire_callback(target, extents):
         surface = target.create_similar_image(
             cairo.FORMAT_ARGB32, extents.width, extents.height)
         surface.set_device_offset(extents.x, extents.y)
