@@ -434,57 +434,6 @@ pycairo_get_tolerance (PycairoContext *o) {
   return PyFloat_FromDouble (cairo_get_tolerance (o->ctx));
 }
 
-/* read a Python sequence of (i,x,y) sequences
- * return cairo_glyph_t *
- *        num_glyphs
- *        must call PyMem_Free(glyphs) when finished using the glyphs
- */
-static cairo_glyph_t *
-_PyGlyphs_AsGlyphs (PyObject *py_object, int *num_glyphs)
-{
-  int length, i;
-  cairo_glyph_t *glyphs = NULL, *glyph;
-  PyObject *py_glyphs, *py_seq = NULL;
-
-  py_glyphs = PySequence_Fast (py_object, "glyphs must be a sequence");
-  if (py_glyphs == NULL)
-    return NULL;
-
-  length = PySequence_Fast_GET_SIZE(py_glyphs);
-  if (*num_glyphs < 0 || *num_glyphs > length)
-    *num_glyphs = length;
-
-  glyphs = PyMem_Malloc (*num_glyphs * sizeof(cairo_glyph_t));
-  if (glyphs == NULL) {
-    PyErr_NoMemory();
-    goto error;
-  }
-  for (i = 0, glyph = glyphs; i < *num_glyphs; i++, glyph++) {
-    PyObject *py_item = PySequence_Fast_GET_ITEM(py_glyphs, i);
-    py_seq = PySequence_Fast (py_item, "glyph items must be a sequence");
-    if (py_seq == NULL)
-      goto error;
-    if (PySequence_Fast_GET_SIZE(py_seq) != 3) {
-      PyErr_SetString(PyExc_ValueError,
-		      "each glyph item must be an (i,x,y) sequence");
-      goto error;
-    }
-    glyph->index = PYCAIRO_PyLong_AsLong(PySequence_Fast_GET_ITEM(py_seq, 0));
-    glyph->x = PyFloat_AsDouble(PySequence_Fast_GET_ITEM(py_seq, 1));
-    glyph->y = PyFloat_AsDouble(PySequence_Fast_GET_ITEM(py_seq, 2));
-    if (PyErr_Occurred())
-      goto error;
-    Py_DECREF(py_seq);
-  }
-  Py_DECREF(py_glyphs);
-  return glyphs;
- error:
-  Py_DECREF(py_glyphs);
-  Py_XDECREF(py_seq);
-  PyMem_Free(glyphs);
-  return NULL;
-}
-
 static PyObject *
 pycairo_glyph_extents (PycairoContext *o, PyObject *args) {
   int num_glyphs = -1;
@@ -496,7 +445,7 @@ pycairo_glyph_extents (PycairoContext *o, PyObject *args) {
 			 &py_object, &num_glyphs))
     return NULL;
 
-  glyphs = _PyGlyphs_AsGlyphs (py_object, &num_glyphs);
+  glyphs = _PycairoGlyphs_AsGlyphs (py_object, &num_glyphs);
   if (glyphs == NULL)
     return NULL;
   cairo_glyph_extents (o->ctx, glyphs, num_glyphs, &extents);
@@ -517,7 +466,7 @@ pycairo_glyph_path (PycairoContext *o, PyObject *args) {
 			 &py_object, &num_glyphs))
     return NULL;
 
-  glyphs = _PyGlyphs_AsGlyphs (py_object, &num_glyphs);
+  glyphs = _PycairoGlyphs_AsGlyphs (py_object, &num_glyphs);
   if (glyphs == NULL)
     return NULL;
   cairo_glyph_path (o->ctx, glyphs, num_glyphs);
@@ -1082,7 +1031,7 @@ pycairo_show_glyphs (PycairoContext *o, PyObject *args) {
 			 &py_object, &num_glyphs))
     return NULL;
 
-  glyphs = _PyGlyphs_AsGlyphs (py_object, &num_glyphs);
+  glyphs = _PycairoGlyphs_AsGlyphs (py_object, &num_glyphs);
   if (glyphs == NULL)
     return NULL;
   Py_BEGIN_ALLOW_THREADS;

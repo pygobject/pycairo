@@ -519,11 +519,9 @@ safely be changed, without loosing the current state. Use
         :meth:`Context.set_tolerance`
       :rtype: float
 
-   .. method:: glyph_extents(glyphs, [num_glyphs])
+   .. method:: glyph_extents(glyphs)
 
-      :param glyphs: glyphs, a sequence of (int, float, float)
-      :param num_glyphs: number of glyphs to measure, defaults to using all
-      :type num_glyphs: int
+      :param glyphs: glyphs, a sequence of :class:`Glyph`
       :returns: (x_bearing, y_bearing, width, height, x_advance, y_advance),
         6-tuple of float
       :rtype: tuple
@@ -537,11 +535,9 @@ safely be changed, without loosing the current state. Use
       Note that whitespace glyphs do not contribute to the size of the
       rectangle (extents.width and extents.height).
 
-   .. method:: glyph_path(glyphs[, num_glyphs])
+   .. method:: glyph_path(glyphs)
 
-      :param glyphs: glyphs to show, a sequence of (int, float, float)
-      :param num_glyphs: number of glyphs to show, defaults to showing all
-      :type num_glyphs: int
+      :param glyphs: glyphs to show, a sequence of :class:`Glyph`
 
       Adds closed paths for the glyphs to the current path. The generated path
       if filled, achieves an effect similar to that of
@@ -1275,12 +1271,9 @@ safely be changed, without loosing the current state. Use
       precision of its internal arithmetic, and the prescribed *tolerance* is
       restricted to the smallest representable internal value.
 
-   .. method:: show_glyphs(glyphs[, num_glyphs])
+   .. method:: show_glyphs(glyphs)
 
-      :param glyphs: glyphs to show as a sequence of (int, float, float)
-      :param num_glyphs: number of glyphs to show, defaults to showing all
-        glyphs
-      :type num_glyphs: int
+      :param glyphs: glyphs to show as a sequence of :class:`Glyph`
 
       A drawing operator that generates the shape from an array of glyphs,
       rendered according to the current font face, font size (font matrix),

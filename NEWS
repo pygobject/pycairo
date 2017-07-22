@@ -6,6 +6,7 @@
 New Features:
   * Add :meth:`Surface.map_to_image` and :meth:`Surface.unmap_image` :bug:`51`
   * Add :class:`RasterSourcePattern` :bug:`48`
+  * Add :class:`Glyph` :bug:`53`
 
 Changes:
   * Pycairo instances wrapping the same underlying cairo object now compare

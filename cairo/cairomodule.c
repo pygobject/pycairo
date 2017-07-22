@@ -245,6 +245,9 @@ PYCAIRO_MOD_INIT(_cairo)
   if (PyType_Ready(&PycairoDevice_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
 
+  if (PyType_Ready(&PycairoGlyph_Type) < 0)
+    return PYCAIRO_MOD_ERROR_VAL;
+
 #ifdef CAIRO_HAS_SCRIPT_SURFACE
   if (PyType_Ready(&PycairoScriptDevice_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
@@ -374,6 +377,9 @@ PYCAIRO_MOD_INIT(_cairo)
 
   Py_INCREF(&PycairoDevice_Type);
   PyModule_AddObject(m, "Device", (PyObject *)&PycairoDevice_Type);
+
+  Py_INCREF(&PycairoGlyph_Type);
+  PyModule_AddObject(m, "Glyph", (PyObject *)&PycairoGlyph_Type);
 
 #ifdef CAIRO_HAS_SCRIPT_SURFACE
   Py_INCREF(&PycairoScriptDevice_Type);

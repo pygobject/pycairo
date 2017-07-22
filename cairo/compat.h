@@ -43,6 +43,7 @@
 #define PYCAIRO_MOD_INIT(name) void init##name(void)
 
 #define PYCAIRO_PyUnicode_FromString PyString_FromString
+#define PYCAIRO_PyUnicode_Format PyString_Format
 #define PYCAIRO_PyUnicode_Join _PyString_Join
 #define PYCAIRO_PyUnicode_InternFromString PyString_InternFromString
 #define PYCAIRO_PyUnicode_Astring PyString_AsString
@@ -71,6 +72,7 @@
 #define PYCAIRO_MOD_INIT(name) PyMODINIT_FUNC PyInit_##name(void)
 
 #define PYCAIRO_PyUnicode_FromString PyUnicode_FromString
+#define PYCAIRO_PyUnicode_Format PyUnicode_Format
 #define PYCAIRO_PyUnicode_Join PyUnicode_Join
 #define PYCAIRO_PyUnicode_InternFromString PyUnicode_InternFromString
 #define PYCAIRO_PyUnicode_Astring _PyUnicode_AsString

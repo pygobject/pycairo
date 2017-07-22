@@ -20,4 +20,5 @@ API Reference
    surfaces
    text
    devices
+   glyph
    legacy_constants

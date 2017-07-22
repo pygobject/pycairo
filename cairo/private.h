@@ -43,6 +43,8 @@
 #include "compat.h"
 
 
+cairo_glyph_t * _PycairoGlyphs_AsGlyphs (PyObject *py_object, int *num_glyphs);
+
 PyObject *_Pycairo_Get_Error(void);
 
 PyObject* Pycairo_richcompare (void* a, void *b, int op);
@@ -99,6 +101,9 @@ PyObject *PycairoScaledFont_FromScaledFont (cairo_scaled_font_t *scaled_font);
 extern PyTypeObject PycairoSurface_Type;
 extern PyTypeObject PycairoImageSurface_Type;
 extern PyTypeObject PycairoMappedImageSurface_Type;
+
+extern PyTypeObject PycairoGlyph_Type;
+typedef PyTupleObject PycairGlyph;
 
 typedef struct {
     PyObject_HEAD
