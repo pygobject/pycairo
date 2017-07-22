@@ -8,6 +8,7 @@ New Features:
   * Add :class:`RasterSourcePattern` :bug:`48`
   * Add :class:`Glyph` :bug:`53`
   * Add :class:`Rectangle` :bug:`54`
+  * Add :class:`TextCluster` :bug:`61`
 
 Changes:
   * Pycairo instances wrapping the same underlying cairo object now compare
