@@ -25,10 +25,10 @@ def test_type():
 
     assert repr(cairo.Rectangle(0, 0, 0, 0)) == \
         "cairo.Rectangle(x=0.000000, y=0.000000, width=0.000000, " \
-            "height=0.000000)"
+        "height=0.000000)"
     assert str(cairo.Rectangle(0, 0, 0, 0)) == \
         "cairo.Rectangle(x=0.000000, y=0.000000, width=0.000000, " \
-            "height=0.000000)"
+        "height=0.000000)"
 
 
 def test_context():
