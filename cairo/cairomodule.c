@@ -245,6 +245,7 @@ PYCAIRO_MOD_INIT(_cairo)
   if (PyType_Ready(&PycairoDevice_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
 
+  PycairoGlyph_Type.tp_base = &PyTuple_Type;
   if (PyType_Ready(&PycairoGlyph_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
 
