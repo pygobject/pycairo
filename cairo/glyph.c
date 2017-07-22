@@ -92,11 +92,17 @@ static PyObject *
 glyph_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
     double x, y;
     unsigned long index;
+    PyObject *tuple_args, *result;
 
-    if (!PyArg_ParseTuple (args, "kdd:MeshPattern.move_to", &index, &x, &y))
+    if (!PyArg_ParseTuple (args, "kdd:Glyph.__new__", &index, &x, &y))
         return NULL;
 
-    return PyTuple_Type.tp_new (type, Py_BuildValue ("(N)", args), kwds);
+    tuple_args = Py_BuildValue ("(O)", args);
+    if (tuple_args == NULL)
+        return NULL;
+    result = PyTuple_Type.tp_new (type, tuple_args, kwds);
+    Py_DECREF (tuple_args);
+    return result;
 }
 
 static PyObject*
