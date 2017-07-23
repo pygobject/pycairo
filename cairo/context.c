@@ -1190,6 +1190,7 @@ pycairo_show_text_glyphs (PycairoContext *o, PyObject *args) {
   int i;
   cairo_glyph_t *glyphs = NULL;
   cairo_text_cluster_t *clusters = NULL;
+  Py_ssize_t clusters_size, glyphs_size;
 
   if (!PyArg_ParseTuple (args,
       PYCAIRO_ENC_TEXT_FORMAT "OOi:Context.show_text_glyphs",
@@ -1199,7 +1200,7 @@ pycairo_show_text_glyphs (PycairoContext *o, PyObject *args) {
   glyphs_seq = PySequence_Fast (glyphs_arg, "glyphs must be a sequence");
   if (glyphs_seq == NULL)
     goto error;
-  Py_ssize_t glyphs_size = PySequence_Fast_GET_SIZE (glyphs_seq);
+  glyphs_size = PySequence_Fast_GET_SIZE (glyphs_seq);
   glyphs = cairo_glyph_allocate (glyphs_size);
   if (glyphs_size && glyphs == NULL) {
     PyErr_NoMemory();
@@ -1215,7 +1216,7 @@ pycairo_show_text_glyphs (PycairoContext *o, PyObject *args) {
   clusters_seq = PySequence_Fast (clusters_arg, "clusters must be a sequence");
   if (clusters_seq == NULL)
     goto error;
-  Py_ssize_t clusters_size = PySequence_Fast_GET_SIZE (clusters_seq);
+  clusters_size = PySequence_Fast_GET_SIZE (clusters_seq);
   clusters = cairo_text_cluster_allocate (clusters_size);
   if (clusters_size && clusters == NULL) {
     PyErr_NoMemory();
