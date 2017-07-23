@@ -1180,6 +1180,76 @@ pycairo_user_to_device_distance (PycairoContext *o, PyObject *args) {
   return Py_BuildValue("(dd)", dx, dy);
 }
 
+static PyObject *
+pycairo_show_text_glyphs (PycairoContext *o, PyObject *args) {
+  const char *utf8 = NULL;
+  PyObject *glyphs_arg, *glyphs_seq = NULL;
+  PyObject *clusters_arg, *clusters_seq = NULL;
+  cairo_text_cluster_flags_t cluster_flags;
+  PyObject *py_item;
+  int i;
+  cairo_glyph_t *glyphs = NULL;
+  cairo_text_cluster_t *clusters = NULL;
+
+  if (!PyArg_ParseTuple (args,
+      PYCAIRO_ENC_TEXT_FORMAT "OOi:Context.show_text_glyphs",
+      "utf-8", &utf8, &glyphs_arg, &clusters_arg, &cluster_flags))
+    return NULL;
+
+  glyphs_seq = PySequence_Fast (glyphs_arg, "glyphs must be a sequence");
+  if (glyphs_seq == NULL)
+    goto error;
+  Py_ssize_t glyphs_size = PySequence_Fast_GET_SIZE (glyphs_seq);
+  glyphs = cairo_glyph_allocate (glyphs_size);
+  if (glyphs_size && glyphs == NULL) {
+    PyErr_NoMemory();
+    goto error;
+  }
+  for (i=0; i < glyphs_size; i++) {
+    py_item = PySequence_Fast_GET_ITEM (glyphs_seq, i);
+    if (py_item == 0 || _PyGlyph_AsGlyph (py_item, &(glyphs[i])) != 0)
+      goto error;
+  }
+  Py_CLEAR (glyphs_seq);
+
+  clusters_seq = PySequence_Fast (clusters_arg, "clusters must be a sequence");
+  if (clusters_seq == NULL)
+    goto error;
+  Py_ssize_t clusters_size = PySequence_Fast_GET_SIZE (clusters_seq);
+  clusters = cairo_text_cluster_allocate (clusters_size);
+  if (clusters_size && clusters == NULL) {
+    PyErr_NoMemory();
+    goto error;
+  }
+  for (i=0; i < clusters_size; i++) {
+    py_item = PySequence_Fast_GET_ITEM (clusters_seq, i);
+    if (py_item == NULL ||
+        _PyTextCluster_AsTextCluster (py_item, &(clusters[i])) != 0)
+      goto error;
+  }
+  Py_CLEAR (clusters_seq);
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_show_text_glyphs (
+    o->ctx, utf8, -1, glyphs, glyphs_size, clusters,
+    clusters_size, cluster_flags);
+  Py_END_ALLOW_THREADS;
+
+  PyMem_Free ((void *)utf8);
+  utf8 = NULL;
+  cairo_glyph_free (glyphs);
+  cairo_text_cluster_free (clusters);
+
+  RETURN_NULL_IF_CAIRO_CONTEXT_ERROR (o->ctx);
+  Py_RETURN_NONE;
+error:
+  PyMem_Free ((void *)utf8);
+  cairo_glyph_free (glyphs);
+  cairo_text_cluster_free (clusters);
+  Py_XDECREF (glyphs_seq);
+  Py_XDECREF (clusters_seq);
+  return NULL;
+}
 
 static PyMethodDef pycairo_methods[] = {
   /* methods never exposed in a language binding:
@@ -1295,6 +1365,7 @@ static PyMethodDef pycairo_methods[] = {
   {"user_to_device",  (PyCFunction)pycairo_user_to_device,   METH_VARARGS},
   {"user_to_device_distance",(PyCFunction)pycairo_user_to_device_distance,
    METH_VARARGS},
+  {"show_text_glyphs",(PyCFunction)pycairo_show_text_glyphs, METH_VARARGS},
   {NULL, NULL, 0, NULL},
 };
 

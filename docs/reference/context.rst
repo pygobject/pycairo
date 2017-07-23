@@ -1490,9 +1490,34 @@ safely be changed, without loosing the current state. Use
 
       .. versionadded:: 1.12.0
 
-    .. method:: show_text_glyphs()
+    .. method:: show_text_glyphs(utf8, glyphs, clusters, cluster_flags)
 
-        .. note:: This functions is not implemented in Pycairo yet
+      :param text utf8: a string of text
+      :param list glyphs: list of glyphs to show
+      :param list clusters: list of cluster mapping information
+      :param TextClusterFlags cluster_flags: cluster mapping flags
+      :raises Error:
+
+      .. versionadded:: 1.15
+
+      This operation has rendering effects similar to
+      :meth:`Context.show_glyphs` but, if the target surface supports it, uses
+      the provided text and cluster mapping to embed the text for the glyphs
+      shown in the output. If the target does not support the extended
+      attributes, this function acts like the basic
+      :meth:`Context.show_glyphs` as if it had been passed ``glyphs`` .
+
+      The mapping between utf8 and glyphs is provided by a list of clusters.
+      Each cluster covers a number of text bytes and glyphs, and neighboring
+      clusters cover neighboring areas of utf8 and glyphs . The clusters
+      should collectively cover utf8 and glyphs in entirety.
+
+      The first cluster always covers bytes from the beginning of utf8 . If
+      ``cluster_flags`` do not have the :attr:`TextClusterFlags.BACKWARD` set,
+      the first cluster also covers the beginning of glyphs , otherwise it
+      covers the end of the glyphs array and following clusters move backward.
+
+      See :class:`TextCluster` for constraints on valid clusters.
 
     .. method:: stroke_to_path()
 

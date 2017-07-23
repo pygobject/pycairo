@@ -87,6 +87,19 @@ error:
     return NULL;
 }
 
+/* 0 on success */
+int
+_PyGlyph_AsGlyph (PyObject *pyobj, cairo_glyph_t *glyph) {
+    if (!PyObject_TypeCheck (pyobj, &PycairoGlyph_Type)) {
+        PyErr_SetString (PyExc_TypeError, "item must be of type cairo.Glyph");
+        return -1;
+    }
+
+    glyph->index = PYCAIRO_PyLong_AsLong (PySequence_Fast_GET_ITEM (pyobj, 0));
+    glyph->x = PyFloat_AsDouble (PySequence_Fast_GET_ITEM (pyobj, 1));
+    glyph->y = PyFloat_AsDouble (PySequence_Fast_GET_ITEM (pyobj, 2));
+    return 0;
+}
 
 static PyObject *
 glyph_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {

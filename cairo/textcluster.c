@@ -34,6 +34,22 @@
 #include "config.h"
 #include "private.h"
 
+/* 0 on success */
+int
+_PyTextCluster_AsTextCluster (PyObject *pyobj, cairo_text_cluster_t *cluster) {
+    if (!PyObject_TypeCheck (pyobj, &PycairoTextCluster_Type)) {
+        PyErr_SetString (PyExc_TypeError,
+            "item must be of type cairo.TextCluster");
+        return -1;
+    }
+
+    cluster->num_bytes = PYCAIRO_PyLong_AsLong (
+        PySequence_Fast_GET_ITEM (pyobj, 0));
+    cluster->num_glyphs = PYCAIRO_PyLong_AsLong (
+        PySequence_Fast_GET_ITEM (pyobj, 1));
+    return 0;
+}
+
 static PyObject *
 text_cluster_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
     int num_bytes, num_glyphs;

@@ -44,6 +44,9 @@
 
 
 cairo_glyph_t * _PycairoGlyphs_AsGlyphs (PyObject *py_object, int *num_glyphs);
+int _PyGlyph_AsGlyph (PyObject *pyobj, cairo_glyph_t *glyph);
+int _PyTextCluster_AsTextCluster (PyObject *pyobj,
+                                  cairo_text_cluster_t *cluster);
 
 PyObject *_Pycairo_Get_Error(void);
 
