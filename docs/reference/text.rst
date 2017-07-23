@@ -227,11 +227,13 @@ use.
 
       .. versionadded:: 1.2
 
-   .. method:: text_to_glyphs(x, y, utf8)
+   .. method:: text_to_glyphs(x, y, utf8, [with_clusters=True])
 
       :param float x: X position to place first glyph
       :param float y: Y position to place first glyph
       :param text utf8: a string of text
+      :param bool with_clusters:
+         If :obj:`False` only the glyph list will computed and returned
       :returns:
          a tuple of ([:class:`Glyph`], [:class:`TextCluster`],
          :class:`TextClusterFlags`)

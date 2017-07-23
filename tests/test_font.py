@@ -92,11 +92,13 @@ def test_scaled_font_text_to_glyphs():
     sf = ctx.get_scaled_font()
     assert sf.text_to_glyphs(0, 0, u"") == ([], [], 0)
     glyphs, clusters, flags = sf.text_to_glyphs(0, 0, u"a")
+    assert sf.text_to_glyphs(0, 0, u"a", True) == (glyphs, clusters, flags)
     assert len(glyphs) == 1
     assert isinstance(glyphs[0], cairo.Glyph)
     assert len(clusters) == 1
     assert isinstance(clusters[0], cairo.TextCluster)
     assert flags == 0
+    assert sf.text_to_glyphs(0, 0, u"a", False) == glyphs
     glyphs, clusters, flags = sf.text_to_glyphs(0, 0, u"a b")
     assert len(glyphs) == 3
     assert glyphs[0] != glyphs[1]

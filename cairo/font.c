@@ -370,6 +370,7 @@ static PyObject *
 scaled_font_text_to_glyphs (PycairoScaledFont *o, PyObject *args) {
   const char *utf8;
   double x, y;
+  int with_clusters = 1;
 
   cairo_status_t status;
   cairo_glyph_t *glyphs = NULL;
@@ -386,8 +387,8 @@ scaled_font_text_to_glyphs (PycairoScaledFont *o, PyObject *args) {
   PyObject *pycluster, *cluster_args;
 
   if (!PyArg_ParseTuple (args,
-      "dd" PYCAIRO_ENC_TEXT_FORMAT ":ScaledFont.text_to_glyphs",
-      &x, &y, "utf-8", &utf8))
+      "dd" PYCAIRO_ENC_TEXT_FORMAT "|i:ScaledFont.text_to_glyphs",
+      &x, &y, "utf-8", &utf8, &with_clusters))
     return NULL;
 
   Py_BEGIN_ALLOW_THREADS;
@@ -396,7 +397,9 @@ scaled_font_text_to_glyphs (PycairoScaledFont *o, PyObject *args) {
     x, y,
     utf8, -1,
     &glyphs, &num_glyphs,
-    &clusters, &num_clusters, &cluster_flags);
+    (with_clusters) ? &clusters : NULL,
+    (with_clusters) ? &num_clusters : NULL,
+    (with_clusters) ? &cluster_flags : NULL);
   Py_END_ALLOW_THREADS;
 
   PyMem_Free ((void *)utf8);
@@ -422,31 +425,35 @@ scaled_font_text_to_glyphs (PycairoScaledFont *o, PyObject *args) {
   cairo_glyph_free (glyphs);
   glyphs = NULL;
 
-  cluster_list = PyList_New (num_clusters);
-  if (cluster_list == NULL)
-    goto error;
-  for(i=0; i < num_clusters; i++) {
-    cairo_text_cluster_t *cluster = &clusters[i];
-    cluster_args = Py_BuildValue(
-      "(ii)", cluster->num_bytes, cluster->num_glyphs);
-    if (cluster_args == NULL)
+  if (with_clusters) {
+    cluster_list = PyList_New (num_clusters);
+    if (cluster_list == NULL)
       goto error;
-    pycluster = PyObject_Call(
-      (PyObject *)&PycairoTextCluster_Type, cluster_args, NULL);
-    if (pycluster == NULL) {
-      Py_DECREF (cluster_args);
-      goto error;
+    for(i=0; i < num_clusters; i++) {
+      cairo_text_cluster_t *cluster = &clusters[i];
+      cluster_args = Py_BuildValue(
+        "(ii)", cluster->num_bytes, cluster->num_glyphs);
+      if (cluster_args == NULL)
+        goto error;
+      pycluster = PyObject_Call(
+        (PyObject *)&PycairoTextCluster_Type, cluster_args, NULL);
+      if (pycluster == NULL) {
+        Py_DECREF (cluster_args);
+        goto error;
+      }
+      PyList_SET_ITEM (cluster_list, i, pycluster);
     }
-    PyList_SET_ITEM (cluster_list, i, pycluster);
+    cairo_text_cluster_free (clusters);
+    clusters = NULL;
+
+    flags = CREATE_INT_ENUM (TextClusterFlags, cluster_flags);
+    if (flags == NULL)
+      goto error;
+
+    return Py_BuildValue ("(NNN)", glyph_list, cluster_list, flags);
+  } else {
+    return glyph_list;
   }
-  cairo_text_cluster_free (clusters);
-  clusters = NULL;
-
-  flags = CREATE_INT_ENUM (TextClusterFlags, cluster_flags);
-  if (flags == NULL)
-    goto error;
-
-  return Py_BuildValue ("(NNN)", glyph_list, cluster_list, flags);
 error:
   cairo_glyph_free (glyphs);
   cairo_text_cluster_free (clusters);
