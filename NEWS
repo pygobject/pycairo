@@ -26,6 +26,12 @@ Changes:
     subclass like :class:`Rectangle`, :class:`Glyph`, :class:`TextCluster` and
     :class:`TextExtents`
 
+
+.. _v1.14.1:
+
+1.14.1 - 2017-07-24
+-------------------
+
 Fixes:
   * Fix a crash with :meth:`Surface.get_device` :bug:`57`
 
