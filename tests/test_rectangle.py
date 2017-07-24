@@ -23,12 +23,9 @@ def test_type():
     with pytest.raises(AttributeError):
         assert r.z
 
-    assert repr(cairo.Rectangle(0, 0, 0, 0)) == \
-        "cairo.Rectangle(x=0.000000, y=0.000000, width=0.000000, " \
-        "height=0.000000)"
-    assert str(cairo.Rectangle(0, 0, 0, 0)) == \
-        "cairo.Rectangle(x=0.000000, y=0.000000, width=0.000000, " \
-        "height=0.000000)"
+    assert repr(r) == "cairo.Rectangle(x=0.0, y=0.5, width=0.25, height=0.75)"
+    assert str(r) == repr(r)
+    assert eval(repr(r)) == r
 
 
 def test_context():

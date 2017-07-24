@@ -36,6 +36,30 @@
 
 
 PyObject*
+Pycairo_tuple_getattro (PyObject *self, char **kwds, PyObject *name) {
+    PyObject *value, *item;
+    int res;
+    Py_ssize_t i;
+
+    for (i = 0; kwds[i] != NULL; i++) {
+        value = PYCAIRO_PyUnicode_FromString (kwds[i]);
+        res = PyObject_RichCompareBool (name, value, Py_EQ);
+        Py_DECREF (value);
+        if (res == -1) {
+            return NULL;
+        } else if (res == 1) {
+            item = PyTuple_GetItem (self, i);
+            if (item == NULL)
+                return NULL;
+            Py_INCREF (item);
+            return item;
+        }
+    }
+
+    return PyTuple_Type.tp_getattro (self, name);
+}
+
+PyObject*
 Pycairo_richcompare (void* a, void *b, int op)
 {
     PyObject *res;

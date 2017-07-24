@@ -23,3 +23,4 @@ def test_type():
 
     assert repr(r) == "cairo.TextCluster(num_bytes=2, num_glyphs=1)"
     assert str(r) == "cairo.TextCluster(num_bytes=2, num_glyphs=1)"
+    assert eval(repr(r)) == r

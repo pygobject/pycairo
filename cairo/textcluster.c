@@ -50,19 +50,21 @@ _PyTextCluster_AsTextCluster (PyObject *pyobj, cairo_text_cluster_t *cluster) {
     return 0;
 }
 
+static char *KWDS[] = {"num_bytes", "num_glyphs", NULL};
+
 static PyObject *
 text_cluster_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
     int num_bytes, num_glyphs;
     PyObject *tuple_args, *result;
 
-    if (!PyArg_ParseTuple (args, "ii:TextCluster.__new__",
-            &num_bytes, &num_glyphs))
+    if (!PyArg_ParseTupleAndKeywords (args, kwds, "ii:TextCluster.__new__",
+            KWDS, &num_bytes, &num_glyphs))
         return NULL;
 
-    tuple_args = Py_BuildValue ("(O)", args);
+    tuple_args = Py_BuildValue ("((ii))", num_bytes, num_glyphs);
     if (tuple_args == NULL)
         return NULL;
-    result = PyTuple_Type.tp_new (type, tuple_args, kwds);
+    result = PyTuple_Type.tp_new (type, tuple_args, NULL);
     Py_DECREF (tuple_args);
     return result;
 }
@@ -72,7 +74,7 @@ text_cluster_repr(PyObject *self) {
     PyObject *format, *result;
 
     format = PYCAIRO_PyUnicode_FromString (
-        "cairo.TextCluster(num_bytes=%d, num_glyphs=%d)");
+        "cairo.TextCluster(num_bytes=%r, num_glyphs=%r)");
     if (format == NULL)
         return NULL;
     result = PYCAIRO_PyUnicode_Format (format, self);
@@ -82,27 +84,7 @@ text_cluster_repr(PyObject *self) {
 
 static PyObject*
 text_cluster_getattro (PyObject *self, PyObject *name) {
-
-    PyObject *value;
-    int res;
-
-    value = PYCAIRO_PyUnicode_FromString ("num_bytes");
-    res = PyObject_RichCompareBool (name, value, Py_EQ);
-    Py_DECREF (value);
-    if (res == -1)
-        return NULL;
-    else if (res == 1)
-        return PyTuple_GetItem (self, 0);
-
-    value = PYCAIRO_PyUnicode_FromString ("num_glyphs");
-    res = PyObject_RichCompareBool (name, value, Py_EQ);
-    Py_DECREF (value);
-    if (res == -1)
-        return NULL;
-    else if (res == 1)
-        return PyTuple_GetItem (self, 1);
-
-    return PyTuple_Type.tp_getattro (self, name);
+    return Pycairo_tuple_getattro (self, KWDS, name);
 }
 
 PyTypeObject PycairoTextCluster_Type = {

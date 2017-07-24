@@ -76,7 +76,8 @@ rectangle_int_repr(PycairoRectangleInt *rect_o) {
   PyObject *s;
   cairo_rectangle_int_t *rect = &(rect_o->rectangle_int);
   char buf[80];
-  PyOS_snprintf(buf, sizeof(buf), "cairo.RectangleInt(%d, %d, %d, %d)",
+  PyOS_snprintf(buf, sizeof(buf),
+      "cairo.RectangleInt(x=%d, y=%d, width=%d, height=%d)",
       rect->x, rect->y, rect->width, rect->height);
   s = PYCAIRO_PyUnicode_FromString(buf);
   return s;

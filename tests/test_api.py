@@ -307,7 +307,8 @@ def test_region():
     b = cairo.RectangleInt(1, 2, 10, 12)
     with pytest.raises(TypeError):
         hash(b)
-    assert repr(b) == "cairo.RectangleInt(1, 2, 10, 12)"
+    assert repr(b) == "cairo.RectangleInt(x=1, y=2, width=10, height=12)"
+    assert eval(repr(b)) == b
     assert isinstance(repr(b), str)
     d = cairo.RectangleInt(1, 1, 10, 12)
     e = cairo.RectangleInt(1, 3, 8, 12)

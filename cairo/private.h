@@ -51,6 +51,7 @@ int _PyTextCluster_AsTextCluster (PyObject *pyobj,
 PyObject *_Pycairo_Get_Error(void);
 
 PyObject* Pycairo_richcompare (void* a, void *b, int op);
+PyObject* Pycairo_tuple_getattro (PyObject *self, char **kwds, PyObject *name);
 
 extern PyTypeObject PycairoContext_Type;
 PyObject *PycairoContext_FromContext (cairo_t *ctx, PyTypeObject *type,

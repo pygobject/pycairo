@@ -101,19 +101,22 @@ _PyGlyph_AsGlyph (PyObject *pyobj, cairo_glyph_t *glyph) {
     return 0;
 }
 
+static char *KWDS[] = {"index", "x", "y", NULL};
+
 static PyObject *
 glyph_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
     double x, y;
     unsigned long index;
     PyObject *tuple_args, *result;
 
-    if (!PyArg_ParseTuple (args, "kdd:Glyph.__new__", &index, &x, &y))
+    if (!PyArg_ParseTupleAndKeywords (args, kwds, "kdd:Glyph.__new__",
+            KWDS, &index, &x, &y))
         return NULL;
 
-    tuple_args = Py_BuildValue ("(O)", args);
+    tuple_args = Py_BuildValue ("((kdd))", index, x, y);
     if (tuple_args == NULL)
         return NULL;
-    result = PyTuple_Type.tp_new (type, tuple_args, kwds);
+    result = PyTuple_Type.tp_new (type, tuple_args, NULL);
     Py_DECREF (tuple_args);
     return result;
 }
@@ -123,7 +126,7 @@ glyph_repr(PyObject *self) {
     PyObject *format, *result;
 
     format = PYCAIRO_PyUnicode_FromString (
-        "cairo.Glyph(index=%d, x=%f, y=%f)");
+        "cairo.Glyph(index=%r, x=%r, y=%r)");
     if (format == NULL)
         return NULL;
     result = PYCAIRO_PyUnicode_Format (format, self);
@@ -133,35 +136,7 @@ glyph_repr(PyObject *self) {
 
 static PyObject*
 glyph_getattro (PyObject *self, PyObject *name) {
-
-    PyObject *value;
-    int res;
-
-    value = PYCAIRO_PyUnicode_FromString ("index");
-    res = PyObject_RichCompareBool (name, value, Py_EQ);
-    Py_DECREF (value);
-    if (res == -1)
-        return NULL;
-    else if (res == 1)
-        return PyTuple_GetItem (self, 0);
-
-    value = PYCAIRO_PyUnicode_FromString ("x");
-    res = PyObject_RichCompareBool (name, value, Py_EQ);
-    Py_DECREF (value);
-    if (res == -1)
-        return NULL;
-    else if (res == 1)
-        return PyTuple_GetItem (self, 1);
-
-    value = PYCAIRO_PyUnicode_FromString ("y");
-    res = PyObject_RichCompareBool (name, value, Py_EQ);
-    Py_DECREF (value);
-    if (res == -1)
-        return NULL;
-    else if (res == 1)
-        return PyTuple_GetItem (self, 2);
-
-    return PyTuple_Type.tp_getattro (self, name);
+    return Pycairo_tuple_getattro (self, KWDS, name);
 }
 
 PyTypeObject PycairoGlyph_Type = {

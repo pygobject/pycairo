@@ -23,9 +23,10 @@ def test_type():
         assert g.z
 
     assert repr(cairo.Glyph(0, 0, 0)) == \
-        "cairo.Glyph(index=0, x=0.000000, y=0.000000)"
+        "cairo.Glyph(index=0, x=0.0, y=0.0)"
     assert str(cairo.Glyph(0, 0, 0)) == \
-        "cairo.Glyph(index=0, x=0.000000, y=0.000000)"
+        "cairo.Glyph(index=0, x=0.0, y=0.0)"
+    assert eval(repr(g)) == g
 
 
 def test_context():

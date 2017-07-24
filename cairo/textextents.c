@@ -34,20 +34,24 @@
 #include "config.h"
 #include "private.h"
 
+static char *KWDS[] = {"x_bearing", "y_bearing", "width", "height",
+                       "x_advance", "y_advance", NULL};
+
 static PyObject *
 text_extents_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
     cairo_text_extents_t e;
     PyObject *tuple_args, *result;
 
-    if (!PyArg_ParseTuple (args, "dddddd:TextExtents.__new__",
-            &e.x_bearing, &e.y_bearing, &e.width, &e.height, &e.x_advance,
-            &e.y_advance))
+    if (!PyArg_ParseTupleAndKeywords (args, kwds, "dddddd:TextExtents.__new__",
+            KWDS, &e.x_bearing, &e.y_bearing, &e.width, &e.height,
+            &e.x_advance, &e.y_advance))
         return NULL;
 
-    tuple_args = Py_BuildValue ("(O)", args);
+    tuple_args = Py_BuildValue ("((dddddd))", e.x_bearing, e.y_bearing,
+                                e.width, e.height, e.x_advance, e.y_advance);
     if (tuple_args == NULL)
         return NULL;
-    result = PyTuple_Type.tp_new (type, tuple_args, kwds);
+    result = PyTuple_Type.tp_new (type, tuple_args, NULL);
     Py_DECREF (tuple_args);
     return result;
 }
@@ -57,8 +61,8 @@ text_extents_repr(PyObject *self) {
     PyObject *format, *result;
 
     format = PYCAIRO_PyUnicode_FromString (
-        "cairo.TextExtents(x_bearing=%f, y_bearing=%f, width=%f, height=%f, "
-        "x_advance=%f, y_advance=%f)");
+        "cairo.TextExtents(x_bearing=%r, y_bearing=%r, width=%r, height=%r, "
+        "x_advance=%r, y_advance=%r)");
     if (format == NULL)
         return NULL;
     result = PYCAIRO_PyUnicode_Format (format, self);
@@ -68,58 +72,7 @@ text_extents_repr(PyObject *self) {
 
 static PyObject*
 text_extents_getattro (PyObject *self, PyObject *name) {
-    PyObject *value;
-    int res;
-
-    value = PYCAIRO_PyUnicode_FromString ("x_bearing");
-    res = PyObject_RichCompareBool (name, value, Py_EQ);
-    Py_DECREF (value);
-    if (res == -1)
-        return NULL;
-    else if (res == 1)
-        return PyTuple_GetItem (self, 0);
-
-    value = PYCAIRO_PyUnicode_FromString ("y_bearing");
-    res = PyObject_RichCompareBool (name, value, Py_EQ);
-    Py_DECREF (value);
-    if (res == -1)
-        return NULL;
-    else if (res == 1)
-        return PyTuple_GetItem (self, 1);
-
-    value = PYCAIRO_PyUnicode_FromString ("width");
-    res = PyObject_RichCompareBool (name, value, Py_EQ);
-    Py_DECREF (value);
-    if (res == -1)
-        return NULL;
-    else if (res == 1)
-        return PyTuple_GetItem (self, 2);
-
-    value = PYCAIRO_PyUnicode_FromString ("height");
-    res = PyObject_RichCompareBool (name, value, Py_EQ);
-    Py_DECREF (value);
-    if (res == -1)
-        return NULL;
-    else if (res == 1)
-        return PyTuple_GetItem (self, 3);
-
-    value = PYCAIRO_PyUnicode_FromString ("x_advance");
-    res = PyObject_RichCompareBool (name, value, Py_EQ);
-    Py_DECREF (value);
-    if (res == -1)
-        return NULL;
-    else if (res == 1)
-        return PyTuple_GetItem (self, 4);
-
-    value = PYCAIRO_PyUnicode_FromString ("y_advance");
-    res = PyObject_RichCompareBool (name, value, Py_EQ);
-    Py_DECREF (value);
-    if (res == -1)
-        return NULL;
-    else if (res == 1)
-        return PyTuple_GetItem (self, 5);
-
-    return PyTuple_Type.tp_getattro (self, name);
+    return Pycairo_tuple_getattro (self, KWDS, name);
 }
 
 PyTypeObject PycairoTextExtents_Type = {

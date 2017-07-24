@@ -34,19 +34,21 @@
 #include "config.h"
 #include "private.h"
 
+static char *KWDS[] = {"x", "y", "width", "height", NULL};
+
 static PyObject *
 rectangle_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
     double x, y, width, height;
     PyObject *tuple_args, *result;
 
-    if (!PyArg_ParseTuple (args, "dddd:Rectangle.__new__",
-            &x, &y, &width, &height))
+    if (!PyArg_ParseTupleAndKeywords (args, kwds, "dddd:Rectangle.__new__",
+            KWDS, &x, &y, &width, &height))
         return NULL;
 
-    tuple_args = Py_BuildValue ("(O)", args);
+    tuple_args = Py_BuildValue ("((dddd))", x, y, width, height);
     if (tuple_args == NULL)
         return NULL;
-    result = PyTuple_Type.tp_new (type, tuple_args, kwds);
+    result = PyTuple_Type.tp_new (type, tuple_args, NULL);
     Py_DECREF (tuple_args);
     return result;
 }
@@ -56,7 +58,7 @@ rectangle_repr(PyObject *self) {
     PyObject *format, *result;
 
     format = PYCAIRO_PyUnicode_FromString (
-        "cairo.Rectangle(x=%f, y=%f, width=%f, height=%f)");
+        "cairo.Rectangle(x=%r, y=%r, width=%r, height=%r)");
     if (format == NULL)
         return NULL;
     result = PYCAIRO_PyUnicode_Format (format, self);
@@ -66,43 +68,7 @@ rectangle_repr(PyObject *self) {
 
 static PyObject*
 rectangle_getattro (PyObject *self, PyObject *name) {
-
-    PyObject *value;
-    int res;
-
-    value = PYCAIRO_PyUnicode_FromString ("x");
-    res = PyObject_RichCompareBool (name, value, Py_EQ);
-    Py_DECREF (value);
-    if (res == -1)
-        return NULL;
-    else if (res == 1)
-        return PyTuple_GetItem (self, 0);
-
-    value = PYCAIRO_PyUnicode_FromString ("y");
-    res = PyObject_RichCompareBool (name, value, Py_EQ);
-    Py_DECREF (value);
-    if (res == -1)
-        return NULL;
-    else if (res == 1)
-        return PyTuple_GetItem (self, 1);
-
-    value = PYCAIRO_PyUnicode_FromString ("width");
-    res = PyObject_RichCompareBool (name, value, Py_EQ);
-    Py_DECREF (value);
-    if (res == -1)
-        return NULL;
-    else if (res == 1)
-        return PyTuple_GetItem (self, 2);
-
-    value = PYCAIRO_PyUnicode_FromString ("height");
-    res = PyObject_RichCompareBool (name, value, Py_EQ);
-    Py_DECREF (value);
-    if (res == -1)
-        return NULL;
-    else if (res == 1)
-        return PyTuple_GetItem (self, 3);
-
-    return PyTuple_Type.tp_getattro (self, name);
+    return Pycairo_tuple_getattro (self, KWDS, name);
 }
 
 PyTypeObject PycairoRectangle_Type = {

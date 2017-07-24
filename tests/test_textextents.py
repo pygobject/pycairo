@@ -24,10 +24,11 @@ def test_type():
         assert r.z
 
     assert repr(r) == \
-        "cairo.TextExtents(x_bearing=0.000000, y_bearing=0.500000, " \
-        "width=0.250000, height=0.750000, x_advance=0.500000, " \
-        "y_advance=0.125000)"
+        "cairo.TextExtents(x_bearing=0.0, y_bearing=0.5, " \
+        "width=0.25, height=0.75, x_advance=0.5, " \
+        "y_advance=0.125)"
     assert str(r) == repr(r)
+    assert eval(repr(r)) == r
 
 
 def test_methods():
