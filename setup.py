@@ -8,7 +8,7 @@ import errno
 from distutils.core import Extension, setup, Command, Distribution
 
 
-PYCAIRO_VERSION = '1.14.1'
+PYCAIRO_VERSION = '1.15.0'
 CAIRO_VERSION_REQUIRED = '1.13.1'
 XPYB_VERSION_REQUIRED = '1.3'
 
