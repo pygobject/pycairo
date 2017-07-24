@@ -135,3 +135,18 @@ coordinates.
 
    .. versionadded:: 1.11.0
 
+   .. attribute:: x
+
+        :class:`int`
+
+   .. attribute:: y
+
+        :class:`int`
+
+   .. attribute:: width
+
+        :class:`int`
+
+   .. attribute:: height
+
+        :class:`int`

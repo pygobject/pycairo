@@ -26,3 +26,19 @@ class Rectangle(tuple)
         of :class:`Rectangle`.
 
     A data structure for holding a rectangle.
+
+    .. attribute:: x
+
+        :class:`float`
+
+    .. attribute:: y
+
+        :class:`float`
+
+    .. attribute:: width
+
+        :class:`float`
+
+    .. attribute:: height
+
+        :class:`float`

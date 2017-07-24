@@ -9,8 +9,9 @@ New Features:
   * Add :class:`Glyph` :bug:`53`
   * Add :class:`Rectangle` :bug:`54`
   * Add :class:`TextCluster` :bug:`61`
-  * Add :meth:`ScaledFont.text_to_glyphs`
+  * Add :meth:`ScaledFont.text_to_glyphs` and :meth:`ScaledFont.glyph_extents`
   * Add :meth:`Context.show_text_glyphs`
+  * Add :class:`TextExtents` :bug:`62`
 
 Changes:
   * Pycairo instances wrapping the same underlying cairo object now compare

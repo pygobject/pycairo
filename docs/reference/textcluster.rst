@@ -30,3 +30,11 @@ class TextCluster(tuple)
 
     See :meth:`Context.show_text_glyphs` for how clusters are used in advanced
     text operations.
+
+    .. attribute:: num_bytes
+
+        :class:`int`
+
+    .. attribute:: num_glyphs
+
+        :class:`int`

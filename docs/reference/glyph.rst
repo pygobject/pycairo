@@ -38,3 +38,15 @@ class Glyph(tuple)
     Note that the offsets given by x and y are not cumulative. When drawing or
     measuring text, each glyph is individually positioned with respect to the
     overall origin
+
+    .. attribute:: index
+
+        :class:`int`
+
+    .. attribute:: x
+
+        :class:`float`
+
+    .. attribute:: y
+
+        :class:`float`

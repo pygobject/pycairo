@@ -43,3 +43,27 @@ class TextExtents(tuple)
     will not be doubled. They will change slightly due to hinting (so you
     can't assume that metrics are independent of the transformation matrix),
     but otherwise will remain unchanged.
+
+    .. attribute:: x_bearing
+
+        :class:`float`
+
+    .. attribute:: y_bearing
+
+        :class:`float`
+
+    .. attribute:: width
+
+        :class:`float`
+
+    .. attribute:: height
+
+        :class:`float`
+
+    .. attribute:: x_advance
+
+        :class:`float`
+
+    .. attribute:: y_advance
+
+        :class:`float`
