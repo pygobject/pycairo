@@ -23,4 +23,5 @@ API Reference
    glyph
    rectangle
    textcluster
+   textextents
    legacy_constants

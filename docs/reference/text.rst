@@ -198,18 +198,29 @@ use.
       .. versionadded:: 1.8
 
 
-   .. method:: glyph_extents()
+   .. method:: glyph_extents(glyphs)
 
-      Not implemented in pycairo (yet)
+      :param glyphs: glyphs, a sequence of :class:`Glyph`
+      :rtype: TextExtents
 
+      .. versionadded:: 1.15
+
+      Gets the extents for a list of glyphs. The extents describe a user-space
+      rectangle that encloses the "inked" portion of the glyphs, (as they
+      would be drawn by :meth:`Context.show_glyphs` if the cairo graphics
+      state were set to the same font_face, font_matrix, ctm, and font_options
+      as scaled_font ). Additionally, the x_advance and y_advance values
+      indicate the amount by which the current point would be advanced by
+      cairo_show_glyphs().
+
+      Note that whitespace glyphs do not contribute to the size of the
+      rectangle (extents.width and extents.height).
 
    .. method:: text_extents(text)
 
       :param text: text
       :type text: text
-      :returns: 6-tuple of float:
-        (x_bearing, y_bearing, width, height, x_advance, y_advance)
-      :rtype: tuple
+      :rtype: TextExtents
 
       Gets the extents for a string of text. The extents describe a user-space
       rectangle that encloses the "inked" portion of the text drawn at the

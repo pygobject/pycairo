@@ -114,6 +114,9 @@ typedef PyTupleObject PycairRectangle;
 extern PyTypeObject PycairoTextCluster_Type;
 typedef PyTupleObject PycairTextCluster;
 
+extern PyTypeObject PycairoTextExtents_Type;
+typedef PyTupleObject PycairoTextExtents;
+
 typedef struct {
     PyObject_HEAD
     cairo_device_t *device;

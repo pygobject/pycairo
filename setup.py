@@ -253,6 +253,7 @@ def main():
             'cairo/glyph.c',
             'cairo/rectangle.c',
             'cairo/textcluster.c',
+            'cairo/textextents.c',
         ],
         include_dirs=pkg_config_parse('--cflags-only-I', 'cairo'),
         library_dirs=pkg_config_parse('--libs-only-L', 'cairo'),

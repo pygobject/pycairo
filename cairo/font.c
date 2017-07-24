@@ -319,18 +319,27 @@ scaled_font_get_scale_matrix (PycairoScaledFont *o) {
 
 static PyObject *
 scaled_font_text_extents (PycairoScaledFont *o, PyObject *args) {
-  const char *utf8;
   cairo_text_extents_t extents;
+  const char *utf8;
+  PyObject *ext_args, *res;
 
-  if (!PyArg_ParseTuple (args, PYCAIRO_ENC_TEXT_FORMAT ":ScaledFont.text_extents", "utf-8", &utf8))
+  if (!PyArg_ParseTuple (args,
+        PYCAIRO_ENC_TEXT_FORMAT ":ScaledFont.text_extents", "utf-8", &utf8))
     return NULL;
 
+  Py_BEGIN_ALLOW_THREADS;
   cairo_scaled_font_text_extents (o->scaled_font, utf8, &extents);
-  PyMem_Free((void *)utf8);
-  RETURN_NULL_IF_CAIRO_SCALED_FONT_ERROR(o->scaled_font);
-  return Py_BuildValue("(dddddd)", extents.x_bearing, extents.y_bearing,
-		       extents.width, extents.height, extents.x_advance,
-		       extents.y_advance);
+  Py_END_ALLOW_THREADS;
+
+  PyMem_Free ((void *)utf8);
+
+  RETURN_NULL_IF_CAIRO_SCALED_FONT_ERROR (o->scaled_font);
+  ext_args =  Py_BuildValue ("(dddddd)", extents.x_bearing, extents.y_bearing,
+                             extents.width, extents.height, extents.x_advance,
+                             extents.y_advance);
+  res = PyObject_Call ((PyObject *)&PycairoTextExtents_Type, ext_args, NULL);
+  Py_DECREF (ext_args);
+  return res;
 }
 
 static PyObject *
@@ -463,14 +472,41 @@ error:
   return NULL;
 }
 
+static PyObject *
+scaled_font_glyph_extents (PycairoScaledFont *o, PyObject *args) {
+  int num_glyphs = -1;
+  cairo_glyph_t *glyphs;
+  cairo_text_extents_t extents;
+  PyObject *py_object, *ext_args, *res;
+
+  if (!PyArg_ParseTuple (args, "O|i:ScaledFont.glyph_extents",
+      &py_object, &num_glyphs))
+    return NULL;
+
+  glyphs = _PycairoGlyphs_AsGlyphs (py_object, &num_glyphs);
+  if (glyphs == NULL)
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS
+  cairo_scaled_font_glyph_extents (
+    o->scaled_font, glyphs, num_glyphs, &extents);
+  Py_END_ALLOW_THREADS;
+
+  PyMem_Free (glyphs);
+  RETURN_NULL_IF_CAIRO_SCALED_FONT_ERROR (o->scaled_font);
+  ext_args = Py_BuildValue ("(dddddd)", extents.x_bearing, extents.y_bearing,
+                            extents.width, extents.height, extents.x_advance,
+                            extents.y_advance);
+  res = PyObject_Call ((PyObject *)&PycairoTextExtents_Type, ext_args, NULL);
+  Py_DECREF (ext_args);
+  return res;
+}
+
 static PyMethodDef scaled_font_methods[] = {
   /* methods never exposed in a language binding:
    * cairo_scaled_font_destroy()
    * cairo_scaled_font_get_type()
    * cairo_scaled_font_reference()
-   *
-   * TODO if requested:
-   * cairo_scaled_font_glyph_extents
    */
   {"extents",       (PyCFunction)scaled_font_extents,        METH_NOARGS},
   {"get_font_face", (PyCFunction)scaled_font_get_font_face,  METH_NOARGS},
@@ -480,6 +516,7 @@ static PyMethodDef scaled_font_methods[] = {
   {"get_scale_matrix", (PyCFunction)scaled_font_get_scale_matrix, METH_VARARGS},
   {"text_extents",  (PyCFunction)scaled_font_text_extents,   METH_VARARGS},
   {"text_to_glyphs",  (PyCFunction)scaled_font_text_to_glyphs,    METH_VARARGS},
+  {"glyph_extents", (PyCFunction)scaled_font_glyph_extents,  METH_VARARGS},
   {NULL, NULL, 0, NULL},
 };
 

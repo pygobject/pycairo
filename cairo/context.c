@@ -447,7 +447,7 @@ pycairo_glyph_extents (PycairoContext *o, PyObject *args) {
   int num_glyphs = -1;
   cairo_glyph_t *glyphs;
   cairo_text_extents_t extents;
-  PyObject *py_object;
+  PyObject *py_object, *ext_args, *res;
 
   if (!PyArg_ParseTuple (args, "O|i:Context.glyph_extents",
 			 &py_object, &num_glyphs))
@@ -459,9 +459,12 @@ pycairo_glyph_extents (PycairoContext *o, PyObject *args) {
   cairo_glyph_extents (o->ctx, glyphs, num_glyphs, &extents);
   PyMem_Free (glyphs);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
-  return Py_BuildValue("(dddddd)", extents.x_bearing, extents.y_bearing,
-		       extents.width, extents.height, extents.x_advance,
-		       extents.y_advance);
+  ext_args = Py_BuildValue ("(dddddd)", extents.x_bearing, extents.y_bearing,
+                            extents.width, extents.height, extents.x_advance,
+                            extents.y_advance);
+  res = PyObject_Call ((PyObject *)&PycairoTextExtents_Type, ext_args, NULL);
+  Py_DECREF (ext_args);
+  return res;
 }
 
 static PyObject *
@@ -1105,6 +1108,7 @@ static PyObject *
 pycairo_text_extents (PycairoContext *o, PyObject *args) {
   cairo_text_extents_t extents;
   const char *utf8;
+  PyObject *ext_args, *res;
 
   if (!PyArg_ParseTuple (args, PYCAIRO_ENC_TEXT_FORMAT ":Context.text_extents", "utf-8", &utf8))
     return NULL;
@@ -1112,9 +1116,12 @@ pycairo_text_extents (PycairoContext *o, PyObject *args) {
   cairo_text_extents (o->ctx, utf8, &extents);
   PyMem_Free((void *)utf8);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
-  return Py_BuildValue("(dddddd)", extents.x_bearing, extents.y_bearing,
-		       extents.width, extents.height, extents.x_advance,
-		       extents.y_advance);
+  ext_args =  Py_BuildValue ("(dddddd)", extents.x_bearing, extents.y_bearing,
+                             extents.width, extents.height, extents.x_advance,
+                             extents.y_advance);
+  res = PyObject_Call ((PyObject *)&PycairoTextExtents_Type, ext_args, NULL);
+  Py_DECREF (ext_args);
+  return res;
 }
 
 static PyObject *

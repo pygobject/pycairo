@@ -517,9 +517,7 @@ safely be changed, without loosing the current state. Use
    .. method:: glyph_extents(glyphs)
 
       :param glyphs: glyphs, a sequence of :class:`Glyph`
-      :returns: (x_bearing, y_bearing, width, height, x_advance, y_advance),
-        6-tuple of float
-      :rtype: tuple
+      :rtype: TextExtents
 
       Gets the extents for an array of glyphs. The extents describe a
       user-space rectangle that encloses the "inked" portion of the glyphs,
@@ -1380,9 +1378,7 @@ safely be changed, without loosing the current state. Use
 
       :param text: text to get extents for
       :type text: text
-      :returns: (x_bearing, y_bearing, width, height, x_advance, y_advance)
-        , 6-tuple of float
-      :rtype: tuple
+      :rtype: TextExtents
 
       Gets the extents for a string of text. The extents describe a user-space
       rectangle that encloses the "inked" portion of the text, (as it would be

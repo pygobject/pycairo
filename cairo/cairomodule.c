@@ -257,6 +257,10 @@ PYCAIRO_MOD_INIT(_cairo)
   if (PyType_Ready(&PycairoTextCluster_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
 
+  PycairoTextExtents_Type.tp_base = &PyTuple_Type;
+  if (PyType_Ready(&PycairoTextExtents_Type) < 0)
+    return PYCAIRO_MOD_ERROR_VAL;
+
 #ifdef CAIRO_HAS_SCRIPT_SURFACE
   if (PyType_Ready(&PycairoScriptDevice_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
@@ -395,6 +399,9 @@ PYCAIRO_MOD_INIT(_cairo)
 
   Py_INCREF(&PycairoTextCluster_Type);
   PyModule_AddObject(m, "TextCluster", (PyObject *)&PycairoTextCluster_Type);
+
+  Py_INCREF(&PycairoTextExtents_Type);
+  PyModule_AddObject(m, "TextExtents", (PyObject *)&PycairoTextExtents_Type);
 
 #ifdef CAIRO_HAS_SCRIPT_SURFACE
   Py_INCREF(&PycairoScriptDevice_Type);
