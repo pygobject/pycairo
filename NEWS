@@ -14,15 +14,17 @@ New Features:
   * Add :class:`TextExtents` :bug:`62`
 
 Changes:
-  * Pycairo instances wrapping the same underlying cairo object now compare
-    equally.
-  * Functions which returned a cairo error with cairo.Status.NO_MEMORY no
-    longer raise MemoryError, but a subclass of cairo.Error and MemoryError.
-    Similarly errors with cairo.Status.READ_ERROR and cairo.Status.WRITE_ERROR
-    no longer raise IOError, but a subclass of cairo.Error and IOError.
-    :bug:`55`
-  * Some functions which previously returned a tuple now return the tuple
-    subclass :class:`Rectangle`
+  * Pycairo instances wrapping the same underlying cairo object now hash and
+    compare equally e.g. ``context.get_target() == context.get_target()``
+  * Functions which returned a cairo error with :attr:`Status.NO_MEMORY` no
+    longer raise :exc:`python3:MemoryError`, but a subclass of :exc:`Error`
+    and :exc:`python3:MemoryError`. Similarly errors with
+    :attr:`Status.READ_ERROR` and :attr:`Status.WRITE_ERROR` no longer raise
+    :exc:`python3:IOError`, but a subclass of :exc:`Error` and
+    :exc:`python3:IOError`. :bug:`55`
+  * Some functions which previously returned a tuple now return a tuple
+    subclass like :class:`Rectangle`, :class:`Glyph`, :class:`TextCluster` and
+    :class:`TextExtents`
 
 Fixes:
   * Fix a crash with :meth:`Surface.get_device` :bug:`57`
