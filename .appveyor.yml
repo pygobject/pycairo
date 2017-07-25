@@ -25,5 +25,7 @@ build_script:
   - set CFLAGS=-std=c90 -Wall -Wno-long-long -Werror
   - cd %APPVEYOR_BUILD_FOLDER%
   - bash -xlc "%PYTHON% setup.py test"
+  - bash -xlc "%PYTHON% setup.py sdist"
+  - bash -xlc "%PYTHON% -m pip install dist/*"
 
 deploy: off
