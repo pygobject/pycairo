@@ -49,4 +49,6 @@ install:
 script:
   - python setup.py test
   - python -m flake8 .
+  - python setup.py sdist
+  - python -m pip install "$(eval 'echo dist/*')"
   - if [ "$TRAVIS_PYTHON_VERSION" != "3.3" ]; then python -m sphinx -W -a -E -b html -n docs docs/_build; fi
