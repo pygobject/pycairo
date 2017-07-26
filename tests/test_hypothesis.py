@@ -7,7 +7,7 @@ import cairo
 
 pytest.importorskip("hypothesis")
 from hypothesis import given, strategies, assume
-from hypothesis.strategies import floats, integers, text
+from hypothesis.strategies import floats, integers
 
 
 @given(strategies.floats(), strategies.floats())
@@ -82,7 +82,7 @@ def test_text_cluster(num_bytes, num_glyphs):
 def test_text_extents(x_bearing, y_bearing, width, height, x_advance,
                       y_advance):
     te = cairo.TextExtents(x_bearing, y_bearing, width, height, x_advance,
-        y_advance)
+                           y_advance)
     assert te.x_bearing == x_bearing
     assert te.y_bearing == y_bearing
     assert te.width == width
