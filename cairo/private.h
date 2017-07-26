@@ -48,6 +48,8 @@ int _PyGlyph_AsGlyph (PyObject *pyobj, cairo_glyph_t *glyph);
 int _PyTextCluster_AsTextCluster (PyObject *pyobj,
                                   cairo_text_cluster_t *cluster);
 
+int _conv_pyobject_to_ulong (PyObject *pyobj, unsigned long *result);
+
 PyObject *_Pycairo_Get_Error(void);
 
 PyObject* Pycairo_richcompare (void* a, void *b, int op);

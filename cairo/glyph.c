@@ -107,10 +107,13 @@ static PyObject *
 glyph_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
     double x, y;
     unsigned long index;
-    PyObject *tuple_args, *result;
+    PyObject *pyindex, *tuple_args, *result;
 
-    if (!PyArg_ParseTupleAndKeywords (args, kwds, "kdd:Glyph.__new__",
-            KWDS, &index, &x, &y))
+    if (!PyArg_ParseTupleAndKeywords (args, kwds, "Odd:Glyph.__new__",
+            KWDS, &pyindex, &x, &y))
+        return NULL;
+
+    if (_conv_pyobject_to_ulong (pyindex, &index) < 0)
         return NULL;
 
     tuple_args = Py_BuildValue ("((kdd))", index, x, y);
