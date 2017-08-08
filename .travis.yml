@@ -37,10 +37,11 @@ matrix:
 install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then travis_retry sudo apt-get update -q; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then travis_retry sudo apt-get install -y libcairo2-dev; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$PYVER" == "2" ]]; then brew install python cairo zlib; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew outdated "pkg-config" || brew upgrade "pkg-config"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$PYVER" == "2" ]]; then brew install python cairo; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$PYVER" == "2" ]]; then python2 -m pip install virtualenv; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$PYVER" == "2" ]]; then virtualenv ../venv -p python2; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$PYVER" == "3" ]]; then brew install python3 cairo zlib; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$PYVER" == "3" ]]; then brew install python3 cairo; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$PYVER" == "3" ]]; then python3 -m pip install virtualenv; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$PYVER" == "3" ]]; then virtualenv ../venv -p python3; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source ../venv/bin/activate; fi
