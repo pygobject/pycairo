@@ -18,13 +18,14 @@ init:
 
 install:
   - bash -xlc "pacman --noconfirm -S --needed mingw-w64-%MSYS2_ARCH%-cairo mingw-w64-%MSYS2_ARCH%-%PYTHON% mingw-w64-%MSYS2_ARCH%-%PYTHON%-pip"
-  - bash -xlc "%PYTHON% -m pip install pytest"
+  - bash -xlc "%PYTHON% -m pip install pytest coverage codecov"
 
 build_script:
   - set CHERE_INVOKING=yes
-  - set CFLAGS=-std=c90 -Wall -Wno-long-long -Werror
+  - set CFLAGS=-std=c90 -Wall -Wno-long-long -Werror -coverage
   - cd %APPVEYOR_BUILD_FOLDER%
-  - bash -xlc "%PYTHON% setup.py test"
+  - bash -xlc "%PYTHON% -m coverage run --branch setup.py test"
+  - bash -xlc "%PYTHON% -m codecov"
   - bash -xlc "%PYTHON% setup.py sdist"
   - bash -xlc "%PYTHON% -m pip install dist/*"
 
