@@ -36,3 +36,6 @@ For more information visit https://pycairo.readthedocs.io
 
 .. image:: https://ci.appveyor.com/api/projects/status/9hurdbb19lg2i9xm/branch/master?svg=true
     :target: https://ci.appveyor.com/project/lazka/pycairo/branch/master
+
+.. image:: https://codecov.io/gh/pygobject/pycairo/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/pygobject/pycairo

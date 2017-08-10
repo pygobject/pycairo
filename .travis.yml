@@ -4,22 +4,22 @@ matrix:
       dist: trusty
       language: python
       python: "2.7"
-      env: CFLAGS="-std=c90 -pedantic -Wno-long-long -Werror"
+      env: CFLAGS="-std=c90 -pedantic -Wno-long-long -Werror -coverage"
     - os: linux
       dist: trusty
       language: python
       python: "3.3"
-      env: CFLAGS="-std=c90 -pedantic -Wno-long-long -Werror"
+      env: CFLAGS="-std=c90 -pedantic -Wno-long-long -Werror -coverage"
     - os: linux
       dist: trusty
       language: python
       python: "3.4"
-      env: CFLAGS="-std=c90 -pedantic -Wno-long-long -Werror"
+      env: CFLAGS="-std=c90 -pedantic -Wno-long-long -Werror -coverage"
     - os: linux
       dist: trusty
       language: python
       python: "3.5"
-      env: CFLAGS="-std=c90 -pedantic -Wno-long-long -Werror"
+      env: CFLAGS="-std=c90 -pedantic -Wno-long-long -Werror -coverage"
     - os: linux
       dist: trusty
       language: python
@@ -27,11 +27,11 @@ matrix:
     - os: osx
       osx_image: xcode6.4
       language: generic
-      env: PYVER="3" CFLAGS="-std=c90 -pedantic -Wno-long-long -Werror"
+      env: PYVER="3" CFLAGS="-std=c90 -pedantic -Wno-long-long -Werror -coverage"
     - os: osx
       osx_image: xcode6.4
       language: generic
-      env: PYVER="2" CFLAGS="-std=c90 -pedantic -Wno-long-long -Werror"
+      env: PYVER="2" CFLAGS="-std=c90 -pedantic -Wno-long-long -Werror -coverage"
 
 
 install:
@@ -46,10 +46,11 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$PYVER" == "3" ]]; then virtualenv ../venv -p python3; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source ../venv/bin/activate; fi
   - python -m pip install --upgrade setuptools
-  - python -m pip install --upgrade pytest flake8 sphinx sphinx_rtd_theme
+  - python -m pip install --upgrade pytest flake8 sphinx sphinx_rtd_theme coverage codecov
 
 script:
-  - python setup.py test
+  - python -m coverage run --branch setup.py test
+  - python -m codecov
   - python -m flake8 .
   - python setup.py sdist
   - python -m pip install "$(eval 'echo dist/*')"
