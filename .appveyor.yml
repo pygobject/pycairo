@@ -18,7 +18,7 @@ init:
 
 install:
   - bash -xlc "pacman --noconfirm -S --needed mingw-w64-%MSYS2_ARCH%-cairo mingw-w64-%MSYS2_ARCH%-%PYTHON% mingw-w64-%MSYS2_ARCH%-%PYTHON%-pip"
-  - bash -xlc "%PYTHON% -m pip install pytest coverage codecov"
+  - bash -xlc "%PYTHON% -m pip install pytest coverage codecov hypothesis"
 
 build_script:
   - set CHERE_INVOKING=yes
