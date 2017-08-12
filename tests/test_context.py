@@ -8,7 +8,7 @@ def context():
     return cairo.Context(surface)
 
 
-def text_cmp_hash(context):
+def test_cmp_hash(context):
     other = cairo.Context(context.get_target())
     assert context != other
     hash(context)

@@ -60,17 +60,11 @@ PycairoPath_FromPath (cairo_path_t *path) {
 
 static void
 path_dealloc(PycairoPath *p) {
-#ifdef DEBUG
-  printf("path_dealloc start\n");
-#endif
   if (p->path) {
     cairo_path_destroy(p->path);
     p->path = NULL;
   }
   Py_TYPE(p)->tp_free(p);
-#ifdef DEBUG
-  printf("path_dealloc end\n");
-#endif
 }
 
 static PyObject *

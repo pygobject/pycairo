@@ -150,12 +150,6 @@ def test_matrix_properties():
     assert m.xx == 84
 
 
-def test_path():
-    # AttributeError: 'module' object has no attribute 'Path'
-    test.raises(AttributeError, "p = cairo.Path()")
-    # see examples/warpedtext.py
-
-
 def test_pattern():
     # TypeError: The Pattern type cannot be instantiated
     test.raises(TypeError, "p = cairo.Pattern()")
