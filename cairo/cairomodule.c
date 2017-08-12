@@ -403,6 +403,9 @@ PYCAIRO_MOD_INIT(_cairo)
   Py_INCREF(&PycairoTextExtents_Type);
   PyModule_AddObject(m, "TextExtents", (PyObject *)&PycairoTextExtents_Type);
 
+  Py_INCREF(&PycairoPath_Type);
+  PyModule_AddObject(m, "Path", (PyObject *)&PycairoPath_Type);
+
 #ifdef CAIRO_HAS_SCRIPT_SURFACE
   Py_INCREF(&PycairoScriptDevice_Type);
   PyModule_AddObject(m, "ScriptDevice", (PyObject *)&PycairoScriptDevice_Type);
