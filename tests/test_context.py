@@ -68,3 +68,77 @@ def test_show_text_glyphs():
 
     with pytest.raises(TypeError):
         context.show_text_glyphs("", glyphs, object(), flags)
+
+
+def test_append_path(context):
+    context.line_to(1, 2)
+    p = context.copy_path()
+    context.new_path()
+    context.append_path(p)
+    assert str(context.copy_path()) == str(p)
+
+
+def test_arc(context):
+    assert not list(context.copy_path())
+    context.arc(0, 0, 0, 0, 0)
+    assert list(context.copy_path())
+
+
+def test_arc_negative(context):
+    assert not list(context.copy_path())
+    context.arc_negative(0, 0, 0, 0, 0)
+    assert list(context.copy_path())
+
+
+def test_clip_extents(context):
+    assert context.clip_extents() == (0.0, 0.0, 42.0, 42.0)
+
+
+def test_in_clip():
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
+    context = cairo.Context(surface)
+    assert context.in_clip(50, 50)
+    context.clip()
+    assert not context.in_clip(50, 50)
+    context.reset_clip()
+    assert context.in_clip(50, 50)
+
+    with pytest.raises(TypeError):
+        context.in_clip(None, None)
+
+
+def test_device_to_user(context):
+    assert context.device_to_user(0, 0) == (0, 0)
+    with pytest.raises(TypeError):
+        context.in_clip(None, None)
+
+
+def test_device_to_user_distance(context):
+    assert context.device_to_user_distance(0, 0) == (0, 0)
+    with pytest.raises(TypeError):
+        context.device_to_user_distance(None, None)
+
+
+def test_fill_extents(context):
+    context.line_to(1, 1)
+    context.line_to(1, 0)
+    context.line_to(0, 0)
+    context.line_to(0, 1)
+    context.line_to(1, 1)
+    assert context.fill_extents() == (0, 0, 1, 1)
+
+
+def test_simple(context):
+    context.clip_preserve()
+    context.copy_page()
+    context.copy_path_flat()
+    context.fill()
+    context.fill_preserve()
+    context.font_extents()
+
+    assert context.get_current_point() == (0, 0)
+    assert context.get_dash_count() == 0
+    assert isinstance(context.get_font_matrix(), cairo.Matrix)
+
+    assert context.get_group_target()
+    context.get_line_width()

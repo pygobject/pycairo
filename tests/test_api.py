@@ -79,16 +79,6 @@ def test_surface_create_for_rectangle():
     assert excinfo.value.status == cairo.STATUS_INVALID_SIZE
 
 
-def test_context_in_clip():
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
-    context = cairo.Context(surface)
-    assert context.in_clip(50, 50)
-    context.clip()
-    assert not context.in_clip(50, 50)
-    context.reset_clip()
-    assert context.in_clip(50, 50)
-
-
 def test_surface_create_similar_image():
     surface = cairo.PDFSurface(None, 1, 1)
     image = surface.create_similar_image(cairo.FORMAT_ARGB32, 24, 42)
