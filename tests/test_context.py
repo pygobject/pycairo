@@ -475,6 +475,7 @@ def test_user_to_device_distance(context):
     with pytest.raises(TypeError):
         context.user_to_device_distance(0, object())
 
+
 def test_context(context):
     with pytest.raises(TypeError):
         cairo.Context(None)
