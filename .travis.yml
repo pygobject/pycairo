@@ -37,7 +37,6 @@ matrix:
 install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then travis_retry sudo apt-get update -q; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then travis_retry sudo apt-get install -y libcairo2-dev; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then travis_retry sudo apt-get install -y python-pygame; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew outdated "pkg-config" || brew upgrade "pkg-config"; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$PYVER" == "2" ]]; then brew install python cairo; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$PYVER" == "2" ]]; then python2 -m pip install virtualenv; fi
@@ -48,6 +47,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source ../venv/bin/activate; fi
   - python -m pip install --upgrade setuptools
   - python -m pip install --upgrade pytest flake8 sphinx sphinx_rtd_theme coverage codecov hypothesis
+  - if [ "$TRAVIS_PYTHON_VERSION" != "3.3" ]; then python -m pip install --upgrade pygame; fi
 
 script:
   - python -m coverage run --branch setup.py test
