@@ -380,10 +380,7 @@ pycairo_get_font_options (PycairoContext *o) {
 static PyObject *
 pycairo_get_group_target (PycairoContext *o) {
   cairo_surface_t *surface = cairo_get_group_target (o->ctx);
-  if (surface != NULL)
-    return PycairoSurface_FromSurface (cairo_surface_reference (surface),
-				       NULL);
-  Py_RETURN_NONE;
+  return PycairoSurface_FromSurface (cairo_surface_reference (surface), NULL);
 }
 
 static PyObject *
