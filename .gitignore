@@ -19,6 +19,8 @@
 MANIFEST
 dist
 .hypothesis
+*.pyd
+*.dll
 
 # image files
 *.pdf

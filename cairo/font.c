@@ -618,6 +618,10 @@ font_options_dealloc(PycairoFontOptions *o) {
 
 static PyObject *
 font_options_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
+
+  if (!PyArg_ParseTuple (args, ":FontOptions.__new__"))
+    return NULL;
+
   return PycairoFontOptions_FromFontOptions (cairo_font_options_create());
 }
 

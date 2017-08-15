@@ -16,11 +16,6 @@ import cairo
 import pytest
 import py.test as test
 
-try:
-    long
-except NameError:
-    long = int
-
 
 def test_version():
     cairo.cairo_version()
@@ -117,65 +112,6 @@ def test_context():
         ctx.set_source_rgb(1.0, 1.0, 1.0)
         ctx.set_operator(cairo.OPERATOR_SOURCE)
         ctx.paint()
-
-
-def test_matrix():
-    m = cairo.Matrix()
-    m.rotate(10)
-    m.scale(1.5, 2.5)
-    m.translate(10, 20)
-
-    with pytest.raises(TypeError):
-        m * 42
-
-    with pytest.raises(TypeError):
-        m + 42
-
-    assert m != 42
-    assert m == m
-    assert m != cairo.Matrix()
-
-
-def test_matrix_properties():
-    m = cairo.Matrix(*range(6))
-    assert [m.xx, m.yx, m.xy, m.yy, m.x0, m.y0] == list(range(6))
-    m.xx = 42
-    assert m.xx == 42
-    m.scale(2, 2)
-    assert m.xx == 84
-
-
-def test_pattern():
-    # TypeError: The Pattern type cannot be instantiated
-    test.raises(TypeError, "p = cairo.Pattern()")
-
-    r, g, b, a = 0.1, 0.2, 0.3, 0.4
-    p = cairo.SolidPattern(r, g, b, a)
-    assert p.get_rgba() == (r, g, b, a)
-
-    # SurfacePattern
-
-    # TypeError: The Gradient type cannot be instantiated
-    test.raises(TypeError, "p = cairo.Gradient()")
-
-    x0, y0, x1, y1 = 0.0, 0.0, 0.0, 1.0
-    p = cairo.LinearGradient(x0, y0, x1, y1)
-    assert p.get_linear_points() == (x0, y0, x1, y1)
-    p.add_color_stop_rgba(1, 0, 0, 0, 1)
-    p.add_color_stop_rgba(0, 1, 1, 1, 1)
-
-    cx0, cy0, radius0, cx1, cy1, radius1 = 1.0, 1.0, 1.0, 2.0, 2.0, 1.0
-    p = cairo.RadialGradient(cx0, cy0, radius0, cx1, cy1, radius1)
-    assert p.get_radial_circles() == (cx0, cy0, radius0, cx1, cy1, radius1)
-    p.add_color_stop_rgba(0, 1, 1, 1, 1)
-    p.add_color_stop_rgba(1, 0, 0, 0, 1)
-
-
-def test_pattern_filter():
-    pattern = cairo.SolidPattern(1, 2, 3)
-    assert pattern.get_filter() == cairo.FILTER_GOOD
-    pattern.set_filter(cairo.FILTER_NEAREST)
-    assert pattern.get_filter() == cairo.FILTER_NEAREST
 
 
 def test_surface():
@@ -437,55 +373,6 @@ def test_supports_mime_type():
     surface = cairo.PDFSurface(None, 3, 3)
     assert surface.supports_mime_type(cairo.MIME_TYPE_JPEG)
     assert not surface.supports_mime_type("nope")
-
-
-def test_font_options_copy_equal():
-    surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
-    font_options = surface.get_font_options()
-    font_options.set_hint_metrics(cairo.HINT_METRICS_DEFAULT)
-    new = font_options.copy()
-    assert font_options.equal(new)
-    assert new.get_hint_metrics() == cairo.HINT_METRICS_DEFAULT
-    font_options.set_hint_metrics(cairo.HINT_METRICS_ON)
-    assert not font_options.equal(new)
-    assert new.get_hint_metrics() == cairo.HINT_METRICS_DEFAULT
-
-
-def test_font_options_hash():
-    surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
-    font_options = surface.get_font_options()
-    assert font_options.hash() == font_options.hash()
-    assert isinstance(font_options.hash(), long)
-
-
-def test_font_options_merge():
-    surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
-    font_options = surface.get_font_options()
-    font_options.set_hint_metrics(cairo.HINT_METRICS_DEFAULT)
-    new = font_options.copy()
-    new.set_hint_metrics(cairo.HINT_METRICS_ON)
-    font_options.merge(new)
-    assert font_options.get_hint_metrics() == cairo.HINT_METRICS_ON
-
-
-def test_font_options_hashable_protocol():
-    # make sure __eq__ and __ne__ work
-    surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
-    font_options = surface.get_font_options()
-    assert font_options == font_options.copy()
-    assert not font_options != font_options.copy()
-    font_options.set_hint_metrics(cairo.HINT_METRICS_DEFAULT)
-    different = font_options.copy()
-    different.set_hint_metrics(cairo.HINT_METRICS_ON)
-    assert font_options != different
-    assert not font_options == different
-    assert font_options != object()
-
-    # make sure the other operators are undefined
-    if sys.version_info[0] == 3:
-        with pytest.raises(TypeError):
-            font_options < font_options
-    assert font_options.__gt__(font_options) is NotImplemented
 
 
 def test_surface_mime_data_for_pdf():
