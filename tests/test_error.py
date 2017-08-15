@@ -33,6 +33,15 @@ def test_error_check_status():
     assert e.value.status == cairo.Status.WRITE_ERROR
     assert type(e.value).__name__ == "cairo.IOError"
 
+    err = e.value
+    err.status = cairo.Status.DEVICE_FINISHED
+    assert err.status == cairo.Status.DEVICE_FINISHED
+
+    with pytest.raises(TypeError):
+        del err.status
+
+    str(cairo.Error())
+
 
 def test_error_context():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)

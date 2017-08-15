@@ -22,6 +22,11 @@ except NameError:
     long = int
 
 
+def test_version():
+    cairo.cairo_version()
+    cairo.cairo_version_string()
+
+
 def test_show_unicode_text():
     width, height = 300, 300
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
