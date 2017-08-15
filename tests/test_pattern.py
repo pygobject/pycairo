@@ -258,6 +258,9 @@ def test_mesh_pattern_error_states():
 def test_get_matrix():
     pattern = cairo.SolidPattern(1, 2, 4)
     assert isinstance(pattern.get_matrix(), cairo.Matrix)
+    pattern.set_matrix(cairo.Matrix())
+    with pytest.raises(TypeError):
+        pattern.set_matrix(object())
 
 
 def test_set_extend():

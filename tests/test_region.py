@@ -7,6 +7,9 @@ def test_region():
         cairo.Region(object())
 
     with pytest.raises(TypeError):
+        cairo.Region(object(), object())
+
+    with pytest.raises(TypeError):
         cairo.Region([object()])
 
 
@@ -32,6 +35,8 @@ def test_contains_point():
 def test_intersect():
     rect = cairo.RectangleInt(0, 0, 10, 10)
     r = cairo.Region(rect)
+    r.intersect(r)
+    r.intersect(rect)
     with pytest.raises(TypeError):
         r.intersect(object())
     with pytest.raises(TypeError):
@@ -65,6 +70,7 @@ def test_union():
     rect = cairo.RectangleInt(0, 0, 10, 10)
     r = cairo.Region(rect)
     r.union(r)
+    r.union(rect)
     with pytest.raises(TypeError):
         r.union(object())
     with pytest.raises(TypeError):
@@ -75,6 +81,7 @@ def test_xor():
     rect = cairo.RectangleInt(0, 0, 10, 10)
     r = cairo.Region(rect)
     r.xor(r)
+    r.xor(rect)
     with pytest.raises(TypeError):
         r.xor(object())
     with pytest.raises(TypeError):

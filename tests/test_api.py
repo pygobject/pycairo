@@ -54,12 +54,6 @@ def test_unicode_filenames():
         shutil.rmtree(dirname)
 
 
-def test_ps_surface_level_to_string():
-    level_id = cairo.PSSurface.level_to_string(cairo.PS_LEVEL_2)
-    assert isinstance(level_id, str)
-    assert cairo.PSSurface.ps_level_to_string(cairo.PS_LEVEL_2) == level_id
-
-
 def test_surface_has_show_text_glyphs():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
     assert not surface.has_show_text_glyphs()
@@ -186,28 +180,6 @@ def test_image_surface_get_data():
     ctx.paint()
     surface.flush()
     assert newbuf[0:1] == b"\x00"
-
-
-def test_image_surface_create_for_data():
-    format_ = cairo.FORMAT_ARGB32
-    surface = cairo.ImageSurface(format_, 3, 3)
-    ctx = cairo.Context(surface)
-    ctx.paint()
-    surface.flush()
-    buf = surface.get_data()
-
-    new = cairo.ImageSurface.create_for_data(buf, format_, 3, 3)
-    assert new.get_data() == buf
-
-    with pytest.raises(ValueError):
-        cairo.ImageSurface.create_for_data(buf, format_, 3, -1)
-    with pytest.raises(ValueError):
-        cairo.ImageSurface.create_for_data(buf, format_, -1, 3)
-
-    with pytest.raises(cairo.Error) as excinfo:
-        cairo.ImageSurface.create_for_data(buf, format_, 3, 3, 3)
-
-    assert excinfo.value.status == cairo.STATUS_INVALID_STRIDE
 
 
 def test_surface_file_obj_error():

@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import os
 import io
+import tempfile
+
 import cairo
 import pytest
 
@@ -13,6 +16,7 @@ def test_cmp_hash():
     assert dev == other
     assert not dev != other
     assert hash(dev) == hash(other)
+    assert dev != object()
 
 
 def test_get_device():
@@ -85,3 +89,19 @@ def test_from_recording_surface():
     # No None allowed
     with pytest.raises(TypeError):
         dev.from_recording_surface(None)
+
+
+def test_device_acquire():
+    f = io.BytesIO()
+    dev = cairo.ScriptDevice(f)
+    dev.acquire()
+    dev.release()
+
+
+def test_script_device_to_path():
+    fd, fname = tempfile.mkstemp()
+    os.close(fd)
+    try:
+        cairo.ScriptDevice(fname).finish()
+    finally:
+        os.unlink(fname)
