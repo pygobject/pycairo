@@ -93,11 +93,11 @@ rectangle_int_richcompare(PycairoRectangleInt *self,
     PyErr_SetString(PyExc_TypeError, "Only support testing for == or !=");
     return NULL;
   }
-  if (!PyObject_IsInstance((PyObject*)other,
-        (PyObject*)&PycairoRectangleInt_Type)) {
-    res = 0;
-  }
-  else if (
+
+  if (!PyObject_TypeCheck((PyObject*)other, &PycairoRectangleInt_Type)) {
+    Py_INCREF(Py_NotImplemented);
+    return Py_NotImplemented;
+  } else if (
       self->rectangle_int.x == other->rectangle_int.x &&
       self->rectangle_int.y == other->rectangle_int.y &&
       self->rectangle_int.width == other->rectangle_int.width &&
@@ -230,8 +230,8 @@ region_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
 
     for(i=0; i<rect_size; i++) {
       PyObject *obj_tmp = PySequence_Fast_GET_ITEM(seq, i);
-      if (PyObject_IsInstance(obj_tmp,
-            (PyObject*)&PycairoRectangleInt_Type) != 1) {
+      if (!PyObject_TypeCheck(obj_tmp, &PycairoRectangleInt_Type)) {
+        PyErr_SetString(PyExc_TypeError, "Must be RectangleInt");
         Py_DECREF(seq);
         PyMem_Free(rect);
         return NULL;
@@ -377,8 +377,10 @@ region_richcompare(PycairoRegion *self, PycairoRegion *other, int op) {
     PyErr_SetString(PyExc_TypeError, "Only support testing for == or !=");
     return NULL;
   }
-  if (!PyObject_IsInstance((PyObject*)other, (PyObject*)&PycairoRegion_Type)) {
-    res = 0;
+
+  if (!PyObject_TypeCheck((PyObject*)other, &PycairoRegion_Type)) {
+    Py_INCREF(Py_NotImplemented);
+    return Py_NotImplemented;
   } else {
     res = cairo_region_equal (self->region, other->region);
   }
@@ -409,13 +411,12 @@ region_intersect (PycairoRegion *o, PyObject *args) {
   if (!PyArg_ParseTuple (args, "O:Region.intersect", &other))
     return NULL;
 
-  if (PyObject_IsInstance(other, (PyObject*)&PycairoRegion_Type) == 1) {
+  if (PyObject_TypeCheck(other, &PycairoRegion_Type)) {
       Py_BEGIN_ALLOW_THREADS;
       res = cairo_region_intersect(o->region,
               ((PycairoRegion *)other)->region);
       Py_END_ALLOW_THREADS;
-  } else if (PyObject_IsInstance(other,
-              (PyObject*)&PycairoRectangleInt_Type) == 1) {
+  } else if (PyObject_TypeCheck(other, &PycairoRectangleInt_Type)) {
       Py_BEGIN_ALLOW_THREADS;
       res = cairo_region_intersect_rectangle(o->region,
           &(((PycairoRectangleInt *)other)->rectangle_int));
@@ -437,13 +438,12 @@ region_subtract (PycairoRegion *o, PyObject *args) {
   if (!PyArg_ParseTuple (args, "O:Region.subtract", &other))
     return NULL;
 
-  if (PyObject_IsInstance(other, (PyObject*)&PycairoRegion_Type) == 1) {
+  if (PyObject_TypeCheck(other, &PycairoRegion_Type)) {
       Py_BEGIN_ALLOW_THREADS;
       res = cairo_region_subtract(o->region,
               ((PycairoRegion *)other)->region);
       Py_END_ALLOW_THREADS;
-  } else if (PyObject_IsInstance(other,
-              (PyObject*)&PycairoRectangleInt_Type) == 1) {
+  } else if (PyObject_TypeCheck(other, &PycairoRectangleInt_Type)) {
       Py_BEGIN_ALLOW_THREADS;
       res = cairo_region_subtract_rectangle(o->region,
           &(((PycairoRectangleInt *)other)->rectangle_int));
@@ -464,13 +464,12 @@ region_union (PycairoRegion *o, PyObject *args) {
   if (!PyArg_ParseTuple (args, "O:Region.union", &other))
     return NULL;
 
-  if (PyObject_IsInstance(other, (PyObject*)&PycairoRegion_Type) == 1) {
+  if (PyObject_TypeCheck(other, &PycairoRegion_Type)) {
       Py_BEGIN_ALLOW_THREADS;
       res = cairo_region_union(o->region,
               ((PycairoRegion *)other)->region);
       Py_END_ALLOW_THREADS;
-  } else if (PyObject_IsInstance(other,
-              (PyObject*)&PycairoRectangleInt_Type) == 1) {
+  } else if (PyObject_TypeCheck(other, &PycairoRectangleInt_Type)) {
       Py_BEGIN_ALLOW_THREADS;
       res = cairo_region_union_rectangle(o->region,
           &(((PycairoRectangleInt *)other)->rectangle_int));
@@ -491,13 +490,12 @@ region_xor (PycairoRegion *o, PyObject *args) {
   if (!PyArg_ParseTuple (args, "O:Region.xorg", &other))
     return NULL;
 
-  if (PyObject_IsInstance(other, (PyObject*)&PycairoRegion_Type) == 1) {
+  if (PyObject_TypeCheck(other, &PycairoRegion_Type)) {
       Py_BEGIN_ALLOW_THREADS;
       res = cairo_region_xor(o->region,
               ((PycairoRegion *)other)->region);
       Py_END_ALLOW_THREADS;
-  } else if (PyObject_IsInstance(other,
-              (PyObject*)&PycairoRectangleInt_Type) == 1) {
+  } else if (PyObject_TypeCheck(other, &PycairoRectangleInt_Type)) {
       Py_BEGIN_ALLOW_THREADS;
       res = cairo_region_xor_rectangle(o->region,
           &(((PycairoRectangleInt *)other)->rectangle_int));
