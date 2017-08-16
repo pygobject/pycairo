@@ -129,8 +129,12 @@ matrix_richcmp (PycairoMatrix *m1, PycairoMatrix *m2, int op) {
   cairo_matrix_t *mx1 = &m1->matrix;
   cairo_matrix_t *mx2 = &m2->matrix;
 
-  if (!PyObject_TypeCheck(m2, &PycairoMatrix_Type) ||
-      !(op == Py_EQ || op == Py_NE)) {
+  if (op != Py_EQ && op != Py_NE) {
+    PyErr_SetString(PyExc_TypeError, "Only support testing for == or !=");
+    return NULL;
+  }
+
+  if (!PyObject_TypeCheck(m2, &PycairoMatrix_Type)) {
     Py_INCREF(Py_NotImplemented);
     return Py_NotImplemented;
   }
