@@ -40,3 +40,6 @@ def test_context():
     assert context.glyph_extents([g])
     context.glyph_path([g])
     context.show_glyphs([(0, 0, 0)])
+
+    with pytest.raises(TypeError):
+        context.glyph_path([object()])

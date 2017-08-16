@@ -43,6 +43,12 @@ def test_script_device():
     with pytest.raises(TypeError):
         cairo.ScriptDevice(None)
 
+    with pytest.raises(TypeError):
+        cairo.ScriptDevice()
+
+    with pytest.raises(TypeError):
+        cairo.ScriptDevice("\x00")
+
 
 def test_script_device_mode():
     assert hasattr(cairo, "ScriptMode")
@@ -54,6 +60,8 @@ def test_script_device_mode():
     assert mode == cairo.ScriptMode.ASCII
     dev.set_mode(cairo.ScriptMode.BINARY)
     assert dev.get_mode() == cairo.ScriptMode.BINARY
+    with pytest.raises(TypeError):
+        dev.set_mode(object())
 
 
 def test_script_device_write_comment():
@@ -64,6 +72,8 @@ def test_script_device_write_comment():
     dev.flush()
     assert b"pycairo foo" in f.getvalue()
     assert b"pycairo bar" in f.getvalue()
+    with pytest.raises(TypeError):
+        dev.write_comment(object())
 
 
 def test_from_recording_surface():

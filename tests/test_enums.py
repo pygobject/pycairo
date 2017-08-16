@@ -16,6 +16,9 @@ def test_type():
         t()
 
     with pytest.raises(TypeError):
+        t(object())
+
+    with pytest.raises(TypeError):
         type("foo", (t,), {})
 
     assert hasattr(t, "DEFAULT")

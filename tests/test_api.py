@@ -62,78 +62,36 @@ def test_surface_has_show_text_glyphs():
         surface.has_show_text_glyphs()
 
 
-def test_surface_create_for_rectangle():
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
-    new = surface.create_for_rectangle(0, 0, 10, 10)
-    assert new
-    assert isinstance(new, cairo.Surface)
-
-    with pytest.raises(cairo.Error) as excinfo:
-        surface.create_for_rectangle(0, 0, 10, -1)
-    assert excinfo.value.status == cairo.STATUS_INVALID_SIZE
-
-
-def test_surface_create_similar_image():
-    surface = cairo.PDFSurface(None, 1, 1)
-    image = surface.create_similar_image(cairo.FORMAT_ARGB32, 24, 42)
-    assert image
-    assert isinstance(image, cairo.ImageSurface)
-    del surface
-    assert image.get_width() == 24
-    assert image.get_height() == 42
-
-
-def test_pdf_surface_restrict_to_version():
-    surface = cairo.PDFSurface(None, 10, 10)
-    surface.restrict_to_version(cairo.PDF_VERSION_1_4)
-    surface.finish()
-    with pytest.raises(cairo.Error):
-        surface.restrict_to_version(cairo.PDF_VERSION_1_5)
-
-
-def test_pdf_version_to_string():
-    ver = cairo.PDFSurface.version_to_string(cairo.PDF_VERSION_1_4)
-    assert ver and isinstance(ver, str)
-    with pytest.raises(ValueError):
-        cairo.PDFSurface.version_to_string(-1)
-
-
 def test_context():
-    if cairo.HAS_IMAGE_SURFACE:
-        f, w, h = cairo.FORMAT_ARGB32, 100, 100
-        s = cairo.ImageSurface(f, w, h)
-        ctx = cairo.Context(s)
-        ctx.set_source_rgb(1.0, 1.0, 1.0)
-        ctx.set_operator(cairo.OPERATOR_SOURCE)
-        ctx.paint()
+    f, w, h = cairo.FORMAT_ARGB32, 100, 100
+    s = cairo.ImageSurface(f, w, h)
+    ctx = cairo.Context(s)
+    ctx.set_source_rgb(1.0, 1.0, 1.0)
+    ctx.set_operator(cairo.OPERATOR_SOURCE)
+    ctx.paint()
 
 
 def test_surface():
     # TypeError: The Surface type cannot be instantiated
     test.raises(TypeError, "s = cairo.Surface()")
 
-    if cairo.HAS_IMAGE_SURFACE:
-        f, w, h = cairo.FORMAT_ARGB32, 100, 100
-        s = cairo.ImageSurface(f, w, h)
-        assert s.get_format() == f
-        assert s.get_width() == w
-        assert s.get_height() == h
+    f, w, h = cairo.FORMAT_ARGB32, 100, 100
+    s = cairo.ImageSurface(f, w, h)
+    assert s.get_format() == f
+    assert s.get_width() == w
+    assert s.get_height() == h
 
-    if cairo.HAS_PDF_SURFACE:
-        f, w, h = tfi.TemporaryFile(mode='w+b'), 100, 100
-        s = cairo.PDFSurface(f, w, h)
+    f, w, h = tfi.TemporaryFile(mode='w+b'), 100, 100
+    s = cairo.PDFSurface(f, w, h)
 
-    if cairo.HAS_PS_SURFACE:
-        f, w, h = tfi.TemporaryFile(mode='w+b'), 100, 100
-        s = cairo.PSSurface(f, w, h)
+    f, w, h = tfi.TemporaryFile(mode='w+b'), 100, 100
+    s = cairo.PSSurface(f, w, h)
 
-    if cairo.HAS_RECORDING_SURFACE:
-        s = cairo.RecordingSurface(cairo.CONTENT_COLOR, None)
-        s = cairo.RecordingSurface(cairo.CONTENT_COLOR, (1, 1, 10, 10))
+    s = cairo.RecordingSurface(cairo.CONTENT_COLOR, None)
+    s = cairo.RecordingSurface(cairo.CONTENT_COLOR, (1, 1, 10, 10))
 
-    if cairo.HAS_SVG_SURFACE:
-        f, w, h = tfi.TemporaryFile(mode='w+b'), 100, 100
-        s = cairo.SVGSurface(f, w, h)
+    f, w, h = tfi.TemporaryFile(mode='w+b'), 100, 100
+    s = cairo.SVGSurface(f, w, h)
 
 
 def test_surface_destroy_before_context():
@@ -301,22 +259,6 @@ def test_constants():
     assert cairo.SVG_VERSION_1_2 == 1
 
 
-def test_surface_get_set_mime_data():
-    surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
-    assert surface.get_mime_data("foo") is None
-    assert surface.get_mime_data(cairo.MIME_TYPE_JPEG) is None
-
-    surface.set_mime_data("foo", b"bar")
-    assert surface.get_mime_data("foo") == b"bar"
-    surface.set_mime_data("foo", None)
-    assert surface.get_mime_data("foo") is None
-
-    surface.set_mime_data(cairo.MIME_TYPE_JPEG, b"\x00quux\x00")
-    assert surface.get_mime_data(cairo.MIME_TYPE_JPEG)[:] == b"\x00quux\x00"
-    surface.set_mime_data(cairo.MIME_TYPE_JPEG, None)
-    assert surface.get_mime_data(cairo.MIME_TYPE_JPEG) is None
-
-
 def test_surface_get_set_mime_data_references():
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
     if sys.version_info[0] == 2:
@@ -341,12 +283,6 @@ def test_surface_get_set_mime_data_references():
     assert sys.getrefcount(x) == 2
 
 
-def test_supports_mime_type():
-    surface = cairo.PDFSurface(None, 3, 3)
-    assert surface.supports_mime_type(cairo.MIME_TYPE_JPEG)
-    assert not surface.supports_mime_type("nope")
-
-
 def test_surface_mime_data_for_pdf():
     jpeg_bytes = zlib.decompress(base64.b64decode(
         b'eJz7f+P/AwYBLzdPNwZGRkYGDyBk+H+bwRnEowj8P8TAzcHACDJHkOH/EQYRIBsV'
@@ -362,18 +298,3 @@ def test_surface_mime_data_for_pdf():
     context.paint()
     surface.finish()
     assert jpeg_bytes in file_like.getvalue()
-
-
-def test_svg_version_to_string():
-    ver = cairo.SVGSurface.version_to_string(cairo.SVG_VERSION_1_1)
-    assert ver and isinstance(ver, str)
-    with pytest.raises(ValueError):
-        cairo.SVGSurface.version_to_string(-1)
-
-
-def test_svg_surface_restrict_to_version():
-    surface = cairo.SVGSurface(None, 10, 10)
-    surface.restrict_to_version(cairo.SVG_VERSION_1_1)
-    surface.finish()
-    with pytest.raises(cairo.Error):
-        surface.restrict_to_version(cairo.SVG_VERSION_1_2)

@@ -71,7 +71,7 @@ def test_translate():
     m.translate(1, 1)
     assert m == cairo.Matrix(1, 0, 0, 1, 1, 1)
     with pytest.raises(TypeError):
-        cairo.Matrix.translate(1, object())
+        m.translate(1, object())
 
 
 def test_rotate():

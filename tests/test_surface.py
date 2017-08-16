@@ -57,6 +57,9 @@ def test_surface_map_to_image():
     with pytest.raises(TypeError):
         main.map_to_image(object())
 
+    with pytest.raises(TypeError):
+        main.map_to_image()
+
     gced = main.map_to_image(None)
     del gced
 
@@ -88,7 +91,14 @@ def test_tee_surface():
     main = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
     tee = cairo.TeeSurface(main)
     assert isinstance(tee, cairo.TeeSurface)
-
+    with pytest.raises(TypeError):
+        cairo.TeeSurface(object())
+    with pytest.raises(TypeError):
+        tee.add(object())
+    with pytest.raises(TypeError):
+        tee.remove(object())
+    with pytest.raises(TypeError):
+        tee.index(object())
     # the API is horrible, passing a wrong arg sets the surface to an error
     # state instead of returning the status.
     s1 = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
@@ -153,7 +163,48 @@ def test_pdf_surface():
         cairo.PDFSurface()
 
     with pytest.raises(TypeError):
+        cairo.PDFSurface("\x00")
+
+    with pytest.raises(TypeError):
         cairo.PDFSurface(object(), 100, 100)
+
+
+def test_svg_version_to_string():
+    ver = cairo.SVGSurface.version_to_string(cairo.SVG_VERSION_1_1)
+    assert ver and isinstance(ver, str)
+    with pytest.raises(ValueError):
+        cairo.SVGSurface.version_to_string(-1)
+    with pytest.raises(TypeError):
+        cairo.SVGSurface.version_to_string(object())
+
+
+def test_svg_surface_restrict_to_version():
+    surface = cairo.SVGSurface(None, 10, 10)
+    surface.restrict_to_version(cairo.SVG_VERSION_1_1)
+    surface.finish()
+    with pytest.raises(cairo.Error):
+        surface.restrict_to_version(cairo.SVG_VERSION_1_2)
+    with pytest.raises(TypeError):
+        surface.restrict_to_version(object())
+
+
+def test_pdf_surface_restrict_to_version():
+    surface = cairo.PDFSurface(None, 10, 10)
+    surface.restrict_to_version(cairo.PDF_VERSION_1_4)
+    surface.finish()
+    with pytest.raises(cairo.Error):
+        surface.restrict_to_version(cairo.PDF_VERSION_1_5)
+    with pytest.raises(TypeError):
+        surface.restrict_to_version(object())
+
+
+def test_pdf_version_to_string():
+    ver = cairo.PDFSurface.version_to_string(cairo.PDF_VERSION_1_4)
+    assert ver and isinstance(ver, str)
+    with pytest.raises(ValueError):
+        cairo.PDFSurface.version_to_string(-1)
+    with pytest.raises(TypeError):
+        cairo.PDFSurface.version_to_string(object())
 
 
 def test_ps_surface_misc():
@@ -176,6 +227,8 @@ def test_ps_get_eps():
     assert isinstance(surface.get_eps(), bool)
     surface.set_eps(True)
     assert surface.get_eps()
+    with pytest.raises(TypeError):
+        surface.set_eps(object())
 
 
 def test_ps_set_size():
@@ -198,6 +251,8 @@ def test_ps_surface_level_to_string():
     assert cairo.PSSurface.ps_level_to_string(cairo.PS_LEVEL_2) == level_id
     with pytest.raises(ValueError):
         cairo.PSSurface.level_to_string(-1)
+    with pytest.raises(TypeError):
+        cairo.PSSurface.level_to_string(object())
 
 
 def test_ps_surface_get_levels():
@@ -220,6 +275,9 @@ def test_ps_surface():
         cairo.PSSurface()
 
     with pytest.raises(TypeError):
+        cairo.PSSurface("\x00", 100, 100)
+
+    with pytest.raises(TypeError):
         cairo.PSSurface(object(), 100, 100)
 
 
@@ -233,6 +291,9 @@ def test_scg_surface():
 
     with pytest.raises(TypeError):
         cairo.SVGSurface()
+
+    with pytest.raises(TypeError):
+        cairo.SVGSurface("\x00", 10, 10)
 
     with pytest.raises(TypeError):
         cairo.SVGSurface(object(), 100, 100)
@@ -259,8 +320,65 @@ def test_surface_set_device_scale():
     with pytest.raises(cairo.Error):
         surface.set_device_scale(1, 0)
 
+    with pytest.raises(TypeError):
+        surface.set_device_scale(1, object())
 
-@pytest.mark.skipif(not cairo.HAS_PNG_FUNCTIONS, reason="not png support")
+
+def test_surface_create_for_rectangle():
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
+    new = surface.create_for_rectangle(0, 0, 10, 10)
+    assert new
+    assert isinstance(new, cairo.Surface)
+
+    with pytest.raises(cairo.Error) as excinfo:
+        surface.create_for_rectangle(0, 0, 10, -1)
+    assert excinfo.value.status == cairo.STATUS_INVALID_SIZE
+
+    with pytest.raises(TypeError):
+        surface.create_for_rectangle(0, 0, 10, object())
+
+
+def test_surface_create_similar_image():
+    surface = cairo.PDFSurface(None, 1, 1)
+    image = surface.create_similar_image(cairo.FORMAT_ARGB32, 24, 42)
+    assert image
+    assert isinstance(image, cairo.ImageSurface)
+    del surface
+    assert image.get_width() == 24
+    assert image.get_height() == 42
+    surface = cairo.PDFSurface(None, 1, 1)
+    with pytest.raises(TypeError):
+        surface.create_similar_image(cairo.FORMAT_ARGB32, 24, object())
+
+
+def test_surface_get_set_mime_data():
+    surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
+    assert surface.get_mime_data("foo") is None
+    assert surface.get_mime_data(cairo.MIME_TYPE_JPEG) is None
+
+    surface.set_mime_data("foo", b"bar")
+    assert surface.get_mime_data("foo") == b"bar"
+    surface.set_mime_data("foo", None)
+    assert surface.get_mime_data("foo") is None
+
+    surface.set_mime_data(cairo.MIME_TYPE_JPEG, b"\x00quux\x00")
+    assert surface.get_mime_data(cairo.MIME_TYPE_JPEG)[:] == b"\x00quux\x00"
+    surface.set_mime_data(cairo.MIME_TYPE_JPEG, None)
+    assert surface.get_mime_data(cairo.MIME_TYPE_JPEG) is None
+    with pytest.raises(TypeError):
+        surface.set_mime_data(cairo.MIME_TYPE_JPEG, object())
+    with pytest.raises(TypeError):
+        surface.get_mime_data(object())
+
+
+def test_supports_mime_type():
+    surface = cairo.PDFSurface(None, 3, 3)
+    assert surface.supports_mime_type(cairo.MIME_TYPE_JPEG)
+    assert not surface.supports_mime_type("nope")
+    with pytest.raises(TypeError):
+        surface.supports_mime_type(object())
+
+
 def test_image_surface_create_for_data_array():
     width, height = 255, 255
     data = array.array('B', [0] * width * height * 4)
@@ -286,7 +404,6 @@ def test_image_surface_create_for_data_array():
     os.unlink(filename)
 
 
-@pytest.mark.skipif(not cairo.HAS_PNG_FUNCTIONS, reason="not png support")
 def test_image_surface_write_to_png_filename_and_obj_compare():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 128, 128)
     fd, filename = tempfile.mkstemp(prefix='pycairo_', suffix='.png')
@@ -302,7 +419,6 @@ def test_image_surface_write_to_png_filename_and_obj_compare():
     os.unlink(filename)
 
 
-@pytest.mark.skipif(not cairo.HAS_PNG_FUNCTIONS, reason="not png support")
 def test_image_surface_png_obj_roundtrip():
     fileobj = io.BytesIO()
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 128, 128)
@@ -310,9 +426,14 @@ def test_image_surface_png_obj_roundtrip():
     fileobj.seek(0)
     new_surface = cairo.ImageSurface.create_from_png(fileobj)
     assert surface.get_data() == new_surface.get_data()
+    with pytest.raises(TypeError):
+        cairo.ImageSurface.create_from_png()
+    with pytest.raises(TypeError):
+        cairo.ImageSurface.create_from_png("\x00")
+    with pytest.raises(TypeError):
+        cairo.ImageSurface.create_from_png(object())
 
 
-@pytest.mark.skipif(not cairo.HAS_PNG_FUNCTIONS, reason="not png support")
 def test_image_surface_png_file_roundtrip():
     fd, filename = tempfile.mkstemp(prefix='pycairo_', suffix='.png')
     os.close(fd)
@@ -325,11 +446,12 @@ def test_image_surface_png_file_roundtrip():
     os.unlink(filename)
 
 
-@pytest.mark.skipif(not cairo.HAS_PNG_FUNCTIONS, reason="not png support")
 def test_image_surface_write_to_png_error():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 128, 128)
     with pytest.raises(TypeError):
         surface.write_to_png(42)
+    with pytest.raises(TypeError):
+        surface.write_to_png("\x00")
 
 
 def test_surface_from_stream_closed_before_finished():
@@ -350,6 +472,8 @@ def test_script_surface():
     dev.flush()
     assert b"42" in f.getvalue()
     assert b"paint" in f.getvalue()
+    with pytest.raises(TypeError):
+        cairo.ScriptSurface()
 
 
 def test_script_device_device_ref():
@@ -367,6 +491,8 @@ def test_script_surface_create_for_target():
     dev = cairo.ScriptDevice(f)
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
     script = cairo.ScriptSurface.create_for_target(dev, surface)
+    with pytest.raises(TypeError):
+        cairo.ScriptSurface.create_for_target(dev, object())
     assert isinstance(script, cairo.ScriptSurface)
     ctx = cairo.Context(script)
     ctx.set_source_rgb(0.25, 0.5, 1.0)
@@ -433,6 +559,11 @@ def test_write_to_png(image_surface):
         image_surface.write_to_png()
 
 
+def test_image_surface():
+    with pytest.raises(TypeError):
+        cairo.ImageSurface(cairo.FORMAT_ARGB32, 3, object())
+
+
 def test_image_surface_create_for_data():
     format_ = cairo.FORMAT_ARGB32
     surface = cairo.ImageSurface(format_, 3, 3)
@@ -457,6 +588,9 @@ def test_image_surface_create_for_data():
 
     assert excinfo.value.status == cairo.STATUS_INVALID_STRIDE
 
+    with pytest.raises(TypeError):
+        cairo.ImageSurface.create_for_data(buf, format_, 3, object())
+
 
 def test_image_surface_stride_for_width():
     v = cairo.ImageSurface.format_stride_for_width(cairo.Format.ARGB32, 10)
@@ -474,6 +608,9 @@ def test_image_surface_get_stride(image_surface):
 def test_recording_surface():
     with pytest.raises(TypeError):
         cairo.RecordingSurface(cairo.CONTENT_COLOR, object())
+
+    with pytest.raises(TypeError):
+        cairo.RecordingSurface()
 
     surface = cairo.RecordingSurface(cairo.CONTENT_COLOR, None)
     assert surface.ink_extents() == (0.0, 0.0, 0.0, 0.0)

@@ -268,7 +268,7 @@ def test_move_to(context):
     context.move_to(10, 10)
     assert context.get_current_point() == (10, 10)
     with pytest.raises(TypeError):
-        context.rel_line_to(object(), 0)
+        context.move_to(object(), 0)
 
 
 def test_rel_line_to(context):
@@ -374,11 +374,13 @@ def test_set_miter_limit(context):
 def test_set_scaled_font(context):
     context.set_scaled_font(context.get_scaled_font())
     with pytest.raises(TypeError):
-        context.set_miter_limit(object())
+        context.set_scaled_font(object())
 
 
 def test_set_font_options(context):
     context.set_font_options(context.get_font_options())
+    with pytest.raises(TypeError):
+        context.set_font_options(object())
 
 
 def test_set_font_size(context):
@@ -407,7 +409,7 @@ def test_get_source_rgba(context):
     context.set_source_rgba(1, 1, 1, 0.5)
     assert context.get_source().get_rgba() == (1, 1, 1, 0.5)
     with pytest.raises(TypeError):
-        context.set_source_rgb(1, 1, object())
+        context.set_source_rgba(1, 1, object())
 
 
 def test_set_source_surface(context):

@@ -21,6 +21,8 @@ def test_get_rectangle():
     with pytest.raises(ValueError):
         r.get_rectangle(1)
     assert r.get_rectangle(0) == rect
+    with pytest.raises(TypeError):
+        r.get_rectangle(object())
 
 
 def test_contains_point():
@@ -88,11 +90,20 @@ def test_xor():
         r.xor()
 
 
+def test_translate():
+    r = cairo.Region()
+    r.translate(1, 1)
+    with pytest.raises(TypeError):
+        r.translate(1, object())
+
+
 def test_region_contains_rectangle():
     rect = cairo.RectangleInt(1, 2, 10, 13)
     region = cairo.Region()
     assert region.contains_rectangle(rect) == cairo.RegionOverlap.OUT
     assert isinstance(region.contains_rectangle(rect), cairo.RegionOverlap)
+    with pytest.raises(TypeError):
+        region.contains_rectangle(object())
 
 
 def test_region_cmp_hash():

@@ -176,6 +176,8 @@ def test_scaled_font_glyph_extents(scaled_font):
         scaled_font.glyph_extents(object())
     with pytest.raises(TypeError):
         scaled_font.glyph_extents([object()])
+    with pytest.raises(TypeError):
+        scaled_font.glyph_extents()
 
 
 def test_toy_font_face():

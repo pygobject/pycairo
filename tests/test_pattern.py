@@ -106,6 +106,11 @@ def test_gradient_add_color_stop_rgba():
         pattern.add_color_stop_rgba()
 
 
+def test_solid_pattern():
+    with pytest.raises(TypeError):
+        cairo.SolidPattern()
+
+
 def test_mesh_pattern():
     mesh = cairo.MeshPattern()
     assert isinstance(mesh, cairo.MeshPattern)

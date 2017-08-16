@@ -9,7 +9,6 @@ import pytest
 numpy = pytest.importorskip("numpy")
 
 
-@pytest.mark.skipif(not cairo.HAS_PNG_FUNCTIONS, reason="no png support")
 def test_image_surface_create_for_data_numpy_array():
     width, height = 255, 255
     data = numpy.ndarray(shape=(height, width), dtype=numpy.uint32)
@@ -31,7 +30,6 @@ def test_image_surface_create_for_data_numpy_array():
     os.unlink(filename)
 
 
-@pytest.mark.skipif(not cairo.HAS_PNG_FUNCTIONS, reason="no png support")
 def test_image_surface_get_data_to_numpy_array():
     w, h = 128, 128
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
