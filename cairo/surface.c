@@ -567,17 +567,11 @@ surface_map_to_image (PycairoSurface *self, PyObject *args) {
   PyObject *pyextents, *pymapped;
   cairo_rectangle_int_t *extents;
   cairo_surface_t *mapped_surface;
-  int result;
 
   if (!PyArg_ParseTuple(args, "O:Surface.map_to_image", &pyextents))
     return NULL;
 
-  result = PyObject_IsInstance (
-    pyextents, (PyObject*)&PycairoRectangleInt_Type);
-
-  if (result == -1) {
-    return NULL;
-  } else if (result == 1) {
+  if (PyObject_TypeCheck (pyextents, &PycairoRectangleInt_Type)) {
     extents = &(((PycairoRectangleInt *)pyextents)->rectangle_int);
   } else {
     if (pyextents == Py_None) {
