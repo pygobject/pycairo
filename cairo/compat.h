@@ -61,8 +61,6 @@
 #define PYCAIRO_ENC_TEXT_FORMAT "et"
 #define PYCAIRO_DATA_FORMAT "s"
 
-#define PYCAIRO_PyFilenameBase_Type PyBaseString_Type
-
 #define PYCAIRO_Py_hash_t long
 
 #else
@@ -89,8 +87,6 @@
 
 #define PYCAIRO_ENC_TEXT_FORMAT "es"
 #define PYCAIRO_DATA_FORMAT "y"
-
-#define PYCAIRO_PyFilenameBase_Type PyUnicode_Type
 
 #define PYCAIRO_Py_hash_t Py_hash_t
 
