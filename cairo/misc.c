@@ -34,6 +34,172 @@
 #include "config.h"
 #include "private.h"
 
+/* Converts a Python object to a cairo path. The result needs to be freed with
+ * PyMem_Free().
+ */
+int
+Pycairo_fspath_converter (PyObject *obj, char** result) {
+    char *internal, *buf;
+    PyObject *bytes;
+
+#if defined(MS_WINDOWS) && PY_MAJOR_VERSION < 3
+    PyObject *uni, *other;
+
+    if (PyString_Check (obj)) {
+        uni = PyString_AsDecodedObject (
+            obj, Py_FileSystemDefaultEncoding, "strict");
+        if (uni == NULL)
+            return 0;
+    } else if (PyUnicode_Check (obj)) {
+        uni = obj;
+        Py_INCREF (uni);
+    } else {
+        PyErr_SetString (PyExc_TypeError, "paths must be str/unicode");
+        return 0;
+    }
+
+    bytes = PyUnicode_AsMBCSString (uni);
+    if (bytes == NULL) {
+        Py_DECREF (uni);
+        return 0;
+    }
+
+    if (PyString_AsStringAndSize (bytes, &internal, NULL) == -1) {
+        Py_DECREF (uni);
+        Py_DECREF (bytes);
+        return 0;
+    }
+
+    /* PyUnicode_AsMBCSString doesn't do error handling, so we have to
+     * decode and compare again */
+    other = PyUnicode_DecodeMBCS (internal, PyString_Size (bytes), "strict");
+    if (other == NULL) {
+        Py_DECREF (uni);
+        Py_DECREF (bytes);
+        return 0;
+    }
+
+    if (PyUnicode_Compare (uni, other) != 0) {
+        Py_DECREF (uni);
+        Py_DECREF (bytes);
+        Py_DECREF (other);
+        PyErr_SetString (
+            PyExc_UnicodeEncodeError, "only ANSI paths supported");
+        return 0;
+    }
+
+    Py_DECREF (uni);
+    Py_DECREF (other);
+
+#elif defined(MS_WINDOWS) && PY_MAJOR_VERSION >= 3
+    PyObject *uni;
+
+    if (PyUnicode_FSDecoder (obj, &uni) == 0)
+        return 0;
+
+    bytes = PyUnicode_AsMBCSString (uni);
+    Py_DECREF (uni);
+    if (bytes == NULL)
+        return 0;
+
+    if (PyBytes_AsStringAndSize (bytes, &internal, NULL) == -1) {
+        Py_DECREF (bytes);
+        return 0;
+    }
+#elif !defined(MS_WINDOWS) && PY_MAJOR_VERSION < 3
+    if (PyUnicode_Check (obj)) {
+        bytes = PyUnicode_AsEncodedString (
+            obj, Py_FileSystemDefaultEncoding, "strict");
+        if (bytes == 0)
+            return 0;
+    } else if (PyString_Check (obj)) {
+        bytes = obj;
+        Py_INCREF (bytes);
+    } else {
+        PyErr_SetString (PyExc_TypeError, "paths must be str/unicode");
+        return 0;
+    }
+
+    if (PyString_AsStringAndSize (bytes, &internal, NULL) == -1) {
+        Py_DECREF (bytes);
+        return 0;
+    }
+#elif !defined(MS_WINDOWS) && PY_MAJOR_VERSION >= 3
+    if (PyUnicode_FSConverter (obj, &bytes) == 0)
+        return 0;
+
+    if (PyBytes_AsStringAndSize (bytes, &internal, NULL) == -1) {
+        Py_DECREF (bytes);
+        return 0;
+    }
+#else
+#error "unsupported"
+#endif
+
+    buf = PyMem_Malloc (strlen (internal) + 1);
+    if (buf == NULL) {
+        Py_DECREF (bytes);
+        PyErr_NoMemory ();
+        return 0;
+    }
+    strcpy (buf, internal);
+    Py_DECREF (bytes);
+    *result = buf;
+    return 1;
+}
+
+/* Verifies that the object has a callable write() method.
+ * Gives a borrowed reference.
+ */
+int
+Pycairo_writer_converter (PyObject *obj, PyObject** file) {
+    PyObject *attr;
+
+    attr = PyObject_GetAttrString (obj, "write");
+    if (attr == NULL)
+        return 0;
+
+    if (!PyCallable_Check (attr)) {
+        Py_DECREF (attr);
+        PyErr_SetString (
+            PyExc_TypeError, "'write' attribute not callable");
+        return 0;
+    }
+
+    Py_DECREF (attr);
+    *file = obj;
+    return 1;
+}
+
+int
+Pycairo_reader_converter (PyObject *obj, PyObject** file) {
+    PyObject *attr;
+
+    attr = PyObject_GetAttrString (obj, "read");
+    if (attr == NULL)
+        return 0;
+
+    if (!PyCallable_Check (attr)) {
+        Py_DECREF (attr);
+        PyErr_SetString (
+            PyExc_TypeError, "'read' attribute not callable");
+        return 0;
+    }
+
+    Py_DECREF (attr);
+    *file = obj;
+    return 1;
+}
+
+int
+Pycairo_fspath_none_converter (PyObject *obj, char** result) {
+    if (obj == Py_None) {
+        *result = NULL;
+        return 1;
+    }
+
+    return Pycairo_fspath_converter (obj, result);
+}
 
 PyObject*
 Pycairo_tuple_getattro (PyObject *self, char **kwds, PyObject *name) {

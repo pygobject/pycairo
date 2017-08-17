@@ -1,13 +1,78 @@
 # -*- coding: utf-8 -*-
 
 import math
+import os
+import sys
 
 import pytest
 import cairo
+import tempfile
 
 pytest.importorskip("hypothesis")
-from hypothesis import given, strategies, assume
+from hypothesis import given, strategies, assume, settings
 from hypothesis.strategies import floats, integers
+
+from .hypothesis_fspaths import fspaths
+
+
+@pytest.fixture(scope='module')
+def tempdir_path():
+    dir_ = tempfile.mkdtemp()
+    try:
+        yield dir_
+    finally:
+        os.rmdir(dir_)
+
+
+def _to_temp_path(tempdir_path, p):
+    basename = os.path.basename(p)
+    if sys.version_info[0] == 3 and isinstance(basename, bytes):
+        tempdir_path = os.fsencode(tempdir_path)
+    res = os.path.join(tempdir_path, basename)
+    if not isinstance(p, (type(u""), type(b""))):
+        res = type(p)(res)
+    return res
+
+
+@given(path=fspaths())
+@settings(max_examples=5000)
+def test_fspaths(tempdir_path, path):
+    p = _to_temp_path(tempdir_path, path)
+
+    # filter out "."
+    assert not os.listdir(tempdir_path)
+    if os.path.exists(p):
+        return
+
+    # cairo uses fopen, which only supports ANSI paths under Windows.
+    # Make sure we fail if not ANSI and succeed otherwise
+    is_valid = True
+    if os.name == "nt":
+        temp = os.path.join(p)
+        if isinstance(temp, type(b"")):
+            if sys.version_info[0] == 3:
+                temp = os.fsdecode(temp)
+            else:
+                temp = temp.decode(sys.getfilesystemencoding(), "strict")
+        if isinstance(temp, type(u"")):
+            try:
+                if temp.encode("mbcs").decode("mbcs") != temp:
+                    is_valid = False
+            except UnicodeEncodeError:
+                is_valid = False
+
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
+    try:
+        surface.write_to_png(p)
+    except (TypeError, ValueError):
+        assert not is_valid
+        assert not os.path.exists(p)
+    except cairo.Error:
+        assert not os.path.exists(p)
+    else:
+        assert is_valid
+        assert os.path.exists(p), os.listdir(tempdir_path)
+        os.unlink(p)
 
 
 @given(strategies.floats(), strategies.floats())

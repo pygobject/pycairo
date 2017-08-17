@@ -450,7 +450,7 @@ def test_image_surface_write_to_png_error():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 128, 128)
     with pytest.raises(TypeError):
         surface.write_to_png(42)
-    with pytest.raises(TypeError):
+    with pytest.raises((ValueError, TypeError)):
         surface.write_to_png("\x00")
 
 

@@ -387,41 +387,34 @@ surface_create_similar_image (PycairoSurface *o, PyObject *args) {
 static PyObject *
 surface_write_to_png (PycairoSurface *o, PyObject *args) {
   cairo_status_t status;
+  char *name = NULL;
   PyObject *file;
 
-  if (!PyArg_ParseTuple(args, "O:Surface.write_to_png", &file))
-    return NULL;
-
-  if (PyObject_TypeCheck (file, &PYCAIRO_PyFilenameBase_Type)) {
-    /* filename (str or unicode) argument */
-    char *name = NULL;  /* the encoded filename */
-
-    if (!PyArg_ParseTuple(args, PYCAIRO_ENC_TEXT_FORMAT ":Surface.write_to_png",
-			  Py_FileSystemDefaultEncoding, &name))
-      return NULL;
-
+  if (PyArg_ParseTuple (args, "O&:Surface.write_to_png",
+                        Pycairo_fspath_converter, &name)) {
     Py_BEGIN_ALLOW_THREADS;
     status = cairo_surface_write_to_png (o->surface, name);
     Py_END_ALLOW_THREADS;
-
-    PyMem_Free(name);
-
-  } else {  /* file or file-like object argument */
-    PyObject* writer = PyObject_GetAttrString (file, "write");
-    if (writer == NULL || !PyCallable_Check (writer)) {
-      Py_XDECREF(writer);
-      PyErr_SetString(PyExc_TypeError,
-"Surface.write_to_png takes one argument which must be a filename (str), file "
-"object, or a file-like object which has a \"write\" method (like StringIO)");
+    PyMem_Free (name);
+  } else {
+    PyErr_Clear ();
+    if (PyArg_ParseTuple (args, "O&:Surface.write_to_png",
+                          Pycairo_writer_converter, &file)) {
+      Py_BEGIN_ALLOW_THREADS;
+      status = cairo_surface_write_to_png_stream (o->surface, _write_func,
+                                                  file);
+      Py_END_ALLOW_THREADS;
+    } else {
+      PyErr_Clear ();
+      PyErr_SetString (PyExc_TypeError,
+                       "Surface.write_to_png takes one argument which must be "
+                       "a filename, file object, or a file-like object "
+                       "which has a \"write\" method (like StringIO)");
       return NULL;
     }
-    Py_DECREF(writer);
-    Py_BEGIN_ALLOW_THREADS;
-    status = cairo_surface_write_to_png_stream (o->surface, _write_func,
-						file);
-    Py_END_ALLOW_THREADS;
   }
-  RETURN_NULL_IF_CAIRO_ERROR(status);
+
+  RETURN_NULL_IF_CAIRO_ERROR (status);
   Py_RETURN_NONE;
 }
 #endif  /* CAIRO_HAS_PNG_FUNCTIONS */
@@ -863,42 +856,35 @@ _read_func (void *closure, unsigned char *data, unsigned int length) {
 /* METH_CLASS */
 static PyObject *
 image_surface_create_from_png (PyTypeObject *type, PyObject *args) {
-  cairo_surface_t *is;
-  PyObject *reader, *file;
+  cairo_surface_t *image_surface;
+  PyObject *file;
+  char *name;
 
-  if (!PyArg_ParseTuple(args, "O:ImageSurface.create_from_png", &file))
-    return NULL;
-
-  if (PyObject_TypeCheck (file, &PYCAIRO_PyFilenameBase_Type)) {
-    char *name = NULL;  /* the encoded filename */
-
-    if (!PyArg_ParseTuple(args, PYCAIRO_ENC_TEXT_FORMAT ":Surface.create_from_png",
-			  Py_FileSystemDefaultEncoding, &name))
-      return NULL;
+  if (PyArg_ParseTuple(args, "O&:ImageSurface.create_from_png",
+                      Pycairo_fspath_converter, &name)) {
 
     Py_BEGIN_ALLOW_THREADS;
-    is = cairo_image_surface_create_from_png (name);
+    image_surface = cairo_image_surface_create_from_png (name);
     Py_END_ALLOW_THREADS;
-
     PyMem_Free(name);
-    return PycairoSurface_FromSurface (is, NULL);
+    return PycairoSurface_FromSurface (image_surface, NULL);
+  } else {
+    PyErr_Clear ();
+    if (PyArg_ParseTuple (args, "O&:ImageSurface.create_from_png",
+                          Pycairo_reader_converter, &file)) {
+      Py_BEGIN_ALLOW_THREADS;
+      image_surface = cairo_image_surface_create_from_png_stream (
+        _read_func, file);
+      Py_END_ALLOW_THREADS;
+      return PycairoSurface_FromSurface (image_surface, NULL);
+    } else {
+      PyErr_SetString(PyExc_TypeError,
+                      "ImageSurface.create_from_png argument must be a "
+                      "filename (str), file object, or an object that has a "
+                      "\"read\" method (like StringIO)");
+      return NULL;
+    }
   }
-
-  /* file or file-like object argument */
-  reader = PyObject_GetAttrString (file, "read");
-  if (reader == NULL || !PyCallable_Check (reader)) {
-    Py_XDECREF(reader);
-    PyErr_SetString(PyExc_TypeError,
-"ImageSurface.create_from_png argument must be a filename (str), file object, "
-"or an object that has a \"read\" method (like StringIO)");
-    return NULL;
-  }
-  Py_DECREF(reader);
-
-  Py_BEGIN_ALLOW_THREADS;
-  is = cairo_image_surface_create_from_png_stream (_read_func, file);
-  Py_END_ALLOW_THREADS;
-  return PycairoSurface_FromSurface (is, NULL);
 }
 #endif /* CAIRO_HAS_PNG_FUNCTIONS */
 
@@ -1190,56 +1176,38 @@ PyTypeObject PycairoMappedImageSurface_Type = {
 static PyObject *
 pdf_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   double width_in_points, height_in_points;
-  PyObject *file, *writer;
+  PyObject *file;
   cairo_surface_t *sfc;
+  char *name;
 
-  if (!PyArg_ParseTuple(args, "Odd:PDFSurface.__new__",
-			&file, &width_in_points, &height_in_points))
-    return NULL;
-
-  if (file == Py_None) {
-    Py_BEGIN_ALLOW_THREADS;
-    sfc = cairo_pdf_surface_create (NULL, width_in_points, height_in_points);
-    Py_END_ALLOW_THREADS;
-    return PycairoSurface_FromSurface (sfc, NULL);
-
-  }else if (PyObject_TypeCheck (file, &PYCAIRO_PyFilenameBase_Type)) {
-    /* filename (str or unicode) argument */
-    char *name = NULL;  /* the encoded filename */
-
-    if (!PyArg_ParseTuple(args, PYCAIRO_ENC_TEXT_FORMAT "dd:PDFSurface.__new__",
-			  Py_FileSystemDefaultEncoding,
-			  &name, &width_in_points, &height_in_points))
-      return NULL;
-
+  if (PyArg_ParseTuple (args, "O&dd:PDFSurface.__new__",
+                        Pycairo_fspath_none_converter, &name,
+                        &width_in_points, &height_in_points)) {
     Py_BEGIN_ALLOW_THREADS;
     sfc = cairo_pdf_surface_create (name, width_in_points, height_in_points);
     Py_END_ALLOW_THREADS;
-
     PyMem_Free(name);
     return PycairoSurface_FromSurface (sfc, NULL);
+  } else {
+    PyErr_Clear ();
+    if (PyArg_ParseTuple (args, "O&dd:PDFSurface.__new__",
+                          Pycairo_writer_converter, &file,
+                          &width_in_points, &height_in_points)) {
+      Py_BEGIN_ALLOW_THREADS;
+      sfc = cairo_pdf_surface_create_for_stream (
+        _write_func, file, width_in_points, height_in_points);
+      Py_END_ALLOW_THREADS;
+      return _surface_create_with_object (sfc, file);
+    } else {
+      PyErr_Clear ();
+      PyErr_SetString(PyExc_TypeError,
+                      "PDFSurface argument 1 must be "
+                      "None, or a filename (str), or "
+                      "a file object, or an object that has a "
+                      "\"write\" method (like StringIO).");
+      return NULL;
+    }
   }
-
-  /* file or file-like object argument */
-  writer = PyObject_GetAttrString (file, "write");
-  if (writer == NULL || !PyCallable_Check (writer)) {
-    Py_XDECREF(writer);
-    PyErr_SetString(PyExc_TypeError,
-"PDFSurface argument 1 must be\n"
-"  None, or\n"
-"  a filename (str), or\n"
-"  a file object, or\n"
-"  an object that has a \"write\" method (like StringIO)."
-		    );
-    return NULL;
-  }
-  Py_DECREF(writer);
-
-  Py_BEGIN_ALLOW_THREADS;
-  sfc = cairo_pdf_surface_create_for_stream (_write_func, file,
-					     width_in_points, height_in_points);
-  Py_END_ALLOW_THREADS;
-  return _surface_create_with_object (sfc, file);
 }
 
 static PyObject *
@@ -1465,55 +1433,38 @@ PyTypeObject PycairoScriptSurface_Type = {
 static PyObject *
 ps_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   double width_in_points, height_in_points;
-  PyObject *file, *writer;
+  PyObject *file;
   cairo_surface_t *sfc;
+  char *name;
 
-  if (!PyArg_ParseTuple(args, "Odd:PSSurface.__new__",
-			&file, &width_in_points, &height_in_points))
-    return NULL;
-
-  if (file == Py_None) {
-    Py_BEGIN_ALLOW_THREADS;
-    sfc = cairo_ps_surface_create (NULL, width_in_points, height_in_points);
-    Py_END_ALLOW_THREADS;
-    return PycairoSurface_FromSurface (sfc, NULL);
-
-  }else if (PyObject_TypeCheck (file, &PYCAIRO_PyFilenameBase_Type)) {
-    /* filename (str or unicode) argument */
-    char *name = NULL;  /* the encoded filename */
-
-    if (!PyArg_ParseTuple(args, PYCAIRO_ENC_TEXT_FORMAT "dd:PSSurface.__new__",
-			  Py_FileSystemDefaultEncoding,
-			  &name, &width_in_points, &height_in_points))
-      return NULL;
-
+  if (PyArg_ParseTuple (args, "O&dd:PSSurface.__new__",
+                        Pycairo_fspath_none_converter, &name,
+                        &width_in_points, &height_in_points)) {
     Py_BEGIN_ALLOW_THREADS;
     sfc = cairo_ps_surface_create (name, width_in_points, height_in_points);
     Py_END_ALLOW_THREADS;
-
     PyMem_Free(name);
     return PycairoSurface_FromSurface (sfc, NULL);
+  } else {
+    PyErr_Clear ();
+    if (PyArg_ParseTuple (args, "O&dd:PSSurface.__new__",
+                          Pycairo_writer_converter, &file,
+                          &width_in_points, &height_in_points)) {
+      Py_BEGIN_ALLOW_THREADS;
+      sfc = cairo_ps_surface_create_for_stream (
+        _write_func, file, width_in_points, height_in_points);
+      Py_END_ALLOW_THREADS;
+      return _surface_create_with_object (sfc, file);
+    } else {
+      PyErr_Clear ();
+      PyErr_SetString(PyExc_TypeError,
+                      "PSSurface argument 1 must be "
+                      "None, or a filename (str), or "
+                      "a file object, or an object that has a "
+                      "\"write\" method (like StringIO).");
+      return NULL;
+    }
   }
-  /* else: file or file-like object argument */
-  writer = PyObject_GetAttrString (file, "write");
-  if (writer == NULL || !PyCallable_Check (writer)) {
-    Py_XDECREF(writer);
-    PyErr_SetString(PyExc_TypeError,
-"PSSurface argument 1 must be\n"
-"  None, or\n"
-"  a filename (str), or\n"
-"  a file object, or\n"
-"  an object that has a \"write\" method (like StringIO)."
-		    );
-    return NULL;
-  }
-  Py_DECREF(writer);
-
-  Py_BEGIN_ALLOW_THREADS;
-  sfc = cairo_ps_surface_create_for_stream (_write_func, file,
-					    width_in_points, height_in_points);
-  Py_END_ALLOW_THREADS;
-  return _surface_create_with_object (sfc, file);
 }
 
 static PyObject *
@@ -1811,55 +1762,38 @@ PyTypeObject PycairoRecordingSurface_Type = {
 static PyObject *
 svg_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   double width_in_points, height_in_points;
-  PyObject *file, *writer;
+  PyObject *file;
   cairo_surface_t *sfc;
+  char *name;
 
-  if (!PyArg_ParseTuple(args, "Odd:SVGSurface.__new__",
-			&file, &width_in_points, &height_in_points))
-    return NULL;
-
-  if (file == Py_None) {
-    Py_BEGIN_ALLOW_THREADS;
-    sfc = cairo_svg_surface_create (NULL, width_in_points, height_in_points);
-    Py_END_ALLOW_THREADS;
-    return PycairoSurface_FromSurface (sfc, NULL);
-
-  }else if (PyObject_TypeCheck (file, &PYCAIRO_PyFilenameBase_Type)) {
-    /* filename (str or unicode) argument */
-    char *name = NULL;  /* the encoded filename */
-
-    if (!PyArg_ParseTuple(args, PYCAIRO_ENC_TEXT_FORMAT "dd:SVGSurface.__new__",
-			  Py_FileSystemDefaultEncoding,
-			  &name, &width_in_points, &height_in_points))
-      return NULL;
-
+  if (PyArg_ParseTuple (args, "O&dd:SVGSurface.__new__",
+                        Pycairo_fspath_none_converter, &name,
+                        &width_in_points, &height_in_points)) {
     Py_BEGIN_ALLOW_THREADS;
     sfc = cairo_svg_surface_create (name, width_in_points, height_in_points);
     Py_END_ALLOW_THREADS;
-
     PyMem_Free(name);
     return PycairoSurface_FromSurface (sfc, NULL);
+  } else {
+    PyErr_Clear ();
+    if (PyArg_ParseTuple (args, "O&dd:SVGSurface.__new__",
+                          Pycairo_writer_converter, &file,
+                          &width_in_points, &height_in_points)) {
+      Py_BEGIN_ALLOW_THREADS;
+      sfc = cairo_svg_surface_create_for_stream (
+        _write_func, file, width_in_points, height_in_points);
+      Py_END_ALLOW_THREADS;
+      return _surface_create_with_object (sfc, file);
+    } else {
+      PyErr_Clear ();
+      PyErr_SetString(PyExc_TypeError,
+                      "SVGSurface argument 1 must be "
+                      "None, or a filename (str), or "
+                      "a file object, or an object that has a "
+                      "\"write\" method (like StringIO).");
+      return NULL;
+    }
   }
-  /* else: file or file-like object argument */
-  writer = PyObject_GetAttrString (file, "write");
-  if (writer == NULL || !PyCallable_Check (writer)) {
-    Py_XDECREF(writer);
-    PyErr_SetString(PyExc_TypeError,
-"SVGSurface argument 1 must be\n"
-"  None, or\n"
-"  a filename (str), or\n"
-"  a file object, or\n"
-"  an object that has a \"write\" method (like StringIO)."
-		    );
-    return NULL;
-  }
-  Py_DECREF(writer);
-
-  Py_BEGIN_ALLOW_THREADS;
-  sfc = cairo_svg_surface_create_for_stream (_write_func, file,
-					     width_in_points, height_in_points);
-  Py_END_ALLOW_THREADS;
-  return _surface_create_with_object (sfc, file);
 }
 
 static PyObject *
