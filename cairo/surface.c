@@ -844,7 +844,7 @@ _read_func (void *closure, unsigned char *data, unsigned int length) {
     goto end;
   }
   ret = PYCAIRO_PyBytes_AsStringAndSize(pystr, &buffer, &str_length);
-  if (ret == -1 || str_length < length) {
+  if (ret == -1 || str_length < (Py_ssize_t)length) {
     PyErr_Clear();
     goto end;
   }
