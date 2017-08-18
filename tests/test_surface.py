@@ -560,7 +560,7 @@ def test_write_to_png(image_surface):
 
     with pytest.raises((ValueError, TypeError)) as excinfo:
         image_surface.write_to_png("\x00")
-    excinfo.match(r'.* null .*')
+    excinfo.match(r'.* (null|NUL) .*')
 
     with pytest.raises(TypeError):
         image_surface.write_to_png(object())
