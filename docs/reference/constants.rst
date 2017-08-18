@@ -123,3 +123,15 @@ Other Classes and Functions
     This type only exists for documentation purposes. It represents
     :obj:`python:str`/:obj:`python:unicode` under Python 2 and
     :obj:`python3:str` under Python 3.
+
+
+.. class:: pathlike()
+
+    This type only exists for documentation purposes. It represents everything
+    Python allows as a filesystem path except on Windows where only ANSI paths
+    are supported. To use Unicode paths on Windows most functions take an
+    already open file object which you can create from a Unicode path and then
+    pass to pycairo instead.
+
+    .. versionadded:: 1.15.1
+        Older versions only supported :obj:`str` paths
