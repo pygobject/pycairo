@@ -210,30 +210,35 @@ script_device_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
     PyObject *file;
     cairo_device_t *device;
 
+  if (!PyArg_ParseTuple (args, "O:ScriptDevice.__new__", &file))
+    return NULL;
+
+  if (Pycairo_is_fspath (file)) {
+    if (!PyArg_ParseTuple (args, "O&:ScriptDevice.__new__",
+                           Pycairo_fspath_converter, &name))
+      return NULL;
+
+    Py_BEGIN_ALLOW_THREADS;
+    device = cairo_script_create (name);
+    Py_END_ALLOW_THREADS;
+    PyMem_Free (name);
+    return PycairoDevice_FromDevice (device);
+  } else {
     if (PyArg_ParseTuple (args, "O&:ScriptDevice.__new__",
-                          Pycairo_fspath_converter, &name)) {
+                          Pycairo_writer_converter, &file)) {
         Py_BEGIN_ALLOW_THREADS;
-        device = cairo_script_create (name);
+        device = cairo_script_create_for_stream (_write_func, file);
         Py_END_ALLOW_THREADS;
-        PyMem_Free (name);
-        return PycairoDevice_FromDevice (device);
+        return _device_create_with_object (device, file);
     } else {
         PyErr_Clear ();
-        if (PyArg_ParseTuple (args, "O&:ScriptDevice.__new__",
-                              Pycairo_writer_converter, &file)) {
-            Py_BEGIN_ALLOW_THREADS;
-            device = cairo_script_create_for_stream (_write_func, file);
-            Py_END_ALLOW_THREADS;
-            return _device_create_with_object (device, file);
-        } else {
-            PyErr_Clear ();
-            PyErr_SetString (PyExc_TypeError,
-                             "ScriptDevice takes one argument which must be "
-                             "a filename, file object, or a file-like object "
-                             "which has a \"write\" method (like StringIO)");
-            return NULL;
-        }
+        PyErr_SetString (PyExc_TypeError,
+                         "ScriptDevice takes one argument which must be "
+                         "a filename, file object, or a file-like object "
+                         "which has a \"write\" method (like StringIO)");
+        return NULL;
     }
+  }
 }
 
 static PyObject *

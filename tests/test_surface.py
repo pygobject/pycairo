@@ -162,7 +162,7 @@ def test_pdf_surface():
     with pytest.raises(TypeError):
         cairo.PDFSurface()
 
-    with pytest.raises(TypeError):
+    with pytest.raises((ValueError, TypeError)):
         cairo.PDFSurface("\x00")
 
     with pytest.raises(TypeError):
@@ -274,7 +274,7 @@ def test_ps_surface():
     with pytest.raises(TypeError):
         cairo.PSSurface()
 
-    with pytest.raises(TypeError):
+    with pytest.raises((ValueError, TypeError)):
         cairo.PSSurface("\x00", 100, 100)
 
     with pytest.raises(TypeError):
@@ -292,7 +292,7 @@ def test_scg_surface():
     with pytest.raises(TypeError):
         cairo.SVGSurface()
 
-    with pytest.raises(TypeError):
+    with pytest.raises((ValueError, TypeError)):
         cairo.SVGSurface("\x00", 10, 10)
 
     with pytest.raises(TypeError):
@@ -428,7 +428,7 @@ def test_image_surface_png_obj_roundtrip():
     assert surface.get_data() == new_surface.get_data()
     with pytest.raises(TypeError):
         cairo.ImageSurface.create_from_png()
-    with pytest.raises(TypeError):
+    with pytest.raises((ValueError, TypeError)):
         cairo.ImageSurface.create_from_png("\x00")
     with pytest.raises(TypeError):
         cairo.ImageSurface.create_from_png(object())
@@ -557,6 +557,13 @@ def test_mark_dirty_rectangle(surface):
 def test_write_to_png(image_surface):
     with pytest.raises(TypeError):
         image_surface.write_to_png()
+
+    with pytest.raises((ValueError, TypeError)) as excinfo:
+        image_surface.write_to_png("\x00")
+    excinfo.match(r'.* null .*')
+
+    with pytest.raises(TypeError):
+        image_surface.write_to_png(object())
 
 
 def test_image_surface():

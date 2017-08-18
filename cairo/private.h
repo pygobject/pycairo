@@ -46,6 +46,7 @@ int Pycairo_fspath_converter (PyObject *obj, char** result);
 int Pycairo_fspath_none_converter (PyObject *obj, char** result);
 int Pycairo_writer_converter (PyObject *obj, PyObject** file);
 int Pycairo_reader_converter (PyObject *obj, PyObject** file);
+int Pycairo_is_fspath (PyObject *obj);
 
 cairo_glyph_t * _PycairoGlyphs_AsGlyphs (PyObject *py_object, int *num_glyphs);
 int _PyGlyph_AsGlyph (PyObject *pyobj, cairo_glyph_t *glyph);

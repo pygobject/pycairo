@@ -390,14 +390,18 @@ surface_write_to_png (PycairoSurface *o, PyObject *args) {
   char *name = NULL;
   PyObject *file;
 
-  if (PyArg_ParseTuple (args, "O&:Surface.write_to_png",
-                        Pycairo_fspath_converter, &name)) {
+  if (!PyArg_ParseTuple (args, "O:Surface.write_to_png", &file))
+    return NULL;
+
+  if (Pycairo_is_fspath (file)) {
+    if (!PyArg_ParseTuple (args, "O&:Surface.write_to_png",
+                           Pycairo_fspath_converter, &name))
+      return NULL;
     Py_BEGIN_ALLOW_THREADS;
     status = cairo_surface_write_to_png (o->surface, name);
     Py_END_ALLOW_THREADS;
     PyMem_Free (name);
   } else {
-    PyErr_Clear ();
     if (PyArg_ParseTuple (args, "O&:Surface.write_to_png",
                           Pycairo_writer_converter, &file)) {
       Py_BEGIN_ALLOW_THREADS;
@@ -860,8 +864,13 @@ image_surface_create_from_png (PyTypeObject *type, PyObject *args) {
   PyObject *file;
   char *name;
 
-  if (PyArg_ParseTuple(args, "O&:ImageSurface.create_from_png",
-                      Pycairo_fspath_converter, &name)) {
+  if (!PyArg_ParseTuple (args, "O:ImageSurface.create_from_png", &file))
+    return NULL;
+
+  if (Pycairo_is_fspath (file)) {
+    if (!PyArg_ParseTuple(args, "O&:ImageSurface.create_from_png",
+                          Pycairo_fspath_converter, &name))
+      return NULL;
 
     Py_BEGIN_ALLOW_THREADS;
     image_surface = cairo_image_surface_create_from_png (name);
@@ -869,7 +878,6 @@ image_surface_create_from_png (PyTypeObject *type, PyObject *args) {
     PyMem_Free(name);
     return PycairoSurface_FromSurface (image_surface, NULL);
   } else {
-    PyErr_Clear ();
     if (PyArg_ParseTuple (args, "O&:ImageSurface.create_from_png",
                           Pycairo_reader_converter, &file)) {
       Py_BEGIN_ALLOW_THREADS;
@@ -1180,16 +1188,22 @@ pdf_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   cairo_surface_t *sfc;
   char *name;
 
-  if (PyArg_ParseTuple (args, "O&dd:PDFSurface.__new__",
-                        Pycairo_fspath_none_converter, &name,
-                        &width_in_points, &height_in_points)) {
+  if (!PyArg_ParseTuple (args, "Odd:PDFSurface.__new__",
+                         &file, &width_in_points, &height_in_points))
+    return NULL;
+
+  if (Pycairo_is_fspath (file) || file == Py_None) {
+    if (!PyArg_ParseTuple (args, "O&dd:PDFSurface.__new__",
+                           Pycairo_fspath_none_converter, &name,
+                           &width_in_points, &height_in_points))
+      return NULL;
+
     Py_BEGIN_ALLOW_THREADS;
     sfc = cairo_pdf_surface_create (name, width_in_points, height_in_points);
     Py_END_ALLOW_THREADS;
     PyMem_Free(name);
     return PycairoSurface_FromSurface (sfc, NULL);
   } else {
-    PyErr_Clear ();
     if (PyArg_ParseTuple (args, "O&dd:PDFSurface.__new__",
                           Pycairo_writer_converter, &file,
                           &width_in_points, &height_in_points)) {
@@ -1437,16 +1451,22 @@ ps_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   cairo_surface_t *sfc;
   char *name;
 
-  if (PyArg_ParseTuple (args, "O&dd:PSSurface.__new__",
-                        Pycairo_fspath_none_converter, &name,
-                        &width_in_points, &height_in_points)) {
+  if (!PyArg_ParseTuple (args, "Odd:PSSurface.__new__",
+                         &file, &width_in_points, &height_in_points))
+    return NULL;
+
+  if (Pycairo_is_fspath (file) || file == Py_None) {
+    if (!PyArg_ParseTuple (args, "O&dd:PSSurface.__new__",
+                           Pycairo_fspath_none_converter, &name,
+                           &width_in_points, &height_in_points))
+      return NULL;
+
     Py_BEGIN_ALLOW_THREADS;
     sfc = cairo_ps_surface_create (name, width_in_points, height_in_points);
     Py_END_ALLOW_THREADS;
     PyMem_Free(name);
     return PycairoSurface_FromSurface (sfc, NULL);
   } else {
-    PyErr_Clear ();
     if (PyArg_ParseTuple (args, "O&dd:PSSurface.__new__",
                           Pycairo_writer_converter, &file,
                           &width_in_points, &height_in_points)) {
@@ -1766,16 +1786,22 @@ svg_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   cairo_surface_t *sfc;
   char *name;
 
-  if (PyArg_ParseTuple (args, "O&dd:SVGSurface.__new__",
-                        Pycairo_fspath_none_converter, &name,
-                        &width_in_points, &height_in_points)) {
+  if (!PyArg_ParseTuple (args, "Odd:SVGSurface.__new__",
+                         &file, &width_in_points, &height_in_points))
+    return NULL;
+
+  if (Pycairo_is_fspath (file) || file == Py_None) {
+    if (!PyArg_ParseTuple (args, "O&dd:SVGSurface.__new__",
+                           Pycairo_fspath_none_converter, &name,
+                           &width_in_points, &height_in_points))
+      return NULL;
+
     Py_BEGIN_ALLOW_THREADS;
     sfc = cairo_svg_surface_create (name, width_in_points, height_in_points);
     Py_END_ALLOW_THREADS;
     PyMem_Free(name);
     return PycairoSurface_FromSurface (sfc, NULL);
   } else {
-    PyErr_Clear ();
     if (PyArg_ParseTuple (args, "O&dd:SVGSurface.__new__",
                           Pycairo_writer_converter, &file,
                           &width_in_points, &height_in_points)) {

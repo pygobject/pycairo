@@ -34,6 +34,28 @@
 #include "config.h"
 #include "private.h"
 
+
+/* Returns 1 if the object has the correct file type for a filesystem path.
+ * Parsing it with Pycairo_fspath_converter() might still fail.
+ */
+int
+Pycairo_is_fspath (PyObject *obj) {
+#if PY_MAJOR_VERSION < 3
+    return (PyString_Check (obj) || PyUnicode_Check (obj));
+#elif PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 6
+    PyObject *real = PyOS_FSPath (obj);
+    if (real == NULL) {
+        PyErr_Clear ();
+        return 0;
+    } else {
+        Py_DECREF (real);
+        return 1;
+    }
+#else
+    return (PyBytes_Check (obj) || PyUnicode_Check (obj));
+#endif
+}
+
 /* Converts a Python object to a cairo path. The result needs to be freed with
  * PyMem_Free().
  */
@@ -84,7 +106,7 @@ Pycairo_fspath_converter (PyObject *obj, char** result) {
         Py_DECREF (bytes);
         Py_DECREF (other);
         PyErr_SetString (
-            PyExc_UnicodeEncodeError, "only ANSI paths supported");
+            PyExc_ValueError, "only ANSI paths supported on Windows");
         return 0;
     }
 
