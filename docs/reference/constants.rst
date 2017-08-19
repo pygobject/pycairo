@@ -134,4 +134,4 @@ Other Classes and Functions
     pass to pycairo instead.
 
     .. versionadded:: 1.15.1
-        Older versions only supported :obj:`str` paths
+        Older versions only supported a subset of :obj:`str` paths

@@ -1,6 +1,23 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning
 <http://semver.org/>`__ i.e. the newest version is the latest stable one.
 
+.. _v1.15.1:
+
+1.15.1 - 2017-08-19
+-------------------
+
+Fixes:
+  * Improved support for Python filesystem paths including
+    :class:`os.PathLike`. See :class:`pathlike` for details.
+  * Various minor fixes
+
+Changes:
+  * Expose :class:`cairo.Path`
+
+Tests:
+  * Improved test coverage from ~70% to ~90%
+
+
 .. _v1.15.0:
 
 1.15.0 - 2017-07-24
