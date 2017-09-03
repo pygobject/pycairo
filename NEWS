@@ -1,6 +1,17 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning
 <http://semver.org/>`__ i.e. the newest version is the latest stable one.
 
+.. _v1.15.2:
+
+1.15.2 - 2017-09-03
+-------------------
+
+Fixes:
+  * setup.py: Install pkgconfig file to the same library prefix that Python
+    uses. (/usr/lib64 instead of /usr/lib under Fedora for example) :bug:`70`
+    :pr:`71` (:user:`Sander Sweers <infirit>`)
+
+
 .. _v1.15.1:
 
 1.15.1 - 2017-08-19
