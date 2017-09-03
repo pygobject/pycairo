@@ -6,6 +6,7 @@ import sys
 import os
 import errno
 from distutils.core import Extension, setup, Command, Distribution
+from distutils import sysconfig
 
 
 PYCAIRO_VERSION = '1.15.2'
@@ -119,8 +120,8 @@ class install_pkgconfig(Command):
         return []
 
     def run(self):
-        libdir = os.path.join(self.install_data, "lib")
-        install_dir = os.path.join(libdir, "pkgconfig")
+        python_lib = sysconfig.get_python_lib(True, True, self.install_data)
+        install_dir = os.path.join(os.path.dirname(python_lib), 'pkgconfig')
         self.mkpath(install_dir)
 
         if sys.version_info[0] == 3:
