@@ -13,6 +13,8 @@ PYCAIRO_VERSION = '1.15.3'
 CAIRO_VERSION_REQUIRED = '1.13.1'
 XPYB_VERSION_REQUIRED = '1.3'
 
+is_msvc = False
+
 
 def get_command_class(name):
     # in case pip loads with setuptools this returns the extended commands
@@ -120,6 +122,11 @@ class install_pkgconfig(Command):
         return []
 
     def run(self):
+        global is_msvc
+
+        if is_msvc:
+            return
+
         python_lib = sysconfig.get_python_lib(True, True, self.install_data)
         install_dir = os.path.join(os.path.dirname(python_lib), 'pkgconfig')
         self.mkpath(install_dir)
@@ -128,6 +135,7 @@ class install_pkgconfig(Command):
             target = os.path.join(install_dir, "py3cairo.pc")
         else:
             target = os.path.join(install_dir, "pycairo.pc")
+
         with open(target, "wb") as h:
             h.write((u"""\
 prefix=%(prefix)s
@@ -139,7 +147,8 @@ Requires: cairo
 Cflags: -I${prefix}/include/pycairo
 Libs:
 """ % {
-                "prefix": self.install_base, "version": PYCAIRO_VERSION,
+                "prefix": self.install_base.replace('\\', '/'),
+                "version": PYCAIRO_VERSION,
                 "py_version": sys.version_info[0]}).encode("utf-8"))
 
         self.outfiles.append(target)
@@ -177,13 +186,35 @@ class build_ext(du_build_ext):
         )
 
     def run(self):
-        pkg_config_version_check('cairo', CAIRO_VERSION_REQUIRED)
+        ext = self.extensions[0]
+        global is_msvc
+
+        if os.name == 'nt':
+            if 'MSYSTEM' not in os.environ:
+                if self.compiler is None or \
+                   self.compiler != 'mingw32':
+                    is_msvc = True
+
+        # If we are using MSVC, don't use pkg-config,
+        # just assume that INCLUDE and LIB contain
+        # the paths to the Cairo headers and libraries,
+        # respectively.
+        if is_msvc:
+            ext.libraries += ['cairo']
+        else:
+            pkg_config_version_check('cairo', CAIRO_VERSION_REQUIRED)
+            ext.include_dirs += pkg_config_parse('--cflags-only-I', 'cairo')
+            ext.library_dirs += pkg_config_parse('--libs-only-L', 'cairo')
+            ext.libraries += pkg_config_parse('--libs-only-l', 'cairo')
+            if sys.version_info[0] == 2:
+                # Some python setups don't pass -fno-strict-aliasing,
+                # while MACROS like Py_RETURN_TRUE require it.
+                ext.extra_compile_args += ["-fno-strict-aliasing"]
 
         if self.enable_xpyb:
             if sys.version_info[0] != 2:
                 raise SystemExit("xpyb only supported with Python 2")
             pkg_config_version_check("xpyb", XPYB_VERSION_REQUIRED)
-            ext = self.extensions[0]
 
             ext.define_macros += [("HAVE_XPYB", None)]
             ext.include_dirs += pkg_config_parse('--cflags-only-I', 'xpyb')
@@ -229,12 +260,6 @@ class install_data(du_install_data):
 
 def main():
 
-    extra_compile_args = []
-    if sys.version_info[0] == 2:
-        # Some python setups don't pass -fno-strict-aliasing, while MACROS like
-        # Py_RETURN_TRUE require it.
-        extra_compile_args.append("-fno-strict-aliasing")
-
     cairo_ext = Extension(
         name='cairo._cairo',
         sources=[
@@ -256,10 +281,6 @@ def main():
             'cairo/textcluster.c',
             'cairo/textextents.c',
         ],
-        include_dirs=pkg_config_parse('--cflags-only-I', 'cairo'),
-        library_dirs=pkg_config_parse('--libs-only-L', 'cairo'),
-        libraries=pkg_config_parse('--libs-only-l', 'cairo'),
-        extra_compile_args=extra_compile_args,
     )
 
     with io.open('README.rst', encoding="utf-8") as h:
