@@ -11,10 +11,10 @@ import tempfile as tfi
 import base64
 import zlib
 import shutil
+import sysconfig
 
 import cairo
 import pytest
-import py.test as test
 
 
 def test_version():
@@ -73,7 +73,7 @@ def test_context():
 
 def test_surface():
     # TypeError: The Surface type cannot be instantiated
-    test.raises(TypeError, "s = cairo.Surface()")
+    pytest.raises(TypeError, "s = cairo.Surface()")
 
     f, w, h = cairo.FORMAT_ARGB32, 100, 100
     s = cairo.ImageSurface(f, w, h)
@@ -283,6 +283,8 @@ def test_surface_get_set_mime_data_references():
     assert sys.getrefcount(x) == 2
 
 
+@pytest.mark.skipif(
+    sysconfig.get_platform().startswith("win"), reason="msvc fixme")
 def test_surface_mime_data_for_pdf():
     jpeg_bytes = zlib.decompress(base64.b64decode(
         b'eJz7f+P/AwYBLzdPNwZGRkYGDyBk+H+bwRnEowj8P8TAzcHACDJHkOH/EQYRIBsV'
