@@ -573,6 +573,11 @@ PYCAIRO_MOD_INIT(_cairo)
 #else
   PyModule_AddIntConstant(m, "HAS_SCRIPT_SURFACE", 0);
 #endif
+#ifdef CAIRO_HAS_TEE_SURFACE
+  PyModule_AddIntConstant(m, "HAS_TEE_SURFACE", 1);
+#else
+  PyModule_AddIntConstant(m, "HAS_TEE_SURFACE", 0);
+#endif
 
 #define STRCONSTANT(x) PyModule_AddStringConstant(m, #x, CAIRO_##x)
 

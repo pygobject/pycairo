@@ -6,6 +6,7 @@ import sys
 import array
 import tempfile
 import struct
+import sysconfig
 
 import cairo
 import pytest
@@ -87,6 +88,7 @@ def test_surface_map_to_image_data():
     assert bytes(main.get_data()) == b"\xff\xff\xff\xff\x00\x00\x00\x00"
 
 
+@pytest.mark.skipif(not cairo.HAS_TEE_SURFACE, reason="no tee surface")
 def test_tee_surface():
     main = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
     tee = cairo.TeeSurface(main)
@@ -151,6 +153,8 @@ def test_pdf_set_size():
         surface.set_size(10, object())
 
 
+@pytest.mark.skipif(
+    sysconfig.get_platform().startswith("win"), reason="msvc fixme")
 def test_pdf_surface():
     fd, fname = tempfile.mkstemp()
     os.close(fd)
@@ -188,6 +192,8 @@ def test_svg_surface_restrict_to_version():
         surface.restrict_to_version(object())
 
 
+@pytest.mark.skipif(
+    sysconfig.get_platform().startswith("win"), reason="msvc fixme")
 def test_pdf_surface_restrict_to_version():
     surface = cairo.PDFSurface(None, 10, 10)
     surface.restrict_to_version(cairo.PDF_VERSION_1_4)
@@ -245,6 +251,8 @@ def test_ps_restrict_to_level():
         surface.restrict_to_level(object())
 
 
+@pytest.mark.skipif(
+    sysconfig.get_platform().startswith("win"), reason="msvc fixme")
 def test_ps_surface_level_to_string():
     level_id = cairo.PSSurface.level_to_string(cairo.PS_LEVEL_2)
     assert isinstance(level_id, str)

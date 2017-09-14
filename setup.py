@@ -5,7 +5,11 @@ import subprocess
 import sys
 import os
 import errno
-from distutils.core import Extension, setup, Command, Distribution
+
+try:
+    from setuptools import Extension, setup, Command, Distribution
+except ImportError:
+    from distutils.core import Extension, setup, Command, Distribution
 from distutils import sysconfig
 
 

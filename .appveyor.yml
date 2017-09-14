@@ -1,5 +1,26 @@
 environment:
   matrix:
+    - MSVC_PLATFORM: x86
+      PYTHON_ROOT: Python27
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+    - MSVC_PLATFORM: x64
+      PYTHON_ROOT: Python27-x64
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+    - MSVC_PLATFORM: x86
+      PYTHON_ROOT: Python34
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    - MSVC_PLATFORM: x86
+      PYTHON_ROOT: Python35
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    - MSVC_PLATFORM: x64
+      PYTHON_ROOT: Python35-x64
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    - MSVC_PLATFORM: x86
+      PYTHON_ROOT: Python36
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    - MSVC_PLATFORM: x64
+      PYTHON_ROOT: Python36-x64
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     - MSYS2_ARCH: x86_64
       MSYSTEM: MINGW64
       PYTHON: python2
@@ -14,8 +35,9 @@ environment:
       PYTHON: python3
 
 build_script:
-  - IF NOT %MSYSTEM% == "" set PATH=C:\msys64\%MSYSTEM%\bin;C:\msys64\usr\bin;%PATH%
-  - IF NOT %MSYSTEM% == "" set CHERE_INVOKING=yes
-  - IF NOT %MSYSTEM% == "" bash -lc "bash .appveyor/msys2.sh"
+  - IF DEFINED MSYSTEM set PATH=C:\msys64\%MSYSTEM%\bin;C:\msys64\usr\bin;%PATH%
+  - IF DEFINED MSYSTEM set CHERE_INVOKING=yes
+  - IF DEFINED MSYSTEM bash -lc "bash .appveyor/msys2.sh"
+  - IF DEFINED MSVC_PLATFORM ".appveyor/msvc.bat"
 
 deploy: off
