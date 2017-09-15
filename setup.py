@@ -148,7 +148,7 @@ Requires: cairo
 Cflags: -I${prefix}/include/pycairo
 Libs:
 """ % {
-                "prefix": self.install_base.replace('\\', '/'),
+                "prefix": self.install_base,
                 "version": PYCAIRO_VERSION,
                 "py_version": sys.version_info[0]}).encode("utf-8"))
 
