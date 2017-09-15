@@ -2,8 +2,8 @@ set CAIRO_VER=1.15.6
 appveyor DownloadFile https://github.com/preshing/cairo-windows/releases/download/%CAIRO_VER%/cairo-windows-%CAIRO_VER%.zip
 7z x cairo-windows-%CAIRO_VER%.zip
 
-::~ set MSVC_PLATFORM=x64
-::~ set PYTHON_ROOT=Python27-x64
+::~ set MSVC_PLATFORM=x86
+::~ set PYTHON_ROOT=Python27
 ::~ set PATH=
 ::~ set LIBPATH=
 

@@ -6,10 +6,7 @@ import sys
 import os
 import errno
 
-try:
-    from setuptools import Extension, setup, Command, Distribution
-except ImportError:
-    from distutils.core import Extension, setup, Command, Distribution
+from distutils.core import Extension, setup, Command, Distribution
 from distutils import sysconfig
 
 
