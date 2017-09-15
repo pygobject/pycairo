@@ -7,14 +7,13 @@ import os
 import errno
 
 from distutils.core import Extension, setup, Command, Distribution
+from distutils.ccompiler import new_compiler
 from distutils import sysconfig
 
 
 PYCAIRO_VERSION = '1.15.3'
 CAIRO_VERSION_REQUIRED = '1.13.1'
 XPYB_VERSION_REQUIRED = '1.3'
-
-is_msvc = False
 
 
 def get_command_class(name):
@@ -108,12 +107,18 @@ class install_pkgconfig(Command):
         self.install_data = None
         self.install_base = None
         self.outfiles = []
+        self.compiler_type = None
 
     def finalize_options(self):
         self.set_undefined_options(
             'install',
             ('install_data', 'install_data'),
             ('install_base', 'install_base'),
+        )
+
+        self.set_undefined_options(
+            'build_ext',
+            ('compiler_type', 'compiler_type'),
         )
 
     def get_outputs(self):
@@ -123,9 +128,7 @@ class install_pkgconfig(Command):
         return []
 
     def run(self):
-        global is_msvc
-
-        if is_msvc:
+        if self.compiler_type == "msvc":
             return
 
         python_lib = sysconfig.get_python_lib(True, True, self.install_data)
@@ -177,6 +180,7 @@ class build_ext(du_build_ext):
     def initialize_options(self):
         du_build_ext.initialize_options(self)
         self.enable_xpyb = None
+        self.compiler_type = None
 
     def finalize_options(self):
         du_build_ext.finalize_options(self)
@@ -186,21 +190,16 @@ class build_ext(du_build_ext):
             ('enable_xpyb', 'enable_xpyb'),
         )
 
+        self.compiler_type = new_compiler(compiler=self.compiler).compiler_type
+
     def run(self):
         ext = self.extensions[0]
-        global is_msvc
-
-        if os.name == 'nt':
-            if 'MSYSTEM' not in os.environ:
-                if self.compiler is None or \
-                   self.compiler != 'mingw32':
-                    is_msvc = True
 
         # If we are using MSVC, don't use pkg-config,
         # just assume that INCLUDE and LIB contain
         # the paths to the Cairo headers and libraries,
         # respectively.
-        if is_msvc:
+        if self.compiler_type == "msvc":
             ext.libraries += ['cairo']
         else:
             pkg_config_version_check('cairo', CAIRO_VERSION_REQUIRED)
