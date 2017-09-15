@@ -221,14 +221,21 @@ init_enum_type (PyObject *module, const char *name, PyTypeObject *type) {
 static PyObject *
 format_stride_for_width (PyObject *self, PyObject *args) {
   cairo_format_t format;
+  long value;
   int width;
 
   if (!PyArg_ParseTuple(args, "i:stride_for_width", &width))
     return NULL;
 
-  format = PyLong_AsLong (self);
+  value = PyLong_AsLong (self);
   if (PyErr_Occurred())
     return NULL;
+  if (value > INT_MAX || value < INT_MIN) {
+    PyErr_SetString (PyExc_ValueError, "format value out of range");
+    return NULL;
+  }
+
+  format = (cairo_format_t)value;
 
   return PYCAIRO_PyLong_FromLong (
     cairo_format_stride_for_width (format, width));

@@ -18,4 +18,5 @@ set PYTHON=C:\%PYTHON_ROOT%\python.exe
 
 %PYTHON% -m pip install --upgrade pytest hypothesis setuptools
 copy cairo-windows-%CAIRO_VER%\lib\%MSVC_PLATFORM%\cairo.dll cairo
+set CL=/WX
 %PYTHON% setup.py test

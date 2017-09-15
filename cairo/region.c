@@ -213,8 +213,7 @@ region_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
 
   /* list of rectangle_int or no args */
   if (s != NULL) {
-    int i;
-    int rect_size;
+    Py_ssize_t i, rect_size;
     PyObject *seq = NULL;
     seq = PySequence_Fast (s,
         "argument must be a RectangleInt or a sequence of RectangleInt.");
@@ -222,7 +221,12 @@ region_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
       return NULL;
     }
     rect_size = PySequence_Fast_GET_SIZE(seq);
-    rect = PyMem_Malloc (rect_size * sizeof(cairo_rectangle_int_t));
+    if (rect_size > INT_MAX) {
+        Py_DECREF (seq);
+        PyErr_SetString (PyExc_ValueError, "sequence too large");
+        return NULL;
+    }
+    rect = PyMem_Malloc ((unsigned int)rect_size * sizeof(cairo_rectangle_int_t));
     if (rect == NULL) {
       Py_DECREF(seq);
       return PyErr_NoMemory();
@@ -240,7 +244,7 @@ region_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
       rect[i] = rect_obj->rectangle_int;
     }
 
-    region = cairo_region_create_rectangles(rect, rect_size);
+    region = cairo_region_create_rectangles(rect, (int)rect_size);
 
     Py_DECREF(seq);
     PyMem_Free(rect);
@@ -254,7 +258,7 @@ region_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
   return PycairoRegion_FromRegion(region);
 }
 
-PyObject *
+static PyObject *
 region_copy (PycairoRegion *o) {
   cairo_region_t *res;
   Py_BEGIN_ALLOW_THREADS;
@@ -265,7 +269,7 @@ region_copy (PycairoRegion *o) {
 }
 
 
-PyObject *
+static PyObject *
 region_get_extents (PycairoRegion *o) {
   cairo_rectangle_int_t rect;
   Py_BEGIN_ALLOW_THREADS;
@@ -276,7 +280,7 @@ region_get_extents (PycairoRegion *o) {
 }
 
 
-PyObject *
+static PyObject *
 region_num_rectangles (PycairoRegion *o) {
   int res;
   Py_BEGIN_ALLOW_THREADS;
@@ -286,7 +290,7 @@ region_num_rectangles (PycairoRegion *o) {
 }
 
 
-PyObject *
+static PyObject *
 region_get_rectangle (PycairoRegion *o, PyObject *args) {
   cairo_rectangle_int_t rect;
   int i;
@@ -308,7 +312,7 @@ region_get_rectangle (PycairoRegion *o, PyObject *args) {
 }
 
 
-PyObject *
+static PyObject *
 region_is_empty (PycairoRegion *o) {
   cairo_bool_t res;
   PyObject *b;
@@ -321,7 +325,7 @@ region_is_empty (PycairoRegion *o) {
 }
 
 
-PyObject *
+static PyObject *
 region_contains_point (PycairoRegion *o, PyObject *args) {
   int x, y;
   cairo_bool_t res;
@@ -337,7 +341,7 @@ region_contains_point (PycairoRegion *o, PyObject *args) {
 }
 
 
-PyObject *
+static PyObject *
 region_contains_rectangle (PycairoRegion *o, PyObject *args) {
   cairo_region_overlap_t res;
   PycairoRectangleInt *rect_int;
@@ -352,7 +356,7 @@ region_contains_rectangle (PycairoRegion *o, PyObject *args) {
 }
 
 
-PyObject *
+static PyObject *
 region_equal (PycairoRegion *o, PyObject *args) {
   cairo_bool_t res;
   PyObject *b;
@@ -392,7 +396,7 @@ region_richcompare(PycairoRegion *self, PycairoRegion *other, int op) {
   return b;
 }
 
-PyObject *
+static PyObject *
 region_translate (PycairoRegion *o, PyObject *args) {
   int x, y;
   if (!PyArg_ParseTuple (args, "ii:Region.translate", &x, &y))
@@ -404,7 +408,7 @@ region_translate (PycairoRegion *o, PyObject *args) {
 }
 
 
-PyObject *
+static PyObject *
 region_intersect (PycairoRegion *o, PyObject *args) {
   cairo_status_t res;
   PyObject *other;
@@ -431,7 +435,7 @@ region_intersect (PycairoRegion *o, PyObject *args) {
   Py_RETURN_NONE;
 }
 
-PyObject *
+static PyObject *
 region_subtract (PycairoRegion *o, PyObject *args) {
   cairo_status_t res;
   PyObject *other;
@@ -457,7 +461,7 @@ region_subtract (PycairoRegion *o, PyObject *args) {
   Py_RETURN_NONE;
 }
 
-PyObject *
+static PyObject *
 region_union (PycairoRegion *o, PyObject *args) {
   cairo_status_t res;
   PyObject *other;
@@ -483,7 +487,7 @@ region_union (PycairoRegion *o, PyObject *args) {
   Py_RETURN_NONE;
 }
 
-PyObject *
+static PyObject *
 region_xor (PycairoRegion *o, PyObject *args) {
   cairo_status_t res;
   PyObject *other;

@@ -150,7 +150,7 @@ PyTypeObject PycairoDevice_Type = {
     (newfunc)device_new,                /* tp_new */
 };
 
-#if CAIRO_HAS_SCRIPT_SURFACE
+#ifdef CAIRO_HAS_SCRIPT_SURFACE
 #include <cairo-script.h>
 
 static const cairo_user_data_key_t device_base_object_key;
@@ -276,7 +276,7 @@ script_device_write_comment (PycairoDevice *obj, PyObject *args) {
     Py_RETURN_NONE;
 }
 
-#if CAIRO_HAS_RECORDING_SURFACE
+#ifdef CAIRO_HAS_RECORDING_SURFACE
 static PyObject *
 script_device_from_recording_surface (PycairoDevice *obj, PyObject *args) {
     PyObject *pysurface;
@@ -299,7 +299,7 @@ static PyMethodDef script_device_methods[] = {
     {"get_mode",      (PyCFunction)script_device_get_mode,       METH_NOARGS},
     {"set_mode",      (PyCFunction)script_device_set_mode,       METH_VARARGS},
     {"write_comment", (PyCFunction)script_device_write_comment,  METH_VARARGS},
-#if CAIRO_HAS_RECORDING_SURFACE
+#ifdef CAIRO_HAS_RECORDING_SURFACE
     {"from_recording_surface",
         (PyCFunction)script_device_from_recording_surface,  METH_VARARGS},
 #endif
@@ -365,7 +365,7 @@ PycairoDevice_FromDevice (cairo_device_t *device) {
     }
 
     switch (cairo_device_get_type (device)) {
-#if CAIRO_HAS_SCRIPT_SURFACE
+#ifdef CAIRO_HAS_SCRIPT_SURFACE
         case CAIRO_DEVICE_TYPE_SCRIPT:
             type = &PycairoScriptDevice_Type;
             break;

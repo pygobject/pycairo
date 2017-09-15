@@ -130,33 +130,33 @@ typedef struct {
     cairo_device_t *device;
 } PycairoDevice;
 
-#if CAIRO_HAS_SCRIPT_SURFACE
+#ifdef CAIRO_HAS_SCRIPT_SURFACE
 typedef PycairoDevice PycairoScriptDevice;
 extern PyTypeObject PycairoScriptSurface_Type;
 #endif
 
-#if CAIRO_HAS_PDF_SURFACE
+#ifdef CAIRO_HAS_PDF_SURFACE
 extern PyTypeObject PycairoPDFSurface_Type;
 #endif
 
-#if CAIRO_HAS_PS_SURFACE
+#ifdef CAIRO_HAS_PS_SURFACE
 extern PyTypeObject PycairoPSSurface_Type;
 #endif
 
-#if CAIRO_HAS_RECORDING_SURFACE
+#ifdef CAIRO_HAS_RECORDING_SURFACE
 extern PyTypeObject PycairoRecordingSurface_Type;
 #endif
 
-#if CAIRO_HAS_SVG_SURFACE
+#ifdef CAIRO_HAS_SVG_SURFACE
 extern PyTypeObject PycairoSVGSurface_Type;
 #endif
 
-#if CAIRO_HAS_WIN32_SURFACE
+#ifdef CAIRO_HAS_WIN32_SURFACE
 extern PyTypeObject PycairoWin32Surface_Type;
 extern PyTypeObject PycairoWin32PrintingSurface_Type;
 #endif
 
-#if CAIRO_HAS_XCB_SURFACE
+#ifdef CAIRO_HAS_XCB_SURFACE
 extern PyTypeObject PycairoXCBSurface_Type;
 #ifdef HAVE_XPYB
 #  include <xpyb.h>
@@ -165,11 +165,11 @@ extern PyObject *xpybVISUALTYPE_type;
 #endif
 #endif
 
-#if CAIRO_HAS_XLIB_SURFACE
+#ifdef CAIRO_HAS_XLIB_SURFACE
 extern PyTypeObject PycairoXlibSurface_Type;
 #endif
 
-#if CAIRO_HAS_TEE_SURFACE
+#ifdef CAIRO_HAS_TEE_SURFACE
 typedef PycairoSurface PycairoTeeSurface;
 extern PyTypeObject PycairoTeeSurface_Type;
 #endif

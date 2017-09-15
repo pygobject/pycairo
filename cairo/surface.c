@@ -51,32 +51,32 @@ PycairoSurface_FromSurface (cairo_surface_t *surface, PyObject *base) {
   }
 
   switch (cairo_surface_get_type (surface)) {
-#if CAIRO_HAS_IMAGE_SURFACE
+#ifdef CAIRO_HAS_IMAGE_SURFACE
   case CAIRO_SURFACE_TYPE_IMAGE:
     type = &PycairoImageSurface_Type;
     break;
 #endif
-#if CAIRO_HAS_PDF_SURFACE
+#ifdef CAIRO_HAS_PDF_SURFACE
   case CAIRO_SURFACE_TYPE_PDF:
     type = &PycairoPDFSurface_Type;
     break;
 #endif
-#if CAIRO_HAS_PS_SURFACE
+#ifdef CAIRO_HAS_PS_SURFACE
   case CAIRO_SURFACE_TYPE_PS:
     type = &PycairoPSSurface_Type;
     break;
 #endif
-#if CAIRO_HAS_RECORDING_SURFACE
+#ifdef CAIRO_HAS_RECORDING_SURFACE
   case CAIRO_SURFACE_TYPE_RECORDING:
     type = &PycairoRecordingSurface_Type;
     break;
 #endif
-#if CAIRO_HAS_SVG_SURFACE
+#ifdef CAIRO_HAS_SVG_SURFACE
   case CAIRO_SURFACE_TYPE_SVG:
     type = &PycairoSVGSurface_Type;
     break;
 #endif
-#if CAIRO_HAS_WIN32_SURFACE
+#ifdef CAIRO_HAS_WIN32_SURFACE
   case CAIRO_SURFACE_TYPE_WIN32:
     type = &PycairoWin32Surface_Type;
     break;
@@ -84,22 +84,22 @@ PycairoSurface_FromSurface (cairo_surface_t *surface, PyObject *base) {
     type = &PycairoWin32PrintingSurface_Type;
     break;
 #endif
-#if CAIRO_HAS_XCB_SURFACE
+#ifdef CAIRO_HAS_XCB_SURFACE
   case CAIRO_SURFACE_TYPE_XCB:
     type = &PycairoXCBSurface_Type;
     break;
 #endif
-#if CAIRO_HAS_XLIB_SURFACE
+#ifdef CAIRO_HAS_XLIB_SURFACE
   case CAIRO_SURFACE_TYPE_XLIB:
     type = &PycairoXlibSurface_Type;
     break;
 #endif
-#if CAIRO_HAS_SCRIPT_SURFACE
+#ifdef CAIRO_HAS_SCRIPT_SURFACE
   case CAIRO_SURFACE_TYPE_SCRIPT:
     type = &PycairoScriptSurface_Type;
     break;
 #endif
-#if CAIRO_HAS_TEE_SURFACE
+#ifdef CAIRO_HAS_TEE_SURFACE
   case CAIRO_SURFACE_TYPE_TEE:
     type = &PycairoTeeSurface_Type;
     break;
@@ -849,7 +849,7 @@ _read_func (void *closure, unsigned char *data, unsigned int length) {
     goto end;
   }
   /* don't use strncpy() since png data may contain NUL bytes */
-  memcpy (data, buffer, str_length);
+  memcpy (data, buffer, (size_t)str_length);
   status = CAIRO_STATUS_SUCCESS;
  end:
   Py_XDECREF(pystr);
@@ -1522,7 +1522,7 @@ ps_surface_get_eps (PycairoPSSurface *o) {
 /* METH_STATIC */
 static PyObject *
 ps_level_to_string (PyObject *self, PyObject *args) {
-  int level;
+  cairo_ps_level_t level;
   const char *s;
   if (!PyArg_ParseTuple(args, "i:PSSurface.level_to_string", &level))
     return NULL;
@@ -1537,7 +1537,7 @@ ps_level_to_string (PyObject *self, PyObject *args) {
 
 static PyObject *
 ps_surface_restrict_to_level (PycairoPSSurface *o, PyObject *args) {
-  int level;
+  cairo_ps_level_t level;
 
   if (!PyArg_ParseTuple(args, "i:PSSurface.restrict_to_level", &level))
     return NULL;
@@ -1663,7 +1663,7 @@ PyTypeObject PycairoPSSurface_Type = {
 
 static PyObject *
 recording_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
-  int content;
+  cairo_content_t content;
   cairo_rectangle_t extents, *extents_ptr;
   cairo_surface_t *sfc;
   PyObject *extents_tuple;
@@ -1938,7 +1938,7 @@ PyTypeObject PycairoSVGSurface_Type = {
 #endif  /* CAIRO_HAS_SVG_SURFACE */
 
 
-#if CAIRO_HAS_WIN32_SURFACE
+#ifdef CAIRO_HAS_WIN32_SURFACE
 #include <cairo-win32.h>
 
 static int

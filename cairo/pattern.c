@@ -116,7 +116,7 @@ pattern_get_matrix (PycairoPattern *o) {
 
 static PyObject *
 pattern_set_extend (PycairoPattern *o, PyObject *args) {
-  int extend;
+  cairo_extend_t extend;
 
   if (!PyArg_ParseTuple(args, "i:Pattern.set_extend", &extend))
     return NULL;
@@ -743,7 +743,7 @@ mesh_pattern_get_patch_count (PycairoMeshPattern *obj) {
 
   RETURN_NULL_IF_CAIRO_ERROR (status);
 
-  return PYCAIRO_PyLong_FromLong (count);
+  return PYCAIRO_PyLong_FromLong ((long)count);
 }
 
 static PyObject *

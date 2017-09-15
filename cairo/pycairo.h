@@ -202,34 +202,34 @@ typedef struct {
 #define PycairoSurface_Type         *(Pycairo_CAPI->Surface_Type)
 #define PycairoImageSurface_Type    *(Pycairo_CAPI->ImageSurface_Type)
 
-#if CAIRO_HAS_PDF_SURFACE
+#ifdef CAIRO_HAS_PDF_SURFACE
 #define PycairoPDFSurface_Type      *(Pycairo_CAPI->PDFSurface_Type)
 #endif
 
-#if CAIRO_HAS_PS_SURFACE
+#ifdef CAIRO_HAS_PS_SURFACE
 #define PycairoPSSurface_Type       *(Pycairo_CAPI->PSSurface_Type)
 #endif
 
-#if CAIRO_HAS_RECORDING_SURFACE
+#ifdef CAIRO_HAS_RECORDING_SURFACE
 #define PycairoRecordingSurface_Type \
                                     *(Pycairo_CAPI->RecordingSurface_Type)
 #endif
 
-#if CAIRO_HAS_SVG_SURFACE
+#ifdef CAIRO_HAS_SVG_SURFACE
 #define PycairoSVGSurface_Type      *(Pycairo_CAPI->SVGSurface_Type)
 #endif
 
-#if CAIRO_HAS_WIN32_SURFACE
+#ifdef CAIRO_HAS_WIN32_SURFACE
 #define PycairoWin32Surface_Type    *(Pycairo_CAPI->Win32Surface_Type)
 #define PycairoWin32PrintingSurface_Type \
                                     *(Pycairo_CAPI->Win32PrintingSurface_Type)
 #endif
 
-#if CAIRO_HAS_XCB_SURFACE
+#ifdef CAIRO_HAS_XCB_SURFACE
 #define PycairoXCBSurface_Type      *(Pycairo_CAPI->XCBSurface_Type)
 #endif
 
-#if CAIRO_HAS_XLIB_SURFACE
+#ifdef CAIRO_HAS_XLIB_SURFACE
 #define PycairoXlibSurface_Type     *(Pycairo_CAPI->XlibSurface_Type)
 #endif
 
