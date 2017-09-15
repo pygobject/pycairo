@@ -323,7 +323,11 @@ pycairo_get_dash (PycairoContext *o) {
   PyObject *py_dashes = NULL, *rv = NULL;
 
   count = cairo_get_dash_count (o->ctx);
-  dashes = PyMem_Malloc (count * sizeof(double));
+  if (count < 0) {
+    PyErr_SetString (PyExc_RuntimeError, "invalid dash return");
+    return NULL;
+  }
+  dashes = PyMem_Malloc ((unsigned int)count * sizeof(double));
   if (dashes == NULL)
     return PyErr_NoMemory();
 
@@ -781,7 +785,7 @@ pycairo_set_antialias (PycairoContext *o, PyObject *args) {
 static PyObject *
 pycairo_set_dash (PycairoContext *o, PyObject *args) {
   double *dashes, offset = 0;
-  int num_dashes, i;
+  Py_ssize_t num_dashes, i;
   PyObject *py_dashes;
 
   if (!PyArg_ParseTuple (args, "O|d:Context.set_dash", &py_dashes, &offset))
@@ -793,7 +797,12 @@ pycairo_set_dash (PycairoContext *o, PyObject *args) {
     return NULL;
 
   num_dashes = PySequence_Fast_GET_SIZE(py_dashes);
-  dashes = PyMem_Malloc (num_dashes * sizeof(double));
+  if (num_dashes > INT_MAX) {
+      Py_DECREF (py_dashes);
+      PyErr_SetString (PyExc_ValueError, "dash sequence too large");
+      return NULL;
+  }
+  dashes = PyMem_Malloc ((unsigned int)num_dashes * sizeof(double));
   if (dashes == NULL) {
     Py_DECREF(py_dashes);
     return PyErr_NoMemory();
@@ -807,7 +816,7 @@ pycairo_set_dash (PycairoContext *o, PyObject *args) {
       return NULL;
     }
   }
-  cairo_set_dash (o->ctx, dashes, num_dashes, offset);
+  cairo_set_dash (o->ctx, dashes, (int)num_dashes, offset);
   PyMem_Free (dashes);
   Py_DECREF(py_dashes);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
@@ -1191,10 +1200,9 @@ pycairo_show_text_glyphs (PycairoContext *o, PyObject *args) {
   PyObject *clusters_arg, *clusters_seq = NULL;
   cairo_text_cluster_flags_t cluster_flags;
   PyObject *py_item;
-  int i;
   cairo_glyph_t *glyphs = NULL;
   cairo_text_cluster_t *clusters = NULL;
-  Py_ssize_t clusters_size, glyphs_size;
+  Py_ssize_t i, clusters_size, glyphs_size;
 
   if (!PyArg_ParseTuple (args,
       PYCAIRO_ENC_TEXT_FORMAT "OOi:Context.show_text_glyphs",
@@ -1205,7 +1213,11 @@ pycairo_show_text_glyphs (PycairoContext *o, PyObject *args) {
   if (glyphs_seq == NULL)
     goto error;
   glyphs_size = PySequence_Fast_GET_SIZE (glyphs_seq);
-  glyphs = cairo_glyph_allocate (glyphs_size);
+  if (glyphs_size > INT_MAX) {
+    PyErr_SetString (PyExc_ValueError, "glyph sequence too large");
+    goto error;
+  }
+  glyphs = cairo_glyph_allocate ((int)glyphs_size);
   if (glyphs_size && glyphs == NULL) {
     PyErr_NoMemory();
     goto error;
@@ -1221,7 +1233,11 @@ pycairo_show_text_glyphs (PycairoContext *o, PyObject *args) {
   if (clusters_seq == NULL)
     goto error;
   clusters_size = PySequence_Fast_GET_SIZE (clusters_seq);
-  clusters = cairo_text_cluster_allocate (clusters_size);
+  if (clusters_size > INT_MAX) {
+    PyErr_SetString (PyExc_ValueError, "clusters sequence too large");
+    goto error;
+  }
+  clusters = cairo_text_cluster_allocate ((int)clusters_size);
   if (clusters_size && clusters == NULL) {
     PyErr_NoMemory();
     goto error;
@@ -1236,8 +1252,8 @@ pycairo_show_text_glyphs (PycairoContext *o, PyObject *args) {
 
   Py_BEGIN_ALLOW_THREADS;
   cairo_show_text_glyphs (
-    o->ctx, utf8, -1, glyphs, glyphs_size, clusters,
-    clusters_size, cluster_flags);
+    o->ctx, utf8, -1, glyphs, (int)glyphs_size, clusters,
+    (int)clusters_size, cluster_flags);
   Py_END_ALLOW_THREADS;
 
   PyMem_Free ((void *)utf8);

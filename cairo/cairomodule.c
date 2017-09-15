@@ -488,82 +488,82 @@ PYCAIRO_MOD_INIT(_cairo)
     return PYCAIRO_MOD_ERROR_VAL;
 
     /* constants */
-#if CAIRO_HAS_ATSUI_FONT
+#ifdef CAIRO_HAS_ATSUI_FONT
   PyModule_AddIntConstant(m, "HAS_ATSUI_FONT", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_ATSUI_FONT", 0);
 #endif
-#if CAIRO_HAS_FT_FONT
+#ifdef CAIRO_HAS_FT_FONT
   PyModule_AddIntConstant(m, "HAS_FT_FONT", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_FT_FONT", 0);
 #endif
-#if CAIRO_HAS_GLITZ_SURFACE
+#ifdef CAIRO_HAS_GLITZ_SURFACE
   PyModule_AddIntConstant(m, "HAS_GLITZ_SURFACE", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_GLITZ_SURFACE", 0);
 #endif
-#if CAIRO_HAS_IMAGE_SURFACE
+#ifdef CAIRO_HAS_IMAGE_SURFACE
   PyModule_AddIntConstant(m, "HAS_IMAGE_SURFACE", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_IMAGE_SURFACE", 0);
 #endif
-#if CAIRO_HAS_PDF_SURFACE
+#ifdef CAIRO_HAS_PDF_SURFACE
   PyModule_AddIntConstant(m, "HAS_PDF_SURFACE", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_PDF_SURFACE", 0);
 #endif
-#if CAIRO_HAS_PNG_FUNCTIONS
+#ifdef CAIRO_HAS_PNG_FUNCTIONS
   PyModule_AddIntConstant(m, "HAS_PNG_FUNCTIONS", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_PNG_FUNCTIONS", 0);
 #endif
-#if CAIRO_HAS_PS_SURFACE
+#ifdef CAIRO_HAS_PS_SURFACE
   PyModule_AddIntConstant(m, "HAS_PS_SURFACE", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_PS_SURFACE", 0);
 #endif
-#if CAIRO_HAS_RECORDING_SURFACE
+#ifdef CAIRO_HAS_RECORDING_SURFACE
   PyModule_AddIntConstant(m, "HAS_RECORDING_SURFACE", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_RECORDING_SURFACE", 0);
 #endif
-#if CAIRO_HAS_SVG_SURFACE
+#ifdef CAIRO_HAS_SVG_SURFACE
   PyModule_AddIntConstant(m, "HAS_SVG_SURFACE", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_SVG_SURFACE", 0);
 #endif
-#if CAIRO_HAS_USER_FONT
+#ifdef CAIRO_HAS_USER_FONT
   PyModule_AddIntConstant(m, "HAS_USER_FONT", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_USER_FONT", 0);
 #endif
-#if CAIRO_HAS_QUARTZ_SURFACE
+#ifdef CAIRO_HAS_QUARTZ_SURFACE
   PyModule_AddIntConstant(m, "HAS_QUARTZ_SURFACE", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_QUARTZ_SURFACE", 0);
 #endif
-#if CAIRO_HAS_WIN32_FONT
+#ifdef CAIRO_HAS_WIN32_FONT
   PyModule_AddIntConstant(m, "HAS_WIN32_FONT", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_WIN32_FONT", 0);
 #endif
-#if CAIRO_HAS_WIN32_SURFACE
+#ifdef CAIRO_HAS_WIN32_SURFACE
   PyModule_AddIntConstant(m, "HAS_WIN32_SURFACE", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_WIN32_SURFACE", 0);
 #endif
-#if CAIRO_HAS_XCB_SURFACE
+#ifdef CAIRO_HAS_XCB_SURFACE
   PyModule_AddIntConstant(m, "HAS_XCB_SURFACE", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_XCB_SURFACE", 0);
 #endif
-#if CAIRO_HAS_XLIB_SURFACE
+#ifdef CAIRO_HAS_XLIB_SURFACE
   PyModule_AddIntConstant(m, "HAS_XLIB_SURFACE", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_XLIB_SURFACE", 0);
 #endif
-#if CAIRO_HAS_MIME_SURFACE
+#ifdef CAIRO_HAS_MIME_SURFACE
   PyModule_AddIntConstant(m, "HAS_MIME_SURFACE", 1);
 #else
   PyModule_AddIntConstant(m, "HAS_MIME_SURFACE", 0);

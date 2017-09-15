@@ -211,6 +211,43 @@ class build_ext(du_build_ext):
                 # while MACROS like Py_RETURN_TRUE require it.
                 ext.extra_compile_args += ["-fno-strict-aliasing"]
 
+            if os.environ.get("PYCAIRO_WARN"):
+                ext.extra_compile_args += [
+                    "-Wall",
+                    "-Wundef",
+                    "-Wextra",
+                    "-Wno-missing-field-initializers",
+                    "-Wno-unused-parameter",
+                    "-Wnested-externs",
+                    "-Wpointer-arith",
+                    "-Wno-missing-field-initializers",
+                    "-Wdeclaration-after-statement",
+                    "-Wformat=2",
+                    "-Wold-style-definition",
+                    "-Wcast-align",
+                    "-Wformat-nonliteral",
+                    "-Wformat-security",
+                    "-Wsign-compare",
+                    "-Wstrict-aliasing",
+                    "-Wshadow",
+                    "-Winline",
+                    "-Wpacked",
+                    "-Wmissing-format-attribute",
+                    "-Wmissing-noreturn",
+                    "-Winit-self",
+                    "-Wunused-but-set-variable",
+                    "-Warray-bounds",
+                    "-Wimplicit-function-declaration",
+                    "-Wreturn-type",
+                    "-Wconversion",
+                    "-Wno-unknown-warning-option",
+                ]
+
+                if sys.version_info[:2] not in [(3, 3), (3, 4)]:
+                    ext.extra_compile_args += [
+                        "-Wswitch-default",
+                    ]
+
         if self.enable_xpyb:
             if sys.version_info[0] != 2:
                 raise SystemExit("xpyb only supported with Python 2")

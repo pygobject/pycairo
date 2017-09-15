@@ -144,6 +144,10 @@ path_str(PycairoPath *p) {
       if (ret < 0)
 	goto Done;
       break;
+    default:
+      PyErr_SetString(PyExc_RuntimeError, "unknown CAIRO_PATH type");
+      goto Done;
+      break;
     }
   }
   /* result = "\n".join(pieces) */
