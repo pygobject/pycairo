@@ -135,9 +135,10 @@ def test_image_surface_get_data():
 
     newbuf = surface.get_data()
     assert newbuf[0:1] == b"\x42"
+    ctx.set_source_rgba(1, 1, 1, 1)
     ctx.paint()
     surface.flush()
-    assert newbuf[0:1] == b"\x00"
+    assert newbuf[0:1] == b"\xff"
 
 
 def test_surface_file_obj_error():
