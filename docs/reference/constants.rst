@@ -70,6 +70,10 @@ cairo.HAS
 
     .. versionadded:: 1.12.0
 
+.. data:: HAS_TEE_SURFACE
+
+    .. versionadded:: 1.15.3
+
 
 .. _constants_MIME_TYPE:
 

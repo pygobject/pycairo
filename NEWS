@@ -1,6 +1,21 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning
 <http://semver.org/>`__ i.e. the newest version is the latest stable one.
 
+.. _v1.15.3:
+
+1.15.3 - 2017-09-17
+-------------------
+
+Fixes:
+  * setup.py: Install pkgconfig file into /usr/share/pkgconfig to work around
+    JHBuild on Fedora not picking it up.
+  * Fix tests on big endian machines. :bug:`75`
+  * Support building with MSVC :pr:`72` (:user:`Chun-wei Fan <fanc999>`)
+
+Tests:
+  * Test MSVC builds on appveyor
+
+
 .. _v1.15.2:
 
 1.15.2 - 2017-09-03
