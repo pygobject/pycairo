@@ -21,4 +21,4 @@ copy cairo-windows-%CAIRO_VER%\lib\%MSVC_PLATFORM%\cairo.dll cairo
 set CL=/WX
 %PYTHON% -m coverage run --branch setup.py test
 %PYTHON% -m coverage xml
-%PYTHON% -m codecov
+%PYTHON% -m codecov -f coverage.xml
