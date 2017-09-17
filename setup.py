@@ -8,7 +8,6 @@ import errno
 
 from distutils.core import Extension, setup, Command, Distribution
 from distutils.ccompiler import new_compiler
-from distutils import sysconfig
 
 
 PYCAIRO_VERSION = '1.15.3'
@@ -105,15 +104,13 @@ class install_pkgconfig(Command):
 
     def initialize_options(self):
         self.install_data = None
-        self.install_base = None
-        self.outfiles = []
         self.compiler_type = None
+        self.outfiles = []
 
     def finalize_options(self):
         self.set_undefined_options(
             'install',
             ('install_data', 'install_data'),
-            ('install_base', 'install_base'),
         )
 
         self.set_undefined_options(
@@ -131,14 +128,13 @@ class install_pkgconfig(Command):
         if self.compiler_type == "msvc":
             return
 
-        python_lib = sysconfig.get_python_lib(True, True, self.install_data)
-        install_dir = os.path.join(os.path.dirname(python_lib), 'pkgconfig')
-        self.mkpath(install_dir)
+        pkgconfig_dir = os.path.join(self.install_data, "share", "pkgconfig")
+        self.mkpath(pkgconfig_dir)
 
         if sys.version_info[0] == 3:
-            target = os.path.join(install_dir, "py3cairo.pc")
+            target = os.path.join(pkgconfig_dir, "py3cairo.pc")
         else:
-            target = os.path.join(install_dir, "pycairo.pc")
+            target = os.path.join(pkgconfig_dir, "pycairo.pc")
 
         with open(target, "wb") as h:
             h.write((u"""\
@@ -151,7 +147,7 @@ Requires: cairo
 Cflags: -I${prefix}/include/pycairo
 Libs:
 """ % {
-                "prefix": self.install_base,
+                "prefix": self.install_data,
                 "version": PYCAIRO_VERSION,
                 "py_version": sys.version_info[0]}).encode("utf-8"))
 
