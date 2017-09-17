@@ -10,7 +10,7 @@ from distutils.core import Extension, setup, Command, Distribution
 from distutils.ccompiler import new_compiler
 
 
-PYCAIRO_VERSION = '1.15.3'
+PYCAIRO_VERSION = '1.15.4'
 CAIRO_VERSION_REQUIRED = '1.13.1'
 XPYB_VERSION_REQUIRED = '1.3'
 
