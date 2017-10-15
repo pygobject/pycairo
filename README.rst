@@ -5,7 +5,9 @@
 |
 
 Pycairo is a Python module providing bindings for the `cairo graphics library
-<https://cairographics.org/>`__.
+<https://cairographics.org/>`__. It depends on **cairo >= 1.13.1** and
+works with **Python 2.7+** as well as **Python 3.3+**. Pycairo, including this
+documentation, is licensed under the **LGPLv2.1** as well as the **MPLv1.1**.
 
 The Pycairo bindings are designed to match the cairo C API as closely as
 possible, and to deviate only in cases which are clearly better implemented in
@@ -17,9 +19,31 @@ Features of the Pycairo bindings:
 * Queries the error status of objects and translates them to exceptions.
 * Provides a C API that can be used by other Python extensions.
 
-Pycairo depends on **cairo >= 1.13.1** and works with **Python 2.7+** as well
-as **Python 3.3+**. Pycairo, including this documentation, is licensed under
-the **LGPLv2.1** as well as the **MPLv1.1**.
+.. image:: https://cdn.rawgit.com/pygobject/pycairo/master/docs/images/example.svg
+   :align: right
+   :width: 200px
+
+.. code:: python
+
+    import cairo
+
+    surface = cairo.SVGSurface("example.svg", 200, 200)
+    context = cairo.Context(surface)
+    x, y, x1, y1 = 0.1, 0.5, 0.4, 0.9
+    x2, y2, x3, y3 = 0.6, 0.1, 0.9, 0.5
+    context.scale(200, 200)
+    context.set_line_width(0.04)
+    context.move_to(x, y)
+    context.curve_to(x1, y1, x2, y2, x3, y3)
+    context.stroke()
+    context.set_source_rgba(1, 0.2, 0.2, 0.6)
+    context.set_line_width(0.02)
+    context.move_to(x, y)
+    context.line_to(x1, y1)
+    context.move_to(x2, y2)
+    context.line_to(x3, y3)
+    context.stroke()
+    surface.finish()
 
 If Pycairo is not what you need, have a look at `cairocffi
 <https://cairocffi.readthedocs.io>`__, which is an API compatible package
