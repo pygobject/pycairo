@@ -28,16 +28,17 @@ matrix:
     - os: osx
       osx_image: xcode7.3
       language: generic
-      env: PYVER="3" PYCAIRO_WARN=1 CFLAGS="-Werror -coverage" HOMEBREW_NO_AUTO_UPDATE=1
+      env: PYVER="3" PYCAIRO_WARN=1 CFLAGS="-Werror -coverage"
     - os: osx
       osx_image: xcode7.3
       language: generic
-      env: PYVER="2" PYCAIRO_WARN=1 CFLAGS="-Werror -coverage" HOMEBREW_NO_AUTO_UPDATE=1
+      env: PYVER="2" PYCAIRO_WARN=1 CFLAGS="-Werror -coverage"
 
 
 install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then travis_retry sudo apt-get update -q; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then travis_retry sudo apt-get install -y libcairo2-dev; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew outdated "pkg-config" || brew upgrade "pkg-config"; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$PYVER" == "2" ]]; then brew install python cairo; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$PYVER" == "2" ]]; then python2 -m pip install virtualenv; fi
