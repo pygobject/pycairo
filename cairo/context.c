@@ -416,7 +416,8 @@ pycairo_get_miter_limit (PycairoContext *o) {
 
 static PyObject *
 pycairo_get_operator (PycairoContext *o) {
-  RETURN_INT_ENUM(Operator, cairo_get_operator (o->ctx));
+  /* See NOTE ['cairo_operator_t' underlying type] */
+  RETURN_INT_ENUM(Operator, (int)cairo_get_operator (o->ctx));
 }
 
 static PyObject *
@@ -954,6 +955,16 @@ static PyObject *
 pycairo_set_operator(PycairoContext *o, PyObject *args) {
   cairo_operator_t op;
 
+  /* NOTE ['cairo_operator_t' underlying type]
+   *
+   * Internally 'cairo_operator_t' has 'enum' type
+   * happens to be backed by 'unsigned int' as it does
+   * not contain negative or big enough values.
+   * But here we read it as 'signed int' variable with
+   * PyArg_ParseTuple.
+   * pycairo_get_operator will cast 'unsigned int' back
+   * to 'signed int'.
+   */
   if (!PyArg_ParseTuple(args, "i:Context.set_operator", &op))
     return NULL;
 
