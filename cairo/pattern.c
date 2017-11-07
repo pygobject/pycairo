@@ -117,9 +117,12 @@ pattern_get_matrix (PycairoPattern *o) {
 static PyObject *
 pattern_set_extend (PycairoPattern *o, PyObject *args) {
   cairo_extend_t extend;
+  int extend_arg;
 
-  if (!PyArg_ParseTuple(args, "i:Pattern.set_extend", &extend))
+  if (!PyArg_ParseTuple (args, "i:Pattern.set_extend", &extend_arg))
     return NULL;
+
+  extend = (cairo_extend_t)extend_arg;
 
   cairo_pattern_set_extend (o->pattern, extend);
   Py_RETURN_NONE;
@@ -151,9 +154,12 @@ pattern_get_filter (PycairoPattern *o) {
 static PyObject *
 pattern_set_filter (PycairoPattern *o, PyObject *args) {
   cairo_filter_t filter;
+  int filter_arg;
 
-  if (!PyArg_ParseTuple (args, "i:Pattern.set_filter", &filter))
+  if (!PyArg_ParseTuple (args, "i:Pattern.set_filter", &filter_arg))
     return NULL;
+
+  filter = (cairo_filter_t)filter_arg;
 
   Py_BEGIN_ALLOW_THREADS;
   cairo_pattern_set_filter (o->pattern, filter);
@@ -919,11 +925,13 @@ PyTypeObject PycairoMeshPattern_Type = {
 static PyObject *
 raster_source_pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   cairo_content_t content;
-  int width, height;
+  int width, height, content_arg;
 
   if (!PyArg_ParseTuple (args, "iii:RasterSourcePattern.__new__",
-      &content, &width, &height))
+                         &content_arg, &width, &height))
     return NULL;
+
+  content = (cairo_content_t)content_arg;
 
   return PycairoPattern_FromPattern (
     cairo_pattern_create_raster_source (NULL, content, width, height), NULL);

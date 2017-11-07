@@ -249,9 +249,12 @@ script_device_get_mode (PycairoDevice *obj) {
 static PyObject *
 script_device_set_mode (PycairoDevice *obj, PyObject *args) {
     cairo_script_mode_t mode;
+    int mode_arg;
 
-    if (!PyArg_ParseTuple(args, "i:ScriptDevice.set_mode", &mode))
+    if (!PyArg_ParseTuple (args, "i:ScriptDevice.set_mode", &mode_arg))
         return NULL;
+
+    mode = (cairo_script_mode_t)mode_arg;
 
     Py_BEGIN_ALLOW_THREADS;
     cairo_script_set_mode (obj->device, mode);

@@ -165,12 +165,17 @@ static PyObject *
 toy_font_face_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   const char *utf8;
   PyObject *o;
-  cairo_font_slant_t slant   = CAIRO_FONT_SLANT_NORMAL;
-  cairo_font_weight_t weight = CAIRO_FONT_WEIGHT_NORMAL;
+  cairo_font_slant_t slant;
+  cairo_font_weight_t weight;
+  int slant_arg = CAIRO_FONT_SLANT_NORMAL;
+  int weight_arg = CAIRO_FONT_WEIGHT_NORMAL;
 
   if (!PyArg_ParseTuple (args, PYCAIRO_ENC_TEXT_FORMAT "|ii:ToyFontFace.__new__",
-			 "utf-8", &utf8, &slant, &weight))
+                         "utf-8", &utf8, &slant_arg, &weight_arg))
     return NULL;
+
+  slant = (cairo_font_slant_t)slant_arg;
+  weight = (cairo_font_weight_t)weight_arg;
 
   o = PycairoFontFace_FromFontFace (
 		     cairo_toy_font_face_create (utf8, slant, weight));
@@ -650,48 +655,63 @@ font_options_get_subpixel_order (PycairoFontOptions *o) {
 
 static PyObject *
 font_options_set_antialias (PycairoFontOptions *o, PyObject *args) {
-  cairo_antialias_t aa = CAIRO_ANTIALIAS_DEFAULT;
+  cairo_antialias_t antialias;
+  int antialias_arg = CAIRO_ANTIALIAS_DEFAULT;
 
-  if (!PyArg_ParseTuple(args, "|i:FontOptions.set_antialias", &aa))
+  if (!PyArg_ParseTuple (args, "|i:FontOptions.set_antialias", &antialias_arg))
     return NULL;
 
-  cairo_font_options_set_antialias (o->font_options, aa);
+  antialias = (cairo_antialias_t)antialias_arg;
+
+  cairo_font_options_set_antialias (o->font_options, antialias);
   RETURN_NULL_IF_CAIRO_FONT_OPTIONS_ERROR(o->font_options);
   Py_RETURN_NONE;
 }
 
 static PyObject *
 font_options_set_hint_metrics (PycairoFontOptions *o, PyObject *args) {
-  cairo_hint_metrics_t hm = CAIRO_HINT_METRICS_DEFAULT;
+  cairo_hint_metrics_t hint_metrics;
+  int hint_metrics_arg = CAIRO_HINT_METRICS_DEFAULT;
 
-  if (!PyArg_ParseTuple(args, "|i:FontOptions.set_hint_metrics", &hm))
+  if (!PyArg_ParseTuple (args, "|i:FontOptions.set_hint_metrics",
+                         &hint_metrics_arg))
     return NULL;
 
-  cairo_font_options_set_hint_metrics (o->font_options, hm);
+  hint_metrics = (cairo_hint_metrics_t)hint_metrics_arg;
+
+  cairo_font_options_set_hint_metrics (o->font_options, hint_metrics);
   RETURN_NULL_IF_CAIRO_FONT_OPTIONS_ERROR(o->font_options);
   Py_RETURN_NONE;
 }
 
 static PyObject *
 font_options_set_hint_style (PycairoFontOptions *o, PyObject *args) {
-  cairo_hint_style_t hs = CAIRO_HINT_STYLE_DEFAULT;
+  cairo_hint_style_t hint_style;
+  int hint_style_arg = CAIRO_HINT_STYLE_DEFAULT;
 
-  if (!PyArg_ParseTuple(args, "|i:FontOptions.set_hint_style", &hs))
+  if (!PyArg_ParseTuple (args, "|i:FontOptions.set_hint_style",
+                         &hint_style_arg))
     return NULL;
 
-  cairo_font_options_set_hint_style (o->font_options, hs);
+  hint_style = (cairo_hint_style_t)hint_style_arg;
+
+  cairo_font_options_set_hint_style (o->font_options, hint_style);
   RETURN_NULL_IF_CAIRO_FONT_OPTIONS_ERROR(o->font_options);
   Py_RETURN_NONE;
 }
 
 static PyObject *
 font_options_set_subpixel_order (PycairoFontOptions *o, PyObject *args) {
-  cairo_subpixel_order_t so = CAIRO_SUBPIXEL_ORDER_DEFAULT;
+  cairo_subpixel_order_t subpixel_order;
+  int subpixel_order_arg = CAIRO_SUBPIXEL_ORDER_DEFAULT;
 
-  if (!PyArg_ParseTuple(args, "|i:FontOptions.set_subpixel_order", &so))
+  if (!PyArg_ParseTuple (args, "|i:FontOptions.set_subpixel_order",
+                         &subpixel_order_arg))
     return NULL;
 
-  cairo_font_options_set_subpixel_order (o->font_options, so);
+  subpixel_order = (cairo_subpixel_order_t)subpixel_order_arg;
+
+  cairo_font_options_set_subpixel_order (o->font_options, subpixel_order);
   RETURN_NULL_IF_CAIRO_FONT_OPTIONS_ERROR(o->font_options);
   Py_RETURN_NONE;
 }
