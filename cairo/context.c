@@ -416,8 +416,7 @@ pycairo_get_miter_limit (PycairoContext *o) {
 
 static PyObject *
 pycairo_get_operator (PycairoContext *o) {
-  /* See NOTE ['cairo_operator_t' underlying type] */
-  RETURN_INT_ENUM(Operator, (int)cairo_get_operator (o->ctx));
+  RETURN_INT_ENUM(Operator, cairo_get_operator (o->ctx));
 }
 
 static PyObject *
