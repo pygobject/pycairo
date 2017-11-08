@@ -159,9 +159,12 @@ error_str(PycairoErrorObject *self)
 static PyObject *
 error_check_status (PyTypeObject *type, PyObject *args) {
     cairo_status_t status;
+    int status_arg;
 
-    if (!PyArg_ParseTuple(args, "i:Error._check_status", &status))
+    if (!PyArg_ParseTuple (args, "i:Error._check_status", &status_arg))
         return NULL;
+
+    status = (cairo_status_t)status_arg;
 
     if (Pycairo_Check_Status (status))
         return NULL;

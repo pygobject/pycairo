@@ -1,5 +1,6 @@
 import cairo
 import pytest
+import ctypes
 
 
 @pytest.fixture
@@ -37,6 +38,15 @@ def test_get_line_join(context):
 def test_get_operator(context):
     assert context.get_operator() == cairo.Operator.OVER
     assert isinstance(context.get_operator(), cairo.Operator)
+
+
+def test_get_set_operator_limits(context):
+    max_int = 2 ** (ctypes.sizeof(ctypes.c_int()) * 8 - 1) - 1
+    min_int = -max_int - 1
+
+    for val in [-1, 0, max_int, min_int]:
+        context.set_operator(val)
+        assert context.get_operator() == val
 
 
 def test_show_text_glyphs():

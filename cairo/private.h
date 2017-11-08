@@ -266,8 +266,15 @@ PyObject *int_enum_create(PyTypeObject *type, long value);
 
 #define DECL_ENUM(name) extern PyTypeObject Pycairo_##name##_Type;
 
+/* A defined variant of (int)(unsigned int)(u). The cast from unsigned to
+ * signed gives the reverse result of a signed to unsigned cast. */
+#define _ENSURE_INT(u) ( \
+        ((unsigned int)(u) > INT_MAX) ? \
+            -(int)(UINT_MAX - (unsigned int)(u)) - 1 : (int)(unsigned int)(u) \
+    )
+
 #define CREATE_INT_ENUM(type_name, value) \
-    (int_enum_create(&Pycairo_##type_name##_Type, value))
+    (int_enum_create(&Pycairo_##type_name##_Type, _ENSURE_INT(value)))
 
 #define RETURN_INT_ENUM(type_name, value) \
     return CREATE_INT_ENUM(type_name, value);

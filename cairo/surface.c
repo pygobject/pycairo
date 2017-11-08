@@ -208,11 +208,14 @@ surface_copy_page (PycairoSurface *o) {
 static PyObject *
 surface_create_similar (PycairoSurface *o, PyObject *args) {
   cairo_content_t content;
-  int width, height;
+  int width, height, content_arg;
 
   if (!PyArg_ParseTuple (args, "iii:Surface.create_similar",
-			 &content, &width, &height))
+                         &content_arg, &width, &height))
     return NULL;
+
+  content = (cairo_content_t)content_arg;
+
   return PycairoSurface_FromSurface (
 	     cairo_surface_create_similar (o->surface, content, width, height),
 	     NULL);
@@ -369,12 +372,14 @@ surface_show_page (PycairoSurface *o) {
 static PyObject *
 surface_create_similar_image (PycairoSurface *o, PyObject *args) {
   cairo_format_t format;
-  int width, height;
+  int width, height, format_arg;
   cairo_surface_t *new;
 
   if (!PyArg_ParseTuple (args, "iii:Surface.create_similar_image",
-                         &format, &width, &height))
+                         &format_arg, &width, &height))
     return NULL;
+
+  format = (cairo_format_t)format_arg;
 
   Py_BEGIN_ALLOW_THREADS;
   new = cairo_surface_create_similar_image (o->surface, format, width, height);
@@ -769,11 +774,14 @@ PyTypeObject PycairoSurface_Type = {
 static PyObject *
 image_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   cairo_format_t format;
-  int width, height;
+  int width, height, format_arg;
 
   if (!PyArg_ParseTuple (args, "iii:ImageSurface.__new__",
-			 &format, &width, &height))
+                         &format_arg, &width, &height))
     return NULL;
+
+  format = (cairo_format_t)format_arg;
+
   return PycairoSurface_FromSurface (
 	     cairo_image_surface_create (format, width, height),
 	     NULL);
@@ -785,13 +793,15 @@ image_surface_create_for_data (PyTypeObject *type, PyObject *args) {
   cairo_surface_t *surface;
   cairo_format_t format;
   unsigned char *buffer;
-  int width, height, stride = -1, res;
+  int width, height, stride = -1, res, format_arg;
   Py_ssize_t buffer_len;
   PyObject *obj;
 
-  if (!PyArg_ParseTuple(args, "Oiii|i:ImageSurface.create_for_data",
-			&obj, &format, &width, &height, &stride))
+  if (!PyArg_ParseTuple (args, "Oiii|i:ImageSurface.create_for_data",
+                         &obj, &format_arg, &width, &height, &stride))
     return NULL;
+
+  format = (cairo_format_t)format_arg;
 
   res = PyObject_AsWriteBuffer (obj, (void **)&buffer, &buffer_len);
   if (res == -1)
@@ -900,9 +910,14 @@ image_surface_create_from_png (PyTypeObject *type, PyObject *args) {
 static PyObject *
 image_surface_format_stride_for_width (PyObject *self, PyObject *args) {
   cairo_format_t format;
-  int width;
-  if (!PyArg_ParseTuple(args, "ii:format_stride_for_width", &format, &width))
+  int width, format_arg;
+
+  if (!PyArg_ParseTuple (args, "ii:format_stride_for_width",
+                         &format_arg, &width))
     return NULL;
+
+  format = (cairo_format_t)format_arg;
+
   return PYCAIRO_PyLong_FromLong (cairo_format_stride_for_width (format, width));
 }
 
@@ -1265,10 +1280,13 @@ pdf_get_versions (PyObject *self) {
 static PyObject *
 pdf_version_to_string (PyObject *self,  PyObject *args) {
   cairo_pdf_version_t version;
+  int version_arg;
   const char *version_string;
 
-  if (!PyArg_ParseTuple(args, "i:PDFSurface.version_to_string", &version))
+  if (!PyArg_ParseTuple (args, "i:PDFSurface.version_to_string", &version_arg))
     return NULL;
+
+  version = (cairo_pdf_version_t)version_arg;
 
   Py_BEGIN_ALLOW_THREADS;
   version_string = cairo_pdf_version_to_string (version);
@@ -1285,9 +1303,13 @@ pdf_version_to_string (PyObject *self,  PyObject *args) {
 static PyObject *
 pdf_surface_restrict_to_version (PycairoPDFSurface *o, PyObject *args) {
   cairo_pdf_version_t version;
+  int version_arg;
 
-  if (!PyArg_ParseTuple(args, "i:PDFSurface.restrict_to_version", &version))
+  if (!PyArg_ParseTuple (args, "i:PDFSurface.restrict_to_version",
+                         &version_arg))
     return NULL;
+
+  version = (cairo_pdf_version_t)version_arg;
 
   Py_BEGIN_ALLOW_THREADS;
   cairo_pdf_surface_restrict_to_version (o->surface, version);
@@ -1360,12 +1382,15 @@ typedef PycairoSurface PycairoScriptSurface;
 static PyObject *
 script_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   cairo_content_t content;
+  int content_arg;
   double width, height;
   PyObject *pydevice;
 
   if (!PyArg_ParseTuple (args, "O!idd:ScriptSurface.__new__",
-      &PycairoScriptDevice_Type, &pydevice, &content, &width, &height))
+      &PycairoScriptDevice_Type, &pydevice, &content_arg, &width, &height))
     return NULL;
+
+  content = (cairo_content_t)content_arg;
 
   return PycairoSurface_FromSurface (
     cairo_script_surface_create (
@@ -1523,9 +1548,14 @@ ps_surface_get_eps (PycairoPSSurface *o) {
 static PyObject *
 ps_level_to_string (PyObject *self, PyObject *args) {
   cairo_ps_level_t level;
+  int level_arg;
   const char *s;
-  if (!PyArg_ParseTuple(args, "i:PSSurface.level_to_string", &level))
+
+  if (!PyArg_ParseTuple (args, "i:PSSurface.level_to_string", &level_arg))
     return NULL;
+
+  level = (cairo_ps_level_t)level_arg;
+
   s = cairo_ps_level_to_string (level);
   if (s == NULL){
     PyErr_SetString(PyExc_ValueError, "level_to_string: "
@@ -1538,9 +1568,13 @@ ps_level_to_string (PyObject *self, PyObject *args) {
 static PyObject *
 ps_surface_restrict_to_level (PycairoPSSurface *o, PyObject *args) {
   cairo_ps_level_t level;
+  int level_arg;
 
-  if (!PyArg_ParseTuple(args, "i:PSSurface.restrict_to_level", &level))
+  if (!PyArg_ParseTuple (args, "i:PSSurface.restrict_to_level", &level_arg))
     return NULL;
+
+  level = (cairo_ps_level_t)level_arg;
+
   cairo_ps_surface_restrict_to_level (o->surface, level);
   RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
   Py_RETURN_NONE;
@@ -1666,11 +1700,14 @@ recording_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   cairo_content_t content;
   cairo_rectangle_t extents, *extents_ptr;
   cairo_surface_t *sfc;
+  int content_arg;
   PyObject *extents_tuple;
 
-  if (!PyArg_ParseTuple(args, "iO:RecordingSurface.__new__",
-			&content, &extents_tuple))
+  if (!PyArg_ParseTuple (args, "iO:RecordingSurface.__new__",
+                         &content_arg, &extents_tuple))
     return NULL;
+
+  content = (cairo_content_t)content_arg;
 
   if (extents_tuple == Py_None) {
     extents_ptr = NULL;
@@ -1851,10 +1888,13 @@ svg_get_versions (PyObject *self) {
 static PyObject *
 svg_version_to_string (PyObject *self,  PyObject *args) {
   cairo_svg_version_t version;
+  int version_arg;
   const char *version_string;
 
-  if (!PyArg_ParseTuple(args, "i:SVGSurface.version_to_string", &version))
+  if (!PyArg_ParseTuple (args, "i:SVGSurface.version_to_string", &version_arg))
     return NULL;
+
+  version = (cairo_svg_version_t)version_arg;
 
   Py_BEGIN_ALLOW_THREADS;
   version_string = cairo_svg_version_to_string (version);
@@ -1871,9 +1911,13 @@ svg_version_to_string (PyObject *self,  PyObject *args) {
 static PyObject *
 svg_surface_restrict_to_version (PycairoPDFSurface *o, PyObject *args) {
   cairo_svg_version_t version;
+  int version_arg;
 
-  if (!PyArg_ParseTuple(args, "i:SVGSurface.restrict_to_version", &version))
+  if (!PyArg_ParseTuple (args, "i:SVGSurface.restrict_to_version",
+                         &version_arg))
     return NULL;
+
+  version = (cairo_svg_version_t)version_arg;
 
   Py_BEGIN_ALLOW_THREADS;
   cairo_svg_surface_restrict_to_version (o->surface, version);

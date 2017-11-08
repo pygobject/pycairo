@@ -416,8 +416,7 @@ pycairo_get_miter_limit (PycairoContext *o) {
 
 static PyObject *
 pycairo_get_operator (PycairoContext *o) {
-  /* See NOTE ['cairo_operator_t' underlying type] */
-  RETURN_INT_ENUM(Operator, (int)cairo_get_operator (o->ctx));
+  RETURN_INT_ENUM(Operator, cairo_get_operator (o->ctx));
 }
 
 static PyObject *
@@ -651,10 +650,14 @@ pycairo_push_group (PycairoContext *o) {
 static PyObject *
 pycairo_push_group_with_content (PycairoContext *o, PyObject *args) {
   cairo_content_t content;
+  int content_arg;
 
-  if (!PyArg_ParseTuple(args, "i:Context.push_group_with_content",
-			&content))
+  if (!PyArg_ParseTuple (args, "i:Context.push_group_with_content",
+                         &content_arg))
     return NULL;
+
+  content = (cairo_content_t)content_arg;
+
   cairo_push_group_with_content (o->ctx, content);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   Py_RETURN_NONE;
@@ -758,12 +761,17 @@ pycairo_scale (PycairoContext *o, PyObject *args) {
 static PyObject *
 pycairo_select_font_face (PycairoContext *o, PyObject *args) {
   const char *utf8;
-  cairo_font_slant_t slant   = CAIRO_FONT_SLANT_NORMAL;
-  cairo_font_weight_t weight = CAIRO_FONT_WEIGHT_NORMAL;
+  cairo_font_slant_t slant;
+  cairo_font_weight_t weight;
+  int slant_arg = CAIRO_FONT_SLANT_NORMAL;
+  int weight_arg = CAIRO_FONT_WEIGHT_NORMAL;
 
   if (!PyArg_ParseTuple (args, PYCAIRO_ENC_TEXT_FORMAT "|ii:Context.select_font_face",
-			 "utf-8", &utf8, &slant, &weight))
+                         "utf-8", &utf8, &slant_arg, &weight_arg))
     return NULL;
+
+  slant = (cairo_font_slant_t)slant_arg;
+  weight = (cairo_font_weight_t)weight_arg;
 
   cairo_select_font_face (o->ctx, utf8, slant, weight);
   PyMem_Free((void *)utf8);
@@ -773,10 +781,13 @@ pycairo_select_font_face (PycairoContext *o, PyObject *args) {
 
 static PyObject *
 pycairo_set_antialias (PycairoContext *o, PyObject *args) {
-  cairo_antialias_t antialias = CAIRO_ANTIALIAS_DEFAULT;
+  cairo_antialias_t antialias;
+  int antialias_arg = CAIRO_ANTIALIAS_DEFAULT;
 
-  if (!PyArg_ParseTuple(args, "|i:Context.set_antialias", &antialias))
+  if (!PyArg_ParseTuple (args, "|i:Context.set_antialias", &antialias_arg))
     return NULL;
+
+  antialias = (cairo_antialias_t)antialias_arg;
 
   cairo_set_antialias (o->ctx, antialias);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
@@ -827,9 +838,12 @@ pycairo_set_dash (PycairoContext *o, PyObject *args) {
 static PyObject *
 pycairo_set_fill_rule (PycairoContext *o, PyObject *args) {
   cairo_fill_rule_t fill_rule;
+  int fill_rule_arg;
 
-  if (!PyArg_ParseTuple (args, "i:Context.set_fill_rule", &fill_rule))
+  if (!PyArg_ParseTuple (args, "i:Context.set_fill_rule", &fill_rule_arg))
     return NULL;
+
+  fill_rule = (cairo_fill_rule_t)fill_rule_arg;
 
   cairo_set_fill_rule (o->ctx, fill_rule);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
@@ -893,9 +907,12 @@ pycairo_set_font_size (PycairoContext *o, PyObject *args) {
 static PyObject *
 pycairo_set_line_cap (PycairoContext *o, PyObject *args) {
   cairo_line_cap_t line_cap;
+  int line_cap_arg;
 
-  if (!PyArg_ParseTuple (args, "i:Context.set_line_cap", &line_cap))
+  if (!PyArg_ParseTuple (args, "i:Context.set_line_cap", &line_cap_arg))
     return NULL;
+
+  line_cap = (cairo_line_cap_t)line_cap_arg;
 
   cairo_set_line_cap (o->ctx, line_cap);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
@@ -905,9 +922,12 @@ pycairo_set_line_cap (PycairoContext *o, PyObject *args) {
 static PyObject *
 pycairo_set_line_join (PycairoContext *o, PyObject *args) {
   cairo_line_join_t line_join;
+  int line_join_arg;
 
-  if (!PyArg_ParseTuple (args, "i:Context.set_line_join", &line_join))
+  if (!PyArg_ParseTuple (args, "i:Context.set_line_join", &line_join_arg))
     return NULL;
+
+  line_join = (cairo_line_join_t)line_join_arg;
 
   cairo_set_line_join (o->ctx, line_join);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
@@ -953,22 +973,15 @@ pycairo_set_miter_limit (PycairoContext *o, PyObject *args) {
 
 static PyObject *
 pycairo_set_operator(PycairoContext *o, PyObject *args) {
-  cairo_operator_t op;
+  cairo_operator_t operator;
+  int operator_arg;
 
-  /* NOTE ['cairo_operator_t' underlying type]
-   *
-   * Internally 'cairo_operator_t' has 'enum' type
-   * happens to be backed by 'unsigned int' as it does
-   * not contain negative or big enough values.
-   * But here we read it as 'signed int' variable with
-   * PyArg_ParseTuple.
-   * pycairo_get_operator will cast 'unsigned int' back
-   * to 'signed int'.
-   */
-  if (!PyArg_ParseTuple(args, "i:Context.set_operator", &op))
+  if (!PyArg_ParseTuple (args, "i:Context.set_operator", &operator_arg))
     return NULL;
 
-  cairo_set_operator(o->ctx, op);
+  operator = (cairo_operator_t)operator_arg;
+
+  cairo_set_operator(o->ctx, operator);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   Py_RETURN_NONE;
 }
@@ -1210,6 +1223,7 @@ pycairo_show_text_glyphs (PycairoContext *o, PyObject *args) {
   PyObject *glyphs_arg, *glyphs_seq = NULL;
   PyObject *clusters_arg, *clusters_seq = NULL;
   cairo_text_cluster_flags_t cluster_flags;
+  int cluster_flags_arg;
   PyObject *py_item;
   cairo_glyph_t *glyphs = NULL;
   cairo_text_cluster_t *clusters = NULL;
@@ -1217,8 +1231,10 @@ pycairo_show_text_glyphs (PycairoContext *o, PyObject *args) {
 
   if (!PyArg_ParseTuple (args,
       PYCAIRO_ENC_TEXT_FORMAT "OOi:Context.show_text_glyphs",
-      "utf-8", &utf8, &glyphs_arg, &clusters_arg, &cluster_flags))
+      "utf-8", &utf8, &glyphs_arg, &clusters_arg, &cluster_flags_arg))
     return NULL;
+
+  cluster_flags = (cairo_text_cluster_flags_t)cluster_flags_arg;
 
   glyphs_seq = PySequence_Fast (glyphs_arg, "glyphs must be a sequence");
   if (glyphs_seq == NULL)
