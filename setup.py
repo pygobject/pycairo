@@ -5,9 +5,11 @@ import subprocess
 import sys
 import os
 import errno
+import warnings
 
 from distutils.core import Extension, setup, Command, Distribution
 from distutils.ccompiler import new_compiler
+from distutils.errors import DistutilsError
 
 
 PYCAIRO_VERSION = '1.15.5'
@@ -18,6 +20,23 @@ XPYB_VERSION_REQUIRED = '1.3'
 def get_command_class(name):
     # in case pip loads with setuptools this returns the extended commands
     return Distribution({}).get_command_class(name)
+
+
+# https://github.com/pygobject/pycairo/issues/83
+try:
+    st_bdist_wheel = get_command_class("bdist_wheel")
+except DistutilsError:
+    bdist_wheel = None
+else:
+    class bdist_wheel(st_bdist_wheel):
+
+        def run(self):
+            result = st_bdist_wheel.run(self)
+            warnings.warn(
+                "Python wheels of Pycairo contain absolute paths decided at "
+                "build time. Installing the wheel might result in pkg-config "
+                "returning wrong paths. Try to avoid bdist_wheel for pycairo.")
+            return result
 
 
 def _check_output(command):
@@ -321,6 +340,18 @@ def main():
     with io.open('README.rst', encoding="utf-8") as h:
         long_description = h.read()
 
+    cmdclass = {
+        "build": build,
+        "build_ext": build_ext,
+        "install": install,
+        "install_pkgconfig": install_pkgconfig,
+        "install_data": install_data,
+        "test": test_cmd,
+    }
+
+    if bdist_wheel is not None:
+        cmdclass["bdist_wheel"] = bdist_wheel
+
     setup(
         name="pycairo",
         version=PYCAIRO_VERSION,
@@ -348,14 +379,7 @@ def main():
         data_files=[
             ('include/pycairo', ['cairo/pycairo.h']),
         ],
-        cmdclass={
-            "build": build,
-            "build_ext": build_ext,
-            "install": install,
-            "install_pkgconfig": install_pkgconfig,
-            "install_data": install_data,
-            "test": test_cmd,
-        },
+        cmdclass=cmdclass,
     )
 
 
