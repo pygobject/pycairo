@@ -19,6 +19,7 @@
    reference/index
    pycairo_c_api
    resources
+   faq
 
 .. currentmodule:: cairo
 .. title:: Overview
