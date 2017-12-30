@@ -80,46 +80,64 @@ Pycairo_fspath_converter (PyObject *obj, char** result) {
         return 0;
     }
 
-    bytes = PyUnicode_AsMBCSString (uni);
-    if (bytes == NULL) {
+    if (cairo_version() >= CAIRO_VERSION_ENCODE(1, 15, 10)) {
+        bytes = PyUnicode_AsEncodedString (uni, "utf-8", "strict");
         Py_DECREF (uni);
-        return 0;
-    }
+        if (bytes == NULL) {
+            return 0;
+        }
 
-    if (PyString_AsStringAndSize (bytes, &internal, NULL) == -1) {
-        Py_DECREF (uni);
-        Py_DECREF (bytes);
-        return 0;
-    }
+        if (PyString_AsStringAndSize (bytes, &internal, NULL) == -1) {
+            Py_DECREF (bytes);
+            return 0;
+        }
+    } else {
+        bytes = PyUnicode_AsMBCSString (uni);
+        if (bytes == NULL) {
+            Py_DECREF (uni);
+            return 0;
+        }
 
-    /* PyUnicode_AsMBCSString doesn't do error handling, so we have to
-     * decode and compare again */
-    other = PyUnicode_DecodeMBCS (internal, PyString_Size (bytes), "strict");
-    if (other == NULL) {
-        Py_DECREF (uni);
-        Py_DECREF (bytes);
-        return 0;
-    }
+        if (PyString_AsStringAndSize (bytes, &internal, NULL) == -1) {
+            Py_DECREF (uni);
+            Py_DECREF (bytes);
+            return 0;
+        }
 
-    if (PyUnicode_Compare (uni, other) != 0) {
-        Py_DECREF (uni);
-        Py_DECREF (bytes);
+        /* PyUnicode_AsMBCSString doesn't do error handling, so we have to
+         * decode and compare again */
+        other = PyUnicode_DecodeMBCS (
+            internal, PyString_Size (bytes), "strict");
+        if (other == NULL) {
+            Py_DECREF (uni);
+            Py_DECREF (bytes);
+            return 0;
+        }
+
+        if (PyUnicode_Compare (uni, other) != 0) {
+            Py_DECREF (uni);
+            Py_DECREF (bytes);
+            Py_DECREF (other);
+            PyErr_SetString (
+                PyExc_ValueError, "only ANSI paths supported on Windows");
+            return 0;
+        }
+
         Py_DECREF (other);
-        PyErr_SetString (
-            PyExc_ValueError, "only ANSI paths supported on Windows");
-        return 0;
+        Py_DECREF (uni);
     }
-
-    Py_DECREF (uni);
-    Py_DECREF (other);
-
 #elif defined(MS_WINDOWS) && PY_MAJOR_VERSION >= 3
     PyObject *uni;
 
     if (PyUnicode_FSDecoder (obj, &uni) == 0)
         return 0;
 
-    bytes = PyUnicode_AsMBCSString (uni);
+    if (cairo_version() >= CAIRO_VERSION_ENCODE(1, 15, 10)) {
+        bytes = PyUnicode_AsEncodedString (uni, "utf-8", "strict");
+    } else {
+        bytes = PyUnicode_AsMBCSString (uni);
+    }
+
     Py_DECREF (uni);
     if (bytes == NULL)
         return 0;
