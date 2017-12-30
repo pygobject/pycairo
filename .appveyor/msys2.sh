@@ -10,3 +10,8 @@ $PYTHON -m coverage run --branch setup.py test
 $PYTHON -m codecov
 $PYTHON setup.py sdist
 $PYTHON -m pip install dist/*
+
+# Also test with older cairo
+curl -O "http://repo.msys2.org/mingw/$MSYS2_ARCH/mingw-w64-$MSYS2_ARCH-cairo-1.14.4-1-any.pkg.tar.xz"
+pacman --noconfirm -U "mingw-w64-$MSYS2_ARCH-cairo-1.14.4-1-any.pkg.tar.xz"
+$PYTHON setup.py test

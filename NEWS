@@ -1,6 +1,14 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning
 <http://semver.org/>`__ i.e. the newest version is the latest stable one.
 
+.. _v1.15.5:
+
+1.15.5 - 2018-??-??
+-------------------
+
+* Support Unicode paths under Windows with cairo 1.15.10+ :pr:`87`
+
+
 .. _v1.15.4:
 
 1.15.4 - 2017-11-08

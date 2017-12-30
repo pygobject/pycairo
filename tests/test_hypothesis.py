@@ -3,10 +3,11 @@
 import math
 import os
 import sys
+import tempfile
+import shutil
 
 import pytest
 import cairo
-import tempfile
 
 pytest.importorskip("hypothesis")
 from hypothesis import given, strategies, assume, settings
@@ -21,7 +22,7 @@ def tempdir_path():
     try:
         yield dir_
     finally:
-        os.rmdir(dir_)
+        shutil.rmtree(dir_)
 
 
 def _to_temp_path(tempdir_path, p):
@@ -34,18 +35,32 @@ def _to_temp_path(tempdir_path, p):
     return res
 
 
+def cairo_ver():
+    return tuple(map(int, cairo.cairo_version_string().split(".")))
+
+
 @given(path=fspaths())
-@settings(max_examples=5000)
+@settings(max_examples=500)
 def test_fspaths(tempdir_path, path):
     p = _to_temp_path(tempdir_path, path)
 
-    # filter out "."
     assert not os.listdir(tempdir_path)
+    # filter out "."
     if os.path.exists(p):
         return
 
-    # cairo uses fopen, which only supports ANSI paths under Windows.
-    # Make sure we fail if not ANSI and succeed otherwise
+    if cairo_ver() >= (1, 15, 10):
+        def path_encode(p):
+            return p.encode("utf-8")
+    else:
+        def path_encode(p):
+            new = temp.encode("mbcs")
+            if new.decode("mbcs") != p:
+                raise ValueError
+            return new
+
+    # cairo up to 1.15.8 uses fopen, which only supports ANSI paths under
+    # Windows. 1.15.10+ uses utf-8 like glib.
     is_valid = True
     if os.name == "nt":
         temp = os.path.join(p)
@@ -56,9 +71,8 @@ def test_fspaths(tempdir_path, path):
                 temp = temp.decode(sys.getfilesystemencoding(), "strict")
         if isinstance(temp, type(u"")):
             try:
-                if temp.encode("mbcs").decode("mbcs") != temp:
-                    is_valid = False
-            except UnicodeEncodeError:
+                path_encode(temp)
+            except ValueError:
                 is_valid = False
 
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
@@ -68,6 +82,10 @@ def test_fspaths(tempdir_path, path):
         assert not is_valid
         assert not os.path.exists(p)
     except cairo.Error:
+        # Under Python 2 we can't produce utf-8 without surrogates
+        # and cairo 1.15.10+ errors out in that case.
+        # And for some reason writing to "\x01" fails
+        assert is_valid
         assert not os.path.exists(p)
     else:
         assert is_valid
