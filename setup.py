@@ -9,7 +9,6 @@ import warnings
 
 from distutils.core import Extension, setup, Command, Distribution
 from distutils.ccompiler import new_compiler
-from distutils.errors import DistutilsError
 
 
 PYCAIRO_VERSION = '1.15.5'
@@ -20,23 +19,6 @@ XPYB_VERSION_REQUIRED = '1.3'
 def get_command_class(name):
     # in case pip loads with setuptools this returns the extended commands
     return Distribution({}).get_command_class(name)
-
-
-# https://github.com/pygobject/pycairo/issues/83
-try:
-    st_bdist_wheel = get_command_class("bdist_wheel")
-except DistutilsError:
-    bdist_wheel = None
-else:
-    class bdist_wheel(st_bdist_wheel):
-
-        def run(self):
-            result = st_bdist_wheel.run(self)
-            warnings.warn(
-                "Python wheels of Pycairo contain absolute paths decided at "
-                "build time. Installing the wheel might result in pkg-config "
-                "returning wrong paths. Try to avoid bdist_wheel for pycairo.")
-            return result
 
 
 def _check_output(command):
@@ -146,6 +128,19 @@ class install_pkgconfig(Command):
         return []
 
     def run(self):
+        # https://github.com/pygobject/pycairo/issues/83
+        # The pkg-config file contains absolute paths depending on the
+        # prefix. pip uses wheels as cache and when installing with --user
+        # and then to a virtualenv, the wheel gets reused containing the
+        # wrong paths. So in case bdist_wheel is used, just skip this command.
+        cmd = self.distribution.get_command_obj("bdist_wheel", create=False)
+        if cmd is not None:
+            warnings.warn(
+                "Python wheels and pkg-config is not compatible. "
+                "No pkg-config file will be included in the wheel. Install "
+                "from source if you need one.")
+            return
+
         if self.compiler_type == "msvc":
             return
 
@@ -348,9 +343,6 @@ def main():
         "install_data": install_data,
         "test": test_cmd,
     }
-
-    if bdist_wheel is not None:
-        cmdclass["bdist_wheel"] = bdist_wheel
 
     setup(
         name="pycairo",

@@ -7,6 +7,7 @@ Since version 1.11.0 Pycairo uses `Semantic Versioning
 -------------------
 
 * Support Unicode paths under Windows with cairo 1.15.10+ :pr:`87`
+* Don't include the pkg-config file when building a wheel :bug:`83`
 
 
 .. _v1.15.4:
