@@ -307,6 +307,11 @@ def main():
             'cairo/textcluster.c',
             'cairo/textextents.c',
         ],
+        depends=[
+            'cairo/compat.h',
+            'cairo/private.h',
+            'cairo/pycairo.h',
+        ],
         define_macros=[
             ("PYCAIRO_VERSION_MAJOR", PYCAIRO_VERSION.split('.')[0]),
             ("PYCAIRO_VERSION_MINOR", PYCAIRO_VERSION.split('.')[1]),
