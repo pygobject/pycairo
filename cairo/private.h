@@ -42,6 +42,9 @@
 #include "pycairo.h"
 #include "compat.h"
 
+#define PYCAIRO_STRINGIFY(s) PYCAIRO_STRINGIFY_ARG(s)
+#define PYCAIRO_STRINGIFY_ARG(s) #s
+
 int Pycairo_fspath_converter (PyObject *obj, char** result);
 int Pycairo_fspath_none_converter (PyObject *obj, char** result);
 int Pycairo_writer_converter (PyObject *obj, PyObject** file);

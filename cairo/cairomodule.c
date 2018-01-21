@@ -32,7 +32,6 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-#include "config.h"
 #include "private.h"
 
 
@@ -331,7 +330,10 @@ PYCAIRO_MOD_INIT(_cairo)
   if(init_enums(m) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
 
-  PyModule_AddStringConstant(m, "version", VERSION);
+  PyModule_AddStringConstant(m, "version",
+    PYCAIRO_STRINGIFY(PYCAIRO_VERSION_MAJOR) "."
+    PYCAIRO_STRINGIFY(PYCAIRO_VERSION_MINOR) "."
+    PYCAIRO_STRINGIFY(PYCAIRO_VERSION_MICRO));
   PyModule_AddObject(m, "version_info",
 		     Py_BuildValue("(iii)",
 				   PYCAIRO_VERSION_MAJOR,

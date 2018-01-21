@@ -32,7 +32,6 @@
 #include <Python.h>
 #include "structmember.h"
 
-#include "config.h"
 #include "private.h"
 
 

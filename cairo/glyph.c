@@ -31,7 +31,6 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-#include "config.h"
 #include "private.h"
 
 /* read a Python sequence of (i,x,y) sequences

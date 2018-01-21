@@ -8,4 +8,3 @@ prune docs/_build
 recursive-include tests *.py README
 recursive-include examples *.py README
 include cairo/*.h
-exclude cairo/config.h

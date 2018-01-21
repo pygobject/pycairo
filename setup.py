@@ -52,25 +52,6 @@ def pkg_config_parse(opt, pkg):
     return [x.lstrip(opt) for x in output.split()]
 
 
-def write_config_file(path, version):
-    v = version.split('.')
-
-    with open(path, 'w') as fo:
-        fo.write("""\
-/* Configuration header created by setup.py - do not edit */
-#ifndef _CONFIG_H
-#define _CONFIG_H 1
-
-#define PYCAIRO_VERSION_MAJOR %s
-#define PYCAIRO_VERSION_MINOR %s
-#define PYCAIRO_VERSION_MICRO %s
-#define VERSION "%s"
-
-#endif /* _CONFIG_H */
-""" % (v[0], v[1], v[2], version)
-        )
-
-
 class test_cmd(Command):
     description = "run tests"
     user_options = [
@@ -270,10 +251,6 @@ class build_ext(du_build_ext):
             ext.library_dirs += pkg_config_parse('--libs-only-L', 'xpyb')
             ext.libraries += pkg_config_parse('--libs-only-l', 'xpyb')
 
-        script_dir = os.path.dirname(os.path.realpath(__file__))
-        target = os.path.join(script_dir, "cairo", "config.h")
-        write_config_file(target, PYCAIRO_VERSION)
-
         du_build_ext.run(self)
 
 
@@ -329,6 +306,11 @@ def main():
             'cairo/rectangle.c',
             'cairo/textcluster.c',
             'cairo/textextents.c',
+        ],
+        define_macros=[
+            ("PYCAIRO_VERSION_MAJOR", PYCAIRO_VERSION.split('.')[0]),
+            ("PYCAIRO_VERSION_MINOR", PYCAIRO_VERSION.split('.')[1]),
+            ("PYCAIRO_VERSION_MICRO", PYCAIRO_VERSION.split('.')[2]),
         ],
     )
 
