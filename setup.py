@@ -358,6 +358,7 @@ def main():
         data_files=[
             ('include/pycairo', ['cairo/pycairo.h']),
         ],
+        zip_safe=False,
         cmdclass=cmdclass,
     )
 
