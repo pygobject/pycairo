@@ -3,7 +3,7 @@ Since version 1.11.0 Pycairo uses `Semantic Versioning
 
 .. _v1.15.5:
 
-1.15.5 - 2018-??-??
+1.15.5 - 2018-01-29
 -------------------
 
 * Support Unicode paths under Windows with cairo 1.15.10+ :pr:`87`
