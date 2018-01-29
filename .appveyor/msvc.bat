@@ -16,6 +16,7 @@ set PYTHON=C:\%PYTHON_ROOT%\python.exe
 ::~ SET DISTUTILS_USE_SDK=1
 ::~ SET MSSdk=1
 
+%PYTHON% -m pip install --upgrade setuptools
 %PYTHON% -m pip install --upgrade pytest hypothesis coverage codecov
 copy cairo-windows-%CAIRO_VER%\lib\%MSVC_PLATFORM%\cairo.dll cairo
 set CL=/WX
