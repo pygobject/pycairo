@@ -34,6 +34,7 @@ environment:
 build_script:
   - IF DEFINED MSYSTEM set PATH=C:\msys64\%MSYSTEM%\bin;C:\msys64\usr\bin;%PATH%
   - IF DEFINED MSYSTEM set CHERE_INVOKING=yes
+  - IF DEFINED MSYSTEM bash -lc "bash .appveyor/msys2-pre.sh"
   - IF DEFINED MSYSTEM bash -lc "bash .appveyor/msys2.sh"
   - IF DEFINED MSVC_PLATFORM ".appveyor/msvc.bat"
 
