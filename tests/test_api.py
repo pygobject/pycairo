@@ -260,6 +260,7 @@ def test_constants():
     assert cairo.SVG_VERSION_1_2 == 1
 
 
+@pytest.mark.skipif(not hasattr(sys, "getrefcount"), reason="PyPy")
 def test_surface_get_set_mime_data_references():
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
     if sys.version_info[0] == 2:

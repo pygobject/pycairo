@@ -37,7 +37,7 @@ def test_error_check_status():
     err.status = cairo.Status.DEVICE_FINISHED
     assert err.status == cairo.Status.DEVICE_FINISHED
 
-    with pytest.raises(TypeError):
+    with pytest.raises((TypeError, AttributeError)):
         del err.status
 
     str(cairo.Error())

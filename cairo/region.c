@@ -137,7 +137,7 @@ PyTypeObject PycairoRectangleInt_Type = {
   0,                                    /* tp_as_number */
   0,                                    /* tp_as_sequence */
   0,                                    /* tp_as_mapping */
-  0,                                    /* tp_hash */
+  (hashfunc)PyObject_HashNotImplemented,/* tp_hash */
   0,                                    /* tp_call */
   0,                                    /* tp_str */
   0,                                    /* tp_getattro */
@@ -556,7 +556,7 @@ PyTypeObject PycairoRegion_Type = {
   0,                                    /* tp_as_number */
   0,                                    /* tp_as_sequence */
   0,                                    /* tp_as_mapping */
-  0,                                    /* tp_hash */
+  (hashfunc)PyObject_HashNotImplemented,/* tp_hash */
   0,                                    /* tp_call */
   0,                                    /* tp_str */
   0,                                    /* tp_getattro */

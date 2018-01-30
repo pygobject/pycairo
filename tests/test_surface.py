@@ -7,6 +7,7 @@ import array
 import tempfile
 import struct
 import sysconfig
+import platform
 
 import cairo
 import pytest
@@ -110,6 +111,7 @@ def test_tee_surface():
     tee.remove(s1)
 
 
+@pytest.mark.skipif(not hasattr(sys, "getrefcount"), reason="PyPy")
 def test_image_surface_get_data_refcount():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
     assert sys.getrefcount(surface) == 2
@@ -387,6 +389,7 @@ def test_supports_mime_type():
         surface.supports_mime_type(object())
 
 
+@pytest.mark.skipif(platform.python_implementation() == "PyPy", reason="PyPy")
 def test_image_surface_create_for_data_array():
     width, height = 255, 255
     data = array.array('B', [0] * width * height * 4)
