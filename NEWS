@@ -1,6 +1,14 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning
 <http://semver.org/>`__ i.e. the newest version is the latest stable one.
 
+.. _v1.15.6:
+
+1.15.6 - 2018-01-30
+-------------------
+
+* Experimental PyPy and PyPy3 support :bug:`90`
+
+
 .. _v1.15.5:
 
 1.15.5 - 2018-01-29
