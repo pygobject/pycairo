@@ -45,6 +45,8 @@
 #define PYCAIRO_STRINGIFY(s) PYCAIRO_STRINGIFY_ARG(s)
 #define PYCAIRO_STRINGIFY_ARG(s) #s
 
+int init_error(PyObject *module);
+
 int Pycairo_fspath_converter (PyObject *obj, char** result);
 int Pycairo_fspath_none_converter (PyObject *obj, char** result);
 int Pycairo_writer_converter (PyObject *obj, PyObject** file);
@@ -57,8 +59,6 @@ int _PyTextCluster_AsTextCluster (PyObject *pyobj,
                                   cairo_text_cluster_t *cluster);
 
 int _conv_pyobject_to_ulong (PyObject *pyobj, unsigned long *result);
-
-PyObject *_Pycairo_Get_Error(void);
 
 PyObject* Pycairo_richcompare (void* a, void *b, int op);
 PyObject* Pycairo_tuple_getattro (PyObject *self, char **kwds, PyObject *name);

@@ -41,36 +41,6 @@ xpyb_CAPI_t *xpyb_CAPI;
 PyObject *xpybVISUALTYPE_type;
 #endif
 
-#if PY_MAJOR_VERSION < 3
-
-/* A module specific exception */
-PyObject *_CairoError = NULL;
-
-#else
-
-/* Module initialization */
-struct cairo_state {
-  PyObject *ErrorObject;
-};
-
-#define GETSTATE(m) ((struct cairo_state*)PyModule_GetState(m))
-
-static struct PyModuleDef cairomoduledef;
-#endif
-
-/* Returns a borrowed reference of the error type. */
-PyObject *
-_Pycairo_Get_Error(void) {
-#if PY_MAJOR_VERSION < 3
-  assert(_CairoError != NULL);
-  return _CairoError;
-#else
-  PyObject *cairo_module = PyState_FindModule(&cairomoduledef);
-  assert(cairo_module != NULL);
-  return GETSTATE(cairo_module)->ErrorObject;
-#endif
-}
-
 /* C API.  Clients get at this via Pycairo_IMPORT or import_cairo(), defined in pycairo.h.
  */
 static Pycairo_CAPI_t CAPI = {
@@ -174,36 +144,22 @@ static PyMethodDef cairo_functions[] = {
 
 #if PY_MAJOR_VERSION >= 3
 
-static int
-cairo_traverse(PyObject *m, visitproc visit, void *arg)
-{
-  Py_VISIT(GETSTATE(m)->ErrorObject);
-  return 0;
-}
-
-static int
-cairo_clear(PyObject *m)
-{
-  Py_CLEAR(GETSTATE(m)->ErrorObject);
-  return 0;
-}
-
 static struct PyModuleDef cairomoduledef = {
   PyModuleDef_HEAD_INIT,
   "cairo",
   NULL,
-  sizeof(struct cairo_state),
+  0,
   cairo_functions,
-  0,  /* m_reload */
-  cairo_traverse,
-  cairo_clear,
-  0,  /* m_free - not needed, since all is done in m_clear */
+  0,
+  0,
+  0,
+  0,
 };
 #endif
 
 PYCAIRO_MOD_INIT(_cairo)
 {
-  PyObject *m, *capi, *error;
+  PyObject *m, *capi;
 
   if (PyType_Ready(&PycairoContext_Type) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
@@ -322,6 +278,9 @@ PYCAIRO_MOD_INIT(_cairo)
   m = PyModule_Create(&cairomoduledef);
 #endif
   if (m == NULL)
+    return PYCAIRO_MOD_ERROR_VAL;
+
+  if(init_error(m) < 0)
     return PYCAIRO_MOD_ERROR_VAL;
 
   if(init_buffer_proxy() < 0)
@@ -468,26 +427,6 @@ PYCAIRO_MOD_INIT(_cairo)
   PyModule_AddObject(m, "TeeSurface",
 		     (PyObject *)&PycairoTeeSurface_Type);
 #endif
-
-  /* Add 'cairo.Error' to the module */
-  error = error_get_type();
-  if (error == NULL)
-    return PYCAIRO_MOD_ERROR_VAL;
-
-#if PY_MAJOR_VERSION >= 3
-  GETSTATE(m)->ErrorObject = error;
-#else
-  _CairoError = error;
-#endif
-
-  Py_INCREF(error);
-  if (PyModule_AddObject(m, "Error", error) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
-
-  /* Alias for cairocffi */
-  Py_INCREF(error);
-  if (PyModule_AddObject(m, "CairoError", error) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
 
     /* constants */
 #ifdef CAIRO_HAS_ATSUI_FONT

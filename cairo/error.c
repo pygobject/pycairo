@@ -68,30 +68,41 @@ set_error (PyObject *error_type, cairo_status_t status)
 
 int
 Pycairo_Check_Status (cairo_status_t status) {
-    PyObject *suberror;
+    PyObject *module, *error, *suberror;
 
     if (PyErr_Occurred() != NULL)
         return 1;
 
+    if (status == CAIRO_STATUS_SUCCESS)
+        return 0;
+
+    module = PyImport_ImportModule ("cairo");
+    if (module == NULL)
+        return 1;
+    error = PyObject_GetAttrString (module, "Error");
+    Py_DECREF (module);
+    if (error == NULL)
+        return 1;
+
     switch (status) {
-        case CAIRO_STATUS_SUCCESS:
-            return 0;
         case CAIRO_STATUS_NO_MEMORY:
             suberror = error_get_type_combined (
-                _Pycairo_Get_Error(), PyExc_MemoryError, "cairo.MemoryError");
+                error, PyExc_MemoryError, "cairo.MemoryError");
             set_error (suberror, status);
             Py_DECREF (suberror);
             break;
         case CAIRO_STATUS_READ_ERROR:
         case CAIRO_STATUS_WRITE_ERROR:
             suberror = error_get_type_combined (
-                _Pycairo_Get_Error(), PyExc_IOError, "cairo.IOError");
+                error, PyExc_IOError, "cairo.IOError");
             set_error (suberror, status);
             Py_DECREF (suberror);
             break;
         default:
-            set_error (_Pycairo_Get_Error(), status);
+            set_error (error, status);
     }
+
+    Py_DECREF (error);
 
     return 1;
 }
@@ -251,16 +262,29 @@ static PyTypeObject PycairoError_Type = {
     0,                       /* tp_new */
 };
 
-/* Returns a new reference of the error type or NULL on error and sets
- * an exception.
- */
-PyObject *
-error_get_type(void) {
+int
+init_error (PyObject *module) {
+    PyObject *error;
+
     PycairoError_Type.tp_base = (PyTypeObject*)PyExc_Exception;
     if (PyType_Ready(&PycairoError_Type) < 0)
-        return NULL;
-    Py_INCREF(&PycairoError_Type);
-    return (PyObject*)&PycairoError_Type;
+        return -1;
+
+    error = (PyObject*)&PycairoError_Type;
+
+    Py_INCREF(error);
+    if (PyModule_AddObject(module, "Error", error) < 0) {
+        Py_DECREF (error);
+        return -1;
+    }
+
+    Py_INCREF(error);
+    if (PyModule_AddObject(module, "CairoError", error) < 0) {
+        Py_DECREF (error);
+        return -1;
+    }
+
+    return 0;
 }
 
 static PyObject *
