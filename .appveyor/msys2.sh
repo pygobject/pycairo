@@ -10,6 +10,7 @@ export CFLAGS="-std=c90 -Wall -Wno-long-long -Werror -coverage"
 $PYTHON -m coverage run --branch setup.py test
 $PYTHON -m codecov
 $PYTHON setup.py sdist
+$PYTHON setup.py install --root="$(pwd)"/_root_abs
 $PYTHON -m pip install dist/*
 
 # Also test with older cairo

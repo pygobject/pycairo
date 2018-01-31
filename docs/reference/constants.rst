@@ -26,6 +26,15 @@ Module Functions
    Returns the version of the underlying C cairo library as a human-readable
    string of the form "X.Y.Z".
 
+.. function:: get_include()
+
+    :returns: a path to the directory containing the C header files
+    :rtype: str
+
+    Gives the include path which should be passed to the compiler.
+
+    .. versionadded:: 1.15.7
+
 
 Module Constants
 ================
