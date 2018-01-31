@@ -11,6 +11,41 @@ This manual documents the API used by C and C++ programmers who want to write
 extension modules that use pycairo.
 
 
+Pycairo Compiler Flags
+======================
+
+To compile a Python extension using Pycairo you need to know where Pycairo and
+cairo are located and what flags to pass to the compiler and linker.
+
+1. Variant:
+
+    Only available since version 1.15.7.
+
+    While Pycairo installs a pkg-config file, in case of virtualenvs,
+    installation to the user directory or when using wheels/eggs, pkg-config
+    will not be able to locate the .pc file. The :func:`get_include` function
+    should work in all cases, as long as Pycairo is in your Python search path.
+
+    Compiler Flags:
+        * ``python -c "import cairo; print(cairo.get_include())"``
+        * ``pkg-config --cflags cairo``
+
+    Linker Flags:
+        * ``pkg-config --libs cairo``
+
+2. Variant:
+
+    This works with older versions, but with the limitations mentioned above.
+    Use it as a fallback if you want to support older versions or if your
+    module does not require virtualenv/pip support.
+
+    Compiler Flags:
+        * ``pkg-config --cflags pycairo`` or ``pkg-config --cflags py3cairo``
+
+    Linker Flags:
+        * ``pkg-config --libs pycairo`` or ``pkg-config --libs py3cairo``
+
+
 .. _api-includes:
 
 To access the Pycairo C API under Python 2
@@ -21,7 +56,7 @@ Edit the client module file to add the following lines::
   /* All function, type and macro definitions needed to use the Pycairo/C API
    * are included in your code by the following line
    */
-  #include "Pycairo.h"
+  #include "pycairo.h"
 
   /* define a variable for the C API */
   static Pycairo_CAPI_t *Pycairo_CAPI;
@@ -50,21 +85,6 @@ Example showing how to import the pycairo API::
     /* additional initialization can happen here */
     return m;
   }
-
-
-Pkg-Config Setup
-================
-
-pycairo installs "pycairo.pc" or "py3cairo.pc" in case of a Python 3 install:
-
-.. code-block:: console
-
-    > pkg-config --libs --cflags pycairo
-    > pkg-config --libs --cflags py3cairo
-    -I/usr/include/cairo -I/usr/include/glib-2.0
-    -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/pixman-1
-    -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/pycairo
-    -lcairo
 
 
 Misc Functions

@@ -17,6 +17,13 @@ import cairo
 import pytest
 
 
+def test_get_include():
+    include = cairo.get_include()
+    assert isinstance(include, str)
+    assert os.path.exists(include)
+    assert os.path.isdir(include)
+
+
 def test_version():
     cairo.cairo_version()
     cairo.cairo_version_string()
