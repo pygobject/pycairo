@@ -33,7 +33,7 @@ Module Functions
 
     Gives the include path which should be passed to the compiler.
 
-    .. versionadded:: 1.15.7
+    .. versionadded:: 1.16.0
 
 
 Module Constants

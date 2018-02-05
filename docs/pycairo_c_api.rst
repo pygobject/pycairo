@@ -19,7 +19,7 @@ cairo are located and what flags to pass to the compiler and linker.
 
 1. Variant:
 
-    Only available since version 1.15.7.
+    Only available since version 1.16.0.
 
     While Pycairo installs a pkg-config file, in case of virtualenvs,
     installation to the user directory or when using wheels/eggs, pkg-config
