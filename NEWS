@@ -1,6 +1,19 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning
 <http://semver.org/>`__ i.e. the newest version is the latest stable one.
 
+.. _v1.16.0:
+
+1.16.0 - 2018-02-05
+-------------------
+
+* Add a :func:`get_include` function which returns the compiler include path
+  needed for interfacing with the Pycairo C API :bug:`92`
+* Note for packagers: The default header installation path has changed, but a
+  compat header is installed to the old location to prevent breakage in case
+  anyone has hardcoded the old path instead of using pkg-config.
+  Just in case anyone is wondering why there are two header files now.
+
+
 .. _v1.15.6:
 
 1.15.6 - 2018-01-30
