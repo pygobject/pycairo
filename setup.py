@@ -16,7 +16,7 @@ from distutils.ccompiler import new_compiler
 from distutils import log
 
 
-PYCAIRO_VERSION = '1.16.0'
+PYCAIRO_VERSION = '1.16.1'
 CAIRO_VERSION_REQUIRED = '1.13.1'
 XPYB_VERSION_REQUIRED = '1.3'
 
