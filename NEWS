@@ -1,6 +1,16 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning
 <http://semver.org/>`__ i.e. the newest version is the latest stable one.
 
+.. _v1.16.1:
+
+1.16.1 - 2018-02-06
+-------------------
+
+* setup.py: correctly install pkgconfig into /usr/lib* again.
+  To make JHBuild on Fedora work the following patch is needed:
+  https://bugzilla.gnome.org/show_bug.cgi?id=793216
+
+
 .. _v1.16.0:
 
 1.16.0 - 2018-02-05
