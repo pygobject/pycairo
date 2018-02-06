@@ -14,6 +14,7 @@ if os.environ.get("PYCAIRO_SETUPTOOLS"):
 from distutils.core import Extension, setup, Command, Distribution
 from distutils.ccompiler import new_compiler
 from distutils import log
+from distutils import sysconfig
 
 
 PYCAIRO_VERSION = '1.16.1'
@@ -145,7 +146,8 @@ class install_pkgconfig(Command):
                 "Skipping install_pkgconfig, not supported with MSVC")
             return
 
-        pkgconfig_dir = os.path.join(self.install_data, "share", "pkgconfig")
+        python_lib = sysconfig.get_python_lib(True, True, self.install_data)
+        pkgconfig_dir = os.path.join(os.path.dirname(python_lib), 'pkgconfig')
         self.mkpath(pkgconfig_dir)
 
         if sys.version_info[0] == 3:
