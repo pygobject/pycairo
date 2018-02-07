@@ -167,6 +167,7 @@ def test_scaled_font_get_scale_matrix(scaled_font):
     assert isinstance(scaled_font.get_scale_matrix(), cairo.Matrix)
 
 
+# https://bitbucket.org/pypy/pypy/issues/2741
 @pytest.mark.skipif(platform.python_implementation() == "PyPy", reason="PyPy")
 def test_scaled_font_text_extents(scaled_font):
     with pytest.raises(TypeError):
@@ -182,6 +183,7 @@ def test_scaled_font_glyph_extents(scaled_font):
         scaled_font.glyph_extents()
 
 
+# https://bitbucket.org/pypy/pypy/issues/2741
 @pytest.mark.skipif(platform.python_implementation() == "PyPy", reason="PyPy")
 def test_toy_font_face():
     with pytest.raises(TypeError):
