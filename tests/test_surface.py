@@ -402,7 +402,7 @@ def test_image_surface_create_for_data_array():
             b = int(x * alpha / 255.0)
             g = int(y * alpha / 255.0)
             # cairo.FORMAT_ARGB32 uses pre-multiplied alpha
-            data[offset:offset + 3] = array.array(
+            data[offset:offset + 4] = array.array(
                 "B", struct.pack("=I", b | g << 8 | alpha << 24))
 
     surface = cairo.ImageSurface.create_for_data(
