@@ -28,12 +28,12 @@ matrix:
     - os: linux
       dist: trusty
       language: python
-      python: "pypy"
+      python: "pypy2.7-5.10.0"
       env: PYCAIRO_WARN=1 CFLAGS="-Werror -coverage"
     - os: linux
       dist: trusty
       language: python
-      python: "pypy3"
+      python: "pypy3.5-5.10.1"
       env: PYCAIRO_WARN=1 CFLAGS="-coverage"
     - os: osx
       osx_image: xcode7.3
@@ -60,7 +60,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source ../venv/bin/activate; fi
   - python -m pip install --upgrade setuptools
   - python -m pip install --upgrade pytest flake8 sphinx sphinx_rtd_theme coverage codecov hypothesis
-  - if [[ "$TRAVIS_PYTHON_VERSION" != "3.3" ]] && [[ "$TRAVIS_PYTHON_VERSION" != "pypy" ]] && [[ "$TRAVIS_PYTHON_VERSION" != "pypy3" ]]; then python -m pip install --upgrade pygame; fi
+  - if [[ "$TRAVIS_PYTHON_VERSION" != "3.3" ]] && [[ "${TRAVIS_PYTHON_VERSION:0:4}" != "pypy" ]]; then python -m pip install --upgrade pygame; fi
 
 script:
   - python -m coverage run --branch setup.py test
@@ -74,5 +74,5 @@ script:
   - PYCAIRO_SETUPTOOLS=1 python setup.py bdist_egg
   - PYCAIRO_SETUPTOOLS=1 python setup.py bdist_wheel
   - PYCAIRO_SETUPTOOLS=1 python setup.py install --root=_root_setup
-  - if [[ "$TRAVIS_PYTHON_VERSION" != "pypy" ]] && [[ "$TRAVIS_PYTHON_VERSION" != "pypy3" ]]; then python -m pip install .; fi
+  - if [[ "${TRAVIS_PYTHON_VERSION:0:4}" != "pypy" ]] ; then python -m pip install .; fi
   - if [[ "$TRAVIS_PYTHON_VERSION" != "3.3" ]]; then python -m sphinx -W -a -E -b html -n docs docs/_build; fi
