@@ -1,6 +1,14 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning
 <http://semver.org/>`__ i.e. the newest version is the latest stable one.
 
+.. _v1.16.2:
+
+1.16.2 - 2018-02-10
+-------------------
+
+* setup.py: Some fixes for Debian pybuild quirks. :bug:`98`
+
+
 .. _v1.16.1:
 
 1.16.1 - 2018-02-06
