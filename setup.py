@@ -93,8 +93,6 @@ class install_pkgconfig(Command):
     def initialize_options(self):
         self.install_base = None
         self.install_data = None
-        self.install_lib = None
-        self.root = None
         self.compiler_type = None
         self.outfiles = []
 
@@ -103,12 +101,6 @@ class install_pkgconfig(Command):
             'install_lib',
             ('install_base', 'install_base'),
             ('install_data', 'install_data'),
-            ('install_lib', 'install_lib'),
-        )
-
-        self.set_undefined_options(
-            'install',
-            ('root', 'root'),
         )
 
         self.set_undefined_options(
@@ -150,22 +142,11 @@ class install_pkgconfig(Command):
         pkgconfig_dir = os.path.join(os.path.dirname(python_lib), 'pkgconfig')
         self.mkpath(pkgconfig_dir)
 
-        if sys.version_info[0] == 3:
-            target = os.path.join(pkgconfig_dir, "py3cairo.pc")
-        else:
-            target = os.path.join(pkgconfig_dir, "pycairo.pc")
-
-        # figure out the package path relative to the prefix
-        lib = self.install_lib
-        if self.root is not None:
-            lib = self.install_lib[len(self.root):]
-        rel_lib = os.path.relpath(lib, self.install_base)
-
-        rel_include_dir = os.path.join(rel_lib, "cairo", "include")
+        pcname = "py3cairo.pc" if sys.version_info[0] == 3 else "pycairo.pc"
+        target = os.path.join(pkgconfig_dir, pcname)
 
         log.info("Writing %s" % target)
         log.info("pkg-config prefix: %s" % self.install_base)
-        log.info("pkg-config include: ${prefix}/%s" % rel_include_dir)
         with open(target, "wb") as h:
             h.write((u"""\
 prefix=%(prefix)s
@@ -174,13 +155,12 @@ Name: Pycairo
 Description: Python %(py_version)d bindings for cairo
 Version: %(version)s
 Requires: cairo
-Cflags: -I${prefix}/%(include)s
+Cflags: -I${prefix}/include/pycairo
 Libs:
 """ % {
                 "prefix": self.install_base,
                 "version": PYCAIRO_VERSION,
-                "py_version": sys.version_info[0],
-                "include": rel_include_dir}).encode("utf-8"))
+                "py_version": sys.version_info[0]}).encode("utf-8"))
 
         self.outfiles.append(target)
 
@@ -215,29 +195,30 @@ class install_pycairo_header(Command):
 
     def run(self):
         # https://github.com/pygobject/pycairo/issues/92
-        hname = 'py3cairo.h' if sys.version_info[0] == 3 else 'pycairo.h'
+        # https://github.com/pygobject/pycairo/issues/98
+        hname = "py3cairo.h" if sys.version_info[0] == 3 else "pycairo.h"
         source = self.get_inputs()[0]
 
-        lib_hdir = os.path.join(
-            self.install_lib, "cairo", "include")
+        # for things using get_include()
+        lib_hdir = os.path.join(self.install_lib, "cairo", "include")
         self.mkpath(lib_hdir)
-        header_path = os.path.join(lib_hdir, hname)
-        (out, _) = self.copy_file(source, header_path)
+        lib_header_path = os.path.join(lib_hdir, hname)
+        (out, _) = self.copy_file(source, lib_header_path)
         self.outfiles.append(out)
 
-        # install a simple header including the new one in the old location,
-        # in case some code has hardcoded the old include path.
-        data_hdir = os.path.join(self.install_data, "include", "pycairo")
-        rel_include_path = os.path.normpath(
-            os.path.relpath(header_path, data_hdir)).replace("\\\\", "/")
-        back_comp_path = os.path.join(data_hdir, hname)
-        self.mkpath(data_hdir)
+        cmd = self.distribution.get_command_obj("bdist_wheel", create=False)
+        if cmd is not None:
+            return
+        cmd = self.distribution.get_command_obj("bdist_egg", create=False)
+        if cmd is not None:
+            return
 
-        log.info("Writing %s" % back_comp_path)
-        with io.open(back_comp_path, "w", encoding="utf-8") as h:
-            h.write(u"/* the header has moved, use pkg-config */\n")
-            h.write(u"#include \"%s\"\n" % rel_include_path)
-        self.outfiles.append(back_comp_path)
+        # for things using pkg-config
+        data_hdir = os.path.join(self.install_data, "include", "pycairo")
+        self.mkpath(data_hdir)
+        header_path = os.path.join(data_hdir, hname)
+        (out, _) = self.copy_file(source, header_path)
+        self.outfiles.append(out)
 
 
 du_install_lib = get_command_class("install_lib")
