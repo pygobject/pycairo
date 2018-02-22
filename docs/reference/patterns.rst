@@ -648,10 +648,12 @@ printing.
 
     .. method:: set_acquire(acquire, release)
 
-        :param callable acquire:
+        :param acquire:
             acquire callback or :obj:`None` to unset it
-        :param callable release:
+        :type acquire: :obj:`callable`
+        :param release:
             (optional) release callback or :obj:`None`
+        :type release: :obj:`callable`
         :raises Error:
 
         Specifies the callbacks used to generate the image surface for a
