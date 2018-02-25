@@ -28,6 +28,10 @@ def test_type():
         "cairo.Glyph(index=0, x=0.0, y=0.0)"
     assert eval(repr(g)) == g
 
+    assert cairo.Glyph.index
+    assert cairo.Glyph.x
+    assert cairo.Glyph.y
+
 
 def test_context():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)

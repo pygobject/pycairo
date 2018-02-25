@@ -99,10 +99,27 @@ text_cluster_repr(PyObject *self) {
     return result;
 }
 
-static PyObject*
-text_cluster_getattro (PyObject *self, PyObject *name) {
-    return Pycairo_tuple_getattro (self, KWDS, name);
+static PyObject *
+text_cluster_get_num_bytes(PyObject *self, void *closure)
+{
+    PyObject *obj = PyTuple_GetItem (self, 0);
+    Py_XINCREF (obj);
+    return obj;
 }
+
+static PyObject *
+text_cluster_get_num_glyphs(PyObject *self, void *closure)
+{
+    PyObject *obj = PyTuple_GetItem (self, 1);
+    Py_XINCREF (obj);
+    return obj;
+}
+
+static PyGetSetDef text_cluster_getset[] = {
+    {"num_bytes", (getter)text_cluster_get_num_bytes},
+    {"num_glyphs", (getter)text_cluster_get_num_glyphs},
+    {NULL,},
+};
 
 PyTypeObject PycairoTextCluster_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
@@ -121,7 +138,7 @@ PyTypeObject PycairoTextCluster_Type = {
     0,                                  /* tp_hash */
     0,                                  /* tp_call */
     0,                                  /* tp_str */
-    text_cluster_getattro,              /* tp_getattro */
+    0,                                  /* tp_getattro */
     0,                                  /* tp_setattro */
     0,                                  /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,                 /* tp_flags */
@@ -134,7 +151,7 @@ PyTypeObject PycairoTextCluster_Type = {
     0,                                  /* tp_iternext */
     0,                                  /* tp_methods */
     0,                                  /* tp_members */
-    0,                                  /* tp_getset */
+    text_cluster_getset,                /* tp_getset */
     0,                                  /* tp_base */
     0,                                  /* tp_dict */
     0,                                  /* tp_descr_get */

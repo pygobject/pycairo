@@ -65,10 +65,45 @@ rectangle_repr(PyObject *self) {
     return result;
 }
 
-static PyObject*
-rectangle_getattro (PyObject *self, PyObject *name) {
-    return Pycairo_tuple_getattro (self, KWDS, name);
+static PyObject *
+rectangle_get_x(PyObject *self, void *closure)
+{
+    PyObject *obj = PyTuple_GetItem (self, 0);
+    Py_XINCREF (obj);
+    return obj;
 }
+
+static PyObject *
+rectangle_get_y(PyObject *self, void *closure)
+{
+    PyObject *obj = PyTuple_GetItem (self, 1);
+    Py_XINCREF (obj);
+    return obj;
+}
+
+static PyObject *
+rectangle_get_width(PyObject *self, void *closure)
+{
+    PyObject *obj = PyTuple_GetItem (self, 2);
+    Py_XINCREF (obj);
+    return obj;
+}
+
+static PyObject *
+rectangle_get_height(PyObject *self, void *closure)
+{
+    PyObject *obj = PyTuple_GetItem (self, 3);
+    Py_XINCREF (obj);
+    return obj;
+}
+
+static PyGetSetDef rectangle_getset[] = {
+    {"x", (getter)rectangle_get_x},
+    {"y", (getter)rectangle_get_y},
+    {"width", (getter)rectangle_get_width},
+    {"height", (getter)rectangle_get_height},
+    {NULL,},
+};
 
 PyTypeObject PycairoRectangle_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
@@ -87,7 +122,7 @@ PyTypeObject PycairoRectangle_Type = {
     0,                                  /* tp_hash */
     0,                                  /* tp_call */
     0,                                  /* tp_str */
-    rectangle_getattro,                 /* tp_getattro */
+    0,                                  /* tp_getattro */
     0,                                  /* tp_setattro */
     0,                                  /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,                 /* tp_flags */
@@ -100,7 +135,7 @@ PyTypeObject PycairoRectangle_Type = {
     0,                                  /* tp_iternext */
     0,                                  /* tp_methods */
     0,                                  /* tp_members */
-    0,                                  /* tp_getset */
+    rectangle_getset,                   /* tp_getset */
     0,                                  /* tp_base */
     0,                                  /* tp_dict */
     0,                                  /* tp_descr_get */
