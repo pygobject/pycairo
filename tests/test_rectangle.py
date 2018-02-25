@@ -27,6 +27,11 @@ def test_type():
     assert str(r) == repr(r)
     assert eval(repr(r)) == r
 
+    assert cairo.Rectangle.x
+    assert cairo.Rectangle.y
+    assert cairo.Rectangle.width
+    assert cairo.Rectangle.height
+
 
 def test_context():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)

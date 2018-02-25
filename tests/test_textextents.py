@@ -30,6 +30,13 @@ def test_type():
     assert str(r) == repr(r)
     assert eval(repr(r)) == r
 
+    assert cairo.TextExtents.x_bearing
+    assert cairo.TextExtents.y_bearing
+    assert cairo.TextExtents.width
+    assert cairo.TextExtents.height
+    assert cairo.TextExtents.x_advance
+    assert cairo.TextExtents.y_advance
+
 
 def test_methods():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
