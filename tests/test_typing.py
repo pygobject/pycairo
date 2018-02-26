@@ -25,10 +25,6 @@ def test_typing():
         code = compile(h.read(), stub, "exec")
         exec(code, mod.__dict__)
 
-    allowed_dunder = [
-        "__init__", "__module__", "__dict__", "__weakref__", "__doc__",
-        "__annotations__"]
-
     def collect_names(t):
         names = set()
         for key, value in vars(t).items():
