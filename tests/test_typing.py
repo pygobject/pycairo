@@ -28,7 +28,8 @@ def test_typing():
     def collect_names(t):
         names = set()
         for key, value in vars(t).items():
-            if key in ["XlibSurface", "XCBSurface"]:
+            if key in ["XlibSurface", "XCBSurface", "Win32PrintingSurface",
+                       "Win32Surface"]:
                 continue
             if key.startswith("_"):
                 continue
