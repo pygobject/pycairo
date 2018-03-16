@@ -13,6 +13,7 @@ if os.environ.get("PYCAIRO_SETUPTOOLS"):
 
 from distutils.core import Extension, setup, Command, Distribution
 from distutils.ccompiler import new_compiler
+from distutils.sysconfig import customize_compiler
 from distutils import log
 from distutils import sysconfig
 
@@ -56,6 +57,105 @@ def pkg_config_parse(opt, pkg):
     output = ret.decode()
     opt = opt[-2:]
     return [x.lstrip(opt) for x in output.split()]
+
+
+def filter_compiler_arguments(compiler, args):
+    """Given a compiler instance and a list of compiler warning flags
+    returns the list of supported flags.
+    """
+
+    if compiler.compiler_type == "msvc":
+        # TODO
+        return []
+
+    extra = []
+
+    def check_arguments(compiler, args):
+        p = subprocess.Popen(
+            [compiler.compiler[0]] + args + extra + ["-x", "c", "-E", "-"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE)
+        stdout, stderr = p.communicate(b"int i;\n")
+        if p.returncode != 0:
+            text = stderr.decode("ascii", "replace")
+            return False, [a for a in args if a in text]
+        else:
+            return True, []
+
+    def check_argument(compiler, arg):
+        return check_arguments(compiler, [arg])[0]
+
+    # clang doesn't error out for unknown options, force it to
+    if check_argument(compiler, '-Werror=unknown-warning-option'):
+        extra += ['-Werror=unknown-warning-option']
+    if check_argument(compiler, '-Werror=unused-command-line-argument'):
+        extra += ['-Werror=unused-command-line-argument']
+
+    # first try to remove all arguments contained in the error message
+    supported = list(args)
+    while 1:
+        ok, maybe_unknown = check_arguments(compiler, supported)
+        if ok:
+            return supported
+        elif not maybe_unknown:
+            break
+        for unknown in maybe_unknown:
+            if not check_argument(compiler, unknown):
+                supported.remove(unknown)
+
+    # hm, didn't work, try each argument one by one
+    supported = []
+    for arg in args:
+        if check_argument(compiler, arg):
+            supported.append(arg)
+    return supported
+
+
+def add_ext_warn_flags(ext, compiler):
+    args = [
+        "-Wall",
+        "-Warray-bounds",
+        "-Wcast-align",
+        "-Wconversion",
+        "-Wdeclaration-after-statement",
+        "-Wextra",
+        "-Wformat=2",
+        "-Wformat-nonliteral",
+        "-Wformat-security",
+        "-Wimplicit-function-declaration",
+        "-Winit-self",
+        "-Winline",
+        "-Wmissing-format-attribute",
+        "-Wmissing-noreturn",
+        "-Wnested-externs",
+        "-Wold-style-definition",
+        "-Wpacked",
+        "-Wpointer-arith",
+        "-Wreturn-type",
+        "-Wshadow",
+        "-Wsign-compare",
+        "-Wstrict-aliasing",
+        "-Wundef",
+        "-Wunused-but-set-variable",
+    ]
+
+    if sys.version_info[:2] not in [(3, 3), (3, 4)]:
+        args += [
+            "-Wswitch-default",
+        ]
+
+    args += [
+        "-Wno-missing-field-initializers",
+        "-Wno-unused-parameter",
+    ]
+
+    # silence clang for unused gcc CFLAGS added by Debian
+    args += [
+        "-Wno-unused-command-line-argument",
+    ]
+
+    ext.extra_compile_args += filter_compiler_arguments(compiler, args)
 
 
 class test_cmd(Command):
@@ -291,42 +391,9 @@ class build_ext(du_build_ext):
                 # while MACROS like Py_RETURN_TRUE require it.
                 ext.extra_compile_args += ["-fno-strict-aliasing"]
 
-            if os.environ.get("PYCAIRO_WARN"):
-                ext.extra_compile_args += [
-                    "-Wall",
-                    "-Wundef",
-                    "-Wextra",
-                    "-Wno-missing-field-initializers",
-                    "-Wno-unused-parameter",
-                    "-Wnested-externs",
-                    "-Wpointer-arith",
-                    "-Wno-missing-field-initializers",
-                    "-Wdeclaration-after-statement",
-                    "-Wformat=2",
-                    "-Wold-style-definition",
-                    "-Wcast-align",
-                    "-Wformat-nonliteral",
-                    "-Wformat-security",
-                    "-Wsign-compare",
-                    "-Wstrict-aliasing",
-                    "-Wshadow",
-                    "-Winline",
-                    "-Wpacked",
-                    "-Wmissing-format-attribute",
-                    "-Wmissing-noreturn",
-                    "-Winit-self",
-                    "-Wunused-but-set-variable",
-                    "-Warray-bounds",
-                    "-Wimplicit-function-declaration",
-                    "-Wreturn-type",
-                    "-Wconversion",
-                    "-Wno-unknown-warning-option",
-                ]
-
-                if sys.version_info[:2] not in [(3, 3), (3, 4)]:
-                    ext.extra_compile_args += [
-                        "-Wswitch-default",
-                    ]
+            compiler = new_compiler(compiler=self.compiler)
+            customize_compiler(compiler)
+            add_ext_warn_flags(ext, compiler)
 
         if self.enable_xpyb:
             if sys.version_info[0] != 2:
