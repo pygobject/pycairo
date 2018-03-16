@@ -4,45 +4,45 @@ matrix:
       dist: trusty
       language: python
       python: "2.7"
-      env: PYCAIRO_WARN=1 CFLAGS="-Werror -coverage"
+      env: CFLAGS="-Werror -coverage"
     - os: linux
       dist: trusty
       language: python
       python: "3.3"
-      env: PYCAIRO_WARN=1 CFLAGS="-Werror -coverage"
+      env: CFLAGS="-Werror -coverage"
     - os: linux
       dist: trusty
       language: python
       python: "3.4"
-      env: PYCAIRO_WARN=1 CFLAGS="-Werror -coverage"
+      env: CFLAGS="-Werror -coverage"
     - os: linux
       dist: trusty
       language: python
       python: "3.5"
-      env: PYCAIRO_WARN=1 CFLAGS="-Werror -coverage"
+      env: CFLAGS="-Werror -coverage"
     - os: linux
       dist: trusty
       language: python
       python: "3.6"
-      env: PYCAIRO_WARN=1 CFLAGS="-Werror -coverage"
+      env: CFLAGS="-Werror -coverage"
     - os: linux
       dist: trusty
       language: python
       python: "pypy2.7-5.10.0"
-      env: PYCAIRO_WARN=1 CFLAGS="-Werror -coverage"
+      env: CFLAGS="-Werror -coverage"
     - os: linux
       dist: trusty
       language: python
       python: "pypy3.5-5.10.1"
-      env: PYCAIRO_WARN=1 CFLAGS="-coverage"
+      env: CFLAGS="-coverage"
     - os: osx
       osx_image: xcode7.3
       language: generic
-      env: PYVER="3" PYCAIRO_WARN=1 CFLAGS="-Werror -coverage"
+      env: PYVER="3" CFLAGS="-Werror -coverage"
     - os: osx
       osx_image: xcode7.3
       language: generic
-      env: PYVER="2" PYCAIRO_WARN=1 CFLAGS="-Werror -coverage"
+      env: PYVER="2" CFLAGS="-Werror -coverage"
 
 
 install:
