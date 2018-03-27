@@ -8,6 +8,17 @@ import cairo
 import pytest
 
 
+def test_context_manager():
+    f = io.BytesIO()
+    with cairo.ScriptDevice(f) as dev:
+        dev.acquire()
+        dev.release()
+
+    with pytest.raises(cairo.Error) as excinfo:
+        dev.acquire()
+    assert excinfo.value.status == cairo.Status.DEVICE_FINISHED
+
+
 def test_cmp_hash():
     f = io.BytesIO()
     dev = cairo.ScriptDevice(f)

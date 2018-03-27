@@ -655,6 +655,20 @@ surface_unmap_image (PycairoSurface *self, PyObject *args) {
 
 #endif /* CAIRO_HAS_IMAGE_SURFACE */
 
+static PyObject *
+surface_ctx_enter (PyObject *obj) {
+  Py_INCREF (obj);
+  return obj;
+}
+
+static PyObject *
+surface_ctx_exit (PycairoSurface *obj, PyObject *args) {
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_surface_finish (obj->surface);
+  Py_END_ALLOW_THREADS;
+  Py_RETURN_NONE;
+}
+
 static PyMethodDef surface_methods[] = {
   /* methods never exposed in a language binding:
    * cairo_surface_destroy()
@@ -663,6 +677,8 @@ static PyMethodDef surface_methods[] = {
    * cairo_surface_reference()
    * cairo_surface_set_user_data()
    */
+  {"__enter__",      (PyCFunction)surface_ctx_enter,          METH_NOARGS},
+  {"__exit__",       (PyCFunction)surface_ctx_exit,           METH_VARARGS},
   {"copy_page",      (PyCFunction)surface_copy_page,          METH_NOARGS},
   {"create_similar", (PyCFunction)surface_create_similar,     METH_VARARGS},
   {"create_similar_image", (PyCFunction)surface_create_similar_image,

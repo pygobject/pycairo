@@ -13,6 +13,14 @@ import cairo
 import pytest
 
 
+def test_context_manager():
+    with cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10) as surface:
+        surface.show_page()
+    with pytest.raises(cairo.Error) as excinfo:
+        surface.show_page()
+    assert excinfo.value.status == cairo.Status.SURFACE_FINISHED
+
+
 def test_surface_cmp_hash():
     main = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
     ctx = cairo.Context(main)
