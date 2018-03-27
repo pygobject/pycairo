@@ -72,7 +72,23 @@ device_release (PycairoDevice *obj) {
     Py_RETURN_NONE;
 }
 
+static PyObject *
+device_ctx_enter (PyObject *obj) {
+    Py_INCREF (obj);
+    return obj;
+}
+
+static PyObject *
+device_ctx_exit (PycairoDevice *obj, PyObject *args) {
+    Py_BEGIN_ALLOW_THREADS;
+    cairo_device_finish (obj->device);
+    Py_END_ALLOW_THREADS;
+    Py_RETURN_NONE;
+}
+
 static PyMethodDef device_methods[] = {
+    {"__enter__",      (PyCFunction)device_ctx_enter,          METH_NOARGS},
+    {"__exit__",       (PyCFunction)device_ctx_exit,           METH_VARARGS},
     {"finish",         (PyCFunction)device_finish,             METH_NOARGS},
     {"flush",          (PyCFunction)device_flush,              METH_NOARGS},
     {"acquire",        (PyCFunction)device_acquire,            METH_NOARGS},
