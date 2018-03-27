@@ -74,6 +74,23 @@ def test_surface_map_to_image():
     del gced
 
 
+def test_surface_map_to_image_context_manager():
+    main = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
+    with main.map_to_image(None) as image:
+        pass
+
+    with pytest.raises(RuntimeError):
+        main.unmap_image(image)
+
+    with pytest.raises(cairo.Error) as excinfo:
+        image.show_page()
+    assert excinfo.value.status == cairo.Status.SURFACE_FINISHED
+
+    with pytest.raises(RuntimeError):
+        with image:
+            pass
+
+
 def test_surface_map_to_image_data():
     main = cairo.ImageSurface(cairo.Format.RGB24, 2, 1)
 

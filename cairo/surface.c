@@ -644,7 +644,7 @@ surface_unmap_image (PycairoSurface *self, PyObject *args) {
   /* Replace the mapped image surface with a fake one and finish it so
    * that any operation on it fails.
    */
-  fake_surface = cairo_image_surface_create (CAIRO_FORMAT_INVALID, 0, 0);
+  fake_surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 0, 0);
   cairo_surface_finish (fake_surface);
   pymapped->surface = fake_surface;
   /* We no longer need the base surface */
@@ -1140,6 +1140,10 @@ mapped_image_surface_dealloc (PycairoImageSurface *self) {
   if (cairo_surface_get_user_data (
       self->surface, &surface_is_mapped_image) != NULL) {
     cairo_surface_unmap_image (pybasesurface->surface, self->surface);
+    self->surface = NULL;
+  } else {
+    cairo_surface_destroy(self->surface);
+    self->surface = NULL;
   }
 
   Py_CLEAR (self->base);
@@ -1154,7 +1158,21 @@ mapped_image_surface_finish (PycairoSurface *self) {
   return NULL;
 }
 
+static PyObject *
+mapped_image_surface_ctx_exit (PycairoImageSurface *self, PyObject *args) {
+  PycairoSurface *pybasesurface = (PycairoSurface *)(self->base);
+  PyObject *subargs, *result;
+
+  subargs = Py_BuildValue("(O)", self);
+  if (subargs == NULL)
+    return NULL;
+  result = surface_unmap_image (pybasesurface, subargs);
+  Py_DECREF (subargs);
+  return result;
+}
+
 static PyMethodDef mapped_image_surface_methods[] = {
+  {"__exit__",     (PyCFunction)mapped_image_surface_ctx_exit,   METH_VARARGS},
   {"finish",       (PyCFunction)mapped_image_surface_finish,     METH_NOARGS},
   {NULL, NULL, 0, NULL},
 };
