@@ -1142,6 +1142,7 @@ mapped_image_surface_dealloc (PycairoImageSurface *self) {
     cairo_surface_unmap_image (pybasesurface->surface, self->surface);
   }
 
+  Py_CLEAR (self->base);
   Py_TYPE (self)->tp_free (self);
 }
 
