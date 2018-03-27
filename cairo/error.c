@@ -54,10 +54,13 @@ status_to_string(cairo_status_t status)
 static void
 set_error (PyObject *error_type, cairo_status_t status)
 {
-    PyObject *args, *v;
+    PyObject *args, *v, *int_enum;
 
-    args = Py_BuildValue("(sO)", status_to_string(status),
-                         CREATE_INT_ENUM(Status, status));
+    int_enum = CREATE_INT_ENUM(Status, status);
+    if (int_enum == NULL)
+        return;
+    args = Py_BuildValue("(sO)", status_to_string(status), int_enum);
+    Py_DECREF (int_enum);
     v = PyObject_Call(error_type, args, NULL);
     Py_DECREF(args);
     if (v != NULL) {
