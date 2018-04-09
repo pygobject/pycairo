@@ -17,6 +17,18 @@ class Device()
 
     .. versionadded:: 1.14
 
+    .. note::
+
+        .. versionadded:: 1.17.0
+
+            :class:`cairo.Device` can be used as a context manager:
+
+        .. code:: python
+
+            # device.finish() will be called on __exit__
+            with cairo.ScriptDevice(f) as device:
+                pass
+
     .. method:: finish()
 
         This function finishes the device and drops all references to external

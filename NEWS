@@ -1,6 +1,17 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning
 <http://semver.org/>`__ i.e. the newest version is the latest stable one.
 
+.. _v1.17.0:
+
+1.17.0 - 2018-??-??
+-------------------
+
+* :class:`cairo.Surface` and :class:`cairo.Device` can now be used as context
+  managers. :bug:`103`
+* Fix a leak when a cairo error was raised.
+* Fix a leak when a mapped surface was GCed instead of unmapped.
+
+
 .. _v1.16.3:
 
 1.16.3 - 2018-02-27

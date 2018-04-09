@@ -48,6 +48,22 @@ class Surface()
    *Surface* is the abstract base class from which all the other surface
    classes derive. It cannot be instantiated directly.
 
+   .. note::
+
+      .. versionadded:: 1.17.0
+
+         :class:`cairo.Surface` can be used as a context manager:
+
+      .. code:: python
+
+         # surface.finish() will be called on __exit__
+         with cairo.SVGSurface("example.svg", 200, 200) as surface:
+             pass
+
+         # surface.unmap_image(image_surface) will be called on __exit__
+         with surface.map_to_image(None) as image_surface:
+             pass
+
    .. method:: copy_page()
 
       Emits the current page for backends that support multiple pages, but
