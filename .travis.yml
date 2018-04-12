@@ -34,7 +34,7 @@ matrix:
       dist: trusty
       language: python
       python: "pypy3.5-5.10.1"
-      env: CFLAGS="-coverage"
+      env: CFLAGS="-Werror -coverage"
     - os: osx
       osx_image: xcode7.3
       language: generic

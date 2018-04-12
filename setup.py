@@ -155,6 +155,10 @@ def add_ext_warn_flags(ext, compiler):
         "-Wno-unused-command-line-argument",
     ]
 
+    args += [
+        "-fno-strict-aliasing",
+    ]
+
     ext.extra_compile_args += filter_compiler_arguments(compiler, args)
 
 
@@ -386,10 +390,6 @@ class build_ext(du_build_ext):
             ext.include_dirs += pkg_config_parse('--cflags-only-I', 'cairo')
             ext.library_dirs += pkg_config_parse('--libs-only-L', 'cairo')
             ext.libraries += pkg_config_parse('--libs-only-l', 'cairo')
-            if sys.version_info[0] == 2:
-                # Some python setups don't pass -fno-strict-aliasing,
-                # while MACROS like Py_RETURN_TRUE require it.
-                ext.extra_compile_args += ["-fno-strict-aliasing"]
 
             compiler = new_compiler(compiler=self.compiler)
             customize_compiler(compiler)
