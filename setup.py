@@ -112,7 +112,7 @@ def filter_compiler_arguments(compiler, args):
     return supported
 
 
-def add_ext_warn_flags(ext, compiler):
+def add_ext_cflags(ext, compiler):
     args = [
         "-Wall",
         "-Warray-bounds",
@@ -157,6 +157,7 @@ def add_ext_warn_flags(ext, compiler):
 
     args += [
         "-fno-strict-aliasing",
+        "-fvisibility=hidden",
     ]
 
     ext.extra_compile_args += filter_compiler_arguments(compiler, args)
@@ -213,7 +214,7 @@ class build_tests(Command):
         compiler = new_compiler()
         customize_compiler(compiler)
 
-        add_ext_warn_flags(ext, compiler)
+        add_ext_cflags(ext, compiler)
 
         if compiler.compiler_type == "msvc":
             ext.libraries += ['cairo']
@@ -465,7 +466,7 @@ class build_ext(du_build_ext):
 
             compiler = new_compiler(compiler=self.compiler)
             customize_compiler(compiler)
-            add_ext_warn_flags(ext, compiler)
+            add_ext_cflags(ext, compiler)
 
         if self.enable_xpyb:
             if sys.version_info[0] != 2:

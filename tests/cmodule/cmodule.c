@@ -8,11 +8,17 @@ static PyMethodDef CModMethods[] = {
     {NULL, NULL, 0, NULL}
 };
 
+#ifdef __GNUC__
+#define PYCAIRO_MODINIT_FUNC __attribute__((visibility("default"))) PyMODINIT_FUNC
+#else
+#define PYCAIRO_MODINIT_FUNC PyMODINIT_FUNC
+#endif
+
 #if PY_MAJOR_VERSION < 3
 
 Pycairo_CAPI_t *Pycairo_CAPI;
 
-PyMODINIT_FUNC
+PYCAIRO_MODINIT_FUNC
 initcmod (void)
 {
     Py_InitModule ("cmod", CModMethods);
@@ -29,7 +35,7 @@ static struct PyModuleDef cmod_module = {
     CModMethods,
 };
 
-PyMODINIT_FUNC
+PYCAIRO_MODINIT_FUNC
 PyInit_cmod (void)
 {
     PyObject *m;

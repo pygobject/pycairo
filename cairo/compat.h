@@ -36,11 +36,17 @@
         PyObject_HEAD_INIT(type) size,
 #endif
 
+#ifdef __GNUC__
+#define PYCAIRO_MODINIT_FUNC __attribute__((visibility("default"))) PyMODINIT_FUNC
+#else
+#define PYCAIRO_MODINIT_FUNC PyMODINIT_FUNC
+#endif
+
 #if PY_MAJOR_VERSION < 3
 
 #define PYCAIRO_MOD_ERROR_VAL
 #define PYCAIRO_MOD_SUCCESS_VAL(val)
-#define PYCAIRO_MOD_INIT(name) void init##name(void)
+#define PYCAIRO_MOD_INIT(name) PYCAIRO_MODINIT_FUNC init##name(void)
 
 #define PYCAIRO_PyUnicode_FromString PyString_FromString
 #define PYCAIRO_PyUnicode_Format PyString_Format
@@ -67,7 +73,7 @@
 
 #define PYCAIRO_MOD_ERROR_VAL NULL
 #define PYCAIRO_MOD_SUCCESS_VAL(val) val
-#define PYCAIRO_MOD_INIT(name) PyMODINIT_FUNC PyInit_##name(void)
+#define PYCAIRO_MOD_INIT(name) PYCAIRO_MODINIT_FUNC PyInit_##name(void)
 
 #define PYCAIRO_PyUnicode_FromString PyUnicode_FromString
 #define PYCAIRO_PyUnicode_Format PyUnicode_Format
