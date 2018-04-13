@@ -59,11 +59,18 @@ Edit the client module file to add the following lines::
   #include "pycairo.h"
 
   /* define a variable for the C API */
-  static Pycairo_CAPI_t *Pycairo_CAPI;
+  Pycairo_CAPI_t *Pycairo_CAPI;
 
   /* import pycairo - add to the init<module> function */
   Pycairo_IMPORT;
 
+In case you want to use the API from another compilation unit::
+
+  #include <pycairo.h>
+
+  extern Pycairo_CAPI_t *Pycairo_CAPI;
+
+  ...
 
 To access the Pycairo C API under Python 3
 ==========================================
@@ -85,6 +92,17 @@ Example showing how to import the pycairo API::
     /* additional initialization can happen here */
     return m;
   }
+
+In case you want to use the API from another compilation unit::
+
+  #define PYCAIRO_NO_IMPORT
+  #include <py3cairo.h>
+
+  ...
+
+.. versionadded:: 1.17.0
+
+    The ``PYCAIRO_NO_IMPORT`` macro is used since 1.17.0
 
 
 Misc Functions
