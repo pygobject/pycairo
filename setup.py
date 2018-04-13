@@ -197,12 +197,15 @@ class build_tests(Command):
             name='tests.cmod',
             sources=[
                 os.path.join(tests_dir, "cmodule.c"),
+                os.path.join(tests_dir, "cmodulelib.c"),
             ],
             include_dirs=[
                 tests_dir,
                 cairo.get_include(),
             ],
             depends=[
+                os.path.join(tests_dir, "cmodulelib.h"),
+                os.path.join(cairo.get_include(), "pycairo.h"),
             ],
             define_macros=[("PY_SSIZE_T_CLEAN", None)],
         )

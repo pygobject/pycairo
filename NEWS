@@ -10,6 +10,8 @@ Since version 1.11.0 Pycairo uses `Semantic Versioning
   managers. :bug:`103`
 * Fix a leak when a cairo error was raised.
 * Fix a leak when a mapped surface was GCed instead of unmapped.
+* Make it possible to use the C API with Python 3 outside of the compilation
+  unit doing the import by defining ``PYCAIRO_NO_IMPORT``. :bug:`110`
 
 
 .. _v1.16.3:
