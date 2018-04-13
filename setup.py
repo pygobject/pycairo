@@ -162,6 +162,77 @@ def add_ext_warn_flags(ext, compiler):
     ext.extra_compile_args += filter_compiler_arguments(compiler, args)
 
 
+class build_tests(Command):
+    description = "build test libraries and extensions"
+    user_options = [
+        ("force", "f", "force a rebuild"),
+        ("enable-xpyb", None, "Build with xpyb support (default=disabled)"),
+    ]
+
+    def initialize_options(self):
+        self.force = False
+        self.build_base = None
+        self.enable_xpyb = False
+
+    def finalize_options(self):
+        self.set_undefined_options(
+            'build',
+            ('build_base', 'build_base'))
+        self.enable_xpyb = bool(self.enable_xpyb)
+        self.force = bool(self.force)
+
+    def run(self):
+        cmd = self.reinitialize_command("build_ext")
+        cmd.inplace = True
+        cmd.enable_xpyb = self.enable_xpyb
+        cmd.force = self.force
+        cmd.ensure_finalized()
+        cmd.run()
+
+        import cairo
+
+        tests_dir = os.path.join("tests", "cmodule")
+
+        ext = Extension(
+            name='tests.cmod',
+            sources=[
+                os.path.join(tests_dir, "cmodule.c"),
+            ],
+            include_dirs=[
+                tests_dir,
+                cairo.get_include(),
+            ],
+            depends=[
+            ],
+            define_macros=[("PY_SSIZE_T_CLEAN", None)],
+        )
+
+        compiler = new_compiler()
+        customize_compiler(compiler)
+
+        add_ext_warn_flags(ext, compiler)
+
+        if compiler.compiler_type == "msvc":
+            ext.libraries += ['cairo']
+        else:
+            pkg_config_version_check('cairo', CAIRO_VERSION_REQUIRED)
+            ext.include_dirs += pkg_config_parse('--cflags-only-I', 'cairo')
+            ext.library_dirs += pkg_config_parse('--libs-only-L', 'cairo')
+            ext.libraries += pkg_config_parse('--libs-only-l', 'cairo')
+
+        dist = Distribution({"ext_modules": [ext]})
+
+        build_cmd = dist.get_command_obj("build")
+        build_cmd.build_base = os.path.join(self.build_base, "pycairo_tests")
+        build_cmd.ensure_finalized()
+
+        cmd = dist.get_command_obj("build_ext")
+        cmd.inplace = True
+        cmd.force = self.force
+        cmd.ensure_finalized()
+        cmd.run()
+
+
 class test_cmd(Command):
     description = "run tests"
     user_options = [
@@ -172,16 +243,14 @@ class test_cmd(Command):
         self.enable_xpyb = None
 
     def finalize_options(self):
-        pass
+        self.enable_xpyb = bool(self.enable_xpyb)
 
     def run(self):
         import pytest
 
         # ensure the C extension is build inplace
-        cmd = self.reinitialize_command("build_ext")
-        if self.enable_xpyb is not None:
-            cmd.enable_xpyb = self.enable_xpyb
-        cmd.inplace = True
+        cmd = self.reinitialize_command("build_tests")
+        cmd.enable_xpyb = self.enable_xpyb
         cmd.ensure_finalized()
         cmd.run()
 
@@ -471,6 +540,7 @@ def main():
         "install_pkgconfig": install_pkgconfig,
         "install_pycairo_header": install_pycairo_header,
         "test": test_cmd,
+        "build_tests": build_tests,
     }
 
     setup(
