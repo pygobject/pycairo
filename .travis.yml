@@ -28,6 +28,11 @@ matrix:
     - os: linux
       dist: trusty
       language: python
+      python: "3.7-dev"
+      env: CFLAGS="-coverage"
+    - os: linux
+      dist: trusty
+      language: python
       python: "pypy2.7-5.10.0"
       env: CFLAGS="-Werror -coverage"
     - os: linux
@@ -61,7 +66,7 @@ install:
   - python -m pip install --upgrade setuptools
   - python -m pip install --upgrade pytest flake8 sphinx sphinx_rtd_theme coverage codecov hypothesis
   - python -m pip install --upgrade mypy || true
-  - if [[ "$TRAVIS_PYTHON_VERSION" != "3.3" ]] && [[ "${TRAVIS_PYTHON_VERSION:0:4}" != "pypy" ]]; then python -m pip install --upgrade pygame; fi
+  - if [[ "$TRAVIS_PYTHON_VERSION" != "3.3" ]] && [[ "$TRAVIS_PYTHON_VERSION" != "3.7-dev" ]] && [[ "${TRAVIS_PYTHON_VERSION:0:4}" != "pypy" ]]; then python -m pip install --upgrade pygame; fi
 
 script:
   - python -m coverage run --branch setup.py test
