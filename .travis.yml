@@ -76,9 +76,8 @@ script:
   - python setup.py bdist
   - python setup.py install --root=_root
   - python setup.py install --root="$(pwd)"/_root_abs
-  - python setup.py install --user
-  - PYCAIRO_SETUPTOOLS=1 python setup.py bdist_egg
-  - PYCAIRO_SETUPTOOLS=1 python setup.py bdist_wheel
-  - PYCAIRO_SETUPTOOLS=1 python setup.py install --root=_root_setup
+  - python setup.py bdist_egg
+  - python setup.py bdist_wheel
+  - python setup.py install --root=_root_setup
   - if [[ "${TRAVIS_PYTHON_VERSION:0:4}" != "pypy" ]] ; then python -m pip install .; fi
   - if [[ "$TRAVIS_PYTHON_VERSION" != "3.3" ]]; then python -m sphinx -W -a -E -b html -n docs docs/_build; fi

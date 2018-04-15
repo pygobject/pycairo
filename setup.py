@@ -6,12 +6,12 @@ import sys
 import os
 import errno
 
-if os.environ.get("PYCAIRO_SETUPTOOLS"):
-    # for testing
-    import setuptools
-    setuptools
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
-from distutils.core import Extension, setup, Command, Distribution
+from distutils.core import Extension, Command, Distribution
 from distutils.ccompiler import new_compiler
 from distutils.sysconfig import customize_compiler
 from distutils import log
