@@ -3,7 +3,7 @@ Since version 1.11.0 Pycairo uses `Semantic Versioning
 
 .. _v1.17.0:
 
-1.17.0 - 2018-??-??
+1.17.0 - 2018-04-15
 -------------------
 
 * :class:`cairo.Surface` and :class:`cairo.Device` can now be used as context
