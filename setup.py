@@ -557,7 +557,12 @@ def main():
         maintainer_email="reiter.christoph@gmail.com",
         ext_modules=[cairo_ext],
         packages=["cairo"],
-        package_data={"cairo": ["__init__.pyi"]},
+        package_data={
+            "cairo": [
+                "__init__.pyi",
+                "py.typed",
+            ],
+        },
         classifiers=[
             'Operating System :: OS Independent',
             'Programming Language :: Python :: 2',
