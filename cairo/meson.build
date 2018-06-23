@@ -75,3 +75,8 @@ pkg.generate(
   subdirs: 'pycairo',
   requires: ['cairo'],
 )
+
+pycairo_dep = declare_dependency(
+  version: pycairo_version,
+  include_directories: [include_directories('.')],
+)
