@@ -3,6 +3,8 @@ include NEWS
 include README.rst
 include MANIFEST.in
 include setup.cfg
+include meson_options.txt
+recursive-include . meson.build
 recursive-include docs *.py Makefile *.rst *.css *.svg
 prune docs/_build
 recursive-include tests *.py README *.c *.h
