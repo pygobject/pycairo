@@ -77,5 +77,12 @@ pyext_c_args = [
   '-DPYCAIRO_VERSION_MICRO=@0@'.format(pycairo_version_micro),
 ]
 
+pkginfo_conf = configuration_data()
+pkginfo_conf.set('VERSION', pycairo_version)
+configure_file(input : 'PKG-INFO.in',
+  output : 'pycairo-@0@.egg-info'.format(pycairo_version),
+  configuration : pkginfo_conf,
+  install_dir : python.get_install_dir())
+
 subdir('cairo')
 subdir('tests')

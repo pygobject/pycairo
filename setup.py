@@ -573,6 +573,7 @@ def main():
             'Programming Language :: Python :: 3.5',
             'Programming Language :: Python :: 3.6',
             'Programming Language :: Python :: Implementation :: CPython',
+            'Programming Language :: Python :: Implementation :: PyPy',
             ('License :: OSI Approved :: '
              'GNU Lesser General Public License v2 (LGPLv2)'),
             'License :: OSI Approved :: Mozilla Public License 1.1 (MPL 1.1)',

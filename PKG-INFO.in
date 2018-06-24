@@ -1,0 +1,22 @@
+Metadata-Version: 1.2
+Name: pycairo
+Version: @VERSION@
+Summary: Python interface for cairo
+Home-page: https://pycairo.readthedocs.io
+Maintainer: Christoph Reiter
+Maintainer-email: reiter.christoph@gmail.com
+License: UNKNOWN
+Description: Pycairo is a Python module providing bindings for the cairo graphics library
+Platform: UNKNOWN
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)
+Classifier: License :: OSI Approved :: Mozilla Public License 1.1 (MPL 1.1)
