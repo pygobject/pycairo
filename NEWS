@@ -1,6 +1,14 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning
 <http://semver.org/>`__ i.e. the newest version is the latest stable one.
 
+.. _v1.17.1:
+
+1.17.1 - 2018-07-07
+-------------------
+
+* `Meson <https://mesonbuild.com/>`__ support (>=0.46). :bug:`114`
+
+
 .. _v1.17.0:
 
 1.17.0 - 2018-04-15
