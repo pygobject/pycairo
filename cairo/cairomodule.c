@@ -126,12 +126,12 @@ static Pycairo_CAPI_t CAPI = {
 };
 
 static PyObject *
-pycairo_cairo_version (PyObject *self) {
+pycairo_cairo_version (PyObject *self, PyObject *ignored) {
   return PYCAIRO_PyLong_FromLong (cairo_version());
 }
 
 static PyObject *
-pycairo_cairo_version_string (PyObject *self) {
+pycairo_cairo_version_string (PyObject *self, PyObject *ignored) {
   return PYCAIRO_PyUnicode_FromString (cairo_version_string());
 }
 

@@ -183,17 +183,17 @@ toy_font_face_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 }
 
 static PyObject *
-toy_font_get_family (PycairoToyFontFace *o) {
+toy_font_get_family (PycairoToyFontFace *o, PyObject *ignored) {
   return PYCAIRO_PyUnicode_FromString (cairo_toy_font_face_get_family (o->font_face));
 }
 
 static PyObject *
-toy_font_get_slant (PycairoToyFontFace *o) {
+toy_font_get_slant (PycairoToyFontFace *o, PyObject *ignored) {
   RETURN_INT_ENUM (FontSlant, cairo_toy_font_face_get_slant (o->font_face));
 }
 
 static PyObject *
-toy_font_get_weight (PycairoToyFontFace *o) {
+toy_font_get_weight (PycairoToyFontFace *o, PyObject *ignored) {
   RETURN_INT_ENUM (FontWeight, cairo_toy_font_face_get_weight (o->font_face));
 }
 
@@ -298,7 +298,7 @@ scaled_font_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 }
 
 static PyObject *
-scaled_font_extents (PycairoScaledFont *o) {
+scaled_font_extents (PycairoScaledFont *o, PyObject *ignored) {
   cairo_font_extents_t e;
 
   cairo_scaled_font_extents (o->scaled_font, &e);
@@ -308,14 +308,14 @@ scaled_font_extents (PycairoScaledFont *o) {
 }
 
 static PyObject *
-scaled_font_get_font_face (PycairoScaledFont *o) {
+scaled_font_get_font_face (PycairoScaledFont *o, PyObject *ignored) {
   return PycairoFontFace_FromFontFace (
                cairo_font_face_reference (
 		   cairo_scaled_font_get_font_face (o->scaled_font)));
 }
 
 static PyObject *
-scaled_font_get_scale_matrix (PycairoScaledFont *o) {
+scaled_font_get_scale_matrix (PycairoScaledFont *o, PyObject *ignored) {
   cairo_matrix_t matrix;
   cairo_scaled_font_get_scale_matrix (o->scaled_font, &matrix);
   return PycairoMatrix_FromMatrix (&matrix);
@@ -347,7 +347,7 @@ scaled_font_text_extents (PycairoScaledFont *o, PyObject *args) {
 }
 
 static PyObject *
-scaled_font_get_ctm (PycairoScaledFont *o) {
+scaled_font_get_ctm (PycairoScaledFont *o, PyObject *ignored) {
   cairo_matrix_t matrix;
 
   Py_BEGIN_ALLOW_THREADS;
@@ -358,7 +358,7 @@ scaled_font_get_ctm (PycairoScaledFont *o) {
 }
 
 static PyObject *
-scaled_font_get_font_matrix (PycairoScaledFont *o) {
+scaled_font_get_font_matrix (PycairoScaledFont *o, PyObject *ignored) {
   cairo_matrix_t matrix;
 
   Py_BEGIN_ALLOW_THREADS;
@@ -369,7 +369,7 @@ scaled_font_get_font_matrix (PycairoScaledFont *o) {
 }
 
 static PyObject *
-scaled_font_get_font_options (PycairoScaledFont *o) {
+scaled_font_get_font_options (PycairoScaledFont *o, PyObject *ignored) {
   cairo_font_options_t *options = cairo_font_options_create();
 
   Py_BEGIN_ALLOW_THREADS;
@@ -630,24 +630,24 @@ font_options_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 }
 
 static PyObject *
-font_options_get_antialias (PycairoFontOptions *o) {
+font_options_get_antialias (PycairoFontOptions *o, PyObject *ignored) {
   RETURN_INT_ENUM (Antialias, cairo_font_options_get_antialias (o->font_options));
 }
 
 static PyObject *
-font_options_get_hint_metrics (PycairoFontOptions *o) {
+font_options_get_hint_metrics (PycairoFontOptions *o, PyObject *ignored) {
   RETURN_INT_ENUM (HintMetrics,
                    cairo_font_options_get_hint_metrics (o->font_options));
 }
 
 static PyObject *
-font_options_get_hint_style (PycairoFontOptions *o) {
+font_options_get_hint_style (PycairoFontOptions *o, PyObject *ignored) {
   RETURN_INT_ENUM (HintStyle,
                    cairo_font_options_get_hint_style (o->font_options));
 }
 
 static PyObject *
-font_options_get_subpixel_order (PycairoFontOptions *o) {
+font_options_get_subpixel_order (PycairoFontOptions *o, PyObject *ignored) {
   RETURN_INT_ENUM (SubpixelOrder,
                    cairo_font_options_get_subpixel_order (o->font_options));
 }
@@ -716,7 +716,7 @@ font_options_set_subpixel_order (PycairoFontOptions *o, PyObject *args) {
 }
 
 static PyObject *
-font_options_copy (PycairoFontOptions *o) {
+font_options_copy (PycairoFontOptions *o, PyObject *ignored) {
   cairo_font_options_t *new;
 
   Py_BEGIN_ALLOW_THREADS;
@@ -727,7 +727,7 @@ font_options_copy (PycairoFontOptions *o) {
 }
 
 static PyObject *
-font_options_hash (PycairoFontOptions *o) {
+font_options_hash (PycairoFontOptions *o, PyObject *ignored) {
   unsigned long hash;
 
   Py_BEGIN_ALLOW_THREADS;

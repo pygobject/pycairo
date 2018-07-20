@@ -102,12 +102,12 @@ pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 }
 
 static PyObject *
-pattern_get_extend (PycairoPattern *o) {
+pattern_get_extend (PycairoPattern *o, PyObject *ignored) {
   RETURN_INT_ENUM (Extend, cairo_pattern_get_extend (o->pattern));
 }
 
 static PyObject *
-pattern_get_matrix (PycairoPattern *o) {
+pattern_get_matrix (PycairoPattern *o, PyObject *ignored) {
   cairo_matrix_t matrix;
   cairo_pattern_get_matrix (o->pattern, &matrix);
   return PycairoMatrix_FromMatrix (&matrix);
@@ -140,7 +140,7 @@ pattern_set_matrix (PycairoPattern *o, PyObject *args) {
 }
 
 static PyObject *
-pattern_get_filter (PycairoPattern *o) {
+pattern_get_filter (PycairoPattern *o, PyObject *ignored) {
   cairo_filter_t filter;
 
   Py_BEGIN_ALLOW_THREADS;
@@ -262,7 +262,7 @@ solid_pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 }
 
 static PyObject *
-solid_pattern_get_rgba (PycairoSolidPattern *o) {
+solid_pattern_get_rgba (PycairoSolidPattern *o, PyObject *ignored) {
   double red, green, blue, alpha;
   cairo_pattern_get_rgba (o->pattern, &red, &green, &blue, &alpha);
   return Py_BuildValue("(dddd)", red, green, blue, alpha);
@@ -330,7 +330,7 @@ surface_pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 }
 
 static PyObject *
-surface_pattern_get_surface (PycairoSurfacePattern *o) {
+surface_pattern_get_surface (PycairoSurfacePattern *o, PyObject *ignored) {
   cairo_surface_t *surface;
   RETURN_NULL_IF_CAIRO_ERROR(cairo_pattern_get_surface (o->pattern, &surface));
   return PycairoSurface_FromSurface(cairo_surface_reference (surface), NULL);
@@ -418,7 +418,7 @@ gradient_add_color_stop_rgba (PycairoGradient *o, PyObject *args) {
 }
 
 static PyObject *
-gradient_get_color_stops_rgba (PycairoGradient *obj) {
+gradient_get_color_stops_rgba (PycairoGradient *obj, PyObject *ignored) {
   cairo_status_t status;
   double offset, red, green, blue, alpha;
   int count;
@@ -523,7 +523,7 @@ linear_gradient_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 }
 
 static PyObject *
-linear_gradient_get_linear_points (PycairoLinearGradient *o) {
+linear_gradient_get_linear_points (PycairoLinearGradient *o, PyObject *ignored) {
   double x0, y0, x1, y1;
   cairo_pattern_get_linear_points (o->pattern, &x0, &y0, &x1, &y1);
   return Py_BuildValue("(dddd)", x0, y0, x1, y1);
@@ -593,7 +593,7 @@ radial_gradient_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 }
 
 static PyObject *
-radial_gradient_get_radial_circles (PycairoRadialGradient *o) {
+radial_gradient_get_radial_circles (PycairoRadialGradient *o, PyObject *ignored) {
   double x0, y0, r0, x1, y1, r1;
   cairo_pattern_get_radial_circles (o->pattern, &x0, &y0, &r0,
 				    &x1, &y1, &r1);
@@ -659,7 +659,7 @@ mesh_pattern_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 }
 
 static PyObject *
-mesh_pattern_begin_patch (PycairoMeshPattern *obj) {
+mesh_pattern_begin_patch (PycairoMeshPattern *obj, PyObject *ignored) {
   Py_BEGIN_ALLOW_THREADS;
   cairo_mesh_pattern_begin_patch (obj->pattern);
   Py_END_ALLOW_THREADS;
@@ -670,7 +670,7 @@ mesh_pattern_begin_patch (PycairoMeshPattern *obj) {
 }
 
 static PyObject *
-mesh_pattern_end_patch (PycairoMeshPattern *obj) {
+mesh_pattern_end_patch (PycairoMeshPattern *obj, PyObject *ignored) {
   Py_BEGIN_ALLOW_THREADS;
   cairo_mesh_pattern_end_patch (obj->pattern);
   Py_END_ALLOW_THREADS;
@@ -738,7 +738,7 @@ mesh_pattern_get_corner_color_rgba (PycairoMeshPattern *obj, PyObject *args) {
 }
 
 static PyObject *
-mesh_pattern_get_patch_count (PycairoMeshPattern *obj) {
+mesh_pattern_get_patch_count (PycairoMeshPattern *obj, PyObject *ignored) {
   unsigned int count;
   cairo_status_t status;
 
@@ -1152,7 +1152,7 @@ raster_source_pattern_set_acquire (PycairoRasterSourcePattern *obj,
 }
 
 static PyObject *
-raster_source_pattern_get_acquire (PycairoRasterSourcePattern *obj) {
+raster_source_pattern_get_acquire (PycairoRasterSourcePattern *obj, PyObject *ignored) {
   cairo_pattern_t *pattern;
   void *user_data;
   PyObject *acquire_callable, *release_callable;

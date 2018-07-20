@@ -41,21 +41,21 @@ device_dealloc(PycairoDevice *obj) {
 }
 
 static PyObject *
-device_finish (PycairoDevice *obj) {
+device_finish (PycairoDevice *obj, PyObject *ignored) {
     cairo_device_finish (obj->device);
     RETURN_NULL_IF_CAIRO_DEVICE_ERROR(obj->device);
     Py_RETURN_NONE;
 }
 
 static PyObject *
-device_flush (PycairoDevice *obj) {
+device_flush (PycairoDevice *obj, PyObject *ignored) {
     cairo_device_flush (obj->device);
     RETURN_NULL_IF_CAIRO_DEVICE_ERROR(obj->device);
     Py_RETURN_NONE;
 }
 
 static PyObject *
-device_acquire (PycairoDevice *obj) {
+device_acquire (PycairoDevice *obj, PyObject *ignored) {
     cairo_status_t status;
 
     Py_BEGIN_ALLOW_THREADS;
@@ -67,13 +67,13 @@ device_acquire (PycairoDevice *obj) {
 }
 
 static PyObject *
-device_release (PycairoDevice *obj) {
+device_release (PycairoDevice *obj, PyObject *ignored) {
     cairo_device_release (obj->device);
     Py_RETURN_NONE;
 }
 
 static PyObject *
-device_ctx_enter (PyObject *obj) {
+device_ctx_enter (PyObject *obj, PyObject *ignored) {
     Py_INCREF (obj);
     return obj;
 }
@@ -257,7 +257,7 @@ script_device_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 }
 
 static PyObject *
-script_device_get_mode (PycairoDevice *obj) {
+script_device_get_mode (PycairoDevice *obj, PyObject *ignored) {
     RETURN_INT_ENUM (ScriptMode, cairo_script_get_mode (obj->device));
 }
 

@@ -142,7 +142,7 @@ int_enum_repr(PyObject *obj)
 }
 
 static PyObject *
-int_enum_reduce(PyObject *self)
+int_enum_reduce(PyObject *self, PyObject *ignored)
 {
     PyObject *num = PYCAIRO_PyNumber_Long (self);
     if (num == NULL)

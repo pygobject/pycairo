@@ -78,7 +78,7 @@ matrix_init_rotate (PyTypeObject *type, PyObject *args) {
 }
 
 static PyObject *
-matrix_invert (PycairoMatrix *o) {
+matrix_invert (PycairoMatrix *o, PyObject *ignored) {
   if (Pycairo_Check_Status (cairo_matrix_invert (&o->matrix)))
     return NULL;
   Py_RETURN_NONE;

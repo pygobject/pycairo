@@ -116,7 +116,7 @@ pycairo_arc_negative (PycairoContext *o, PyObject *args) {
 }
 
 static PyObject *
-pycairo_clip (PycairoContext *o) {
+pycairo_clip (PycairoContext *o, PyObject *ignored) {
   Py_BEGIN_ALLOW_THREADS;
   cairo_clip (o->ctx);
   Py_END_ALLOW_THREADS;
@@ -125,7 +125,7 @@ pycairo_clip (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_clip_extents (PycairoContext *o) {
+pycairo_clip_extents (PycairoContext *o, PyObject *ignored) {
   double x1, y1, x2, y2;
   cairo_clip_extents (o->ctx, &x1, &y1, &x2, &y2);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
@@ -133,7 +133,7 @@ pycairo_clip_extents (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_clip_preserve (PycairoContext *o) {
+pycairo_clip_preserve (PycairoContext *o, PyObject *ignored) {
   Py_BEGIN_ALLOW_THREADS;
   cairo_clip_preserve (o->ctx);
   Py_END_ALLOW_THREADS;
@@ -157,7 +157,7 @@ pycairo_in_clip (PycairoContext *o, PyObject *args) {
 }
 
 static PyObject *
-pycairo_close_path (PycairoContext *o) {
+pycairo_close_path (PycairoContext *o, PyObject *ignored) {
   Py_BEGIN_ALLOW_THREADS;
   cairo_close_path (o->ctx);
   Py_END_ALLOW_THREADS;
@@ -166,7 +166,7 @@ pycairo_close_path (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_copy_clip_rectangle_list (PycairoContext *o) {
+pycairo_copy_clip_rectangle_list (PycairoContext *o, PyObject *ignored) {
   int i;
   PyObject *rv = NULL;
   PyObject *rect = NULL;
@@ -203,7 +203,7 @@ pycairo_copy_clip_rectangle_list (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_copy_page (PycairoContext *o) {
+pycairo_copy_page (PycairoContext *o, PyObject *ignored) {
   Py_BEGIN_ALLOW_THREADS;
   cairo_copy_page (o->ctx);
   Py_END_ALLOW_THREADS;
@@ -212,7 +212,7 @@ pycairo_copy_page (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_copy_path (PycairoContext *o) {
+pycairo_copy_path (PycairoContext *o, PyObject *ignored) {
   cairo_path_t *cp;
   Py_BEGIN_ALLOW_THREADS;
   cp = cairo_copy_path (o->ctx);
@@ -221,7 +221,7 @@ pycairo_copy_path (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_copy_path_flat (PycairoContext *o) {
+pycairo_copy_path_flat (PycairoContext *o, PyObject *ignored) {
   cairo_path_t *cp;
   Py_BEGIN_ALLOW_THREADS;
   cp = cairo_copy_path_flat (o->ctx);
@@ -268,7 +268,7 @@ pycairo_device_to_user_distance (PycairoContext *o, PyObject *args) {
 }
 
 static PyObject *
-pycairo_fill (PycairoContext *o) {
+pycairo_fill (PycairoContext *o, PyObject *ignored) {
   Py_BEGIN_ALLOW_THREADS;
   cairo_fill (o->ctx);
   Py_END_ALLOW_THREADS;
@@ -277,7 +277,7 @@ pycairo_fill (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_fill_extents (PycairoContext *o) {
+pycairo_fill_extents (PycairoContext *o, PyObject *ignored) {
   double x1, y1, x2, y2;
   cairo_fill_extents (o->ctx, &x1, &y1, &x2, &y2);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
@@ -285,7 +285,7 @@ pycairo_fill_extents (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_fill_preserve (PycairoContext *o) {
+pycairo_fill_preserve (PycairoContext *o, PyObject *ignored) {
   Py_BEGIN_ALLOW_THREADS;
   cairo_fill_preserve (o->ctx);
   Py_END_ALLOW_THREADS;
@@ -294,7 +294,7 @@ pycairo_fill_preserve (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_font_extents (PycairoContext *o) {
+pycairo_font_extents (PycairoContext *o, PyObject *ignored) {
   cairo_font_extents_t e;
 
   cairo_font_extents (o->ctx, &e);
@@ -304,19 +304,19 @@ pycairo_font_extents (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_get_antialias (PycairoContext *o) {
+pycairo_get_antialias (PycairoContext *o, PyObject *ignored) {
   RETURN_INT_ENUM (Antialias, cairo_get_antialias (o->ctx));
 }
 
 static PyObject *
-pycairo_get_current_point (PycairoContext *o) {
+pycairo_get_current_point (PycairoContext *o, PyObject *ignored) {
   double x, y;
   cairo_get_current_point (o->ctx, &x, &y);
   return Py_BuildValue("(dd)", x, y);
 }
 
 static PyObject *
-pycairo_get_dash (PycairoContext *o) {
+pycairo_get_dash (PycairoContext *o, PyObject *ignored) {
   double *dashes = NULL, offset;
   int count, i;
   PyObject *py_dashes = NULL, *rv = NULL;
@@ -350,30 +350,30 @@ pycairo_get_dash (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_get_dash_count (PycairoContext *o) {
+pycairo_get_dash_count (PycairoContext *o, PyObject *ignored) {
   return PYCAIRO_PyLong_FromLong (cairo_get_dash_count (o->ctx));
 }
 
 static PyObject *
-pycairo_get_fill_rule (PycairoContext *o) {
+pycairo_get_fill_rule (PycairoContext *o, PyObject *ignored) {
   RETURN_INT_ENUM(FillRule, cairo_get_fill_rule (o->ctx));
 }
 
 static PyObject *
-pycairo_get_font_face (PycairoContext *o) {
+pycairo_get_font_face (PycairoContext *o, PyObject *ignored) {
   return PycairoFontFace_FromFontFace (
        cairo_font_face_reference (cairo_get_font_face (o->ctx)));
 }
 
 static PyObject *
-pycairo_get_font_matrix (PycairoContext *o) {
+pycairo_get_font_matrix (PycairoContext *o, PyObject *ignored) {
   cairo_matrix_t matrix;
   cairo_get_font_matrix (o->ctx, &matrix);
   return PycairoMatrix_FromMatrix (&matrix);
 }
 
 static PyObject *
-pycairo_get_font_options (PycairoContext *o) {
+pycairo_get_font_options (PycairoContext *o, PyObject *ignored) {
   cairo_font_options_t *options = cairo_font_options_create();
   cairo_get_font_options (o->ctx, options);
   /* there is no reference fn */
@@ -381,64 +381,64 @@ pycairo_get_font_options (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_get_group_target (PycairoContext *o) {
+pycairo_get_group_target (PycairoContext *o, PyObject *ignored) {
   cairo_surface_t *surface = cairo_get_group_target (o->ctx);
   return PycairoSurface_FromSurface (cairo_surface_reference (surface), NULL);
 }
 
 static PyObject *
-pycairo_get_line_cap (PycairoContext *o) {
+pycairo_get_line_cap (PycairoContext *o, PyObject *ignored) {
   RETURN_INT_ENUM(LineCap, cairo_get_line_cap (o->ctx));
 }
 
 static PyObject *
-pycairo_get_line_join (PycairoContext *o) {
+pycairo_get_line_join (PycairoContext *o, PyObject *ignored) {
   RETURN_INT_ENUM(LineJoin, cairo_get_line_join (o->ctx));
 }
 
 static PyObject *
-pycairo_get_line_width (PycairoContext *o) {
+pycairo_get_line_width (PycairoContext *o, PyObject *ignored) {
   return PyFloat_FromDouble(cairo_get_line_width (o->ctx));
 }
 
 static PyObject *
-pycairo_get_matrix (PycairoContext *o) {
+pycairo_get_matrix (PycairoContext *o, PyObject *ignored) {
   cairo_matrix_t matrix;
   cairo_get_matrix (o->ctx, &matrix);
   return PycairoMatrix_FromMatrix (&matrix);
 }
 
 static PyObject *
-pycairo_get_miter_limit (PycairoContext *o) {
+pycairo_get_miter_limit (PycairoContext *o, PyObject *ignored) {
   return PyFloat_FromDouble (cairo_get_miter_limit (o->ctx));
 }
 
 static PyObject *
-pycairo_get_operator (PycairoContext *o) {
+pycairo_get_operator (PycairoContext *o, PyObject *ignored) {
   RETURN_INT_ENUM(Operator, cairo_get_operator (o->ctx));
 }
 
 static PyObject *
-pycairo_get_scaled_font (PycairoContext *o) {
+pycairo_get_scaled_font (PycairoContext *o, PyObject *ignored) {
   return PycairoScaledFont_FromScaledFont (
 	   cairo_scaled_font_reference (cairo_get_scaled_font (o->ctx)));
 }
 
 static PyObject *
-pycairo_get_source (PycairoContext *o) {
+pycairo_get_source (PycairoContext *o, PyObject *ignored) {
   return PycairoPattern_FromPattern (
 	       cairo_pattern_reference (cairo_get_source (o->ctx)), NULL);
 }
 
 static PyObject *
-pycairo_get_target (PycairoContext *o) {
+pycairo_get_target (PycairoContext *o, PyObject *ignored) {
   return PycairoSurface_FromSurface (
 	       cairo_surface_reference (cairo_get_target (o->ctx)),
 	       NULL);
 }
 
 static PyObject *
-pycairo_get_tolerance (PycairoContext *o) {
+pycairo_get_tolerance (PycairoContext *o, PyObject *ignored) {
   return PyFloat_FromDouble (cairo_get_tolerance (o->ctx));
 }
 
@@ -487,7 +487,7 @@ pycairo_glyph_path (PycairoContext *o, PyObject *args) {
 }
 
 static PyObject *
-pycairo_has_current_point (PycairoContext *o) {
+pycairo_has_current_point (PycairoContext *o, PyObject *ignored) {
   PyObject *b = cairo_has_current_point (o->ctx) ? Py_True : Py_False;
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   Py_INCREF(b);
@@ -495,7 +495,7 @@ pycairo_has_current_point (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_identity_matrix (PycairoContext *o) {
+pycairo_identity_matrix (PycairoContext *o, PyObject *ignored) {
   cairo_identity_matrix (o->ctx);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   Py_RETURN_NONE;
@@ -584,21 +584,21 @@ pycairo_move_to (PycairoContext *o, PyObject *args) {
 }
 
 static PyObject *
-pycairo_new_path (PycairoContext *o) {
+pycairo_new_path (PycairoContext *o, PyObject *ignored) {
   cairo_new_path (o->ctx);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   Py_RETURN_NONE;
 }
 
 static PyObject *
-pycairo_new_sub_path (PycairoContext *o) {
+pycairo_new_sub_path (PycairoContext *o, PyObject *ignored) {
   cairo_new_sub_path (o->ctx);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   Py_RETURN_NONE;
 }
 
 static PyObject *
-pycairo_paint (PycairoContext *o) {
+pycairo_paint (PycairoContext *o, PyObject *ignored) {
   Py_BEGIN_ALLOW_THREADS;
   cairo_paint (o->ctx);
   Py_END_ALLOW_THREADS;
@@ -621,7 +621,7 @@ pycairo_paint_with_alpha (PycairoContext *o, PyObject *args) {
 }
 
 static PyObject *
-pycairo_path_extents (PycairoContext *o) {
+pycairo_path_extents (PycairoContext *o, PyObject *ignored) {
   double x1, y1, x2, y2;
   cairo_path_extents (o->ctx, &x1, &y1, &x2, &y2);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
@@ -629,18 +629,18 @@ pycairo_path_extents (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_pop_group (PycairoContext *o) {
+pycairo_pop_group (PycairoContext *o, PyObject *ignored) {
   return PycairoPattern_FromPattern (cairo_pop_group (o->ctx), NULL);
 }
 
 static PyObject *
-pycairo_pop_group_to_source (PycairoContext *o) {
+pycairo_pop_group_to_source (PycairoContext *o, PyObject *ignored) {
   cairo_pop_group_to_source (o->ctx);
   Py_RETURN_NONE;
 }
 
 static PyObject *
-pycairo_push_group (PycairoContext *o) {
+pycairo_push_group (PycairoContext *o, PyObject *ignored) {
   cairo_push_group (o->ctx);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   Py_RETURN_NONE;
@@ -713,14 +713,14 @@ pycairo_rel_move_to (PycairoContext *o, PyObject *args) {
 }
 
 static PyObject *
-pycairo_reset_clip (PycairoContext *o) {
+pycairo_reset_clip (PycairoContext *o, PyObject *ignored) {
   cairo_reset_clip (o->ctx);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   Py_RETURN_NONE;
 }
 
 static PyObject *
-pycairo_restore (PycairoContext *o) {
+pycairo_restore (PycairoContext *o, PyObject *ignored) {
   cairo_restore (o->ctx);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   Py_RETURN_NONE;
@@ -739,7 +739,7 @@ pycairo_rotate (PycairoContext *o, PyObject *args) {
 }
 
 static PyObject *
-pycairo_save (PycairoContext *o) {
+pycairo_save (PycairoContext *o, PyObject *ignored) {
   cairo_save (o->ctx);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
   Py_RETURN_NONE;
@@ -1083,7 +1083,7 @@ pycairo_show_glyphs (PycairoContext *o, PyObject *args) {
 }
 
 static PyObject *
-pycairo_show_page (PycairoContext *o) {
+pycairo_show_page (PycairoContext *o, PyObject *ignored) {
   Py_BEGIN_ALLOW_THREADS;
   cairo_show_page (o->ctx);
   Py_END_ALLOW_THREADS;
@@ -1108,7 +1108,7 @@ pycairo_show_text (PycairoContext *o, PyObject *args) {
 }
 
 static PyObject *
-pycairo_stroke (PycairoContext *o) {
+pycairo_stroke (PycairoContext *o, PyObject *ignored) {
   Py_BEGIN_ALLOW_THREADS;
   cairo_stroke (o->ctx);
   Py_END_ALLOW_THREADS;
@@ -1117,7 +1117,7 @@ pycairo_stroke (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_stroke_extents (PycairoContext *o) {
+pycairo_stroke_extents (PycairoContext *o, PyObject *ignored) {
   double x1, y1, x2, y2;
   cairo_stroke_extents (o->ctx, &x1, &y1, &x2, &y2);
   RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
@@ -1125,7 +1125,7 @@ pycairo_stroke_extents (PycairoContext *o) {
 }
 
 static PyObject *
-pycairo_stroke_preserve (PycairoContext *o) {
+pycairo_stroke_preserve (PycairoContext *o, PyObject *ignored) {
   Py_BEGIN_ALLOW_THREADS;
   cairo_stroke_preserve (o->ctx);
   Py_END_ALLOW_THREADS;
