@@ -59,8 +59,15 @@ install_headers(
 )
 install_headers([header_file], subdir: 'pycairo')
 
+# https://github.com/mesonbuild/meson/issues/4117
+if host_machine.system() == 'windows'
+  python_ext_dep = python_dep
+else
+  python_ext_dep = python_dep.partial_dependency(compile_args: true)
+endif
+
 pyext = python.extension_module('_cairo', sources,
-  dependencies : [python_dep, cairo_dep],
+  dependencies : [python_ext_dep, cairo_dep],
   install: true,
   subdir : 'cairo',
   c_args: pyext_c_args + main_c_args,
