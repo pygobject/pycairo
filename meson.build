@@ -19,50 +19,90 @@ configure_file(
   configuration: configuration_data(),
 )
 
-main_c_args = [
-  '-Wall',
-  '-Warray-bounds',
-  '-Wcast-align',
-  '-Wconversion',
-  '-Wdeclaration-after-statement',
-  '-Wextra',
-  '-Wformat=2',
-  '-Wformat-nonliteral',
-  '-Wformat-security',
-  '-Wimplicit-function-declaration',
-  '-Winit-self',
-  '-Winline',
-  '-Wmissing-format-attribute',
-  '-Wmissing-noreturn',
-  '-Wnested-externs',
-  '-Wold-style-definition',
-  '-Wpacked',
-  '-Wpointer-arith',
-  '-Wreturn-type',
-  '-Wshadow',
-  '-Wsign-compare',
-  '-Wstrict-aliasing',
-  '-Wundef',
-  '-Wunused-but-set-variable',
-]
+cc = meson.get_compiler('c')
 
-main_c_args += [
-  '-Wno-missing-field-initializers',
-  '-Wno-unused-parameter',
-]
-
-main_c_args += [
-  '-fno-strict-aliasing',
-  '-fvisibility=hidden',
-]
-
-if not ['3.3', '3.4'].contains(python.language_version())
+main_c_args = []
+if cc.get_id() == 'msvc'
+# Adapted from msvc_recommended_pragmas.h, since we don't depend on GLib here
+# Warnings that we want to look out for
   main_c_args += [
-    '-Wswitch-default',
+    '-we4002', # too many actual parameters for macro
+    '-we4003', # not enough actual parameters for macro
+    '-w14010', # single-line comment contains line-continuation character
+    '-we4013', # 'function' undefined; assuming extern returning int
+    '-w14016', # no function return type; using int as default
+    '-we4020', # too many actual parameters
+    '-we4021', # too few actual parameters
+    '-we4027', # function declared without formal parameter list
+    '-we4029', # declared formal parameter list different from definition
+    '-we4033', # 'function' must return a value
+    '-we4035', # 'function' : no return value
+    '-we4045', # array bounds overflow
+    '-we4047', # different levels of indirection
+    '-we4049', # terminating line number emission
+    '-we4053', # An expression of type void was used as an operand
+    '-we4071', # no function prototype given
+    '-we4150',
+    '-we4819', # The file contains a character that cannot be represented in the current code page
   ]
+
+# Silence warnings for stuff that should not really raise concern
+  main_c_args += [
+    '-wd4101', # unreferenced local variable
+    '-wd4244', # No possible loss of data warnings
+    '-wd4305', # No truncation from int to char warnings
+  ]
+
+# Silence warnings for using non-MS CRT stuff
+  main_c_args += [
+    '-D_CRT_SECURE_NO_WARNINGS',
+    '-D_CRT_NONSTDC_NO_WARNINGS'
+  ]
+else
+  main_c_args += [
+    '-Wall',
+    '-Warray-bounds',
+    '-Wcast-align',
+    '-Wconversion',
+    '-Wdeclaration-after-statement',
+    '-Wextra',
+    '-Wformat=2',
+    '-Wformat-nonliteral',
+    '-Wformat-security',
+    '-Wimplicit-function-declaration',
+    '-Winit-self',
+    '-Winline',
+    '-Wmissing-format-attribute',
+    '-Wmissing-noreturn',
+    '-Wnested-externs',
+    '-Wold-style-definition',
+    '-Wpacked',
+    '-Wpointer-arith',
+    '-Wreturn-type',
+    '-Wshadow',
+    '-Wsign-compare',
+    '-Wstrict-aliasing',
+    '-Wundef',
+    '-Wunused-but-set-variable',
+  ]
+
+  main_c_args += [
+    '-Wno-missing-field-initializers',
+    '-Wno-unused-parameter',
+  ]
+
+  main_c_args += [
+    '-fno-strict-aliasing',
+    '-fvisibility=hidden',
+  ]
+
+  if not ['3.3', '3.4'].contains(python.language_version())
+    main_c_args += [
+      '-Wswitch-default',
+    ]
+  endif
 endif
 
-cc = meson.get_compiler('c')
 main_c_args = cc.get_supported_arguments(main_c_args)
 
 pycairo_version = meson.project_version()
