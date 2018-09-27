@@ -475,10 +475,9 @@ surface_set_mime_data (PycairoSurface *o, PyObject *args) {
     Py_RETURN_NONE;
   }
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+PYCAIRO_BEGIN_IGNORE_DEPRECATED
   res = PyObject_AsReadBuffer (obj, (const void **)&buffer, &buffer_len);
-#pragma GCC diagnostic pop
+PYCAIRO_END_IGNORE_DEPRECATED
   if (res == -1)
     return NULL;
 
@@ -821,10 +820,9 @@ image_surface_create_for_data (PyTypeObject *type, PyObject *args) {
 
   format = (cairo_format_t)format_arg;
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+PYCAIRO_BEGIN_IGNORE_DEPRECATED
   res = PyObject_AsWriteBuffer (obj, (void **)&buffer, &buffer_len);
-#pragma GCC diagnostic pop
+PYCAIRO_END_IGNORE_DEPRECATED
   if (res == -1)
     return NULL;
 
