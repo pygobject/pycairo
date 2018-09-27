@@ -313,4 +313,23 @@ DECL_ENUM(PSLevel)
 DECL_ENUM(ScriptMode)
 #endif
 
+/* Use to disable deprecation warnings temporarily */
+#ifdef _MSC_VER
+# define PYCAIRO_BEGIN_IGNORE_DEPRECATED \
+  __pragma (warning (push)) \
+  __pragma (warning (disable : 4996))
+
+# define PYCAIRO_END_IGNORE_DEPRECATED \
+  __pragma (warning (pop))
+
+#else
+
+# define PYCAIRO_BEGIN_IGNORE_DEPRECATED \
+  _Pragma ("GCC diagnostic push") \
+  _Pragma ("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
+
+# define PYCAIRO_END_IGNORE_DEPRECATED \
+  _Pragma ("GCC diagnostic pop")
+#endif
+
 #endif /* _PYCAIRO_PRIVATE_H_ */

@@ -34,7 +34,13 @@ endforeach
 
 python_dep = python.dependency()
 
-cairo_dep = dependency('cairo', version: cair_version_req)
+cairo_dep = dependency('cairo', version: cair_version_req, required: cc.get_id() != 'msvc')
+
+if cc.get_id() == 'msvc' and not cairo_dep.found()
+  if cc.has_header('cairo.h')
+    cairo_dep = cc.find_library('cairo')
+  endif
+endif
 
 python.install_sources(python_sources,
   pure : false,
