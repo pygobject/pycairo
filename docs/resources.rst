@@ -15,9 +15,6 @@ Windows Binary Packages (unofficial)
 Some Libraries/Modules Using pycairo
   * `Cairo Plot <https://launchpad.net/cairoplot>`_: a module to plot
     graphics
-  * `hamster graphics library
-    <http://wiki.github.com/tbaugis/hamster_experiments/>`_ - a sprite styled
-    abstraction library for drawing and animation in PyGTK
   * `matplotlib <http://matplotlib.sourceforge.net/>`_: a python 2D plotting
     library which produces publication quality figures in a variety of
     hardcopy formats and interactive environments across platforms.
