@@ -3,7 +3,8 @@ set -e
 export MSYS2_FC_CACHE_SKIP=1
 pacman --noconfirm -Suy --force
 pacman --noconfirm -S --needed mingw-w64-$MSYS2_ARCH-cairo \
-    mingw-w64-$MSYS2_ARCH-$PYTHON mingw-w64-$MSYS2_ARCH-$PYTHON-pip
+    mingw-w64-$MSYS2_ARCH-$PYTHON mingw-w64-$MSYS2_ARCH-$PYTHON-pip \
+    mingw-w64-$MSYS2_ARCH-toolchain
 $PYTHON -m pip install pytest coverage codecov hypothesis
 $PYTHON -m pip install mypy || true
 
