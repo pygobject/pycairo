@@ -1,17 +1,5 @@
 environment:
   matrix:
-    - MSYS2_ARCH: x86_64
-      MSYSTEM: MINGW64
-      PYTHON: python2
-    - MSYS2_ARCH: i686
-      MSYSTEM: MINGW32
-      PYTHON: python2
-    - MSYS2_ARCH: x86_64
-      MSYSTEM: MINGW64
-      PYTHON: python3
-    - MSYS2_ARCH: i686
-      MSYSTEM: MINGW32
-      PYTHON: python3
     - MSVC_PLATFORM: x86
       PYTHON_ROOT: Python27
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
@@ -32,10 +20,6 @@ environment:
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
 
 build_script:
-  - IF DEFINED MSYSTEM set PATH=C:\msys64\%MSYSTEM%\bin;C:\msys64\usr\bin;%PATH%
-  - IF DEFINED MSYSTEM set CHERE_INVOKING=yes
-  - IF DEFINED MSYSTEM bash -lc "bash -x .appveyor/msys2-pre.sh"
-  - IF DEFINED MSYSTEM bash -lc "bash -x .appveyor/msys2.sh"
-  - IF DEFINED MSVC_PLATFORM ".appveyor/msvc.bat"
+  - .appveyor/msvc.bat
 
 deploy: off

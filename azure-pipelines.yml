@@ -2,25 +2,25 @@ jobs:
   - job: MSYS2
     timeoutInMinutes: 60
     pool:
-      vmImage: vs2017-win2016
+      vmImage: vs2015-win2012r2
     strategy:
       maxParallel: 4
       matrix:
         py2-i686:
           MSYSTEM: MINGW32
-          MINGW_ARCH: i686
+          MSYS2_ARCH: i686
           PYTHON: python2
         py2-x86_64:
           MSYSTEM: MINGW64
-          MINGW_ARCH: x86_64
+          MSYS2_ARCH: x86_64
           PYTHON: python2
         py3-i686:
           MSYSTEM: MINGW32
-          MINGW_ARCH: i686
+          MSYS2_ARCH: i686
           PYTHON: python3
         py3-x86_64:
           MSYSTEM: MINGW64
-          MINGW_ARCH: x86_64
+          MSYS2_ARCH: x86_64
           PYTHON: python3
     steps:
       - script: |
@@ -32,7 +32,12 @@ jobs:
         displayName: Update MSYS2
       - script: |
           set PATH=C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
-          %CD:~0,2%\msys64\usr\bin\bash -lc "bash -x .appveyor/msys2.sh"
+          %CD:~0,2%\msys64\usr\bin\bash -lc "bash -x .azure-pipelines/msys2.sh"
         displayName: Test
         env:
           CHERE_INVOKING: yes
+          MSYSTEM: $(MSYSTEM)
+          MSYS2_ARCH: $(MSYS2_ARCH)
+          PYTHON: $(PYTHON)
+          CODECOV_TOKEN: $(CODECOV_TOKEN)
+          CODECOV_BRANCH: $(Build.SourceBranchName)
