@@ -1947,7 +1947,7 @@ svg_version_to_string (PyObject *self,  PyObject *args) {
 }
 
 static PyObject *
-svg_surface_restrict_to_version (PycairoPDFSurface *o, PyObject *args) {
+svg_surface_restrict_to_version (PycairoSVGSurface *o, PyObject *args) {
   cairo_svg_version_t version;
   int version_arg;
 
