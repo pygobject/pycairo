@@ -1519,3 +1519,49 @@ safely be changed, without loosing the current state. Use
 
         .. note:: This function is not implemented in cairo, but still
             mentioned in the documentation.
+
+    .. method:: tag_begin(tag_name, attributes)
+
+        :param text tag_name: tag name
+        :param text attributes: tag attributes
+
+        Marks the beginning of the tag_name structure. Call :meth:`tag_end`
+        with the same tag_name to mark the end of the structure.
+
+        The attributes string is of the form "key1=value2 key2=value2 ...".
+        Values may be boolean (true/false or 1/0), integer, float, string, or
+        an array.
+
+        String values are enclosed in single quotes ('). Single quotes and
+        backslashes inside the string should be escaped with a backslash.
+
+        Boolean values may be set to true by only specifying the key. eg the
+        attribute string "key" is the equivalent to "key=true".
+
+        Arrays are enclosed in '[]'. eg "rect=[1.2 4.3 2.0 3.0]".
+
+        If no attributes are required, attributes can be an empty string.
+
+        See `Tags and Links Description
+        <https://www.cairographics.org/manual/cairo-Tags-and-Links.html#cairo-Tags-and-Links.description>`__
+        for the list of tags and attributes.
+
+        Invalid nesting of tags or invalid attributes will cause the context
+        to shutdown with a status of :attr:`Status.TAG_ERROR`.
+
+        See :meth:`tag_end`.
+
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+
+    .. method:: tag_end(tag_name)
+
+        :param text tag_name: tag name
+
+        Marks the end of the tag_name structure.
+
+        Invalid nesting of tags will cause the context to shutdown with a
+        status of :attr:`Status.TAG_ERROR`.
+
+        See :meth:`tag_begin`.
+
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+

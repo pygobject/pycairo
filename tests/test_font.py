@@ -30,6 +30,25 @@ def scaled_font(font_face, font_options):
         font_face, cairo.Matrix(), cairo.Matrix(), font_options)
 
 
+@pytest.mark.skipif(not hasattr(cairo.FontOptions, "get_variations"),
+                    reason="too old cairo")
+def test_font_options_variations(font_options):
+    assert font_options.get_variations() is None
+    font_options.set_variations("foo")
+    assert font_options.get_variations() == "foo"
+    font_options.set_variations(None)
+    assert font_options.get_variations() is None
+
+    with pytest.raises(TypeError):
+        font_options.set_variations(1)
+
+    with pytest.raises(TypeError):
+        font_options.set_variations("foo", "bar")
+
+    with pytest.raises(TypeError):
+        font_options.set_variations()
+
+
 def test_font_options():
     assert isinstance(cairo.FontOptions(), cairo.FontOptions)
     with pytest.raises(TypeError):

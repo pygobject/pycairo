@@ -629,6 +629,50 @@ font_options_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   return PycairoFontOptions_FromFontOptions (cairo_font_options_create());
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 12)
+static PyObject *
+font_options_set_variations (PycairoFontOptions *o, PyObject *args) {
+    const char *variations;
+    PyObject *maybe_none;
+
+    if (!PyArg_ParseTuple (args, "O:FontOptions.set_variations", &maybe_none))
+        return NULL;
+
+    if (maybe_none != Py_None) {
+        if (!PyArg_ParseTuple (args,
+                PYCAIRO_ENC_TEXT_FORMAT ":FontOptions.set_variations", "utf-8",
+                &variations))
+            return NULL;
+    } else {
+        variations = NULL;
+    }
+
+    Py_BEGIN_ALLOW_THREADS;
+    cairo_font_options_set_variations (o->font_options, variations);
+    Py_END_ALLOW_THREADS;
+
+    if (variations != NULL)
+        PyMem_Free((void *)variations);
+
+    RETURN_NULL_IF_CAIRO_FONT_OPTIONS_ERROR(o->font_options);
+    Py_RETURN_NONE;
+}
+
+static PyObject *
+font_options_get_variations (PycairoFontOptions *o, PyObject *ignored) {
+    const char *variations;
+
+    Py_BEGIN_ALLOW_THREADS;
+    variations = cairo_font_options_get_variations (o->font_options);
+    Py_END_ALLOW_THREADS;
+
+    if (variations == NULL)
+        Py_RETURN_NONE;
+
+    return PYCAIRO_PyUnicode_FromString (variations);
+}
+#endif
+
 static PyObject *
 font_options_get_antialias (PycairoFontOptions *o, PyObject *ignored) {
   RETURN_INT_ENUM (Antialias, cairo_font_options_get_antialias (o->font_options));
@@ -773,6 +817,10 @@ static PyMethodDef font_options_methods[] = {
    * cairo_font_options_destroy()
    * cairo_font_options_reference()
    */
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 12)
+  {"get_variations",    (PyCFunction)font_options_get_variations, METH_NOARGS},
+  {"set_variations",    (PyCFunction)font_options_set_variations, METH_VARARGS},
+#endif
   {"get_antialias",     (PyCFunction)font_options_get_antialias,  METH_NOARGS},
   {"get_hint_metrics",  (PyCFunction)font_options_get_hint_metrics,
    METH_NOARGS},

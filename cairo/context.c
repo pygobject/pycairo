@@ -74,6 +74,49 @@ pycairo_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   return PycairoContext_FromContext (cairo_create (s->surface), type, NULL);
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
+static PyObject *
+pycairo_tag_begin (PycairoContext *o, PyObject *args) {
+    const char *tag_name;
+    const char *attributes;
+
+    if (!PyArg_ParseTuple (args,
+            PYCAIRO_ENC_TEXT_FORMAT PYCAIRO_ENC_TEXT_FORMAT
+            ":Context.tag_begin", "utf-8",
+            &tag_name, "utf-8", &attributes))
+        return NULL;
+
+    Py_BEGIN_ALLOW_THREADS;
+    cairo_tag_begin (o->ctx, tag_name, attributes);
+    Py_END_ALLOW_THREADS;
+
+    PyMem_Free((void *)tag_name);
+    PyMem_Free((void *)attributes);
+
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
+    Py_RETURN_NONE;
+}
+
+static PyObject *
+pycairo_tag_end (PycairoContext *o, PyObject *args) {
+    const char *tag_name;
+
+    if (!PyArg_ParseTuple (args,
+            PYCAIRO_ENC_TEXT_FORMAT ":Context.tag_end", "utf-8",
+            &tag_name))
+        return NULL;
+
+      Py_BEGIN_ALLOW_THREADS;
+      cairo_tag_end (o->ctx, tag_name);
+      Py_END_ALLOW_THREADS;
+
+      PyMem_Free((void *)tag_name);
+
+      RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
+      Py_RETURN_NONE;
+}
+#endif
+
 static PyObject *
 pycairo_append_path (PycairoContext *o, PyObject *args) {
   PycairoPath *p;
@@ -1309,6 +1352,10 @@ static PyMethodDef pycairo_methods[] = {
    * - not needed since Pycairo calls Pycairo_Check_Status() to check
    *   for errors and raise exceptions
    */
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
+  {"tag_begin",       (PyCFunction)pycairo_tag_begin,        METH_VARARGS},
+  {"tag_end",         (PyCFunction)pycairo_tag_end,          METH_VARARGS},
+#endif
   {"append_path",     (PyCFunction)pycairo_append_path,      METH_VARARGS},
   {"arc",             (PyCFunction)pycairo_arc,              METH_VARARGS},
   {"arc_negative",    (PyCFunction)pycairo_arc_negative,     METH_VARARGS},

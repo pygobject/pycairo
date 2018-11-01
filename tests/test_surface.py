@@ -180,6 +180,52 @@ def test_pdf_set_size():
         surface.set_size(10, object())
 
 
+@pytest.mark.skipif(not hasattr(cairo.PDFSurface, "set_page_label"),
+                    reason="too old cairo")
+def test_pdf_set_page_label():
+    fileobj = io.BytesIO()
+    with cairo.PDFSurface(fileobj, 128, 128) as surface:
+        surface.set_page_label("foo")
+        surface.set_page_label("bar")
+    with pytest.raises(cairo.Error):
+        surface.set_page_label("bar")
+
+
+@pytest.mark.skipif(not hasattr(cairo.PDFSurface, "set_metadata"),
+                    reason="too old cairo")
+def test_pdf_set_metadata():
+    fileobj = io.BytesIO()
+    with cairo.PDFSurface(fileobj, 128, 128) as surface:
+        surface.set_metadata(cairo.PDFMetadata.TITLE, "title")
+        surface.set_metadata(cairo.PDFMetadata.TITLE, "title")
+        surface.set_metadata(cairo.PDFMetadata.AUTHOR, "author")
+    with pytest.raises(cairo.Error):
+        surface.set_metadata(cairo.PDFMetadata.AUTHOR, "author")
+
+
+@pytest.mark.skipif(not hasattr(cairo.PDFSurface, "add_outline"),
+                    reason="too old cairo")
+def test_pdf_add_outline():
+    fileobj = io.BytesIO()
+    with cairo.PDFSurface(fileobj, 128, 128) as surface:
+        res = surface.add_outline(
+            cairo.PDF_OUTLINE_ROOT, "foo", "page=3 pos=[3.1 6.2]",
+            cairo.PDFOutlineFlags.OPEN)
+        assert isinstance(res, int)
+
+
+@pytest.mark.skipif(not hasattr(cairo.PDFSurface, "set_thumbnail_size"),
+                    reason="too old cairo")
+def test_pdf_set_thumbnail_size():
+    fileobj = io.BytesIO()
+    with cairo.PDFSurface(fileobj, 128, 128) as surface:
+        surface.set_thumbnail_size(10, 10)
+        surface.set_thumbnail_size(0, 0)
+        surface.set_thumbnail_size(1, 1)
+    with pytest.raises(cairo.Error):
+        surface.set_thumbnail_size(0, 0)
+
+
 @pytest.mark.skipif(
     sysconfig.get_platform().startswith("win"), reason="msvc fixme")
 def test_pdf_surface():
@@ -207,6 +253,17 @@ def test_svg_version_to_string():
         cairo.SVGSurface.version_to_string(-1)
     with pytest.raises(TypeError):
         cairo.SVGSurface.version_to_string(object())
+
+
+@pytest.mark.skipif(not hasattr(cairo.SVGSurface, "get_document_unit"),
+                    reason="too old cairo")
+def test_svg_surface_get_document_unit():
+    with cairo.SVGSurface(None, 10, 10) as surface:
+        assert surface.get_document_unit() == cairo.SVGUnit.PT
+        surface.set_document_unit(cairo.SVGUnit.PX)
+        assert surface.get_document_unit() == cairo.SVGUnit.PX
+    with pytest.raises(cairo.Error):
+        surface.set_document_unit(cairo.SVGUnit.PX)
 
 
 def test_svg_surface_restrict_to_version():

@@ -379,3 +379,37 @@ objects.
       Compares two font options objects for equality.
 
       .. versionadded:: 1.12.0
+
+    .. method:: set_variations(variations)
+
+        :param variations: the new font variations, or :obj:`None`
+        :type variations: :class:`str` or :obj:`None`
+
+        Sets the OpenType font variations for the font options object. Font
+        variations are specified as a string with a format that is similar to
+        the CSS font-variation-settings. The string contains a comma-separated
+        list of axis assignments, which each assignment consists of a
+        4-character axis name and a value, separated by whitespace and
+        optional equals sign.
+
+        Examples:
+
+        * wght=200,wdth=140.5
+        * wght 200 , wdth 140.5
+
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.12+
+
+    .. method:: get_variations()
+
+        :returns:
+            the font variations for the font options object. The returned
+            string belongs to the options and must not be modified. It is
+            valid until either the font options object is destroyed or the
+            font variations in this object is modified with
+            :meth:`set_variations`.
+        :rtype: str
+
+        Gets the OpenType font variations for the font options object. See
+        :meth:`set_variations` for details about the string format.
+
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.12+

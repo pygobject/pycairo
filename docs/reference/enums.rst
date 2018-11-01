@@ -692,6 +692,22 @@ as constants on the module level. See :ref:`legacy_constants`.
 
         .. versionadded:: 1.14
 
+    .. attribute:: TAG_ERROR
+
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+
+    .. attribute:: FREETYPE_ERROR
+
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+
+    .. attribute:: WIN32_GDI_ERROR
+
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+
+    .. attribute:: PNG_ERROR
+
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+
 
 .. class:: ScriptMode
 
@@ -733,3 +749,116 @@ as constants on the module level. See :ref:`legacy_constants`.
     .. attribute:: RECORD_OPERATIONS
 
         operations are recorded
+
+
+.. class:: PDFOutlineFlags
+
+    :class:`PDFOutlineFlags` is used by the :meth:`PDFSurface.add_outline`
+    method to specify the attributes of an outline item. These flags may be
+    bitwise-or'd to produce any combination of flags.
+
+    .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+
+    .. attribute:: OPEN
+
+        The outline item defaults to open in the PDF viewer
+
+    .. attribute:: BOLD
+
+        The outline item is displayed by the viewer in bold text
+
+    .. attribute:: ITALIC
+
+        The outline item is displayed by the viewer in italic text
+
+
+.. class:: SVGUnit
+
+    :class:`SVGUnit` is used to describe the units valid for coordinates and
+    lengths in the SVG specification.
+
+    See also:
+
+    * https://www.w3.org/TR/SVG/coords.htmlUnits
+    * https://www.w3.org/TR/SVG/types.htmlDataTypeLength
+    * https://www.w3.org/TR/css-values-3/lengths
+
+    .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+
+    .. attribute:: USER
+
+        User unit, a value in the current coordinate system. If used in the
+        root element for the initial coordinate systems it corresponds to
+        pixels.
+
+    .. attribute:: EM
+
+        The size of the element's font.
+
+    .. attribute:: EX
+
+        The x-height of the element’s font.
+
+    .. attribute:: PX
+
+        Pixels (1px = 1/96th of 1in).
+
+    .. attribute:: IN
+
+        Inches (1in = 2.54cm = 96px)
+
+    .. attribute:: CM
+
+        Centimeters (1cm = 96px/2.54).
+
+    .. attribute:: MM
+
+        Millimeters (1mm = 1/10th of 1cm).
+
+    .. attribute:: PT
+
+        Points (1pt = 1/72th of 1in).
+
+    .. attribute:: PC
+
+        Picas (1pc = 1/6th of 1in).
+
+    .. attribute:: PERCENT
+
+        Percent, a value that is some fraction of another reference value.
+
+
+.. class:: PDFMetadata
+
+    :class:`PDFMetadata` is used by the :meth:`PDFSurface.set_metadata` method
+    to specify the metadata to set.
+
+    .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+
+    .. attribute:: TITLE
+
+        The document title
+
+    .. attribute:: AUTHOR
+
+        The document author
+
+    .. attribute:: SUBJECT
+
+        The document subject
+
+    .. attribute:: KEYWORDS
+
+        The document keywords
+
+    .. attribute:: CREATOR
+
+        The document creator
+
+    .. attribute:: CREATE_DATE
+
+        The document creation date
+
+    .. attribute:: MOD_DATE
+
+        The document modification date

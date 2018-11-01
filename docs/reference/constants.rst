@@ -84,6 +84,27 @@ cairo.HAS
     .. versionadded:: 1.15.3
 
 
+.. _constants_TAG:
+
+cairo.TAG
+---------
+
+.. data:: TAG_DEST
+    :annotation: = "cairo.dest"
+
+    Create a destination for a hyperlink. Destination tag attributes are
+    detailed at Destinations.
+
+    .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+
+.. data:: TAG_LINK
+    :annotation: = "Link"
+
+    Create hyperlink. Link tag attributes are detailed at Links.
+
+    .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+
+
 .. _constants_MIME_TYPE:
 
 cairo.MIME_TYPE
@@ -126,6 +147,72 @@ cairo.MIME_TYPE
     with the same unique identifier will only be embedded once.
 
     .. versionadded:: 1.12.0
+
+.. data:: MIME_TYPE_CCITT_FAX
+    :annotation: = "image/g3fax"
+
+    Group 3 or Group 4 CCITT facsimile encoding (International
+    Telecommunication Union, Recommendations T.4 and T.6.)
+
+    .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+
+.. data:: MIME_TYPE_CCITT_FAX_PARAMS
+    :annotation: = "application/x-cairo.ccitt.params"
+
+    Decode parameters for Group 3 or Group 4 CCITT facsimile encoding. See
+    `CCITT Fax Images
+    <https://cairographics.org/manual/cairo-PDF-Surfaces.html#ccitt>`__.
+
+    .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+
+.. data:: MIME_TYPE_EPS
+    :annotation: = "application/postscript"
+
+    Encapsulated PostScript file. Encapsulated PostScript File Format
+    Specification
+
+    .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+
+.. data:: MIME_TYPE_EPS_PARAMS
+    :annotation: = "application/x-cairo.eps.params"
+
+    Embedding parameters Encapsulated PostScript data. See Embedding EPS files.
+
+    .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+
+.. data:: MIME_TYPE_JBIG2
+    :annotation: = "application/x-cairo.jbig2"
+
+    Joint Bi-level Image Experts Group image coding standard (ISO/IEC 11544).
+
+    .. versionadded:: 1.18.0
+
+.. data:: MIME_TYPE_JBIG2_GLOBAL
+    :annotation: = "application/x-cairo.jbig2-global"
+
+    Joint Bi-level Image Experts Group image coding standard (ISO/IEC 11544)
+    global segment.
+
+    .. versionadded:: 1.18.0
+
+.. data:: MIME_TYPE_JBIG2_GLOBAL_ID
+    :annotation: = "application/x-cairo.jbig2-global-id"
+
+    An unique identifier shared by a JBIG2 global segment and all JBIG2 images
+    that depend on the global segment.
+
+    .. versionadded:: 1.18.0
+
+
+Other Constants
+---------------
+
+.. data:: PDF_OUTLINE_ROOT
+    :annotation: = 0
+
+    The root outline item in :meth:`PDFSurface.add_outline`
+
+    .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
 
 
 Other Classes and Functions
