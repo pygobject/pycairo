@@ -14,6 +14,7 @@ except ImportError:
 from distutils.core import Extension, Command, Distribution
 from distutils.ccompiler import new_compiler
 from distutils.sysconfig import customize_compiler
+from distutils.util import change_root
 from distutils import log
 from distutils import sysconfig
 
@@ -265,11 +266,15 @@ class test_cmd(Command):
 
 class install_pkgconfig(Command):
     description = "install .pc file"
-    user_options = []
+    user_options = [
+        ('pkgconfigdir=', None, 'pkg-config file install directory'),
+    ]
 
     def initialize_options(self):
+        self.root = None
         self.install_base = None
         self.install_data = None
+        self.pkgconfigdir = None
         self.compiler_type = None
         self.outfiles = []
 
@@ -278,6 +283,11 @@ class install_pkgconfig(Command):
             'install_lib',
             ('install_base', 'install_base'),
             ('install_data', 'install_data'),
+        )
+
+        self.set_undefined_options(
+            'install',
+            ('root', 'root'),
         )
 
         self.set_undefined_options(
@@ -315,8 +325,13 @@ class install_pkgconfig(Command):
                 "Skipping install_pkgconfig, not supported with MSVC")
             return
 
-        python_lib = sysconfig.get_python_lib(True, True, self.install_data)
-        pkgconfig_dir = os.path.join(os.path.dirname(python_lib), 'pkgconfig')
+        if self.pkgconfigdir is None:
+            python_lib = sysconfig.get_python_lib(True, True,
+                                                  self.install_data)
+            pkgconfig_dir = os.path.join(os.path.dirname(python_lib),
+                                         'pkgconfig')
+        else:
+            pkgconfig_dir = change_root(self.root, self.pkgconfigdir)
         self.mkpath(pkgconfig_dir)
 
         pcname = "py3cairo.pc" if sys.version_info[0] == 3 else "pycairo.pc"
