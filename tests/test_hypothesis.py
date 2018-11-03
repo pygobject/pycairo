@@ -35,10 +35,6 @@ def _to_temp_path(tempdir_path, p):
     return res
 
 
-def cairo_ver():
-    return tuple(map(int, cairo.cairo_version_string().split(".")))
-
-
 @given(path=fspaths())
 @settings(max_examples=500)
 def test_fspaths(tempdir_path, path):
@@ -49,7 +45,7 @@ def test_fspaths(tempdir_path, path):
     if os.path.exists(p):
         return
 
-    if cairo_ver() >= (1, 15, 10):
+    if cairo.cairo_version_info() >= (1, 15, 10):
         def path_encode(p):
             return p.encode("utf-8")
     else:

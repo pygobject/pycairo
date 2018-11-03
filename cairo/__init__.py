@@ -1,4 +1,5 @@
 from ._cairo import *  # noqa: F401,F403
+from ._cairo import cairo_version_string
 
 
 def get_include():
@@ -23,3 +24,7 @@ def get_include():
     # in case we are in an .egg
     import pkg_resources
     return pkg_resources.resource_filename(__name__, "include")
+
+
+def cairo_version_info():
+    return tuple(map(int, cairo_version_string().split(".")))

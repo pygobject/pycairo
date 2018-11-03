@@ -26,6 +26,16 @@ Module Functions
    Returns the version of the underlying C cairo library as a human-readable
    string of the form "X.Y.Z".
 
+.. function:: cairo_version_info()
+
+   :returns: the version
+   :rtype: tuple(int, int, int)
+
+   Returns the version of the underlying C cairo library, as a three integer
+   tuple "(X, Y, Z)"
+
+   .. versionadded:: 1.18.0
+
 .. function:: get_include()
 
     :returns: a path to the directory containing the C header files

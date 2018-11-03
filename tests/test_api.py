@@ -27,6 +27,9 @@ def test_get_include():
 def test_version():
     cairo.cairo_version()
     cairo.cairo_version_string()
+    info = cairo.cairo_version_info()
+    assert isinstance(info, tuple)
+    assert len(info) == 3
 
 
 def test_show_unicode_text():
