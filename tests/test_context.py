@@ -10,6 +10,13 @@ def context():
     return cairo.Context(surface)
 
 
+@pytest.mark.skipif(not hasattr(cairo.Context, "tag_begin"),
+                    reason="too old cairo")
+def test_tags(context):
+    context.tag_begin("foo", "bar=quux")
+    context.tag_end("foo")
+
+
 def test_cmp_hash(context):
     other = cairo.Context(context.get_target())
     assert context != other

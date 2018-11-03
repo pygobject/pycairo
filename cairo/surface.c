@@ -1357,7 +1357,98 @@ pdf_surface_restrict_to_version (PycairoPDFSurface *o, PyObject *args) {
   Py_RETURN_NONE;
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
+static PyObject *
+pdf_surface_set_page_label (PycairoPDFSurface *o, PyObject *args) {
+  const char *utf8;
+
+  if (!PyArg_ParseTuple (args, PYCAIRO_ENC_TEXT_FORMAT ":PDFSurface.set_page_label",
+                         "utf-8", &utf8))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_pdf_surface_set_page_label (o->surface, utf8);
+  Py_END_ALLOW_THREADS;
+
+  PyMem_Free((void *)utf8);
+
+  RETURN_NULL_IF_CAIRO_SURFACE_ERROR (o->surface);
+  Py_RETURN_NONE;
+}
+
+static PyObject *
+pdf_surface_set_metadata (PycairoPDFSurface *o, PyObject *args) {
+  const char *utf8;
+  cairo_pdf_metadata_t metadata;
+  int metadata_arg;
+
+  if (!PyArg_ParseTuple (args, "i" PYCAIRO_ENC_TEXT_FORMAT ":PDFSurface.set_metadata",
+                         &metadata_arg, "utf-8", &utf8))
+    return NULL;
+
+  metadata = (cairo_pdf_metadata_t)metadata_arg;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_pdf_surface_set_metadata (o->surface, metadata, utf8);
+  Py_END_ALLOW_THREADS;
+
+  PyMem_Free((void *)utf8);
+
+  RETURN_NULL_IF_CAIRO_SURFACE_ERROR (o->surface);
+  Py_RETURN_NONE;
+}
+
+static PyObject *
+pdf_surface_set_thumbnail_size (PycairoPDFSurface *o, PyObject *args) {
+  int width, height;
+
+  if (!PyArg_ParseTuple (args, "ii:PDFSurface.set_thumbnail_size",
+                         &width, &height))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_pdf_surface_set_thumbnail_size (o->surface, width, height);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_NULL_IF_CAIRO_SURFACE_ERROR (o->surface);
+  Py_RETURN_NONE;
+}
+
+static PyObject *
+pdf_surface_add_outline (PycairoPDFSurface *o, PyObject *args) {
+
+  int parent_id, added_id;
+  const char *utf8;
+  const char *link_attribs;
+  cairo_pdf_outline_flags_t flags;
+  int flags_arg;
+
+  if (!PyArg_ParseTuple (args, "i" PYCAIRO_ENC_TEXT_FORMAT PYCAIRO_ENC_TEXT_FORMAT "i:PDFSurface.add_outline",
+                         &parent_id, "utf-8", &utf8, "utf-8", &link_attribs, &flags_arg))
+    return NULL;
+
+  flags = (cairo_pdf_outline_flags_t)flags_arg;
+
+  Py_BEGIN_ALLOW_THREADS;
+  added_id = cairo_pdf_surface_add_outline (o->surface, parent_id, utf8, link_attribs, flags);
+  Py_END_ALLOW_THREADS;
+
+  PyMem_Free((void *)utf8);
+  PyMem_Free((void *)link_attribs);
+
+  RETURN_NULL_IF_CAIRO_SURFACE_ERROR (o->surface);
+
+  return PYCAIRO_PyLong_FromLong (added_id);
+}
+#endif
+
 static PyMethodDef pdf_surface_methods[] = {
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
+  {"set_page_label", (PyCFunction)pdf_surface_set_page_label, METH_VARARGS},
+  {"set_metadata", (PyCFunction)pdf_surface_set_metadata, METH_VARARGS},
+  {"set_thumbnail_size", (PyCFunction)pdf_surface_set_thumbnail_size, METH_VARARGS},
+  {"add_outline", (PyCFunction)pdf_surface_add_outline, METH_VARARGS},
+#endif
   {"set_size", (PyCFunction)pdf_surface_set_size, METH_VARARGS},
   {"get_versions", (PyCFunction)pdf_get_versions, METH_NOARGS | METH_STATIC},
   {"version_to_string", (PyCFunction)pdf_version_to_string,
@@ -1946,6 +2037,31 @@ svg_version_to_string (PyObject *self,  PyObject *args) {
   return PYCAIRO_PyUnicode_FromString (version_string);
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
+static PyObject *
+svg_surface_get_document_unit (PycairoSVGSurface *o, PyObject *ignored) {
+  RETURN_INT_ENUM (SVGUnit, cairo_svg_surface_get_document_unit (o->surface));
+}
+
+static PyObject *
+svg_surface_set_document_unit (PycairoSVGSurface *o, PyObject *args) {
+  cairo_svg_unit_t unit;
+  int unit_arg;
+
+  if (!PyArg_ParseTuple (args, "i:SVGSurface.set_document_unit", &unit_arg))
+    return NULL;
+
+  unit = (cairo_svg_unit_t)unit_arg;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_svg_surface_set_document_unit (o->surface, unit);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_NULL_IF_CAIRO_SURFACE_ERROR (o->surface);
+  Py_RETURN_NONE;
+}
+#endif
+
 static PyObject *
 svg_surface_restrict_to_version (PycairoSVGSurface *o, PyObject *args) {
   cairo_svg_version_t version;
@@ -1966,6 +2082,12 @@ svg_surface_restrict_to_version (PycairoSVGSurface *o, PyObject *args) {
 }
 
 static PyMethodDef svg_surface_methods[] = {
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
+  {"get_document_unit", (PyCFunction)svg_surface_get_document_unit,
+   METH_NOARGS},
+  {"set_document_unit", (PyCFunction)svg_surface_set_document_unit,
+   METH_VARARGS},
+#endif
   {"get_versions", (PyCFunction)svg_get_versions, METH_NOARGS | METH_STATIC},
   {"version_to_string", (PyCFunction)svg_version_to_string,
    METH_VARARGS | METH_STATIC},
