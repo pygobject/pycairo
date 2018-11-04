@@ -54,6 +54,13 @@ Module Constants
 
     .. versionadded:: 1.18.0
 
+.. data:: CAIRO_VERSION_STRING
+
+    A human-readable string literal containing the version of cairo available
+    at compile-time, in the form of "X.Y.Z".
+
+    .. versionadded:: 1.18.0
+
 .. data:: CAIRO_VERSION_MAJOR
 
     The major component of the version of cairo available at compile-time.
