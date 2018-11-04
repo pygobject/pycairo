@@ -28,6 +28,13 @@ def test_version():
     cairo.cairo_version()
     cairo.cairo_version_string()
 
+    assert cairo.CAIRO_VERSION == cairo.cairo_version()
+    assert cairo.CAIRO_VERSION_STRING == cairo.cairo_version_string()
+    ver_tuple = (cairo.CAIRO_VERSION_MAJOR, cairo.CAIRO_VERSION_MINOR,
+                 cairo.CAIRO_VERSION_MICRO)
+    assert tuple(map(int, cairo.CAIRO_VERSION_STRING.split("."))) == \
+        ver_tuple
+
 
 def test_show_unicode_text():
     width, height = 300, 300

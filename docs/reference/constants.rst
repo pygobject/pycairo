@@ -47,6 +47,31 @@ Module Constants
 
    the pycairo version, as a tuple
 
+.. data:: CAIRO_VERSION
+
+    The version of cairo available at compile-time in the same format as
+    returned by :func:`cairo_version`
+
+    .. versionadded:: 1.18.0
+
+.. data:: CAIRO_VERSION_MAJOR
+
+    The major component of the version of cairo available at compile-time.
+
+    .. versionadded:: 1.18.0
+
+.. data:: CAIRO_VERSION_MINOR
+
+    The minor component of the version of cairo available at compile-time.
+
+    .. versionadded:: 1.18.0
+
+.. data:: CAIRO_VERSION_MICRO
+
+    The micro component of the version of cairo available at compile-time.
+
+    .. versionadded:: 1.18.0
+
 
 .. _constants_HAS:
 

@@ -526,6 +526,12 @@ PYCAIRO_MOD_INIT(_cairo)
   PyModule_AddIntConstant(m, "HAS_TEE_SURFACE", 0);
 #endif
 
+  PyModule_AddIntConstant(m, "CAIRO_VERSION", CAIRO_VERSION);
+  PyModule_AddIntConstant(m, "CAIRO_VERSION_MAJOR", CAIRO_VERSION_MAJOR);
+  PyModule_AddIntConstant(m, "CAIRO_VERSION_MICRO", CAIRO_VERSION_MICRO);
+  PyModule_AddIntConstant(m, "CAIRO_VERSION_MINOR", CAIRO_VERSION_MINOR);
+  PyModule_AddStringConstant(m, "CAIRO_VERSION_STRING", CAIRO_VERSION_STRING);
+
 #define STRCONSTANT(x) PyModule_AddStringConstant(m, #x, CAIRO_##x)
 
   STRCONSTANT(MIME_TYPE_JP2);
