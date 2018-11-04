@@ -28,7 +28,7 @@ foreach python_file : python_sources
   configure_file(
     input: python_file,
     output: python_file,
-    configuration: configuration_data(),
+    copy: true,
   )
 endforeach
 
@@ -56,7 +56,7 @@ endif
 header_file = configure_file(
   input: 'pycairo.h',
   output: pc_name + '.h',
-  configuration: configuration_data(),
+  copy: true,
 )
 
 install_headers(

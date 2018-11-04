@@ -1,7 +1,7 @@
 project(
   'pycairo', 'c',
   version: '1.17.2',
-  meson_version: '>= 0.46.0',
+  meson_version: '>= 0.47.0',
   default_options: [
     'warning_level=1',
     'buildtype=debugoptimized',
@@ -16,7 +16,7 @@ python = pymod.find_installation(get_option('python'))
 configure_file(
   input: 'setup.cfg',
   output: 'setup.cfg',
-  configuration: configuration_data(),
+  copy: true,
 )
 
 cc = meson.get_compiler('c')

@@ -39,7 +39,7 @@ foreach python_file : test_sources
   configure_file(
     input: python_file,
     output: python_file,
-    configuration: configuration_data(),
+    copy: true,
   )
 endforeach
 
