@@ -1,6 +1,48 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning
 <http://semver.org/>`__ i.e. the newest version is the latest stable one.
 
+.. _v1.18.0:
+
+1.18.0 - 2018-11-04
+-------------------
+
+Build:
+  * Dropped Python 3.3 support
+  * meson build requires meson >=0.47 (was >=0.46)
+  * Fix various build warnings with GCC8
+  * meson: Don't link against libpython on non-Windows systems :pr:`120`
+  * meson: Improve support for Visual Studio builds
+    :pr:`121` (:user:`Chun-wei Fan <fanc999>`)
+  * setup.py: Support specifying custom ``--pkgconfigdir``
+    :pr:`127` (:user:`Michał Górny <mgorny>`)
+
+Fixes:
+  * docs: Remove a broken link :pr:`124` (:user:`Nik Nyby <nikolas@gnu.org>`)
+  * typing: Add missing annotations for __enter__/__exit__ :pr:`126`
+
+New API:
+  Some are only available when building with newer cairo versions, see the
+  linked API docs for details.
+
+  * :data:`CAIRO_VERSION`, :data:`CAIRO_VERSION_STRING`,
+    :data:`CAIRO_VERSION_MAJOR`, :data:`CAIRO_VERSION_MINOR`,
+    :data:`CAIRO_VERSION_MICRO`
+  * :attr:`Status.TAG_ERROR`, :attr:`Status.FREETYPE_ERROR`,
+    :attr:`Status.PNG_ERROR`, :attr:`Status.WIN32_GDI_ERROR`
+  * :class:`SVGUnit`, :class:`PDFMetadata`, :class:`PDFOutlineFlags`
+  * :meth:`FontOptions.set_variations`, :meth:`FontOptions.get_variations`
+  * :meth:`Context.tag_begin`, :meth:`Context.tag_end`,
+    :data:`TAG_DEST`, :data:`TAG_LINK`
+  * :meth:`PDFSurface.set_page_label`, :meth:`PDFSurface.set_metadata`,
+    :meth:`PDFSurface.set_thumbnail_size`, :meth:`PDFSurface.add_outline`,
+    :data:`PDF_OUTLINE_ROOT`
+  * :meth:`SVGSurface.set_document_unit`, :meth:`SVGSurface.get_document_unit`
+  * :data:`MIME_TYPE_CCITT_FAX`, :data:`MIME_TYPE_CCITT_FAX_PARAMS`,
+    :data:`MIME_TYPE_EPS`, :data:`MIME_TYPE_EPS_PARAMS`,
+    :data:`MIME_TYPE_JBIG2`, :data:`MIME_TYPE_JBIG2_GLOBAL`,
+    :data:`MIME_TYPE_JBIG2_GLOBAL_ID`
+
+
 .. _v1.17.1:
 
 1.17.1 - 2018-07-07
