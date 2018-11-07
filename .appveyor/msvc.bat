@@ -22,7 +22,7 @@ copy cairo-windows-%CAIRO_VER%\lib\%MSVC_PLATFORM%\cairo.dll cairo || goto :erro
 set CL=/WX
 %PYTHON% -m coverage run --branch setup.py test || goto :error
 %PYTHON% -m coverage xml || goto :error
-%PYTHON% -m codecov --required -f coverage.xml || goto :error
+%PYTHON% -m codecov --required -f coverage.xml
 
 goto :EOF
 :error
