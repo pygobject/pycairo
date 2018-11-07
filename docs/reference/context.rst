@@ -41,7 +41,7 @@ you create a *Context*, set the target surface, and drawing options for the
 :meth:`Context.fill`.
 
 *Contexts* can be pushed to a stack via :meth:`Context.save`. They may then
-safely be changed, without loosing the current state. Use
+safely be changed, without losing the current state. Use
 :meth:`Context.restore` to restore to the saved state.
 
 .. class:: Context(target)
