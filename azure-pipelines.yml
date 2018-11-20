@@ -2,9 +2,8 @@ jobs:
   - job: MSYS2
     timeoutInMinutes: 60
     pool:
-      vmImage: vs2015-win2012r2
+      vmImage: vs2017-win2016
     strategy:
-      maxParallel: 4
       matrix:
         py2-i686:
           MSYSTEM: MINGW32
@@ -24,11 +23,12 @@ jobs:
           PYTHON: python3
     steps:
       - script: |
-          git clone https://github.com/lazka/msys2-ci-base.git %CD:~0,2%\msys64
+          choco install msys2 --params="/InstallDir:%CD:~0,2%\msys64 /NoUpdate /NoPath"
         displayName: Install MSYS2
       - script: |
           set PATH=%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
           %CD:~0,2%\msys64\usr\bin\pacman --noconfirm -Syyuu
+          %CD:~0,2%\msys64\usr\bin\pacman --noconfirm -Syuu
         displayName: Update MSYS2
       - script: |
           set PATH=C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
@@ -36,8 +36,46 @@ jobs:
         displayName: Test
         env:
           CHERE_INVOKING: yes
-          MSYSTEM: $(MSYSTEM)
-          MSYS2_ARCH: $(MSYS2_ARCH)
-          PYTHON: $(PYTHON)
           CODECOV_TOKEN: $(CODECOV_TOKEN)
           CODECOV_BRANCH: $(Build.SourceBranchName)
+
+  - job: MSVC
+    timeoutInMinutes: 60
+    pool:
+      vmImage: vs2017-win2016
+    strategy:
+      matrix:
+        Python37-x64:
+          python.version: '3.7'
+          python.arch: 'x64'
+        Python37-x86:
+          python.version: '3.7'
+          python.arch: 'x86'
+        Python36-x64:
+          python.version: '3.6'
+          python.arch: 'x64'
+        Python36-x86:
+          python.version: '3.6'
+          python.arch: 'x86'
+        Python35-x64:
+          python.version: '3.5'
+          python.arch: 'x64'
+        Python35-x86:
+          python.version: '3.5'
+          python.arch: 'x86'
+    steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '$(python.version)'
+          architecture: '$(python.arch)'
+      - script: |
+          choco install 7zip wget
+        displayName: Install Dependencies
+      - script: |
+          call .azure-pipelines\msvc.bat
+        displayName: Build & Test
+        env:
+          MSVC_PLATFORM: $(python.arch)
+          CODECOV_TOKEN: $(CODECOV_TOKEN)
+          CODECOV_BRANCH: $(Build.SourceBranchName)
+          PYTHON: python

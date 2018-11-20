@@ -6,20 +6,9 @@ environment:
     - MSVC_PLATFORM: x86
       PYTHON_ROOT: Python34
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    - MSVC_PLATFORM: x86
-      PYTHON_ROOT: Python35
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    - MSVC_PLATFORM: x64
-      PYTHON_ROOT: Python35-x64
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    - MSVC_PLATFORM: x86
-      PYTHON_ROOT: Python36
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    - MSVC_PLATFORM: x64
-      PYTHON_ROOT: Python36-x64
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
 
 build_script:
+  - set PYTHON=C:\%PYTHON_ROOT%\python.exe
   - .appveyor/msvc.bat
 
 deploy: off

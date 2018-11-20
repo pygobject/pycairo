@@ -1,5 +1,5 @@
 set CAIRO_VER=1.15.10
-appveyor DownloadFile https://github.com/preshing/cairo-windows/releases/download/%CAIRO_VER%/cairo-windows-%CAIRO_VER%.zip
+wget https://github.com/preshing/cairo-windows/releases/download/%CAIRO_VER%/cairo-windows-%CAIRO_VER%.zip
 7z x cairo-windows-%CAIRO_VER%.zip
 
 ::~ set MSVC_PLATFORM=x86
