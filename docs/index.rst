@@ -14,6 +14,7 @@
    :titlesonly:
    :hidden:
 
+   getting_started
    changelog
    Tutorial <tutorial>
    reference/index
@@ -29,6 +30,8 @@
 
 ----
 
+PyPI:
+    https://pypi.org/project/pycairo
 Tarballs:
     https://github.com/pygobject/pycairo/releases
 Git repo:

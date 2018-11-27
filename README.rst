@@ -13,11 +13,13 @@ The Pycairo bindings are designed to match the cairo C API as closely as
 possible, and to deviate only in cases which are clearly better implemented in
 a more ‘Pythonic’ way.
 
-Features of the Pycairo bindings:
+.. code:: shell
 
-* Provides an object oriented interface to cairo.
-* Queries the error status of objects and translates them to exceptions.
-* Provides a C API that can be used by other Python extensions.
+    pip install pycairo
+
+Installing Pycairo requires cairo including its headers. For more info see
+"`Getting Started
+<https://pycairo.readthedocs.io/en/latest/getting_started.html>`__".
 
 ----
 
@@ -47,6 +49,12 @@ Features of the Pycairo bindings:
         context.stroke()
 
 ----
+
+Features of the Pycairo bindings:
+
+* Provides an object oriented interface to cairo.
+* Queries the error status of objects and translates them to exceptions.
+* Provides a C API that can be used by other Python extensions.
 
 If Pycairo is not what you need, have a look at `cairocffi
 <https://cairocffi.readthedocs.io>`__, which is an API compatible package
