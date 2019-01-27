@@ -122,7 +122,7 @@ pkginfo_conf.set('VERSION', pycairo_version)
 configure_file(input : 'PKG-INFO.in',
   output : 'pycairo-@0@.egg-info'.format(pycairo_version),
   configuration : pkginfo_conf,
-  install_dir : python.get_install_dir())
+  install_dir : python.get_install_dir(pure : false))
 
 subdir('cairo')
 subdir('tests')
