@@ -87,7 +87,8 @@ def test_context():
 
 def test_surface():
     # TypeError: The Surface type cannot be instantiated
-    pytest.raises(TypeError, "s = cairo.Surface()")
+    with pytest.raises(TypeError):
+        cairo.Surface()
 
     f, w, h = cairo.FORMAT_ARGB32, 100, 100
     s = cairo.ImageSurface(f, w, h)
