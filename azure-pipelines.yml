@@ -63,6 +63,9 @@ jobs:
         Python35-x86:
           python.version: '3.5'
           python.arch: 'x86'
+        Python27-x86:
+          python.version: '2.7'
+          python.arch: 'x86'
     steps:
       - task: UsePythonVersion@0
         inputs:
@@ -71,6 +74,10 @@ jobs:
       - script: |
           choco install 7zip wget
         displayName: Install Dependencies
+      - script: |
+          choco install vcpython27
+        displayName: Install PY2 Dependencies
+        condition: eq(variables['python.version'], '2.7')
       - script: |
           call .azure-pipelines\msvc.bat
         displayName: Build & Test

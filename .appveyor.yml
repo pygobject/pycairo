@@ -1,9 +1,6 @@
 environment:
   matrix:
     - MSVC_PLATFORM: x86
-      PYTHON_ROOT: Python27
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
-    - MSVC_PLATFORM: x86
       PYTHON_ROOT: Python34
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
 
