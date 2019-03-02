@@ -41,7 +41,9 @@ int
 Pycairo_is_fspath (PyObject *obj) {
 #if PY_MAJOR_VERSION < 3
     return (PyString_Check (obj) || PyUnicode_Check (obj));
-#elif PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 6
+#elif PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 6 && !defined(PYPY_VERSION)
+    /* PyOS_FSPath() is missing in PyPy:
+     * https://bitbucket.org/pypy/pypy/issues/2961 */
     PyObject *real = PyOS_FSPath (obj);
     if (real == NULL) {
         PyErr_Clear ();
