@@ -61,7 +61,7 @@ header_file = configure_file(
 
 install_headers(
   [header_file],
-  subdir: join_paths(python.get_install_dir(), 'cairo', 'include'),
+  install_dir: join_paths(python.get_install_dir(), 'cairo', 'include'),
 )
 install_headers([header_file], subdir: 'pycairo')
 
