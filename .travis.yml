@@ -26,14 +26,14 @@ matrix:
       python: "3.7"
       env: CFLAGS="-Werror -coverage"
     - os: linux
-      dist: trusty
+      dist: xenial
       language: python
-      python: "pypy2.7-5.10.0"
+      python: "pypy2.7-6.0"
       env: CFLAGS="-Werror -coverage"
     - os: linux
-      dist: trusty
+      dist: xenial
       language: python
-      python: "pypy3.5-5.10.1"
+      python: "pypy3.5-6.0"
       env: CFLAGS="-Werror -coverage"
     - os: osx
       osx_image: xcode9.4
