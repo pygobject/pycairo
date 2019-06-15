@@ -119,7 +119,6 @@ def add_ext_cflags(ext, compiler):
         "-Warray-bounds",
         "-Wcast-align",
         "-Wconversion",
-        "-Wdeclaration-after-statement",
         "-Wextra",
         "-Wformat=2",
         "-Wformat-nonliteral",

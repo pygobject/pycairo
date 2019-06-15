@@ -69,7 +69,6 @@ else
     '-Warray-bounds',
     '-Wcast-align',
     '-Wconversion',
-    '-Wdeclaration-after-statement',
     '-Wextra',
     '-Wformat=2',
     '-Wformat-nonliteral',
