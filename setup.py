@@ -138,12 +138,8 @@ def add_ext_cflags(ext, compiler):
         "-Wstrict-aliasing",
         "-Wundef",
         "-Wunused-but-set-variable",
+        "-Wswitch-default",
     ]
-
-    if sys.version_info[:2] not in [(3, 3), (3, 4)]:
-        args += [
-            "-Wswitch-default",
-        ]
 
     args += [
         "-Wno-missing-field-initializers",
