@@ -257,6 +257,7 @@ init_enums (PyObject *module) {
     PyObject *ev;
 
     Pycairo_IntEnum_Type.tp_repr = (reprfunc)int_enum_repr;
+    Pycairo_IntEnum_Type.tp_str = PYCAIRO_PyLong_Type.tp_repr;
     Pycairo_IntEnum_Type.tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
     Pycairo_IntEnum_Type.tp_methods = int_enum_methods;
     Pycairo_IntEnum_Type.tp_base = &PYCAIRO_PyLong_Type;
