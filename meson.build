@@ -13,6 +13,11 @@ cair_version_req = '>=1.13.1'
 pymod = import('python')
 python = pymod.find_installation(get_option('python'))
 
+pyver = python.language_version()
+if pyver.version_compare('< 2.7') or (pyver.version_compare('>= 3.0') and pyver.version_compare('< 3.5'))
+  error('Requires Python2 >= 2.7 or Python3 >= 3.5')
+endif
+
 configure_file(
   input: 'setup.cfg',
   output: 'setup.cfg',
@@ -84,6 +89,7 @@ else
     '-Wstrict-aliasing',
     '-Wundef',
     '-Wunused-but-set-variable',
+    '-Wswitch-default',
   ]
 
   main_c_args += [
@@ -95,12 +101,6 @@ else
     '-fno-strict-aliasing',
     '-fvisibility=hidden',
   ]
-
-  if not ['3.3', '3.4'].contains(python.language_version())
-    main_c_args += [
-      '-Wswitch-default',
-    ]
-  endif
 endif
 
 main_c_args = cc.get_supported_arguments(main_c_args)

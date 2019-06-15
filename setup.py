@@ -583,7 +583,6 @@ def main():
             'Programming Language :: Python :: 2',
             'Programming Language :: Python :: 2.7',
             'Programming Language :: Python :: 3',
-            'Programming Language :: Python :: 3.4',
             'Programming Language :: Python :: 3.5',
             'Programming Language :: Python :: 3.6',
             'Programming Language :: Python :: 3.7',
@@ -594,6 +593,8 @@ def main():
             'License :: OSI Approved :: Mozilla Public License 1.1 (MPL 1.1)',
         ],
         cmdclass=cmdclass,
+        python_requires=(
+            '>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4'),
     )
 
 
