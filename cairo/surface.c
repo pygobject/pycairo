@@ -126,12 +126,26 @@ static cairo_status_t
 _write_func (void *closure, const unsigned char *data, unsigned int length) {
   PyGILState_STATE gstate = PyGILState_Ensure();
   PyObject *res = PyObject_CallMethod ((PyObject *)closure, "write", "(" PYCAIRO_DATA_FORMAT "#)",
-				       data, (Py_ssize_t)length);
+                                       data, (Py_ssize_t)length);
   if (res == NULL) {
-    PyErr_Clear();
     /* an exception has occurred, it will be picked up later by
      * Pycairo_Check_Status()
+     *
+     * Do not clear the error here!
      */
+    PyObject *ptype, *pvalue, *ptraceback;
+    PyErr_Fetch(&ptype, &pvalue, &ptraceback);
+
+    PyObject *error_string
+      = PyUnicode_FromFormat("Cairo: Exception occured while writing to output stream: %U",
+                             pvalue);
+    Py_XDECREF(ptype);
+    Py_XDECREF(pvalue);
+    Py_XDECREF(ptraceback);
+
+    PyErr_SetObject(PyExc_Exception, error_string);
+    Py_DECREF(error_string);
+
     PyGILState_Release(gstate);
     return CAIRO_STATUS_WRITE_ERROR;
   }
@@ -191,7 +205,7 @@ _surface_create_with_object(cairo_surface_t *surface, PyObject *base) {
 static PyObject *
 surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   PyErr_SetString(PyExc_TypeError,
-		  "The Surface type cannot be instantiated");
+                  "The Surface type cannot be instantiated");
   return NULL;
 }
 
@@ -216,8 +230,8 @@ surface_create_similar (PycairoSurface *o, PyObject *args) {
   content = (cairo_content_t)content_arg;
 
   return PycairoSurface_FromSurface (
-	     cairo_surface_create_similar (o->surface, content, width, height),
-	     NULL);
+             cairo_surface_create_similar (o->surface, content, width, height),
+             NULL);
 }
 
 static PyObject *
@@ -292,7 +306,7 @@ surface_mark_dirty_rectangle (PycairoSurface *o, PyObject *args) {
   int x, y, width, height;
 
   if (!PyArg_ParseTuple(args, "iiii:Surface.mark_dirty_rectangle",
-			&x, &y, &width, &height))
+                        &x, &y, &width, &height))
     return NULL;
 
   cairo_surface_mark_dirty_rectangle (o->surface, x, y, width, height);
@@ -305,7 +319,7 @@ surface_set_device_offset (PycairoSurface *o, PyObject *args) {
   double x_offset, y_offset;
 
   if (!PyArg_ParseTuple (args, "dd:Surface.set_device_offset",
-			 &x_offset, &y_offset))
+                         &x_offset, &y_offset))
     return NULL;
 
   cairo_surface_set_device_offset (o->surface, x_offset, y_offset);
@@ -318,7 +332,7 @@ surface_set_device_scale (PycairoSurface *o, PyObject *args) {
   cairo_matrix_t transform;
 
   if (!PyArg_ParseTuple (args, "dd:Surface.set_device_scale",
-			 &x_scale, &y_scale))
+                         &x_scale, &y_scale))
     return NULL;
 
   /* cairo asserts the following without reporting an error back.
@@ -337,7 +351,7 @@ surface_set_fallback_resolution (PycairoSurface *o, PyObject *args) {
   double x_ppi, y_ppi;
 
   if (!PyArg_ParseTuple(args, "dd:Surface.set_fallback_resolution",
-			&x_ppi, &y_ppi))
+                        &x_ppi, &y_ppi))
     return NULL;
   cairo_surface_set_fallback_resolution (o->surface, x_ppi, y_ppi);
   Py_RETURN_NONE;
@@ -800,8 +814,8 @@ image_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   format = (cairo_format_t)format_arg;
 
   return PycairoSurface_FromSurface (
-	     cairo_image_surface_create (format, width, height),
-	     NULL);
+             cairo_image_surface_create (format, width, height),
+             NULL);
 }
 
 /* METH_CLASS */
@@ -839,7 +853,7 @@ PYCAIRO_END_IGNORE_DEPRECATED
     stride = cairo_format_stride_for_width (format, width);
     if (stride == -1){
       PyErr_SetString(PyExc_ValueError,
-		      "format is invalid or the width too large");
+                      "format is invalid or the width too large");
       return NULL;
     }
   }
@@ -849,7 +863,7 @@ PYCAIRO_END_IGNORE_DEPRECATED
   }
   Py_BEGIN_ALLOW_THREADS;
   surface = cairo_image_surface_create_for_data (buffer, format, width,
-						 height, stride);
+                                                 height, stride);
   Py_END_ALLOW_THREADS;
   return _surface_create_with_object(surface, obj);
 }
@@ -864,7 +878,7 @@ _read_func (void *closure, unsigned char *data, unsigned int length) {
   cairo_status_t status = CAIRO_STATUS_READ_ERROR;
   PyGILState_STATE gstate = PyGILState_Ensure();
   PyObject *pystr = PyObject_CallMethod ((PyObject *)closure, "read", "(i)",
-					 length);
+                                         length);
   if (pystr == NULL) {
     PyErr_Clear();
     /* an exception has occurred, it will be picked up later by
@@ -992,7 +1006,7 @@ image_surface_buffer_getreadbuf (PycairoImageSurface *o, Py_ssize_t segment,
 
   if (segment != 0) {
     PyErr_SetString(PyExc_SystemError,
-		    "accessing non-existent ImageSurface segment");
+                    "accessing non-existent ImageSurface segment");
     return -1;
   }
   height = cairo_image_surface_get_height (surface);
@@ -1009,7 +1023,7 @@ image_surface_buffer_getwritebuf (PycairoImageSurface *o, Py_ssize_t segment,
 
   if (segment != 0) {
     PyErr_SetString(PyExc_SystemError,
-		    "accessing non-existent ImageSurface segment");
+                    "accessing non-existent ImageSurface segment");
     return -1;
   }
   height = cairo_image_surface_get_height (surface);
@@ -1282,10 +1296,10 @@ pdf_surface_set_size (PycairoPDFSurface *o, PyObject *args) {
   double width_in_points, height_in_points;
 
   if (!PyArg_ParseTuple(args, "dd:PDFSurface.set_size", &width_in_points,
-			&height_in_points))
+                        &height_in_points))
     return NULL;
   cairo_pdf_surface_set_size (o->surface, width_in_points,
-			      height_in_points);
+                              height_in_points);
   Py_RETURN_NONE;
 }
 
@@ -1688,7 +1702,7 @@ ps_level_to_string (PyObject *self, PyObject *args) {
   s = cairo_ps_level_to_string (level);
   if (s == NULL){
     PyErr_SetString(PyExc_ValueError, "level_to_string: "
-		    "invalid level argument");
+                    "invalid level argument");
     return NULL;
   }
   return PYCAIRO_PyUnicode_FromString(s);
@@ -1713,7 +1727,7 @@ static PyObject *
 ps_surface_set_eps (PycairoPSSurface *o, PyObject *args) {
   PyObject *py_eps;
   if (!PyArg_ParseTuple(args, "O!:PSSurface.set_eps",
-			&PyBool_Type, &py_eps))
+                        &PyBool_Type, &py_eps))
     return NULL;
   cairo_ps_surface_set_eps (o->surface, (py_eps == Py_True));
   RETURN_NULL_IF_CAIRO_SURFACE_ERROR(o->surface);
@@ -1725,7 +1739,7 @@ ps_surface_set_size (PycairoPSSurface *o, PyObject *args) {
   double width_in_points, height_in_points;
 
   if (!PyArg_ParseTuple(args, "dd:PSSurface.set_size",
-			&width_in_points, &height_in_points))
+                        &width_in_points, &height_in_points))
     return NULL;
   cairo_ps_surface_set_size (o->surface, width_in_points, height_in_points);
   Py_RETURN_NONE;
@@ -1842,10 +1856,10 @@ recording_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
     extents_ptr = NULL;
   } else {
     if (!PyArg_ParseTuple(extents_tuple, "dddd", &extents.x, &extents.y,
-			  &extents.width, &extents.height)) {
+                          &extents.width, &extents.height)) {
       PyErr_SetString(PyExc_TypeError,
-		      "RecordingSurface() argument 2 must be a "
-		      "4-tuple of float");
+                      "RecordingSurface() argument 2 must be a "
+                      "4-tuple of float");
       return NULL;
     }
     extents_ptr = &extents;
@@ -2163,7 +2177,7 @@ win32_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
                         convert_pyobject_to_hdc, &hdc))
     return NULL;
   return PycairoSurface_FromSurface (
-		     cairo_win32_surface_create (hdc), NULL);
+                     cairo_win32_surface_create (hdc), NULL);
 }
 
 static PyMethodDef win32_surface_methods[] = {
@@ -2218,14 +2232,14 @@ PyTypeObject PycairoWin32Surface_Type = {
 /* Class Win32PrintingSurface(Surface) ------------------------------------ */
 static PyObject *
 win32_printing_surface_new (PyTypeObject *type, PyObject *args,
-			    PyObject *kwds) {
+                            PyObject *kwds) {
   HDC hdc;
 
   if (!PyArg_ParseTuple(args, "O&:Win32PrintingSurface.__new__",
                         convert_pyobject_to_hdc, &hdc))
     return NULL;
   return PycairoSurface_FromSurface (
-		     cairo_win32_printing_surface_create (hdc), NULL);
+                     cairo_win32_printing_surface_create (hdc), NULL);
 }
 
 static PyMethodDef win32_printing_surface_methods[] = {
@@ -2355,7 +2369,7 @@ xcb_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
       return NULL;
 
   return PycairoSurface_FromSurface (
-		     cairo_xcb_surface_create (conn->conn, drawable, visualtype,
+                     cairo_xcb_surface_create (conn->conn, drawable, visualtype,
                                                width, height), NULL);
 #else
   PyErr_SetString(PyExc_TypeError,
@@ -2432,7 +2446,7 @@ PyTypeObject PycairoXCBSurface_Type = {
 static PyObject *
 xlib_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   PyErr_SetString(PyExc_TypeError,
-		  "The XlibSurface type cannot be directly instantiated");
+                  "The XlibSurface type cannot be directly instantiated");
   return NULL;
 }
 
