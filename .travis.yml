@@ -41,11 +41,11 @@ matrix:
       python: "pypy3.5-6.0"
       env: CFLAGS="-Werror -coverage"
     - os: osx
-      osx_image: xcode9.4
+      osx_image: xcode10.3
       language: generic
       env: PYVER="3" CFLAGS="-Werror -coverage"
     - os: osx
-      osx_image: xcode9.4
+      osx_image: xcode10.3
       language: generic
       env: PYVER="2" CFLAGS="-Werror -coverage"
 
