@@ -16,7 +16,7 @@ set LIB=%CAIRO_ROOT%\lib\%MSVC_PLATFORM%
 ::~ SET MSSdk=1
 
 %PYTHON% -m pip install --upgrade setuptools || goto :error
-%PYTHON% -m pip install --upgrade pytest hypothesis coverage codecov || goto :error
+%PYTHON% -m pip install --upgrade pytest hypothesis coverage codecov attrs || goto :error
 copy cairo-windows-%CAIRO_VER%\lib\%MSVC_PLATFORM%\cairo.dll cairo || goto :error
 set CL=/WX
 %PYTHON% -m coverage run --branch setup.py test || goto :error

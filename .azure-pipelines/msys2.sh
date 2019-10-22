@@ -5,7 +5,7 @@ pacman --noconfirm -Suy --force
 pacman --noconfirm -S --needed mingw-w64-$MSYS2_ARCH-cairo \
     mingw-w64-$MSYS2_ARCH-$PYTHON mingw-w64-$MSYS2_ARCH-$PYTHON-pip \
     mingw-w64-$MSYS2_ARCH-toolchain git
-$PYTHON -m pip install pytest coverage codecov hypothesis
+$PYTHON -m pip install --upgrade pytest coverage codecov hypothesis attrs
 $PYTHON -m pip install mypy || true
 
 export CFLAGS="-std=c90 -Wall -Wno-long-long -Werror -coverage"
