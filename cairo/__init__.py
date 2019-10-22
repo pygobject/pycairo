@@ -1,5 +1,13 @@
-from ._cairo import *  # noqa: F401,F403
-
+# support overrides in different directories than our module
+# so we can use _cairo from an external build dir
+try:
+    from ._cairo import *  # noqa: F401,F403
+except ImportError:
+    # If import fails, try an extended path search,
+    # to work with uninstalled out-of-tree build setups
+    from pkgutil import extend_path
+    __path__ = extend_path(__path__, __name__)
+    from ._cairo import *  # noqa: F401,F403
 
 def get_include():
     """Returns a path to the directory containing the C header files"""
