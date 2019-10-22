@@ -8,7 +8,7 @@ pacman --noconfirm -S --needed mingw-w64-$MSYS2_ARCH-cairo \
 $PYTHON -m pip install --upgrade pytest coverage codecov hypothesis attrs
 $PYTHON -m pip install mypy || true
 
-export CFLAGS="-std=c90 -Wall -Wno-long-long -Werror -coverage"
+export CFLAGS="-Werror -coverage"
 $PYTHON -m coverage run --branch setup.py test
 $PYTHON -m codecov --required --branch "$CODECOV_BRANCH" || true
 $PYTHON setup.py sdist
