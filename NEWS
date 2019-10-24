@@ -1,6 +1,14 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning
 <http://semver.org/>`__ i.e. the newest version is the latest stable one.
 
+.. _v1.18.2:
+
+1.18.2 - 2019-10-24
+-------------------
+
+* Fix a minor compatibility issue with Python 3.8 (fixes the test suite)
+
+
 .. _v1.18.1:
 
 1.18.1 - 2019-04-19
