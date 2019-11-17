@@ -565,6 +565,7 @@ def main():
         long_description=long_description,
         maintainer="Christoph Reiter",
         maintainer_email="reiter.christoph@gmail.com",
+        license="LGPL-2.1-only OR MPL-1.1",
         ext_modules=[cairo_ext],
         packages=["cairo"],
         package_data={
