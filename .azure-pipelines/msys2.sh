@@ -1,6 +1,8 @@
 set -e
 
 export MSYS2_FC_CACHE_SKIP=1
+# Avoid import mismatch, for example: D:/a/1/s\tests\test_api.py vs D:/a/1/s/tests/test_api.py
+export PY_IGNORE_IMPORTMISMATCH=1
 export PYTHONPYCACHEPREFIX="$HOME/.cache/$MSYS2_ARCH-$PYTHON/"
 mkdir -p $PYTHONPYCACHEPREFIX
 
