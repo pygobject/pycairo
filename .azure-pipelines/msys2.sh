@@ -1,6 +1,9 @@
 set -e
 
 export MSYS2_FC_CACHE_SKIP=1
+export PYTHONPYCACHEPREFIX="$HOME/.cache/$MSYS2_ARCH-$PYTHON/"
+mkdir -p $PYTHONPYCACHEPREFIX
+
 pacman --noconfirm -Suy
 pacman --noconfirm -S --needed mingw-w64-$MSYS2_ARCH-cairo \
     mingw-w64-$MSYS2_ARCH-$PYTHON mingw-w64-$MSYS2_ARCH-$PYTHON-pip \
@@ -9,7 +12,6 @@ $PYTHON -m pip install pytest coverage codecov hypothesis
 $PYTHON -m pip install mypy || true
 
 export CFLAGS="-std=c90 -Wall -Wno-long-long -Werror -coverage"
-export PYTHONDONTWRITEBYTECODE=1
 $PYTHON -m coverage run --branch setup.py test
 $PYTHON -m codecov --required --branch "$CODECOV_BRANCH" || true
 $PYTHON setup.py sdist
