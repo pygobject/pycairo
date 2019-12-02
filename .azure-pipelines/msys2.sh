@@ -9,6 +9,7 @@ $PYTHON -m pip install pytest coverage codecov hypothesis
 $PYTHON -m pip install mypy || true
 
 export CFLAGS="-std=c90 -Wall -Wno-long-long -Werror -coverage"
+export PYTHONDONTWRITEBYTECODE=1
 $PYTHON -m coverage run --branch setup.py test
 $PYTHON -m codecov --required --branch "$CODECOV_BRANCH" || true
 $PYTHON setup.py sdist
