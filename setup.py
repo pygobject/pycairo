@@ -147,9 +147,8 @@ def add_ext_cflags(ext, compiler):
     ]
 
     # silence clang for unused gcc CFLAGS added by Debian
-    args += [
-        "-Wno-unused-command-line-argument",
-    ]
+    if check_argument(compiler, "-Wno-unused-command-line-argument"):
+        args += ["-Wno-unused-command-line-argument"]
 
     args += [
         "-fno-strict-aliasing",
