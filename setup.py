@@ -92,6 +92,9 @@ def filter_compiler_arguments(compiler, args):
         extra += ['-Werror=unknown-warning-option']
     if check_argument(compiler, '-Werror=unused-command-line-argument'):
         extra += ['-Werror=unused-command-line-argument']
+    # silence clang for unused gcc CFLAGS added by Debian
+    if check_argument(compiler, '-Wno-unused-command-line-argument'):
+        extra += ['-Wno-unused-command-line-argument']
 
     # first try to remove all arguments contained in the error message
     supported = list(args)
@@ -144,11 +147,6 @@ def add_ext_cflags(ext, compiler):
     args += [
         "-Wno-missing-field-initializers",
         "-Wno-unused-parameter",
-    ]
-
-    # silence clang for unused gcc CFLAGS added by Debian
-    args += [
-        "-Wno-unused-command-line-argument",
     ]
 
     args += [
