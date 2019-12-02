@@ -275,7 +275,7 @@ pathiter_next(PycairoPathiter *it) {
   /* return the next path element, advance index */
   if (it->index < path->num_data) {
     cairo_path_data_t *data = &path->data[it->index];
-    int type = data->header.type;
+    unsigned int type = data->header.type;
 
     it->index += data[0].header.length;
 
