@@ -38,11 +38,11 @@ matrix:
     - os: osx
       osx_image: xcode10.3
       language: generic
-      env: PYVER="3" CFLAGS="-Werror -coverage"
+      env: PYVER="3" CFLAGS="-Werror -coverage -isysroot $(xcrun --show-sdk-path)" ARCHFLAGS="-isysroot $(xcrun --show-sdk-path)"
     - os: osx
       osx_image: xcode10.3
       language: generic
-      env: PYVER="2" CFLAGS="-Werror -coverage"
+      env: PYVER="2" CFLAGS="-Werror -coverage -isysroot $(xcrun --show-sdk-path)" ARCHFLAGS="-isysroot $(xcrun --show-sdk-path)"
 
 
 install:
