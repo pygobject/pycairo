@@ -154,6 +154,10 @@ def add_ext_cflags(ext, compiler):
         "-fvisibility=hidden",
     ]
 
+    args += [
+        "-std=c99",
+    ]
+
     ext.extra_compile_args += filter_compiler_arguments(compiler, args)
 
 
