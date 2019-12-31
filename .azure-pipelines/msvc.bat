@@ -22,7 +22,7 @@ set CL=/WX
 %PYTHON% -m coverage run --branch setup.py test || goto :error
 %PYTHON% -m pytest tests\\test_cmod.py || goto :error
 %PYTHON% -m coverage xml || goto :error
-%PYTHON% -m codecov --required -f coverage.xml
+%PYTHON% -m codecov -f coverage.xml
 
 goto :EOF
 :error
