@@ -20,6 +20,7 @@ SET PATH=%CD%\cairo-windows-%CAIRO_VER%\lib\%MSVC_PLATFORM%;%PATH%
 %PYTHON% -m pip install --upgrade pytest hypothesis coverage codecov || goto :error
 set CL=/WX
 %PYTHON% -m coverage run --branch setup.py test || goto :error
+%PYTHON% -m pytest tests\\test_cmod.py || goto :error
 %PYTHON% -m coverage xml || goto :error
 %PYTHON% -m codecov --required -f coverage.xml
 
