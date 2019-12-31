@@ -188,8 +188,6 @@ class build_tests(Command):
         cmd.ensure_finalized()
         cmd.run()
 
-        import cairo
-
         tests_dir = os.path.join("tests", "cmodule")
 
         ext = Extension(
@@ -200,11 +198,11 @@ class build_tests(Command):
             ],
             include_dirs=[
                 tests_dir,
-                cairo.get_include(),
+                "cairo",
             ],
             depends=[
                 os.path.join(tests_dir, "cmodulelib.h"),
-                os.path.join(cairo.get_include(), "pycairo.h"),
+                os.path.join("cairo", "pycairo.h"),
             ],
             define_macros=[("PY_SSIZE_T_CLEAN", None)],
         )
