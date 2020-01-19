@@ -410,6 +410,24 @@ class install_pycairo_header(Command):
         self.outfiles.append(out)
 
 
+def check_setuptools_for_dist():
+    if "setuptools" not in sys.modules:
+        raise Exception("setuptools not available")
+    version = tuple(map(int, sys.modules["setuptools"].__version__.split(".")))
+    if version < (24, 2, 0):
+        raise Exception("setuptools too old")
+
+
+du_sdist = get_command_class("sdist")
+
+
+class sdist(du_sdist):
+
+    def run(self):
+        check_setuptools_for_dist()
+        du_sdist.run(self)
+
+
 du_install_lib = get_command_class("install_lib")
 
 
@@ -557,6 +575,7 @@ def main():
         "install_pycairo_header": install_pycairo_header,
         "test": test_cmd,
         "build_tests": build_tests,
+        "sdist": sdist,
     }
 
     setup(
