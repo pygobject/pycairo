@@ -980,7 +980,7 @@ safely be changed, without losing the current state. Use
         stroke portions as float.
       :param offset: an offset into the dash pattern at which the stroke
         should start, defaults to 0.
-      :type offset: int
+      :type offset: float
       :raises: :exc:`cairo.Error` if any value in *dashes* is negative, or if
         all values are 0.
 

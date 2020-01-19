@@ -167,6 +167,9 @@ def test_set_get_dash(context):
     assert context.get_dash() == ((0.0, 1.0, 2.0, 3.0), 4.0)
     assert context.get_dash_count() == 4
 
+    context.set_dash([1], 1.25)
+    assert context.get_dash() == ((1.0,), 1.25)
+
     with pytest.raises(TypeError):
         context.set_dash()
 
