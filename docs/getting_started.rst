@@ -4,8 +4,7 @@ Getting Started
 
 Installation:
 
-* Python 2: ``pip2 install pycairo``
-* Python 3: ``pip3 install pycairo``
+* ``pip3 install pycairo``
 
 Installing Pycairo requires pkg-config and cairo including its headers. Here
 are some examples on how to install those for some platforms:

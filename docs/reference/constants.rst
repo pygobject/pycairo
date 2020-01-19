@@ -253,7 +253,6 @@ Other Classes and Functions
 .. class:: text()
 
     This type only exists for documentation purposes. It represents
-    :obj:`python:str`/:obj:`python:unicode` under Python 2 and
     :obj:`python3:str` under Python 3.
 
 

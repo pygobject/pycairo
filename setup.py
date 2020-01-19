@@ -531,6 +531,9 @@ class build(du_build):
 
 def main():
 
+    if sys.version_info[0] < 3:
+        raise Exception("Python 2 no longer supported")
+
     cairo_ext = Extension(
         name='cairo._cairo',
         sources=[
@@ -597,8 +600,6 @@ def main():
         },
         classifiers=[
             'Operating System :: OS Independent',
-            'Programming Language :: Python :: 2',
-            'Programming Language :: Python :: 2.7',
             'Programming Language :: Python :: 3',
             'Programming Language :: Python :: 3.5',
             'Programming Language :: Python :: 3.6',
@@ -611,8 +612,7 @@ def main():
             'License :: OSI Approved :: Mozilla Public License 1.1 (MPL 1.1)',
         ],
         cmdclass=cmdclass,
-        python_requires=(
-            '>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4'),
+        python_requires='>=3.5, <4',
     )
 
 
