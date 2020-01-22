@@ -13,7 +13,7 @@ from snippets import get_snippets
 
 def do_snippet(snippet):
     if verbose_mode:
-        print('processing %s' % snippet.name)
+        print(f'processing {snippet.name}')
 
     width, height = 256, 256
 
@@ -29,7 +29,7 @@ def do_snippet(snippet):
         os.makedirs(os.path.join("_build", "png"))
     except EnvironmentError:
         pass
-    filename = os.path.join("_build", "png", "%s.png" % snippet.name)
+    filename = os.path.join("_build", "png", f"{snippet.name}.png")
 
     surface.write_to_png(filename)
 

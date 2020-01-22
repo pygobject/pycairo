@@ -46,7 +46,7 @@ def pkg_config_version_check(pkg, version):
         "pkg-config",
         "--print-errors",
         "--exists",
-        '%s >= %s' % (pkg, version),
+        f'{pkg} >= {version}',
     ]
 
     _check_output(command)

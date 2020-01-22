@@ -13,7 +13,7 @@ from snippets import get_snippets
 
 def do_snippet(snippet):
     if verbose_mode:
-        print('processing %s' % snippet.name)
+        print(f'processing {snippet.name}')
 
     width_in_inches, height_in_inches = 2, 2
     width_in_points, height_in_points = \
@@ -24,7 +24,7 @@ def do_snippet(snippet):
         os.makedirs(os.path.join("_build", "svg"))
     except EnvironmentError:
         pass
-    filename = os.path.join("_build", "svg", "%s.svg" % snippet.name)
+    filename = os.path.join("_build", "svg", f"{snippet.name}.svg")
 
     surface = cairo.SVGSurface(filename, width_in_points, height_in_points)
     cr = cairo.Context(surface)
