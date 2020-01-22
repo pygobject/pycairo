@@ -48,30 +48,6 @@ cairo are located and what flags to pass to the compiler and linker.
 
 .. _api-includes:
 
-To access the Pycairo C API under Python 2
-==========================================
-
-Edit the client module file to add the following lines::
-
-  /* All function, type and macro definitions needed to use the Pycairo/C API
-   * are included in your code by the following line
-   */
-  #include "pycairo.h"
-
-  /* define a variable for the C API */
-  Pycairo_CAPI_t *Pycairo_CAPI;
-
-  /* import pycairo - add to the init<module> function */
-  Pycairo_IMPORT;
-
-In case you want to use the API from another compilation unit::
-
-  #include <pycairo.h>
-
-  extern Pycairo_CAPI_t *Pycairo_CAPI;
-
-  ...
-
 To access the Pycairo C API under Python 3
 ==========================================
 

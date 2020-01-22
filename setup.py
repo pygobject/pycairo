@@ -410,6 +410,24 @@ class install_pycairo_header(Command):
         self.outfiles.append(out)
 
 
+def check_setuptools_for_dist():
+    if "setuptools" not in sys.modules:
+        raise Exception("setuptools not available")
+    version = tuple(map(int, sys.modules["setuptools"].__version__.split(".")))
+    if version < (24, 2, 0):
+        raise Exception("setuptools too old")
+
+
+du_sdist = get_command_class("sdist")
+
+
+class sdist(du_sdist):
+
+    def run(self):
+        check_setuptools_for_dist()
+        du_sdist.run(self)
+
+
 du_install_lib = get_command_class("install_lib")
 
 
@@ -513,6 +531,9 @@ class build(du_build):
 
 def main():
 
+    if sys.version_info[0] < 3:
+        raise Exception("Python 2 no longer supported")
+
     cairo_ext = Extension(
         name='cairo._cairo',
         sources=[
@@ -557,6 +578,7 @@ def main():
         "install_pycairo_header": install_pycairo_header,
         "test": test_cmd,
         "build_tests": build_tests,
+        "sdist": sdist,
     }
 
     setup(
@@ -578,8 +600,6 @@ def main():
         },
         classifiers=[
             'Operating System :: OS Independent',
-            'Programming Language :: Python :: 2',
-            'Programming Language :: Python :: 2.7',
             'Programming Language :: Python :: 3',
             'Programming Language :: Python :: 3.5',
             'Programming Language :: Python :: 3.6',
@@ -592,8 +612,7 @@ def main():
             'License :: OSI Approved :: Mozilla Public License 1.1 (MPL 1.1)',
         ],
         cmdclass=cmdclass,
-        python_requires=(
-            '>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4'),
+        python_requires='>=3.5, <4',
     )
 
 
