@@ -1,13 +1,18 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning
 <http://semver.org/>`__ i.e. the newest version is the latest stable one.
+The last version supporting Python 2.7 is 1.18.x.
 
 
 .. _v1.19.0:
 
-1.19.0 - 2020-??-??
+1.19.0 - 2020-01-23
 -------------------
 
-* Python 2 is no longer supported.
+* Python 2 is no longer supported :pr:`172`
+* Add machine-readable license statement :pr:`158` (:user:`Maxim Ivanov <ulidtko>`)
+* travis-ci: Manually set sysroot so correct SDK is used (:user:`Stuart Axon <stuaxo>`)
+* Support Python 3.8 on Windows (because of DLL lookup changes)
+* Fix wrong type for set_dash() offset parameter in the docs/types.
 
 
 .. _v1.18.2:
