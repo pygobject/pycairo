@@ -48,7 +48,7 @@ Creating a pygame.image from an ImageSurface:
 Pyglet & ImageSurface as Texture
 --------------------------------
 
-Creating a pyglet.Texture from an ImageSurface
+Creating a pyglet.Texture from an ImageSurface:
     .. code:: python
     
         import ctypes
@@ -138,3 +138,20 @@ Freetype-py & Cairo
 -------------------
 
 See https://github.com/rougier/freetype-py/tree/master/examples for examples. Most of the ``*-cairo.py`` examples illustrate conversion from FreeType bitmaps to Cairo surfaces; the two examples, ``glyph-vector-cairo.py`` and ``glyph-vector-2-cairo.py``, illustrate conversion from FreeType glyph contours to Cairo paths.
+
+
+ModernGL & ImageSurface as Texture
+----------------------------------
+
+Creating a moderngl.Texture from an ImageSurface:
+    .. code:: python
+
+        import moderngl
+        import cairo
+        ctx = moderngl.create_context(standalone=True)
+        width, height = 400, 400
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+        texture = ctx.texture((width, height), 4, data=surface.get_data())
+
+An example can also be found in the ModernGL project:
+https://github.com/moderngl/moderngl/blob/master/examples/integration_pycairo.py
