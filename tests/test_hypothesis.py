@@ -5,6 +5,7 @@ import os
 import sys
 import tempfile
 import shutil
+import platform
 
 import pytest
 import cairo
@@ -39,6 +40,9 @@ def cairo_ver():
     return tuple(map(int, cairo.cairo_version_string().split(".")))
 
 
+@pytest.mark.skipif(
+    platform.python_implementation() == "PyPy" and sys.pypy_version_info < (7, 3, 0),
+    reason="PyPy bugs")
 @given(path=fspaths())
 @settings(max_examples=500)
 def test_fspaths(tempdir_path, path):

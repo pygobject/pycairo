@@ -33,6 +33,11 @@
 
 #include "private.h"
 
+/* PyOS_FSPath() was missing in PyPy for some time:
+ * https://bitbucket.org/pypy/pypy/issues/2961 */
+#if PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 6 && (!defined(PYPY_VERSION) || PYPY_VERSION_NUM >= 0x07030000)
+#define HAS_FSPATH_SUPPORT
+#endif
 
 /* Returns 1 if the object has the correct file type for a filesystem path.
  * Parsing it with Pycairo_fspath_converter() might still fail.
@@ -41,9 +46,7 @@ int
 Pycairo_is_fspath (PyObject *obj) {
 #if PY_MAJOR_VERSION < 3
     return (PyString_Check (obj) || PyUnicode_Check (obj));
-#elif PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 6 && !defined(PYPY_VERSION)
-    /* PyOS_FSPath() is missing in PyPy:
-     * https://bitbucket.org/pypy/pypy/issues/2961 */
+#elif defined(HAS_FSPATH_SUPPORT)
     PyObject *real = PyOS_FSPath (obj);
     if (real == NULL) {
         PyErr_Clear ();
@@ -56,6 +59,47 @@ Pycairo_is_fspath (PyObject *obj) {
     return (PyBytes_Check (obj) || PyUnicode_Check (obj));
 #endif
 }
+
+#if !defined(MS_WINDOWS) && PY_MAJOR_VERSION >= 3
+/* Broken in PyPy: https://bitbucket.org/pypy/pypy/issues/3168 */
+static int
+Pycairo_PyUnicode_FSConverter(PyObject* obj, void* result) {
+    int res;
+    PyObject *real = NULL;
+#ifdef HAS_FSPATH_SUPPORT
+    real = PyOS_FSPath (obj);
+#endif
+    if (real == NULL) {
+        PyErr_Clear ();
+        return PyUnicode_FSConverter (obj, result);
+    } else {
+        res = PyUnicode_FSConverter (real, result);
+        Py_DECREF (real);
+        return res;
+    }
+}
+#endif
+
+#if defined(MS_WINDOWS) && PY_MAJOR_VERSION >= 3
+/* Broken in PyPy: https://bitbucket.org/pypy/pypy/issues/3168 */
+static int
+Pycairo_PyUnicode_FSDecoder(PyObject* obj, void* result) {
+    int res;
+    PyObject *real = NULL;
+#ifdef HAS_FSPATH_SUPPORT
+    real = PyOS_FSPath (obj);
+#endif
+    if (real == NULL) {
+        PyErr_Clear ();
+        return PyUnicode_FSDecoder (obj, result);
+    } else {
+        res = PyUnicode_FSDecoder (real, result);
+        Py_DECREF (real);
+        return res;
+    }
+}
+#endif
+
 
 /* Converts a Python object to a cairo path. The result needs to be freed with
  * PyMem_Free().
@@ -130,7 +174,7 @@ Pycairo_fspath_converter (PyObject *obj, char** result) {
 #elif defined(MS_WINDOWS) && PY_MAJOR_VERSION >= 3
     PyObject *uni;
 
-    if (PyUnicode_FSDecoder (obj, &uni) == 0)
+    if (Pycairo_PyUnicode_FSDecoder (obj, &uni) == 0)
         return 0;
 
     if (cairo_version() >= CAIRO_VERSION_ENCODE(1, 15, 10)) {
@@ -166,7 +210,7 @@ Pycairo_fspath_converter (PyObject *obj, char** result) {
         return 0;
     }
 #elif !defined(MS_WINDOWS) && PY_MAJOR_VERSION >= 3
-    if (PyUnicode_FSConverter (obj, &bytes) == 0)
+    if (Pycairo_PyUnicode_FSConverter (obj, &bytes) == 0)
         return 0;
 
     if (PyBytes_AsStringAndSize (bytes, &internal, NULL) == -1) {
