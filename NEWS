@@ -3,6 +3,15 @@ Since version 1.11.0 Pycairo uses `Semantic Versioning
 The last version supporting Python 2.7 is 1.18.x.
 
 
+.. _v1.19.1:
+
+1.19.1 - 2020-02-16
+-------------------
+
+* docs: Add moderngl in the integration section. :pr:`174` (:user:`Einar Forselv <einarf>`)
+* Support os.PathLike with PyPy3 >= 7.3.0
+
+
 .. _v1.19.0:
 
 1.19.0 - 2020-01-23
