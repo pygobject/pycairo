@@ -145,8 +145,6 @@ static PyMethodDef cairo_functions[] = {
   {NULL, NULL, 0, NULL},
 };
 
-#if PY_MAJOR_VERSION >= 3
-
 static struct PyModuleDef cairomoduledef = {
   PyModuleDef_HEAD_INIT,
   "cairo",
@@ -158,7 +156,6 @@ static struct PyModuleDef cairomoduledef = {
   0,
   0,
 };
-#endif
 
 PYCAIRO_MOD_INIT(_cairo)
 {
@@ -275,11 +272,8 @@ PYCAIRO_MOD_INIT(_cairo)
     return PYCAIRO_MOD_ERROR_VAL;
 #endif
 
-#if PY_MAJOR_VERSION < 3
-  m = Py_InitModule("cairo._cairo", cairo_functions);
-#else
   m = PyModule_Create(&cairomoduledef);
-#endif
+
   if (m == NULL)
     return PYCAIRO_MOD_ERROR_VAL;
 
@@ -553,12 +547,8 @@ PYCAIRO_MOD_INIT(_cairo)
 
 #undef STRCONSTANT
 
-#if PY_MAJOR_VERSION >= 3
   /* Create a Capsule containing the CAPI pointer */
   capi = PyCapsule_New((void *)(&CAPI), "cairo.CAPI", 0);
-#else
-  capi = PyCObject_FromVoidPtr(&CAPI, NULL);
-#endif
 
   if (capi != NULL) {
     PyModule_AddObject(m, "CAPI", capi);

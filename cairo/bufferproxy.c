@@ -33,8 +33,6 @@
 
 #include "private.h"
 
-#if PY_MAJOR_VERSION >= 3
-
 typedef struct {
     PyObject_HEAD
     PyObject *exporter;
@@ -121,11 +119,9 @@ buffer_proxy_dealloc(PyObject* obj)
 
     Py_TYPE(obj)->tp_free(obj);
 }
-#endif
 
 int
 init_buffer_proxy (void) {
-#if PY_MAJOR_VERSION >= 3
     Pycairo_BufferProxyType.tp_as_buffer = &Pycairo_BufferProxy_as_buffer;
     Pycairo_BufferProxyType.tp_dealloc = &buffer_proxy_dealloc;
     Pycairo_BufferProxyType.tp_traverse = &buffer_proxy_traverse;
@@ -134,6 +130,6 @@ init_buffer_proxy (void) {
 
     if (PyType_Ready(&Pycairo_BufferProxyType) < 0)
         return -1;
-#endif
+
     return 0;
 }

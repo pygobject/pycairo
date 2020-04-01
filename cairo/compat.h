@@ -42,35 +42,6 @@
 #define PYCAIRO_MODINIT_FUNC PyMODINIT_FUNC
 #endif
 
-#if PY_MAJOR_VERSION < 3
-
-#define PYCAIRO_MOD_ERROR_VAL
-#define PYCAIRO_MOD_SUCCESS_VAL(val)
-#define PYCAIRO_MOD_INIT(name) PYCAIRO_MODINIT_FUNC init##name(void)
-
-#define PYCAIRO_PyUnicode_FromString PyString_FromString
-#define PYCAIRO_PyUnicode_Format PyString_Format
-#define PYCAIRO_PyUnicode_Join _PyString_Join
-#define PYCAIRO_PyUnicode_InternFromString PyString_InternFromString
-#define PYCAIRO_PyUnicode_Astring PyString_AsString
-#define PYCAIRO_PyUnicode_FromFormat PyString_FromFormat
-
-#define PYCAIRO_PyNumber_Long PyNumber_Int
-
-#define PYCAIRO_PyBytes_AsStringAndSize PyString_AsStringAndSize
-
-#define PYCAIRO_PyLong_Type PyInt_Type
-#define PYCAIRO_PyLongObject PyIntObject
-#define PYCAIRO_PyLong_FromLong PyInt_FromLong
-#define PYCAIRO_PyLong_AsLong PyInt_AsLong
-
-#define PYCAIRO_ENC_TEXT_FORMAT "et"
-#define PYCAIRO_DATA_FORMAT "s"
-
-#define PYCAIRO_Py_hash_t long
-
-#else
-
 #define PYCAIRO_MOD_ERROR_VAL NULL
 #define PYCAIRO_MOD_SUCCESS_VAL(val) val
 #define PYCAIRO_MOD_INIT(name) PYCAIRO_MODINIT_FUNC PyInit_##name(void)
@@ -95,8 +66,6 @@
 #define PYCAIRO_DATA_FORMAT "y"
 
 #define PYCAIRO_Py_hash_t Py_hash_t
-
-#endif
 
 #define PYCAIRO_Py_hash_t_FromVoidPtr(p) ((PYCAIRO_Py_hash_t)(Py_ssize_t)(p))
 

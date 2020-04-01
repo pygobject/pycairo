@@ -3,10 +3,6 @@
 #include <pycairo.h>
 #include "cmodulelib.h"
 
-#if PY_MAJOR_VERSION < 3
-extern Pycairo_CAPI_t *Pycairo_CAPI;
-#endif
-
 PyObject *
 create_image_surface (PyObject *self, PyObject *args)
 {

@@ -942,7 +942,6 @@ image_surface_format_stride_for_width (PyObject *self, PyObject *args) {
 
 static PyObject *
 image_surface_get_data (PycairoImageSurface *o, PyObject *ignored) {
-#if PY_MAJOR_VERSION >= 3
   cairo_surface_t *surface;
   int height, stride;
   unsigned char * buffer;
@@ -956,9 +955,6 @@ image_surface_get_data (PycairoImageSurface *o, PyObject *ignored) {
   stride = cairo_image_surface_get_stride (surface);
 
   return buffer_proxy_create_view((PyObject *)o, buffer, height * stride, 0);
-#else
-  return PyBuffer_FromReadWriteObject((PyObject *)o, 0, Py_END_OF_BUFFER);
-#endif
 }
 
 static PyObject *
@@ -980,80 +976,6 @@ static PyObject *
 image_surface_get_width (PycairoImageSurface *o, PyObject *ignored) {
   return PYCAIRO_PyLong_FromLong (cairo_image_surface_get_width (o->surface));
 }
-
-#if PY_MAJOR_VERSION < 3
-
-/* Buffer interface functions, used by ImageSurface.get_data() */
-static Py_ssize_t
-image_surface_buffer_getreadbuf (PycairoImageSurface *o, Py_ssize_t segment,
-                                 const void **ptr) {
-  cairo_surface_t *surface = o->surface;
-  int height, stride;
-
-  if (segment != 0) {
-    PyErr_SetString(PyExc_SystemError,
-		    "accessing non-existent ImageSurface segment");
-    return -1;
-  }
-  height = cairo_image_surface_get_height (surface);
-  stride = cairo_image_surface_get_stride (surface);
-  *ptr = (void *) cairo_image_surface_get_data (surface);
-  return height * stride;
-}
-
-static Py_ssize_t
-image_surface_buffer_getwritebuf (PycairoImageSurface *o, Py_ssize_t segment,
-                                  const void **ptr) {
-  cairo_surface_t *surface = o->surface;
-  int height, stride;
-
-  if (segment != 0) {
-    PyErr_SetString(PyExc_SystemError,
-		    "accessing non-existent ImageSurface segment");
-    return -1;
-  }
-  height = cairo_image_surface_get_height (surface);
-  stride = cairo_image_surface_get_stride (surface);
-  *ptr = (void *) cairo_image_surface_get_data (surface);
-  return height * stride;
-}
-
-static Py_ssize_t
-image_surface_buffer_getsegcount (PycairoImageSurface *o, Py_ssize_t *lenp) {
-  if (lenp) {
-    /* report the sum of the sizes (in bytes) of all segments */
-    cairo_surface_t *surface = o->surface;
-    int height = cairo_image_surface_get_height (surface);
-    int stride = cairo_image_surface_get_stride (surface);
-    *lenp = height * stride;
-  }
-  return 1;  /* surface data is all in one segment */
-}
-
-static Py_ssize_t
-image_surface_buffer_getcharbuffer (PycairoImageSurface *o,
-                                    Py_ssize_t segment,
-                                    char **ptrptr) {
-  Py_ssize_t segment_size;
-
-  if (segment != 0) {
-    PyErr_SetString(PyExc_SystemError,
-      "accessing non-existent ImageSurface segment");
-    return -1;
-  }
-
-  image_surface_buffer_getsegcount (o, &segment_size);
-  return segment_size;
-}
-
-/* See Python C API Manual 10.7 */
-static PyBufferProcs image_surface_as_buffer = {
-  (readbufferproc) image_surface_buffer_getreadbuf,
-  (writebufferproc)image_surface_buffer_getwritebuf,
-  (segcountproc)   image_surface_buffer_getsegcount,
-  (charbufferproc) image_surface_buffer_getcharbuffer,
-};
-#endif
 
 static PyMethodDef image_surface_methods[] = {
   {"create_for_data",(PyCFunction)image_surface_create_for_data,
@@ -1093,17 +1015,8 @@ PyTypeObject PycairoImageSurface_Type = {
   0,                                  /* tp_str */
   0,                                  /* tp_getattro */
   0,                                  /* tp_setattro */
-#if PY_MAJOR_VERSION < 3
-  &image_surface_as_buffer,           /* tp_as_buffer */
-#else
   0,                                  /* tp_as_buffer */
-#endif
-#if PY_MAJOR_VERSION < 3
-  Py_TPFLAGS_DEFAULT |
-     Py_TPFLAGS_HAVE_GETCHARBUFFER,   /* tp_flags */
-#else
   Py_TPFLAGS_DEFAULT,                 /* tp_flags */
-#endif
   0,                                  /* tp_doc */
   0,                                  /* tp_traverse */
   0,                                  /* tp_clear */
@@ -2295,15 +2208,8 @@ xpyb2struct(PyObject *obj, Py_ssize_t *len)
 {
     const void *data;
 
-#if PY_MAJOR_VERSION >= 3
-  // buffer function disabled
-  return NULL;
-#endif
-
-    if (PyObject_AsReadBuffer(obj, &data, len) < 0)
-        return NULL;
-
-    return data;
+    // buffer function disabled
+    return NULL;
 }
 
 static int

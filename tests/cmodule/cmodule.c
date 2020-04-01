@@ -14,19 +14,6 @@ static PyMethodDef CModMethods[] = {
 #define PYCAIRO_MODINIT_FUNC PyMODINIT_FUNC
 #endif
 
-#if PY_MAJOR_VERSION < 3
-
-Pycairo_CAPI_t *Pycairo_CAPI;
-
-PYCAIRO_MODINIT_FUNC
-initcmod (void)
-{
-    Py_InitModule ("cmod", CModMethods);
-
-    Pycairo_IMPORT;
-}
-#else
-
 static struct PyModuleDef cmod_module = {
     PyModuleDef_HEAD_INIT,
     "cmod",
@@ -49,5 +36,3 @@ PyInit_cmod (void)
 
     return m;
 }
-
-#endif
