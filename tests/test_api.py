@@ -278,12 +278,8 @@ def test_constants():
 @pytest.mark.skipif(not hasattr(sys, "getrefcount"), reason="PyPy")
 def test_surface_get_set_mime_data_references():
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
-    if sys.version_info[0] == 2:
-        v = buffer(b"bla")
-        x = buffer(v, 0, 1)
-    else:
-        v = memoryview(b"bla")
-        x = v[:1]
+    v = memoryview(b"bla")
+    x = v[:1]
     assert sys.getrefcount(v) == 2
     assert sys.getrefcount(x) == 2
     surface.set_mime_data("foo", v)

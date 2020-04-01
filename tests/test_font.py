@@ -1,14 +1,7 @@
-import sys
 import platform
 
 import cairo
 import pytest
-
-
-try:
-    long
-except NameError:
-    long = int
 
 
 @pytest.fixture
@@ -73,7 +66,7 @@ def test_font_options_hash():
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
     font_options = surface.get_font_options()
     assert font_options.hash() == font_options.hash()
-    assert isinstance(font_options.hash(), long)
+    assert isinstance(font_options.hash(), int)
 
 
 def test_font_options_merge():
@@ -102,9 +95,8 @@ def test_font_options_hashable_protocol():
     assert font_options != object()
 
     # make sure the other operators are undefined
-    if sys.version_info[0] == 3:
-        with pytest.raises(TypeError):
-            font_options < font_options
+    with pytest.raises(TypeError):
+        font_options < font_options
     assert font_options.__gt__(font_options) is NotImplemented
 
 

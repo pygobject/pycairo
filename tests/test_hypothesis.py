@@ -28,7 +28,7 @@ def tempdir_path():
 
 def _to_temp_path(tempdir_path, p):
     basename = os.path.basename(p)
-    if sys.version_info[0] == 3 and isinstance(basename, bytes):
+    if isinstance(basename, bytes):
         tempdir_path = os.fsencode(tempdir_path)
     res = os.path.join(tempdir_path, basename)
     if not isinstance(p, (type(u""), type(b""))):
@@ -69,10 +69,7 @@ def test_fspaths(tempdir_path, path):
     if os.name == "nt":
         temp = os.path.join(p)
         if isinstance(temp, type(b"")):
-            if sys.version_info[0] == 3:
-                temp = os.fsdecode(temp)
-            else:
-                temp = temp.decode(sys.getfilesystemencoding(), "strict")
+            temp = os.fsdecode(temp)
         if isinstance(temp, type(u"")):
             try:
                 path_encode(temp)

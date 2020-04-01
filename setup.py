@@ -331,7 +331,7 @@ class install_pkgconfig(Command):
             pkgconfig_dir = change_root(self.root, self.pkgconfigdir)
         self.mkpath(pkgconfig_dir)
 
-        pcname = "py3cairo.pc" if sys.version_info[0] == 3 else "pycairo.pc"
+        pcname = "py3cairo.pc"
         target = os.path.join(pkgconfig_dir, pcname)
 
         log.info("Writing %s" % target)
@@ -385,7 +385,7 @@ class install_pycairo_header(Command):
     def run(self):
         # https://github.com/pygobject/pycairo/issues/92
         # https://github.com/pygobject/pycairo/issues/98
-        hname = "py3cairo.h" if sys.version_info[0] == 3 else "pycairo.h"
+        hname = "py3cairo.h"
         source = self.get_inputs()[0]
 
         # for things using get_include()

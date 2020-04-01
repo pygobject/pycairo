@@ -8,7 +8,7 @@ import pytest
 
 mypy = pytest.importorskip("mypy.api")
 pytestmark = pytest.mark.skipif(
-    sys.version_info[:2] < (3, 6), reason="Py3 only")
+    sys.version_info[:2] < (3, 6), reason="Py3.6 only")
 pytestmark
 
 
