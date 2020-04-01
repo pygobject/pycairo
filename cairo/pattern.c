@@ -199,7 +199,7 @@ pattern_richcompare (PyObject *self, PyObject *other, int op)
   }
 }
 
-static PYCAIRO_Py_hash_t
+static Py_hash_t
 pattern_hash (PyObject *self)
 {
   return PYCAIRO_Py_hash_t_FromVoidPtr (((PycairoPattern *)self)->pattern);
@@ -748,7 +748,7 @@ mesh_pattern_get_patch_count (PycairoMeshPattern *obj, PyObject *ignored) {
 
   RETURN_NULL_IF_CAIRO_ERROR (status);
 
-  return PYCAIRO_PyLong_FromLong ((long)count);
+  return PyLong_FromLong ((long)count);
 }
 
 static PyObject *

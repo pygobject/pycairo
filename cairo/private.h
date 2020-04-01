@@ -40,7 +40,6 @@
 #include <Python.h>
 
 #include "pycairo.h"
-#include "compat.h"
 
 #define PYCAIRO_STRINGIFY(s) PYCAIRO_STRINGIFY_ARG(s)
 #define PYCAIRO_STRINGIFY_ARG(s) #s
@@ -334,5 +333,13 @@ DECL_ENUM(ScriptMode)
 # define PYCAIRO_END_IGNORE_DEPRECATED \
   _Pragma ("GCC diagnostic pop")
 #endif
+
+#ifdef __GNUC__
+#define PYCAIRO_MODINIT_FUNC __attribute__((visibility("default"))) PyMODINIT_FUNC
+#else
+#define PYCAIRO_MODINIT_FUNC PyMODINIT_FUNC
+#endif
+
+#define PYCAIRO_Py_hash_t_FromVoidPtr(p) ((Py_hash_t)(Py_ssize_t)(p))
 
 #endif /* _PYCAIRO_PRIVATE_H_ */

@@ -107,7 +107,7 @@ font_face_richcompare (PyObject *self, PyObject *other, int op)
   }
 }
 
-static PYCAIRO_Py_hash_t
+static Py_hash_t
 font_face_hash (PyObject *self)
 {
   return PYCAIRO_Py_hash_t_FromVoidPtr (((PycairoFontFace *)self)->font_face);
@@ -169,7 +169,7 @@ toy_font_face_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   int slant_arg = CAIRO_FONT_SLANT_NORMAL;
   int weight_arg = CAIRO_FONT_WEIGHT_NORMAL;
 
-  if (!PyArg_ParseTuple (args, PYCAIRO_ENC_TEXT_FORMAT "|ii:ToyFontFace.__new__",
+  if (!PyArg_ParseTuple (args, "es|ii:ToyFontFace.__new__",
                          "utf-8", &utf8, &slant_arg, &weight_arg))
     return NULL;
 
@@ -184,7 +184,7 @@ toy_font_face_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 
 static PyObject *
 toy_font_get_family (PycairoToyFontFace *o, PyObject *ignored) {
-  return PYCAIRO_PyUnicode_FromString (cairo_toy_font_face_get_family (o->font_face));
+  return PyUnicode_FromString (cairo_toy_font_face_get_family (o->font_face));
 }
 
 static PyObject *
@@ -328,7 +328,7 @@ scaled_font_text_extents (PycairoScaledFont *o, PyObject *args) {
   PyObject *ext_args, *res;
 
   if (!PyArg_ParseTuple (args,
-        PYCAIRO_ENC_TEXT_FORMAT ":ScaledFont.text_extents", "utf-8", &utf8))
+        "es:ScaledFont.text_extents", "utf-8", &utf8))
     return NULL;
 
   Py_BEGIN_ALLOW_THREADS;
@@ -400,7 +400,7 @@ scaled_font_text_to_glyphs (PycairoScaledFont *o, PyObject *args) {
   PyObject *pycluster, *cluster_args;
 
   if (!PyArg_ParseTuple (args,
-      "dd" PYCAIRO_ENC_TEXT_FORMAT "|i:ScaledFont.text_to_glyphs",
+      "ddes|i:ScaledFont.text_to_glyphs",
       &x, &y, "utf-8", &utf8, &with_clusters))
     return NULL;
 
@@ -538,7 +538,7 @@ scaled_font_richcompare (PyObject *self, PyObject *other, int op)
   }
 }
 
-static PYCAIRO_Py_hash_t
+static Py_hash_t
 scaled_font_hash (PyObject *self)
 {
   return PYCAIRO_Py_hash_t_FromVoidPtr (
@@ -640,7 +640,7 @@ font_options_set_variations (PycairoFontOptions *o, PyObject *args) {
 
     if (maybe_none != Py_None) {
         if (!PyArg_ParseTuple (args,
-                PYCAIRO_ENC_TEXT_FORMAT ":FontOptions.set_variations", "utf-8",
+                "es:FontOptions.set_variations", "utf-8",
                 &variations))
             return NULL;
     } else {
@@ -669,7 +669,7 @@ font_options_get_variations (PycairoFontOptions *o, PyObject *ignored) {
     if (variations == NULL)
         Py_RETURN_NONE;
 
-    return PYCAIRO_PyUnicode_FromString (variations);
+    return PyUnicode_FromString (variations);
 }
 #endif
 

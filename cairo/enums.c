@@ -52,7 +52,7 @@
 #endif
 
 typedef struct {
-    PYCAIRO_PyLongObject base;
+    PyLongObject base;
 } Pycairo_IntEnumObject;
 
 static PyObject *
@@ -63,7 +63,7 @@ int_enum_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     if (!PyArg_ParseTuple (args, "O", &dummy))
         return NULL;
 
-    return PYCAIRO_PyLong_Type.tp_new(type, args, kwds);
+    return PyLong_Type.tp_new(type, args, kwds);
 }
 
 PyObject *
@@ -94,8 +94,8 @@ enum_type_register_constant(PyTypeObject *type, const char* name, long value) {
     }
 
     /* Add int->name pair to the mapping */
-    int_obj = PYCAIRO_PyLong_FromLong(value);
-    name_obj = PYCAIRO_PyUnicode_FromString (name);
+    int_obj = PyLong_FromLong(value);
+    name_obj = PyUnicode_FromString (name);
     if (PyDict_SetItem(value_map, int_obj, name_obj) < 0) {
         Py_DECREF(int_obj);
         Py_DECREF(name_obj);
@@ -125,8 +125,8 @@ int_enum_get_name(PyObject *obj) {
     if(name_obj == NULL)
         return NULL;
 
-    return PYCAIRO_PyUnicode_FromFormat("%s.%s", Py_TYPE(obj)->tp_name,
-                                        PYCAIRO_PyUnicode_Astring(name_obj));
+    return PyUnicode_FromFormat ("%s.%s", Py_TYPE(obj)->tp_name,
+                                 _PyUnicode_AsString(name_obj));
 }
 
 static PyObject *
@@ -136,7 +136,7 @@ int_enum_repr(PyObject *obj)
 
     name_obj = int_enum_get_name(obj);
     if(name_obj == NULL)
-        return PYCAIRO_PyLong_Type.tp_repr(obj);
+        return PyLong_Type.tp_repr(obj);
 
     return name_obj;
 }
@@ -144,10 +144,10 @@ int_enum_repr(PyObject *obj)
 static PyObject *
 int_enum_reduce(PyObject *self, PyObject *ignored)
 {
-    PyObject *num = PYCAIRO_PyNumber_Long (self);
+    PyObject *num = PyNumber_Long (self);
     if (num == NULL)
         return NULL;
-    return Py_BuildValue ("(O, (N))", &PYCAIRO_PyLong_Type, num);
+    return Py_BuildValue ("(O, (N))", &PyLong_Type, num);
 }
 
 static PyMethodDef int_enum_methods[] = {
@@ -243,7 +243,7 @@ format_stride_for_width (PyObject *self, PyObject *args) {
 
   format = (cairo_format_t)value;
 
-  return PYCAIRO_PyLong_FromLong (
+  return PyLong_FromLong (
     cairo_format_stride_for_width (format, width));
 }
 
@@ -257,10 +257,10 @@ init_enums (PyObject *module) {
     PyObject *ev;
 
     Pycairo_IntEnum_Type.tp_repr = (reprfunc)int_enum_repr;
-    Pycairo_IntEnum_Type.tp_str = PYCAIRO_PyLong_Type.tp_repr;
+    Pycairo_IntEnum_Type.tp_str = PyLong_Type.tp_repr;
     Pycairo_IntEnum_Type.tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
     Pycairo_IntEnum_Type.tp_methods = int_enum_methods;
-    Pycairo_IntEnum_Type.tp_base = &PYCAIRO_PyLong_Type;
+    Pycairo_IntEnum_Type.tp_base = &PyLong_Type;
     Pycairo_IntEnum_Type.tp_new = (newfunc)int_enum_new;
 
     if (PyType_Ready(&Pycairo_IntEnum_Type) < 0)

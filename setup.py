@@ -556,7 +556,6 @@ def main():
             'cairo/textextents.c',
         ],
         depends=[
-            'cairo/compat.h',
             'cairo/private.h',
             'cairo/pycairo.h',
         ],

@@ -75,7 +75,7 @@ _PycairoGlyphs_AsGlyphs (PyObject *py_object, int *num_glyphs)
                              "each glyph item must be an (i,x,y) sequence");
             goto error;
         }
-        index = PYCAIRO_PyLong_AsLong (PySequence_Fast_GET_ITEM (py_seq, 0));
+        index = PyLong_AsLong (PySequence_Fast_GET_ITEM (py_seq, 0));
         if (PyErr_Occurred ())
             goto error;
         glyph->index = (unsigned long)index;
@@ -106,7 +106,7 @@ _PyGlyph_AsGlyph (PyObject *pyobj, cairo_glyph_t *glyph) {
         return -1;
     }
 
-    index = PYCAIRO_PyLong_AsLong (PySequence_Fast_GET_ITEM (pyobj, 0));
+    index = PyLong_AsLong (PySequence_Fast_GET_ITEM (pyobj, 0));
     if (PyErr_Occurred ())
         return -1;
     if (index < 0) {
@@ -146,11 +146,11 @@ static PyObject*
 glyph_repr(PyObject *self) {
     PyObject *format, *result;
 
-    format = PYCAIRO_PyUnicode_FromString (
+    format = PyUnicode_FromString (
         "cairo.Glyph(index=%r, x=%r, y=%r)");
     if (format == NULL)
         return NULL;
-    result = PYCAIRO_PyUnicode_Format (format, self);
+    result = PyUnicode_Format (format, self);
     Py_DECREF (format);
     return result;
 }

@@ -44,7 +44,7 @@ _PyTextCluster_AsTextCluster (PyObject *pyobj, cairo_text_cluster_t *cluster) {
         return -1;
     }
 
-    num_bytes = PYCAIRO_PyLong_AsLong (
+    num_bytes = PyLong_AsLong (
         PySequence_Fast_GET_ITEM (pyobj, 0));
     if (PyErr_Occurred ())
         return -1;
@@ -54,7 +54,7 @@ _PyTextCluster_AsTextCluster (PyObject *pyobj, cairo_text_cluster_t *cluster) {
     }
     cluster->num_bytes = (int)num_bytes;
 
-    num_glyphs = PYCAIRO_PyLong_AsLong (
+    num_glyphs = PyLong_AsLong (
         PySequence_Fast_GET_ITEM (pyobj, 1));
     if (PyErr_Occurred ())
         return -1;
@@ -90,11 +90,11 @@ static PyObject*
 text_cluster_repr(PyObject *self) {
     PyObject *format, *result;
 
-    format = PYCAIRO_PyUnicode_FromString (
+    format = PyUnicode_FromString (
         "cairo.TextCluster(num_bytes=%r, num_glyphs=%r)");
     if (format == NULL)
         return NULL;
-    result = PYCAIRO_PyUnicode_Format (format, self);
+    result = PyUnicode_Format (format, self);
     Py_DECREF (format);
     return result;
 }

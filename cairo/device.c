@@ -117,7 +117,7 @@ device_richcompare (PyObject *self, PyObject *other, int op)
   }
 }
 
-static PYCAIRO_Py_hash_t
+static Py_hash_t
 device_hash (PyObject *self)
 {
   return PYCAIRO_Py_hash_t_FromVoidPtr (((PycairoDevice *)self)->device);
@@ -202,7 +202,7 @@ static cairo_status_t
 _write_func (void *closure, const unsigned char *data, unsigned int length) {
     PyGILState_STATE gstate = PyGILState_Ensure();
     PyObject *res = PyObject_CallMethod (
-        (PyObject *)closure, "write", "(" PYCAIRO_DATA_FORMAT "#)",
+        (PyObject *)closure, "write", "(y#)",
         data, (Py_ssize_t)length);
 
     if (res == NULL) {

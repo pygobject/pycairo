@@ -59,12 +59,12 @@ static PyObject*
 text_extents_repr(PyObject *self) {
     PyObject *format, *result;
 
-    format = PYCAIRO_PyUnicode_FromString (
+    format = PyUnicode_FromString (
         "cairo.TextExtents(x_bearing=%r, y_bearing=%r, width=%r, height=%r, "
         "x_advance=%r, y_advance=%r)");
     if (format == NULL)
         return NULL;
-    result = PYCAIRO_PyUnicode_Format (format, self);
+    result = PyUnicode_Format (format, self);
     Py_DECREF (format);
     return result;
 }

@@ -118,7 +118,7 @@ matrix_repr (PycairoMatrix *o) {
 		o->matrix.xx, o->matrix.yx,
 		o->matrix.xy, o->matrix.yy,
 		o->matrix.x0, o->matrix.y0);
-  return PYCAIRO_PyUnicode_FromString(buf);
+  return PyUnicode_FromString (buf);
 }
 
 static PyObject *

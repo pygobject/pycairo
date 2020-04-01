@@ -81,8 +81,7 @@ pycairo_tag_begin (PycairoContext *o, PyObject *args) {
     const char *attributes;
 
     if (!PyArg_ParseTuple (args,
-            PYCAIRO_ENC_TEXT_FORMAT PYCAIRO_ENC_TEXT_FORMAT
-            ":Context.tag_begin", "utf-8",
+            "eses:Context.tag_begin", "utf-8",
             &tag_name, "utf-8", &attributes))
         return NULL;
 
@@ -102,7 +101,7 @@ pycairo_tag_end (PycairoContext *o, PyObject *args) {
     const char *tag_name;
 
     if (!PyArg_ParseTuple (args,
-            PYCAIRO_ENC_TEXT_FORMAT ":Context.tag_end", "utf-8",
+            "es:Context.tag_end", "utf-8",
             &tag_name))
         return NULL;
 
@@ -394,7 +393,7 @@ pycairo_get_dash (PycairoContext *o, PyObject *ignored) {
 
 static PyObject *
 pycairo_get_dash_count (PycairoContext *o, PyObject *ignored) {
-  return PYCAIRO_PyLong_FromLong (cairo_get_dash_count (o->ctx));
+  return PyLong_FromLong (cairo_get_dash_count (o->ctx));
 }
 
 static PyObject *
@@ -808,7 +807,7 @@ pycairo_select_font_face (PycairoContext *o, PyObject *args) {
   int slant_arg = CAIRO_FONT_SLANT_NORMAL;
   int weight_arg = CAIRO_FONT_WEIGHT_NORMAL;
 
-  if (!PyArg_ParseTuple (args, PYCAIRO_ENC_TEXT_FORMAT "|ii:Context.select_font_face",
+  if (!PyArg_ParseTuple (args, "es|ii:Context.select_font_face",
                          "utf-8", &utf8, &slant_arg, &weight_arg))
     return NULL;
 
@@ -1138,7 +1137,7 @@ static PyObject *
 pycairo_show_text (PycairoContext *o, PyObject *args) {
   const char *utf8;
 
-  if (!PyArg_ParseTuple (args, PYCAIRO_ENC_TEXT_FORMAT ":Context.show_text", "utf-8", &utf8))
+  if (!PyArg_ParseTuple (args, "es:Context.show_text", "utf-8", &utf8))
     return NULL;
 
   Py_BEGIN_ALLOW_THREADS;
@@ -1182,7 +1181,7 @@ pycairo_text_extents (PycairoContext *o, PyObject *args) {
   const char *utf8;
   PyObject *ext_args, *res;
 
-  if (!PyArg_ParseTuple (args, PYCAIRO_ENC_TEXT_FORMAT ":Context.text_extents", "utf-8", &utf8))
+  if (!PyArg_ParseTuple (args, "es:Context.text_extents", "utf-8", &utf8))
     return NULL;
 
   cairo_text_extents (o->ctx, utf8, &extents);
@@ -1200,7 +1199,7 @@ static PyObject *
 pycairo_text_path (PycairoContext *o, PyObject *args) {
   const char *utf8;
 
-  if (!PyArg_ParseTuple (args, PYCAIRO_ENC_TEXT_FORMAT ":Context.text_path", "utf-8", &utf8))
+  if (!PyArg_ParseTuple (args, "es:Context.text_path", "utf-8", &utf8))
     return NULL;
 
   cairo_text_path (o->ctx, utf8);
@@ -1272,7 +1271,7 @@ pycairo_show_text_glyphs (PycairoContext *o, PyObject *args) {
   Py_ssize_t i, clusters_size, glyphs_size;
 
   if (!PyArg_ParseTuple (args,
-      PYCAIRO_ENC_TEXT_FORMAT "OOi:Context.show_text_glyphs",
+      "esOOi:Context.show_text_glyphs",
       "utf-8", &utf8, &glyphs_arg, &clusters_arg, &cluster_flags_arg))
     return NULL;
 
@@ -1477,7 +1476,7 @@ pycairo_richcompare (PyObject *self, PyObject *other, int op)
   }
 }
 
-static PYCAIRO_Py_hash_t
+static Py_hash_t
 pycairo_hash (PyObject *self)
 {
   return PYCAIRO_Py_hash_t_FromVoidPtr (((PycairoContext *)self)->ctx);

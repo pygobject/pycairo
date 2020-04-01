@@ -79,7 +79,7 @@ rectangle_int_repr(PycairoRectangleInt *rect_o) {
   PyOS_snprintf(buf, sizeof(buf),
       "cairo.RectangleInt(x=%d, y=%d, width=%d, height=%d)",
       rect->x, rect->y, rect->width, rect->height);
-  s = PYCAIRO_PyUnicode_FromString(buf);
+  s = PyUnicode_FromString (buf);
   return s;
 }
 
@@ -286,7 +286,7 @@ region_num_rectangles (PycairoRegion *o, PyObject *ignored) {
   Py_BEGIN_ALLOW_THREADS;
   res = cairo_region_num_rectangles(o->region);
   Py_END_ALLOW_THREADS;
-  return PYCAIRO_PyLong_FromLong(res);
+  return PyLong_FromLong(res);
 }
 
 

@@ -125,7 +125,7 @@ PycairoSurface_FromSurface (cairo_surface_t *surface, PyObject *base) {
 static cairo_status_t
 _write_func (void *closure, const unsigned char *data, unsigned int length) {
   PyGILState_STATE gstate = PyGILState_Ensure();
-  PyObject *res = PyObject_CallMethod ((PyObject *)closure, "write", "(" PYCAIRO_DATA_FORMAT "#)",
+  PyObject *res = PyObject_CallMethod ((PyObject *)closure, "write", "(y#)",
 				       data, (Py_ssize_t)length);
   if (res == NULL) {
     PyErr_Clear();
@@ -485,7 +485,7 @@ PYCAIRO_END_IGNORE_DEPRECATED
    * passed in object with it. This allows us to return the same object in
    * surface_get_mime_data().
    */
-  mime_intern = PYCAIRO_PyUnicode_InternFromString(mime_type);
+  mime_intern = PyUnicode_InternFromString (mime_type);
   capsule = PyCapsule_New(o->surface, NULL, NULL);
   user_data = Py_BuildValue("(NOO)", capsule, obj, mime_intern);
   if (user_data == NULL)
@@ -526,13 +526,13 @@ surface_get_mime_data (PycairoSurface *o, PyObject *args) {
     Py_RETURN_NONE;
   }
 
-  mime_intern = PYCAIRO_PyUnicode_InternFromString(mime_type);
+  mime_intern = PyUnicode_InternFromString (mime_type);
   user_data = cairo_surface_get_user_data(
     o->surface, (cairo_user_data_key_t *)mime_intern);
 
   if (user_data == NULL) {
     /* In case the mime data wasn't set through the Python API just copy it */
-    return Py_BuildValue(PYCAIRO_DATA_FORMAT "#", buffer, buffer_len);
+    return Py_BuildValue("y#", buffer, buffer_len);
   } else {
     obj = PyTuple_GET_ITEM(user_data, 1);
     Py_INCREF(obj);
@@ -734,7 +734,7 @@ surface_richcompare (PyObject *self, PyObject *other, int op)
   }
 }
 
-static PYCAIRO_Py_hash_t
+static Py_hash_t
 surface_hash (PyObject *self)
 {
   return PYCAIRO_Py_hash_t_FromVoidPtr (((PycairoSurface *)self)->surface);
@@ -872,7 +872,7 @@ _read_func (void *closure, unsigned char *data, unsigned int length) {
      */
     goto end;
   }
-  ret = PYCAIRO_PyBytes_AsStringAndSize(pystr, &buffer, &str_length);
+  ret = PyBytes_AsStringAndSize (pystr, &buffer, &str_length);
   if (ret == -1 || str_length < (Py_ssize_t)length) {
     PyErr_Clear();
     goto end;
@@ -937,7 +937,7 @@ image_surface_format_stride_for_width (PyObject *self, PyObject *args) {
 
   format = (cairo_format_t)format_arg;
 
-  return PYCAIRO_PyLong_FromLong (cairo_format_stride_for_width (format, width));
+  return PyLong_FromLong (cairo_format_stride_for_width (format, width));
 }
 
 static PyObject *
@@ -964,17 +964,17 @@ image_surface_get_format (PycairoImageSurface *o, PyObject *ignored) {
 
 static PyObject *
 image_surface_get_height (PycairoImageSurface *o, PyObject *ignored) {
-  return PYCAIRO_PyLong_FromLong (cairo_image_surface_get_height (o->surface));
+  return PyLong_FromLong (cairo_image_surface_get_height (o->surface));
 }
 
 static PyObject *
 image_surface_get_stride (PycairoImageSurface *o, PyObject *ignored) {
-  return PYCAIRO_PyLong_FromLong (cairo_image_surface_get_stride (o->surface));
+  return PyLong_FromLong (cairo_image_surface_get_stride (o->surface));
 }
 
 static PyObject *
 image_surface_get_width (PycairoImageSurface *o, PyObject *ignored) {
-  return PYCAIRO_PyLong_FromLong (cairo_image_surface_get_width (o->surface));
+  return PyLong_FromLong (cairo_image_surface_get_width (o->surface));
 }
 
 static PyMethodDef image_surface_methods[] = {
@@ -1248,7 +1248,7 @@ pdf_version_to_string (PyObject *self,  PyObject *args) {
     return NULL;
   }
 
-  return PYCAIRO_PyUnicode_FromString (version_string);
+  return PyUnicode_FromString (version_string);
 }
 
 static PyObject *
@@ -1275,7 +1275,7 @@ static PyObject *
 pdf_surface_set_page_label (PycairoPDFSurface *o, PyObject *args) {
   const char *utf8;
 
-  if (!PyArg_ParseTuple (args, PYCAIRO_ENC_TEXT_FORMAT ":PDFSurface.set_page_label",
+  if (!PyArg_ParseTuple (args, "es:PDFSurface.set_page_label",
                          "utf-8", &utf8))
     return NULL;
 
@@ -1295,7 +1295,7 @@ pdf_surface_set_metadata (PycairoPDFSurface *o, PyObject *args) {
   cairo_pdf_metadata_t metadata;
   int metadata_arg;
 
-  if (!PyArg_ParseTuple (args, "i" PYCAIRO_ENC_TEXT_FORMAT ":PDFSurface.set_metadata",
+  if (!PyArg_ParseTuple (args, "ies:PDFSurface.set_metadata",
                          &metadata_arg, "utf-8", &utf8))
     return NULL;
 
@@ -1336,7 +1336,7 @@ pdf_surface_add_outline (PycairoPDFSurface *o, PyObject *args) {
   cairo_pdf_outline_flags_t flags;
   int flags_arg;
 
-  if (!PyArg_ParseTuple (args, "i" PYCAIRO_ENC_TEXT_FORMAT PYCAIRO_ENC_TEXT_FORMAT "i:PDFSurface.add_outline",
+  if (!PyArg_ParseTuple (args, "iesesi:PDFSurface.add_outline",
                          &parent_id, "utf-8", &utf8, "utf-8", &link_attribs, &flags_arg))
     return NULL;
 
@@ -1351,7 +1351,7 @@ pdf_surface_add_outline (PycairoPDFSurface *o, PyObject *args) {
 
   RETURN_NULL_IF_CAIRO_SURFACE_ERROR (o->surface);
 
-  return PYCAIRO_PyLong_FromLong (added_id);
+  return PyLong_FromLong (added_id);
 }
 #endif
 
@@ -1604,7 +1604,7 @@ ps_level_to_string (PyObject *self, PyObject *args) {
 		    "invalid level argument");
     return NULL;
   }
-  return PYCAIRO_PyUnicode_FromString(s);
+  return PyUnicode_FromString (s);
 }
 
 static PyObject *
@@ -1947,7 +1947,7 @@ svg_version_to_string (PyObject *self,  PyObject *args) {
     return NULL;
   }
 
-  return PYCAIRO_PyUnicode_FromString (version_string);
+  return PyUnicode_FromString (version_string);
 }
 
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
@@ -2344,17 +2344,17 @@ xlib_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 
 static PyObject *
 xlib_surface_get_depth (PycairoXlibSurface *o, PyObject *ignored) {
-  return PYCAIRO_PyLong_FromLong (cairo_xlib_surface_get_depth (o->surface));
+  return PyLong_FromLong (cairo_xlib_surface_get_depth (o->surface));
 }
 
 static PyObject *
 xlib_surface_get_height (PycairoXlibSurface *o, PyObject *ignored) {
-  return PYCAIRO_PyLong_FromLong (cairo_xlib_surface_get_height (o->surface));
+  return PyLong_FromLong (cairo_xlib_surface_get_height (o->surface));
 }
 
 static PyObject *
 xlib_surface_get_width (PycairoXlibSurface *o, PyObject *ignored) {
-  return PYCAIRO_PyLong_FromLong (cairo_xlib_surface_get_width (o->surface));
+  return PyLong_FromLong (cairo_xlib_surface_get_width (o->surface));
 }
 
 static PyMethodDef xlib_surface_methods[] = {

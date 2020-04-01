@@ -56,11 +56,11 @@ static PyObject*
 rectangle_repr(PyObject *self) {
     PyObject *format, *result;
 
-    format = PYCAIRO_PyUnicode_FromString (
+    format = PyUnicode_FromString (
         "cairo.Rectangle(x=%r, y=%r, width=%r, height=%r)");
     if (format == NULL)
         return NULL;
-    result = PYCAIRO_PyUnicode_Format (format, self);
+    result = PyUnicode_Format (format, self);
     Py_DECREF (format);
     return result;
 }

@@ -130,12 +130,12 @@ static Pycairo_CAPI_t CAPI = {
 
 static PyObject *
 pycairo_cairo_version (PyObject *self, PyObject *ignored) {
-  return PYCAIRO_PyLong_FromLong (cairo_version());
+  return PyLong_FromLong (cairo_version());
 }
 
 static PyObject *
 pycairo_cairo_version_string (PyObject *self, PyObject *ignored) {
-  return PYCAIRO_PyUnicode_FromString (cairo_version_string());
+  return PyUnicode_FromString (cairo_version_string());
 }
 
 static PyMethodDef cairo_functions[] = {
@@ -157,134 +157,134 @@ static struct PyModuleDef cairomoduledef = {
   0,
 };
 
-PYCAIRO_MOD_INIT(_cairo)
+PYCAIRO_MODINIT_FUNC PyInit__cairo(void)
 {
   PyObject *m, *capi;
 
   if (PyType_Ready(&PycairoContext_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
   if (PyType_Ready(&PycairoFontFace_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
   if (PyType_Ready(&PycairoToyFontFace_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
   if (PyType_Ready(&PycairoFontOptions_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
   if (PyType_Ready(&PycairoMatrix_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
   if (PyType_Ready(&PycairoPath_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
   PycairoPathiter_Type.tp_iter=&PyObject_SelfIter;
   if (PyType_Ready(&PycairoPathiter_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 
   if (PyType_Ready(&PycairoPattern_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
   if (PyType_Ready(&PycairoSolidPattern_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
   if (PyType_Ready(&PycairoSurfacePattern_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
   if (PyType_Ready(&PycairoGradient_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
   if (PyType_Ready(&PycairoLinearGradient_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
   if (PyType_Ready(&PycairoRadialGradient_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
   if (PyType_Ready(&PycairoMeshPattern_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
   if (PyType_Ready(&PycairoRasterSourcePattern_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 
   if (PyType_Ready(&PycairoRectangleInt_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 
   if (PyType_Ready(&PycairoDevice_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 
   PycairoGlyph_Type.tp_base = &PyTuple_Type;
   if (PyType_Ready(&PycairoGlyph_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 
   PycairoRectangle_Type.tp_base = &PyTuple_Type;
   if (PyType_Ready(&PycairoRectangle_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 
   PycairoTextCluster_Type.tp_base = &PyTuple_Type;
   if (PyType_Ready(&PycairoTextCluster_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 
   PycairoTextExtents_Type.tp_base = &PyTuple_Type;
   if (PyType_Ready(&PycairoTextExtents_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 
 #ifdef CAIRO_HAS_SCRIPT_SURFACE
   if (PyType_Ready(&PycairoScriptDevice_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
   if (PyType_Ready(&PycairoScriptSurface_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 #endif
 
   if (PyType_Ready(&PycairoRegion_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 
   if (PyType_Ready(&PycairoScaledFont_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 
   if (PyType_Ready(&PycairoSurface_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 #ifdef CAIRO_HAS_IMAGE_SURFACE
   if (PyType_Ready(&PycairoImageSurface_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
   if (PyType_Ready(&PycairoMappedImageSurface_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 #endif
 #ifdef CAIRO_HAS_PDF_SURFACE
   if (PyType_Ready(&PycairoPDFSurface_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 #endif
 #ifdef CAIRO_HAS_PS_SURFACE
   if (PyType_Ready(&PycairoPSSurface_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 #endif
 #ifdef CAIRO_HAS_RECORDING_SURFACE
   if (PyType_Ready(&PycairoRecordingSurface_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 #endif
 #ifdef CAIRO_HAS_SVG_SURFACE
   if (PyType_Ready(&PycairoSVGSurface_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 #endif
 #ifdef CAIRO_HAS_WIN32_SURFACE
   if (PyType_Ready(&PycairoWin32Surface_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
   if (PyType_Ready(&PycairoWin32PrintingSurface_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 #endif
 #ifdef CAIRO_HAS_XCB_SURFACE
   if (PyType_Ready(&PycairoXCBSurface_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 #endif
 #ifdef CAIRO_HAS_XLIB_SURFACE
   if (PyType_Ready(&PycairoXlibSurface_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 #endif
 #ifdef CAIRO_HAS_TEE_SURFACE
   if (PyType_Ready(&PycairoTeeSurface_Type) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 #endif
 
   m = PyModule_Create(&cairomoduledef);
 
   if (m == NULL)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 
   if(init_error(m) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 
   if(init_buffer_proxy() < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 
   if(init_enums(m) < 0)
-    return PYCAIRO_MOD_ERROR_VAL;
+    return NULL;
 
   PyModule_AddStringConstant(m, "version",
     PYCAIRO_STRINGIFY(PYCAIRO_VERSION_MAJOR) "."
@@ -554,5 +554,5 @@ PYCAIRO_MOD_INIT(_cairo)
     PyModule_AddObject(m, "CAPI", capi);
   }
 
-  return PYCAIRO_MOD_SUCCESS_VAL(m);
+  return m;
 }
