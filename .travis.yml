@@ -26,20 +26,20 @@ matrix:
       python: "pypy3"
       env: CFLAGS="-Werror -coverage"
     - os: osx
-      osx_image: xcode10.3
+      osx_image: xcode11.3
       language: generic
-      env: PYVER="3" CFLAGS="-Werror -Wno-nullability-completeness -coverage -isysroot $(xcrun --show-sdk-path)" ARCHFLAGS="-isysroot $(xcrun --show-sdk-path)"
+      env: CFLAGS="-Werror -coverage"
 
 
 install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then travis_retry sudo apt-get update -q; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then travis_retry sudo apt-get install -y libcairo2-dev; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install pkg-config || brew upgrade pkg-config || true; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install cairo || brew upgrade cairo || true; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install pkg-config || true; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install cairo || true; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig"; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew unlink python@2 || true; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install python || brew upgrade python || true; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install python || true; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then python3 -m pip install virtualenv; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then virtualenv ../venv -p python3; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source ../venv/bin/activate; fi
