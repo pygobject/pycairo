@@ -275,22 +275,22 @@ pathiter_next(PycairoPathiter *it) {
   /* return the next path element, advance index */
   if (it->index < path->num_data) {
     cairo_path_data_t *data = &path->data[it->index];
-    int type = data->header.type;
+    cairo_path_data_type_t type = data->header.type;
 
     it->index += data[0].header.length;
 
     switch (type) {
     case CAIRO_PATH_MOVE_TO:
     case CAIRO_PATH_LINE_TO:
-      return Py_BuildValue("(i(dd))", type,
+      return Py_BuildValue("(i(dd))", (int)type,
 			   data[1].point.x, data[1].point.y);
     case CAIRO_PATH_CURVE_TO:
-      return Py_BuildValue("(i(dddddd))", type,
+      return Py_BuildValue("(i(dddddd))", (int)type,
 			   data[1].point.x, data[1].point.y,
 			   data[2].point.x, data[2].point.y,
 			   data[3].point.x, data[3].point.y);
     case CAIRO_PATH_CLOSE_PATH:
-      return Py_BuildValue("i()", type);
+      return Py_BuildValue("i()", (int)type);
     default:
       PyErr_SetString(PyExc_RuntimeError, "unknown CAIRO_PATH type");
       return NULL;
