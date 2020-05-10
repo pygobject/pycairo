@@ -79,7 +79,7 @@ def test_aliases():
         # special case..
         if name == "PathDataType":
             name = "Path"
-        return"_".join([s.upper() for s in re.findall('[A-Z][^A-Z]*', name)])
+        return "_".join([s.upper() for s in re.findall('[A-Z][^A-Z]*', name)])
 
     for t in types_:
         for name in dir(t):
