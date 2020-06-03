@@ -124,4 +124,7 @@ configure_file(input : 'PKG-INFO.in',
   install_dir : python.get_install_dir(pure : false))
 
 subdir('cairo')
-subdir('tests')
+
+if get_option('tests')
+  subdir('tests')
+endif
