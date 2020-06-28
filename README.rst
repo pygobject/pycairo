@@ -1,4 +1,4 @@
-.. image:: https://cdn.rawgit.com/pygobject/pycairo/master/docs/images/pycairo.svg
+.. image:: https://raw.githubusercontent.com/pygobject/pycairo/master/docs/images/pycairo.svg
    :align: center
    :width: 370px
 
@@ -23,7 +23,7 @@ Installing Pycairo requires cairo including its headers. For more info see
 
 ----
 
-.. image:: https://cdn.rawgit.com/pygobject/pycairo/master/docs/images/example.svg
+.. image:: https://raw.githubusercontent.com/pygobject/pycairo/master/docs/images/example.svg
    :align: right
    :width: 200px
 
