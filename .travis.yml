@@ -83,7 +83,7 @@ before_cache:
   - rm -f $HOME/.cache/pip/log/debug.log
 branches:
   only:
-  - master
+  - /pycairo-\d.\d{2}/
 deploy:
   provider: releases
   file_glob: true

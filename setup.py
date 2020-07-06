@@ -580,7 +580,7 @@ def main():
         "build_tests": build_tests,
         "sdist": sdist,
     }
-    if True:
+    if platform.system() == "Windows":
         setup(
             name="pycairo",
             version=PYCAIRO_VERSION,
