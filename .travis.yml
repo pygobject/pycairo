@@ -81,9 +81,7 @@ cache:
 before_cache:
   - brew cleanup
   - rm -f $HOME/.cache/pip/log/debug.log
-branches:
-  only:
-  - /pycairo-\d.\d{2}/
+
 deploy:
   provider: releases
   file_glob: true
