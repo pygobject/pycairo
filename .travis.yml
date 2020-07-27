@@ -4,17 +4,17 @@ matrix:
       language: sh
       python: 3.6
       name: Build on Python 3.6.8 in Windows
-      env: PYVER="3.6.8" PYDIR="Python36" INCLUDE="$PWD/cairocomplied/include/" LIB="$PWD/cairocomplied/lib/x64/" CAIRO_VERSION=1.15.12 WHEELSNAMEx32="pycairo-1.19.2-cp36-cp36m-win32.whl" WHEELSNAMEx64="pycairo-1.19.2-cp36-cp36m-win_amd64.whl"
+      env: PYVER="3.6.8" PYDIR="Python36" CAIRO_VERSION=1.15.12
     - os: windows
       language: sh
       python: 3.7
       name: Build on Python 3.7.7 in Windows
-      env: PYVER="3.7.7" PYDIR="Python37" INCLUDE="$PWD/cairocomplied/include/" LIB="$PWD/cairocomplied/lib/x64/" CAIRO_VERSION=1.15.12 WHEELSNAMEx32="pycairo-1.19.2-cp37-cp37m-win32.whl" WHEELSNAMEx64="pycairo-1.19.2-cp37-cp37m-win_amd64.whl"
+      env: PYVER="3.7.7" PYDIR="Python37" CAIRO_VERSION=1.15.12 
     - os: windows
       language: sh
       python: 3.8
       name: Build on Python 3.8.3 in Windows
-      env: PYVER="3.8.3" PYDIR="Python38" INCLUDE="$PWD/cairocomplied/include/" LIB="$PWD/cairocomplied/lib/x64/" PYNAME="3.8" CAIRO_VERSION=1.15.12 WHEELSNAMEx32="pycairo-1.19.2-cp38-cp38-win32.whl" WHEELSNAMEx64="pycairo-1.19.2-cp38-cp38-win_amd64.whl"
+      env: PYVER="3.8.3" PYDIR="Python38" CAIRO_VERSION=1.15.12
     - os: linux
       dist: trusty
       language: python
