@@ -4,17 +4,17 @@ matrix:
       language: sh
       python: 3.6
       name: Build on Python 3.6.8 in Windows
-      env: PYVER="3.6.8" PYDIR="Python36" CAIRO_VERSION=1.15.12
+      env: PYVER="3.6.8" PYDIR="Python36" CAIRO_VERSION=1.17.2
     - os: windows
       language: sh
       python: 3.7
       name: Build on Python 3.7.7 in Windows
-      env: PYVER="3.7.7" PYDIR="Python37" CAIRO_VERSION=1.15.12 
+      env: PYVER="3.7.7" PYDIR="Python37" CAIRO_VERSION=1.17.2 
     - os: windows
       language: sh
       python: 3.8
       name: Build on Python 3.8.3 in Windows
-      env: PYVER="3.8.3" PYDIR="Python38" CAIRO_VERSION=1.15.12
+      env: PYVER="3.8.3" PYDIR="Python38" CAIRO_VERSION=1.17.2
     - os: linux
       dist: trusty
       language: python
