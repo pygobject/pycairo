@@ -4,17 +4,17 @@ matrix:
       language: sh
       python: 3.6
       name: Build on Python 3.6.8 in Windows
-      env: PYVER="3.6.8" PYDIR="Python36" CAIRO_VERSION=1.17.2
+      env: PYVER="3.6.8" CAIRO_VERSION=1.17.2
     - os: windows
       language: sh
       python: 3.7
       name: Build on Python 3.7.7 in Windows
-      env: PYVER="3.7.7" PYDIR="Python37" CAIRO_VERSION=1.17.2 
+      env: PYVER="3.7.7" CAIRO_VERSION=1.17.2 
     - os: windows
       language: sh
       python: 3.8
       name: Build on Python 3.8.3 in Windows
-      env: PYVER="3.8.3" PYDIR="Python38" CAIRO_VERSION=1.17.2
+      env: PYVER="3.8.3" CAIRO_VERSION=1.17.2
     - os: linux
       dist: trusty
       language: python
@@ -45,7 +45,6 @@ matrix:
       name: Build on Python 3.8 in Mac OSX xcode11.3
       env: CFLAGS="-Werror -coverage"
 install:
-  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then source .travis/downloadCairo.sh; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then travis_retry sudo apt-get update -q; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then travis_retry sudo apt-get install -y libcairo2-dev; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
@@ -62,8 +61,7 @@ install:
   - if [ "$TRAVIS_OS_NAME" != "windows" ]; then python -m pip install --upgrade mypy || true; fi
 script:
   #windows build
-  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then source .travis/runPycairox64.sh; fi
-  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then source .travis/runPycairox86.sh; fi
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then source .travis/runPycairo.sh; fi
   - if [ "$TRAVIS_OS_NAME" != "windows" ]; then python setup.py sdist; fi
   - if [ "$TRAVIS_OS_NAME" != "windows" ]; then python setup.py bdist; fi
   - if [ "$TRAVIS_OS_NAME" != "windows" ]; then python setup.py install --root=_root; fi
@@ -83,6 +81,7 @@ before_cache:
   - rm -f $HOME/.cache/pip/log/debug.log
 
 deploy:
+  if: TRAVIS_OS_NAME = windows
   provider: releases
   file_glob: true
   api_key: $GITHUBOAUTHTOKEN
