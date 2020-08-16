@@ -71,15 +71,6 @@ script:
   - if [ "$TRAVIS_OS_NAME" != "windows" ]; then if [[ "${TRAVIS_PYTHON_VERSION:0:4}" != "pypy" ]] ; then python -m pip install .; fi; fi
   - if [ "$TRAVIS_OS_NAME" != "windows" ]; then python -m sphinx -W -a -E -b html -n docs docs/_build; fi
 
-cache:
-  directories:
-    - $HOME/.cache/pip
-    - $HOME/Library/Caches/Homebrew
-
-before_cache:
-  - brew cleanup
-  - rm -f $HOME/.cache/pip/log/debug.log
-
 deploy:
   if: TRAVIS_OS_NAME = windows
   provider: releases
