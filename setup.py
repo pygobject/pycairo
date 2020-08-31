@@ -579,7 +579,6 @@ def main():
         "build_tests": build_tests,
         "sdist": sdist,
     }
-
     setup(
         name="pycairo",
         version=PYCAIRO_VERSION,
@@ -595,6 +594,7 @@ def main():
             "cairo": [
                 "__init__.pyi",
                 "py.typed",
+                "cairo.dll",
             ],
         },
         classifiers=[

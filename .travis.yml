@@ -1,54 +1,94 @@
 matrix:
   include:
+    - os: windows
+      language: sh
+      python: 3.6
+      name: Build on x64 Python 3.6.8 in Windows
+      env: ARCH="x64" CAIRO_VERSION="1.17.2" PYTHON_PACKAGE="python" PYTHON_VERSION="3.6.8"
+    - os: windows
+      language: sh
+      python: 3.7
+      name: Build on x64 Python 3.7.7 in Windows
+      env: ARCH="x64" CAIRO_VERSION="1.17.2" PYTHON_PACKAGE="python" PYTHON_VERSION="3.7.7" 
+    - os: windows
+      language: sh
+      python: 3.8
+      name: Build on x64 Python 3.8.3 in Windows
+      env: ARCH="x64" CAIRO_VERSION="1.17.2" PYTHON_PACKAGE="python" PYTHON_VERSION="3.8.3"
+    - os: windows
+      language: sh
+      python: 3.6
+      name: Build on x86 Python 3.6.8 in Windows
+      env: ARCH="x86" CAIRO_VERSION="1.17.2" PYTHON_PACKAGE="pythonx86" PYTHON_VERSION="3.6.8"
+    - os: windows
+      language: sh
+      python: 3.7
+      name: Build on x86 Python 3.7.7 in Windows
+      env: ARCH="x86" CAIRO_VERSION="1.17.2" PYTHON_PACKAGE="pythonx86" PYTHON_VERSION="3.7.7" 
+    - os: windows
+      language: sh
+      python: 3.8
+      name: Build on x86 Python 3.8.3 in Windows
+      env: ARCH="x86" CAIRO_VERSION="1.17.2" PYTHON_PACKAGE="pythonx86" PYTHON_VERSION="3.8.3" 
     - os: linux
       dist: trusty
       language: python
-      python: "3.5"
+      python: 3.5
+      name: Build on Python 3.5 in Trusty Linux
       env: CFLAGS="-Werror -coverage"
     - os: linux
       dist: trusty
       language: python
-      python: "3.6"
+      python: 3.6
+      name: Build on Python 3.6 in Trusty Linux
       env: CFLAGS="-Werror -coverage"
     - os: linux
       dist: xenial
       language: python
-      python: "3.7"
+      python: 3.7
+      name: Build on Python 3.7 in Xenial Linux
       env: CFLAGS="-Werror -coverage"
     - os: linux
       dist: xenial
       language: python
-      python: "3.8"
-      env: CFLAGS="-Werror -coverage"
-    - os: linux
-      dist: xenial
-      language: python
-      python: "pypy3"
+      python: 3.8
+      name: Build on Python 3.8 in Xenial Linux
       env: CFLAGS="-Werror -coverage"
     - os: osx
       osx_image: xcode11.3
       language: generic
+      name: Build on Python 3.8 in Mac OSX xcode11.3
       env: CFLAGS="-Werror -coverage"
 
 
 install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then travis_retry sudo apt-get update -q; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then travis_retry sudo apt-get install -y libcairo2-dev; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install pkg-config || true; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install cairo || true; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig"; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew unlink python@2 || true; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install python || true; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then python3 -m pip install virtualenv; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then virtualenv ../venv -p python3; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source ../venv/bin/activate; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then travis_retry sudo apt-get update -q; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then travis_retry sudo apt-get install -y libcairo2-dev; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install pkg-config || true; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install cairo || true; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig"; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew unlink python@2 || true; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install python || true; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then python3 -m pip install virtualenv; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then virtualenv ../venv -p python3; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then source ../venv/bin/activate; fi
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then curl -sS -L https://aka.ms/nugetclidl -o $TMP/nuget.exe; fi
+  # TODO - future versions of cairo-windows will build with tee support so should not be tagged 'with-tee'
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then curl -sS -L https://github.com/preshing/cairo-windows/releases/download/with-tee/cairo-windows-$CAIRO_VERSION.zip -o $TMP/cairo-windows-$CAIRO_VERSION.zip; fi
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then 7z x $TMP/cairo-windows-$CAIRO_VERSION.zip -o$TMP; fi
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then $TMP/nuget install $PYTHON_PACKAGE -Version $PYTHON_VERSION -OutputDirectory $TMP/nuget-$ARCH; fi
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then export INCLUDE="$TMP/cairo-windows-$CAIRO_VERSION/include"; fi
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then export LIB=$TMP/cairo-windows-$CAIRO_VERSION/lib/$ARCH; fi
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then export PATH=$TMP/nuget-$ARCH/$PYTHON_PACKAGE.$PYTHON_VERSION/tools/:$TMP/nuget-$ARCH/$PYTHON_PACKAGE.$PYTHON_VERSION/tools/Scripts:$PATH; fi
+  - python -m pip install --upgrade wheel
   - python -m pip install --upgrade setuptools
   - python -m pip install --upgrade pytest flake8 "sphinx<3" sphinx_rtd_theme coverage codecov hypothesis attrs
   - python -m pip install --upgrade mypy || true
   - if [[ "$TRAVIS_OS_NAME" != "osx" ]] && [[ "$TRAVIS_PYTHON_VERSION" != "3.8" ]] && [[ "${TRAVIS_PYTHON_VERSION:0:4}" != "pypy" ]]; then python -m pip install --upgrade pygame; fi
 
 script:
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]] ; then cp $TMP/cairo-windows-$CAIRO_VERSION/lib/$ARCH/cairo.dll cairo/cairo.dll; fi
   - python -m coverage run --branch setup.py test
   - python -m codecov --required || true
   - python -m flake8 .
@@ -56,8 +96,17 @@ script:
   - python setup.py bdist
   - python setup.py install --root=_root
   - python setup.py install --root="$(pwd)"/_root_abs
-  - python setup.py bdist_egg
   - python setup.py bdist_wheel
   - python setup.py install --root=_root_setup
   - if [[ "${TRAVIS_PYTHON_VERSION:0:4}" != "pypy" ]] ; then python -m pip install .; fi
   - python -m sphinx -W -a -E -b html -n docs docs/_build
+
+
+deploy:
+  if: TRAVIS_OS_NAME = windows
+  provider: releases
+  file_glob: true
+  api_key: $GITHUBOAUTHTOKEN
+  file: dist/*.whl
+  skip_cleanup: true
+  draft: true
