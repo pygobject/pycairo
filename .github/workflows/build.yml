@@ -1,27 +1,30 @@
 name: Build
 
-on: [push]
+on: 
+  push:
+      branches:
+        - master
+  pull_request:
+      branches:
+        - master
 
 jobs:
   build_wheels:
-    name: Build wheels for Windows on ${{ matrix.python-version }}
+    name: Build wheels and Test for Windows on ${{ matrix.python-version }}
     runs-on: windows-latest
     env:
       CAIRO_VERSION: "1.17.2"
-      TOKENACCESS: ${{ secrets.GITHUB_TOKEN }} 
     strategy:
       matrix:
         python-version: [3.5, 3.6, 3.7, 3.8]
-
     steps:
       - uses: actions/checkout@v2
       - name: Download and extract Cairo Binary
         run: |
-          
+          #TODO: Change below URL on new cairo release
           curl -L https://github.com/preshing/cairo-windows/releases/download/with-tee/cairo-windows-1.17.2.zip -o cairocomplied.zip
           7z x cairocomplied.zip
           Move-Item 'cairo-windows-*' "cairocomplied"
-          #Move-Item 'cairocomplied\include\cairo\*' "cairocomplied\include"
           tree
       - name: Set up Python ${{ matrix.python-version }} for x64
         uses: actions/setup-python@v2
