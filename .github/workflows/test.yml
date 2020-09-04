@@ -47,3 +47,51 @@ jobs:
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
+
+  ubuntu:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.5, 3.6, 3.7, 3.8, pypy3]
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update -q
+        sudo apt-get install -y libcairo2-dev
+        python -m pip install --upgrade setuptools
+        python -m pip install --upgrade pytest flake8 "sphinx<3" sphinx_rtd_theme coverage hypothesis attrs wheel
+        if [[ "${{ matrix.python-version }}" != "pypy3" ]]; then
+          python -m pip install --upgrade mypy
+        fi
+        if [[ "${{ matrix.python-version }}" != "pypy3" ]] && [[ "${{ matrix.python-version }}" != "3.8" ]]; then
+          python -m pip install --upgrade pygame
+        fi
+
+    - name: Run tests
+      run: |
+        export CFLAGS="-Werror -coverage"
+        python -m coverage run --branch setup.py test
+        python -m coverage xml -i
+        python -m flake8 .
+        python setup.py sdist
+        python setup.py bdist
+        python setup.py install --root=_root
+        python setup.py install --root="$(pwd)"/_root_abs
+        python setup.py bdist_egg
+        python setup.py bdist_wheel
+        python setup.py install --root=_root_setup
+        if [[ "${{ matrix.python-version }}" != "pypy3" ]]; then
+          python -m pip install .
+        fi
+        python -m sphinx -W -a -E -b html -n docs docs/_build
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1

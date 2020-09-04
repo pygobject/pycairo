@@ -1,52 +1,23 @@
 matrix:
   include:
-    - os: linux
-      dist: trusty
-      language: python
-      python: "3.5"
-      env: CFLAGS="-Werror -coverage"
-    - os: linux
-      dist: trusty
-      language: python
-      python: "3.6"
-      env: CFLAGS="-Werror -coverage"
-    - os: linux
-      dist: xenial
-      language: python
-      python: "3.7"
-      env: CFLAGS="-Werror -coverage"
-    - os: linux
-      dist: xenial
-      language: python
-      python: "3.8"
-      env: CFLAGS="-Werror -coverage"
-    - os: linux
-      dist: xenial
-      language: python
-      python: "pypy3"
-      env: CFLAGS="-Werror -coverage"
     - os: osx
       osx_image: xcode11.3
       language: generic
       env: CFLAGS="-Werror -coverage"
 
-
 install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then travis_retry sudo apt-get update -q; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then travis_retry sudo apt-get install -y libcairo2-dev; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install pkg-config || true; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install cairo || true; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig"; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew unlink python@2 || true; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install python || true; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then python3 -m pip install virtualenv; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then virtualenv ../venv -p python3; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source ../venv/bin/activate; fi
+  - brew update
+  - brew install pkg-config || true
+  - brew install cairo || true
+  - export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig"
+  - brew unlink python@2 || true
+  - brew install python || true
+  - python3 -m pip install virtualenv
+  - virtualenv ../venv -p python3
+  - source ../venv/bin/activate
   - python -m pip install --upgrade setuptools
   - python -m pip install --upgrade pytest flake8 "sphinx<3" sphinx_rtd_theme coverage codecov hypothesis attrs
   - python -m pip install --upgrade mypy || true
-  - if [[ "$TRAVIS_OS_NAME" != "osx" ]] && [[ "$TRAVIS_PYTHON_VERSION" != "3.8" ]] && [[ "${TRAVIS_PYTHON_VERSION:0:4}" != "pypy" ]]; then python -m pip install --upgrade pygame; fi
 
 script:
   - python -m coverage run --branch setup.py test
@@ -59,5 +30,5 @@ script:
   - python setup.py bdist_egg
   - python setup.py bdist_wheel
   - python setup.py install --root=_root_setup
-  - if [[ "${TRAVIS_PYTHON_VERSION:0:4}" != "pypy" ]] ; then python -m pip install .; fi
+  - python -m pip install .
   - python -m sphinx -W -a -E -b html -n docs docs/_build
