@@ -1,36 +1,4 @@
 jobs:
-  - job: MSYS2
-    timeoutInMinutes: 60
-    pool:
-      vmImage: vs2017-win2016
-    strategy:
-      matrix:
-        py3-i686:
-          MSYSTEM: MINGW32
-          MSYS2_ARCH: i686
-          PYTHON: python3
-        py3-x86_64:
-          MSYSTEM: MINGW64
-          MSYS2_ARCH: x86_64
-          PYTHON: python3
-    steps:
-      - script: |
-          choco install msys2 --params="/InstallDir:%CD:~0,2%\msys64 /NoUpdate /NoPath"
-        displayName: Install MSYS2
-      - script: |
-          set PATH=%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
-          %CD:~0,2%\msys64\usr\bin\pacman --noconfirm -Syyuu
-          %CD:~0,2%\msys64\usr\bin\pacman --noconfirm -Syuu
-        displayName: Update MSYS2
-      - script: |
-          set PATH=C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
-          %CD:~0,2%\msys64\usr\bin\bash -lc "bash -x .azure-pipelines/msys2.sh"
-        displayName: Test
-        env:
-          CHERE_INVOKING: yes
-          CODECOV_TOKEN: $(CODECOV_TOKEN)
-          CODECOV_BRANCH: $(Build.SourceBranchName)
-
   - job: MSVC
     timeoutInMinutes: 60
     pool:

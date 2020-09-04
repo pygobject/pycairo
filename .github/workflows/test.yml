@@ -1,0 +1,49 @@
+name: Test
+
+on: 
+  push:
+  pull_request:
+
+jobs:
+  msys2:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - msystem: MINGW64
+            arch: x86_64
+          - msystem: MINGW32
+            arch: i686
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: setup-msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.msystem }}
+          update: true
+          install: >-
+            mingw-w64-${{ matrix.arch }}-cairo
+            mingw-w64-${{ matrix.arch }}-python
+            mingw-w64-${{ matrix.arch }}-python-pip
+            mingw-w64-${{ matrix.arch }}-toolchain
+
+      - name: Install dependencies
+        shell: msys2 {0}
+        run: |
+          python -m pip install pytest coverage hypothesis mypy
+
+      - name: Run tests
+        shell: msys2 {0}
+        run: |
+          export CFLAGS="-std=c90 -Wall -Wno-long-long -Werror -coverage"
+          python -m coverage run --branch setup.py test
+          python -m coverage xml -i
+          python setup.py sdist
+          python setup.py install --root="$(pwd)"/_root_abs
+          python -m pip install dist/*
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
