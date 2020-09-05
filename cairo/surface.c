@@ -142,6 +142,7 @@ _write_func (void *closure, const unsigned char *data, unsigned int length) {
 
 static const cairo_user_data_key_t surface_base_object_key;
 static const cairo_user_data_key_t surface_is_mapped_image;
+static const cairo_user_data_key_t surface_buffer_view_key;
 
 static void
 surface_dealloc (PycairoSurface *o) {
@@ -804,14 +805,22 @@ image_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
 	     NULL);
 }
 
+static void
+_release_buffer_destroy_func (void *user_data) {
+  Py_buffer *view = (Py_buffer *)user_data;
+  PyGILState_STATE gstate = PyGILState_Ensure();
+  PyBuffer_Release (view);
+  PyMem_Free (view);
+  PyGILState_Release(gstate);
+}
+
 /* METH_CLASS */
 static PyObject *
 image_surface_create_for_data (PyTypeObject *type, PyObject *args) {
   cairo_surface_t *surface;
   cairo_format_t format;
-  unsigned char *buffer;
+  cairo_status_t status;
   int width, height, stride = -1, res, format_arg;
-  Py_ssize_t buffer_len;
   PyObject *obj;
 
   if (!PyArg_ParseTuple (args, "Oiii|i:ImageSurface.create_for_data",
@@ -819,12 +828,6 @@ image_surface_create_for_data (PyTypeObject *type, PyObject *args) {
     return NULL;
 
   format = (cairo_format_t)format_arg;
-
-PYCAIRO_BEGIN_IGNORE_DEPRECATED
-  res = PyObject_AsWriteBuffer (obj, (void **)&buffer, &buffer_len);
-PYCAIRO_END_IGNORE_DEPRECATED
-  if (res == -1)
-    return NULL;
 
   if (width <= 0) {
     PyErr_SetString(PyExc_ValueError, "width must be positive");
@@ -843,15 +846,40 @@ PYCAIRO_END_IGNORE_DEPRECATED
       return NULL;
     }
   }
-  if (height * stride > buffer_len) {
+
+  Py_buffer *view = PyMem_Malloc (sizeof (Py_buffer));
+  if (view == NULL) {
+    PyErr_NoMemory ();
+    return NULL;
+  }
+
+  res = PyObject_GetBuffer (obj, view, PyBUF_WRITABLE);
+  if (res == -1)
+    return NULL;
+
+  if (height * stride > view->len) {
+    PyBuffer_Release (view);
+    PyMem_Free (view);
     PyErr_SetString(PyExc_TypeError, "buffer is not long enough");
     return NULL;
   }
+
   Py_BEGIN_ALLOW_THREADS;
-  surface = cairo_image_surface_create_for_data (buffer, format, width,
-						 height, stride);
+  surface = cairo_image_surface_create_for_data (view->buf, format, width,
+                                                 height, stride);
   Py_END_ALLOW_THREADS;
-  return _surface_create_with_object(surface, obj);
+
+  status = cairo_surface_set_user_data(
+    surface, &surface_buffer_view_key, view,
+    (cairo_destroy_func_t)_release_buffer_destroy_func);
+  if (Pycairo_Check_Status (status)) {
+    cairo_surface_destroy (surface);
+    PyBuffer_Release (view);
+    PyMem_Free (view);
+    return NULL;
+  }
+
+  return PycairoSurface_FromSurface(surface, NULL);
 }
 
 
