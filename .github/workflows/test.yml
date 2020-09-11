@@ -95,3 +95,88 @@ jobs:
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
+
+  msvc:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download and extract Cairo Binary
+        run: |
+          #TODO: Change below URL on new cairo release
+          curl -L https://github.com/preshing/cairo-windows/releases/download/with-tee/cairo-windows-1.17.2.zip -o cairocomplied.zip
+          7z x cairocomplied.zip
+          Move-Item 'cairo-windows-*' "cairocomplied"
+          tree
+
+      - name: Set up Python ${{ matrix.python-version }} for x64
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: 'x64'
+
+      - name: Build x64 Build
+        run: |
+          $env:INCLUDE="$PWD\cairocomplied\include\"
+          $env:LIB="$PWD\cairocomplied\lib\x64\"
+          Copy-Item "$PWD\cairocomplied\lib\x64\cairo.dll" "cairo\cairo.dll"
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade wheel
+          python -m pip install --upgrade setuptools
+          python -m pip install --upgrade pytest flake8 "sphinx<3" sphinx_rtd_theme coverage hypothesis attrs
+          python -m pip install --upgrade mypy || true
+          python -m pip install --upgrade pygame
+          python -m coverage run --branch setup.py test
+          python -m coverage xml -i
+          python -m flake8 .
+          python setup.py sdist
+          python setup.py bdist
+          python setup.py install --root=_root
+          python setup.py install --root="$(pwd)"/_root_abs
+          python setup.py bdist_wheel
+          python setup.py install --root=_root_setup
+          python -m pip install .
+          python -m sphinx -W -a -E -b html -n docs docs/_build
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+
+      - name: Set up Python ${{ matrix.python-version }} for x86
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: 'x86'
+
+      - name: Build x86 Build
+        run: |
+          $env:INCLUDE="$PWD\cairocomplied\include\"
+          $env:LIB="$PWD\cairocomplied\lib\x86\"
+          Copy-Item "cairocomplied\lib\x86\cairo.dll" "cairo\cairo.dll"
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade wheel
+          python -m pip install --upgrade setuptools
+          python -m pip install --upgrade pytest flake8 "sphinx<3" sphinx_rtd_theme coverage hypothesis attrs
+          python -m pip install --upgrade mypy || true
+          python -m pip install --upgrade pygame
+          python -m coverage run --branch setup.py test
+          python -m coverage xml -i
+          python -m flake8 .
+          python setup.py sdist
+          python setup.py bdist
+          python setup.py install --root=_root
+          python setup.py install --root="$(pwd)"/_root_abs
+          python setup.py bdist_wheel
+          python setup.py install --root=_root_setup
+          python -m pip install .
+          python -m sphinx -W -a -E -b html -n docs docs/_build
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+
+      - uses: actions/upload-artifact@v2
+        with:
+         name: wheels-${{ matrix.python-version }}
+         path: dist/pycairo*.whl
