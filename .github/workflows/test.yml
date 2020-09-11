@@ -180,3 +180,39 @@ jobs:
         with:
          name: wheels-${{ matrix.python-version }}
          path: dist/pycairo*.whl
+
+  macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies & run tests
+        run: |
+          brew install pkg-config || true
+          brew install cairo || true
+          export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig"
+          brew unlink python@2 || true
+          brew install python || true
+          python3 -m venv ../venv
+          source ../venv/bin/activate
+          python -m pip install --upgrade setuptools
+          python -m pip install --upgrade pytest flake8 "sphinx<3" sphinx_rtd_theme coverage hypothesis attrs wheel
+          python -m pip install --upgrade mypy || true
+          # run tests
+          python -m coverage run --branch setup.py test
+          python -m coverage xml -i
+          python -m flake8 .
+          python setup.py sdist
+          python setup.py bdist
+          python setup.py install --root=_root
+          python setup.py install --root="$(pwd)"/_root_abs
+          python setup.py bdist_egg
+          python setup.py bdist_wheel
+          python setup.py install --root=_root_setup
+          python -m pip install .
+          python -m sphinx -W -a -E -b html -n docs docs/_build
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1

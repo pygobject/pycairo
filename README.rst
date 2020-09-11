@@ -65,11 +65,5 @@ using `cffi <https://cffi.readthedocs.io/>`__ or `Qahirah
 
 For more information visit https://pycairo.readthedocs.io
 
-.. image:: https://travis-ci.org/pygobject/pycairo.svg?branch=master
-    :target: https://travis-ci.org/pygobject/pycairo
-
-.. image:: https://dev.azure.com/pygobject/pycairo/_apis/build/status/pygobject.pycairo
-  :target: https://dev.azure.com/pygobject/pycairo/_build/latest?definitionId=1
-
 .. image:: https://codecov.io/gh/pygobject/pycairo/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/pygobject/pycairo
