@@ -440,28 +440,30 @@ _destroy_mime_user_data_func (PyObject *user_data) {
 static void
 _destroy_mime_data_func (PyObject *user_data) {
   cairo_surface_t *surface;
+  Py_buffer *view;
   PyObject *mime_intern;
 
   PyGILState_STATE gstate = PyGILState_Ensure();
 
   /* Remove the user data holding the source object */
   surface = PyCapsule_GetPointer(PyTuple_GET_ITEM(user_data, 0), NULL);
-  mime_intern = PyTuple_GET_ITEM(user_data, 2);
+  view = PyCapsule_GetPointer(PyTuple_GET_ITEM(user_data, 1), NULL);
+  mime_intern = PyTuple_GET_ITEM(user_data, 3);
   cairo_surface_set_user_data(
     surface, (cairo_user_data_key_t *)mime_intern, NULL, NULL);
 
   /* Destroy the user data */
-  _destroy_mime_user_data_func(user_data);
+  PyBuffer_Release (view);
+  PyMem_Free (view);
+  Py_DECREF(user_data);
 
   PyGILState_Release(gstate);
 }
 
 static PyObject *
 surface_set_mime_data (PycairoSurface *o, PyObject *args) {
-  PyObject *obj, *user_data, *mime_intern, *capsule;
-  const unsigned char *buffer;
+  PyObject *obj, *user_data, *mime_intern, *surface_capsule, *view_capsule;
   const char *mime_type;
-  Py_ssize_t buffer_len;
   int res;
   cairo_status_t status;
 
@@ -476,38 +478,58 @@ surface_set_mime_data (PycairoSurface *o, PyObject *args) {
     Py_RETURN_NONE;
   }
 
-PYCAIRO_BEGIN_IGNORE_DEPRECATED
-  res = PyObject_AsReadBuffer (obj, (const void **)&buffer, &buffer_len);
-PYCAIRO_END_IGNORE_DEPRECATED
-  if (res == -1)
+  Py_buffer *view = PyMem_Malloc (sizeof (Py_buffer));
+  if (view == NULL) {
+    PyErr_NoMemory ();
     return NULL;
+  }
+
+  res = PyObject_GetBuffer (obj, view, PyBUF_READ);
+  if (res == -1) {
+      PyMem_Free (view);
+      return NULL;
+  }
 
   /* We use the interned mime type string as user data key and store the
    * passed in object with it. This allows us to return the same object in
    * surface_get_mime_data().
    */
   mime_intern = PyUnicode_InternFromString (mime_type);
-  capsule = PyCapsule_New(o->surface, NULL, NULL);
-  user_data = Py_BuildValue("(NOO)", capsule, obj, mime_intern);
-  if (user_data == NULL)
+  surface_capsule = PyCapsule_New(o->surface, NULL, NULL);
+  view_capsule = PyCapsule_New(view, NULL, NULL);
+  user_data = Py_BuildValue("(NNOO)", surface_capsule, view_capsule, obj, mime_intern);
+  if (user_data == NULL) {
+    PyBuffer_Release (view);
+    PyMem_Free (view);
     return NULL;
+  }
 
   status = cairo_surface_set_user_data(
     o->surface, (cairo_user_data_key_t *)mime_intern, user_data,
     (cairo_destroy_func_t)_destroy_mime_user_data_func);
-  if (status != CAIRO_STATUS_SUCCESS)
-    Py_DECREF(user_data);
-  RETURN_NULL_IF_CAIRO_ERROR(status);
 
+  if (status != CAIRO_STATUS_SUCCESS) {
+    PyBuffer_Release (view);
+    PyMem_Free (view);
+    Py_DECREF(user_data);
+    Pycairo_Check_Status (status);
+    return NULL;
+  }
+
+  Py_INCREF(user_data);
   status = cairo_surface_set_mime_data (
-    o->surface, mime_type, buffer, (unsigned long)buffer_len,
+    o->surface, mime_type, view->buf, (unsigned long)view->len,
     (cairo_destroy_func_t)_destroy_mime_data_func, user_data);
+
   if (status != CAIRO_STATUS_SUCCESS) {
     cairo_surface_set_user_data(
       o->surface, (cairo_user_data_key_t *)mime_intern, NULL, NULL);
+    PyBuffer_Release (view);
+    PyMem_Free (view);
+    Py_DECREF(user_data);
+    Pycairo_Check_Status (status);
+    return NULL;
   }
-  RETURN_NULL_IF_CAIRO_ERROR(status);
-  Py_INCREF(user_data);
 
   Py_RETURN_NONE;
 }
@@ -535,7 +557,7 @@ surface_get_mime_data (PycairoSurface *o, PyObject *args) {
     /* In case the mime data wasn't set through the Python API just copy it */
     return Py_BuildValue("y#", buffer, buffer_len);
   } else {
-    obj = PyTuple_GET_ITEM(user_data, 1);
+    obj = PyTuple_GET_ITEM(user_data, 2);
     Py_INCREF(obj);
     return obj;
   }
