@@ -854,8 +854,10 @@ image_surface_create_for_data (PyTypeObject *type, PyObject *args) {
   }
 
   res = PyObject_GetBuffer (obj, view, PyBUF_WRITABLE);
-  if (res == -1)
+  if (res == -1) {
+    PyMem_Free (view);
     return NULL;
+  }
 
   if (height * stride > view->len) {
     PyBuffer_Release (view);
