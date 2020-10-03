@@ -159,11 +159,6 @@ extern PyTypeObject PycairoWin32PrintingSurface_Type;
 
 #ifdef CAIRO_HAS_XCB_SURFACE
 extern PyTypeObject PycairoXCBSurface_Type;
-#ifdef HAVE_XPYB
-#  include <xpyb.h>
-extern xpyb_CAPI_t *xpyb_CAPI;
-extern PyObject *xpybVISUALTYPE_type;
-#endif
 #endif
 
 #ifdef CAIRO_HAS_XLIB_SURFACE

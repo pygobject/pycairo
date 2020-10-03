@@ -21,7 +21,6 @@ from distutils import sysconfig
 
 PYCAIRO_VERSION = '1.19.2'
 CAIRO_VERSION_REQUIRED = '1.15.10'
-XPYB_VERSION_REQUIRED = '1.3'
 
 
 def get_command_class(name):
@@ -167,25 +166,21 @@ class build_tests(Command):
     description = "build test libraries and extensions"
     user_options = [
         ("force", "f", "force a rebuild"),
-        ("enable-xpyb", None, "Build with xpyb support (default=disabled)"),
     ]
 
     def initialize_options(self):
         self.force = False
         self.build_base = None
-        self.enable_xpyb = False
 
     def finalize_options(self):
         self.set_undefined_options(
             'build',
             ('build_base', 'build_base'))
-        self.enable_xpyb = bool(self.enable_xpyb)
         self.force = bool(self.force)
 
     def run(self):
         cmd = self.reinitialize_command("build_ext")
         cmd.inplace = True
-        cmd.enable_xpyb = self.enable_xpyb
         cmd.force = self.force
         cmd.ensure_finalized()
         cmd.run()
@@ -237,22 +232,19 @@ class build_tests(Command):
 
 class test_cmd(Command):
     description = "run tests"
-    user_options = [
-        ("enable-xpyb", None, "Build with xpyb support (default=disabled)"),
-    ]
+    user_options = []
 
     def initialize_options(self):
-        self.enable_xpyb = None
+        pass
 
     def finalize_options(self):
-        self.enable_xpyb = bool(self.enable_xpyb)
+        pass
 
     def run(self):
         import pytest
 
         # ensure the C extension is build inplace
         cmd = self.reinitialize_command("build_tests")
-        cmd.enable_xpyb = self.enable_xpyb
         cmd.ensure_finalized()
         cmd.run()
 
@@ -460,22 +452,12 @@ du_build_ext = get_command_class("build_ext")
 
 class build_ext(du_build_ext):
 
-    user_options = du_build_ext.user_options + [
-        ("enable-xpyb", None, "Build with xpyb support (default=disabled)"),
-    ]
-
     def initialize_options(self):
         du_build_ext.initialize_options(self)
-        self.enable_xpyb = None
         self.compiler_type = None
 
     def finalize_options(self):
         du_build_ext.finalize_options(self)
-
-        self.set_undefined_options(
-            'build',
-            ('enable_xpyb', 'enable_xpyb'),
-        )
 
         self.compiler_type = new_compiler(compiler=self.compiler).compiler_type
 
@@ -498,35 +480,7 @@ class build_ext(du_build_ext):
             customize_compiler(compiler)
             add_ext_cflags(ext, compiler)
 
-        if self.enable_xpyb:
-            if sys.version_info[0] != 2:
-                raise SystemExit("xpyb only supported with Python 2")
-            pkg_config_version_check("xpyb", XPYB_VERSION_REQUIRED)
-
-            ext.define_macros += [("HAVE_XPYB", None)]
-            ext.include_dirs += pkg_config_parse('--cflags-only-I', 'xpyb')
-            ext.library_dirs += pkg_config_parse('--libs-only-L', 'xpyb')
-            ext.libraries += pkg_config_parse('--libs-only-l', 'xpyb')
-
         du_build_ext.run(self)
-
-
-du_build = get_command_class("build")
-
-
-class build(du_build):
-
-    user_options = du_build.user_options + [
-        ("enable-xpyb", None, "Build with xpyb support (default=disabled)"),
-    ]
-
-    def initialize_options(self):
-        du_build.initialize_options(self)
-        self.enable_xpyb = False
-
-    def finalize_options(self):
-        du_build.finalize_options(self)
-        self.enable_xpyb = bool(self.enable_xpyb)
 
 
 def main():
@@ -570,7 +524,6 @@ def main():
         long_description = h.read()
 
     cmdclass = {
-        "build": build,
         "build_ext": build_ext,
         "install_lib": install_lib,
         "install_pkgconfig": install_pkgconfig,
