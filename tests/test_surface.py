@@ -166,6 +166,14 @@ def test_surface_get_format():
     assert isinstance(surface.get_format(), cairo.Format)
 
 
+def test_pdf_get_error():
+    cairo.PDFSurface(io.BytesIO(), 10, 10)
+    with pytest.raises(TypeError):
+        cairo.PDFSurface(object(), 10, 10)
+    with pytest.raises(TypeError):
+        cairo.PDFSurface(io.StringIO(), 10, 10)
+
+
 def test_pdf_get_versions():
     versions = cairo.PDFSurface.get_versions()
     assert isinstance(versions, list)
@@ -295,6 +303,14 @@ def test_pdf_version_to_string():
         cairo.PDFSurface.version_to_string(-1)
     with pytest.raises(TypeError):
         cairo.PDFSurface.version_to_string(object())
+
+
+def test_ps_surface_error():
+    cairo.PSSurface(io.BytesIO(), 10, 10)
+    with pytest.raises(TypeError):
+        cairo.PSSurface(object(), 10, 10)
+    with pytest.raises(TypeError):
+        cairo.PSSurface(io.StringIO(), 10, 10)
 
 
 def test_ps_surface_misc():
@@ -526,6 +542,8 @@ def test_image_surface_png_obj_roundtrip():
         cairo.ImageSurface.create_from_png("\x00")
     with pytest.raises(TypeError):
         cairo.ImageSurface.create_from_png(object())
+    with pytest.raises(TypeError):
+        cairo.ImageSurface.create_from_png(io.StringIO())
 
 
 def test_image_surface_png_file_roundtrip():
@@ -651,6 +669,9 @@ def test_mark_dirty_rectangle(surface):
 def test_write_to_png(image_surface):
     with pytest.raises(TypeError):
         image_surface.write_to_png()
+
+    with pytest.raises(TypeError):
+        image_surface.write_to_png(io.StringIO())
 
     with pytest.raises((ValueError, TypeError)) as excinfo:
         image_surface.write_to_png("\x00")

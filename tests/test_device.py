@@ -57,6 +57,9 @@ def test_script_device():
     with pytest.raises(TypeError):
         cairo.ScriptDevice()
 
+    with pytest.raises(TypeError):
+        cairo.ScriptDevice(io.StringIO())
+
     with pytest.raises((ValueError, TypeError)):
         cairo.ScriptDevice("\x00")
 
