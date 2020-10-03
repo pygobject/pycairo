@@ -83,7 +83,7 @@ def fspaths(draw, allow_pathlike=True):
             lambda b: b.decode(
                 sys.getfilesystemencoding(), "surrogateescape"))
 
-        r = draw(randoms())
+        r = draw(randoms(use_true_random=False))
 
         def shuffle_text(t):
             l = list(t)
