@@ -20,7 +20,7 @@ from distutils import sysconfig
 
 
 PYCAIRO_VERSION = '1.19.2'
-CAIRO_VERSION_REQUIRED = '1.13.1'
+CAIRO_VERSION_REQUIRED = '1.15.10'
 XPYB_VERSION_REQUIRED = '1.3'
 
 

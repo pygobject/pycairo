@@ -5,7 +5,7 @@
 |
 
 Pycairo is a Python module providing bindings for the `cairo graphics library
-<https://cairographics.org/>`__. It depends on **cairo >= 1.13.1** and works
+<https://cairographics.org/>`__. It depends on **cairo >= 1.15.10** and works
 with **Python 3.6+**. Pycairo, including this documentation, is licensed under
 the `LGPL-2.1-only OR MPL-1.1 <https://spdx.org/ids-how>`__.
 
