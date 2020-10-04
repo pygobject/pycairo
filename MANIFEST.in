@@ -3,6 +3,7 @@ include NEWS
 include README.rst
 include MANIFEST.in
 include PKG-INFO.in
+include pyproject.toml
 include setup.cfg
 include meson_options.txt
 recursive-include . meson.build
