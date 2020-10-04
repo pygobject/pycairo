@@ -9,5 +9,5 @@ recursive-include . meson.build
 recursive-include docs *.py Makefile *.rst *.css *.svg
 prune docs/_build
 recursive-include tests *.py README *.c *.h
-recursive-include examples *.py README
+recursive-include examples *.py README *.ipynb
 include cairo/*.h
