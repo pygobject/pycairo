@@ -2247,79 +2247,11 @@ PyTypeObject PycairoWin32PrintingSurface_Type = {
 #ifdef CAIRO_HAS_XCB_SURFACE
 #include <cairo-xcb.h>
 
-#ifdef HAVE_XPYB
-/** Convert a Python object from xpyb to a C struct matching libxcb type.
- * The object must be referenced if you want to keep returned data away from
- * garbage collection.
- * @param obj The object to convert.
- * @param len The size of the object read by Python.
- * @return A pointer to that data.
- */
-const void *
-xpyb2struct(PyObject *obj, Py_ssize_t *len)
-{
-    const void *data;
-
-    // buffer function disabled
-    return NULL;
-}
-
-static int
-have_xpyb(void)
-{
-  static int have_xpyb = -1;
-  if(have_xpyb == -1) {
-      /* Get type from xpyb */
-      xpyb_IMPORT;
-      /* Some types are not defined in the CAPI */
-      PyObject *xpyb_module = PyImport_ImportModule("xcb.xproto");
-      if (xpyb_module) {
-          PyObject *dict = PyModule_GetDict(xpyb_module);
-          xpybVISUALTYPE_type = PyDict_GetItemString(dict, "VISUALTYPE");
-          Py_DECREF(xpyb_module);
-          have_xpyb = 1;
-      }
-      else
-          have_xpyb = 0;
-  }
-  return have_xpyb;
-}
-
-#endif
-
 static PyObject *
 xcb_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
-#ifdef HAVE_XPYB
-  int width, height;
-  xcb_drawable_t drawable;
-  PyObject *visual;
-  xpybConn *conn;
-
-  if(!have_xpyb())
-      return NULL;
-
-  if (!PyArg_ParseTuple(args, "O!IO!ii:XCBSurface.__new__",
-                        xpyb_CAPI->xpybConn_type, &conn,
-                        &drawable,
-                        xpybVISUALTYPE_type, &visual,
-                        &width, &height))
-    return NULL;
-
-  /* Convert Python object VISUALTYPE to a xcb_visualtype_t */
-  Py_ssize_t length;
-  xcb_visualtype_t *visualtype = (xcb_visualtype_t *) xpyb2struct(visual, &length);
-
-  if (length < sizeof(xcb_visualtype_t))
-      return NULL;
-
-  return PycairoSurface_FromSurface (
-		     cairo_xcb_surface_create (conn->conn, drawable, visualtype,
-                                               width, height), NULL);
-#else
   PyErr_SetString(PyExc_TypeError,
-                  "pycairo was not compiled with xpyb support");
+                  "Not supported");
   return NULL;
-#endif
 }
 
 static PyObject *

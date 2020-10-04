@@ -38,12 +38,6 @@
 #include <cairo-pdf.h>
 #endif
 
-/* for XCB api */
-#if defined(CAIRO_HAS_XCB_SURFACE) && defined(HAVE_XPYB)
-xpyb_CAPI_t *xpyb_CAPI;
-PyObject *xpybVISUALTYPE_type;
-#endif
-
 /* C API.  Clients get at this via Pycairo_IMPORT or import_cairo(), defined in pycairo.h.
  */
 static Pycairo_CAPI_t CAPI = {
