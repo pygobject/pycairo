@@ -159,8 +159,9 @@ def test_image_surface_get_data():
 def test_surface_file_obj_error():
     class Fail(object):
 
-        def write(*args):
-            raise IOError
+        def write(obj, data):
+            if data:
+                raise IOError
 
     cairo.PDFSurface(Fail(), 100, 100)
     cairo.PSSurface(Fail(), 100, 100)

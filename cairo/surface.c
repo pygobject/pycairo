@@ -418,7 +418,7 @@ surface_write_to_png (PycairoSurface *o, PyObject *args) {
       PyErr_SetString (PyExc_TypeError,
                        "Surface.write_to_png takes one argument which must be "
                        "a filename, file object, or a file-like object "
-                       "which has a \"write\" method (like StringIO)");
+                       "which has a \"write\" method (like BytesIO) taking bytes");
       return NULL;
     }
   }
@@ -970,7 +970,7 @@ image_surface_create_from_png (PyTypeObject *type, PyObject *args) {
       PyErr_SetString(PyExc_TypeError,
                       "ImageSurface.create_from_png argument must be a "
                       "filename (str), file object, or an object that has a "
-                      "\"read\" method (like StringIO)");
+                      "\"read\" method (like BytesIO) returning bytes.");
       return NULL;
     }
   }
@@ -1236,7 +1236,7 @@ pdf_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
                       "PDFSurface argument 1 must be "
                       "None, or a filename (str), or "
                       "a file object, or an object that has a "
-                      "\"write\" method (like StringIO).");
+                      "\"write\" method (like BytesIO) taking bytes.");
       return NULL;
     }
   }
@@ -1600,7 +1600,7 @@ ps_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
                       "PSSurface argument 1 must be "
                       "None, or a filename (str), or "
                       "a file object, or an object that has a "
-                      "\"write\" method (like StringIO).");
+                      "\"write\" method (like BytesIO) taking bytes.");
       return NULL;
     }
   }
@@ -1947,7 +1947,7 @@ svg_surface_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
                       "SVGSurface argument 1 must be "
                       "None, or a filename (str), or "
                       "a file object, or an object that has a "
-                      "\"write\" method (like StringIO).");
+                      "\"write\" method (like BytesIO) taking bytes.");
       return NULL;
     }
   }

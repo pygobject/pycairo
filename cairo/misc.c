@@ -154,40 +154,37 @@ Pycairo_fspath_converter (PyObject *obj, char** result) {
  */
 int
 Pycairo_writer_converter (PyObject *obj, PyObject** file) {
-    PyObject *attr;
+    PyObject *res;
 
-    attr = PyObject_GetAttrString (obj, "write");
-    if (attr == NULL)
-        return 0;
+    /* Check that the file is opened in binary mode by writing a zero length
+     * bytes object to it */
+    res = PyObject_CallMethod (obj, "write", "(y#)", "", (Py_ssize_t) 0);
+    if (res == NULL)
+        return  0;
+    Py_DECREF (res);
 
-    if (!PyCallable_Check (attr)) {
-        Py_DECREF (attr);
-        PyErr_SetString (
-            PyExc_TypeError, "'write' attribute not callable");
-        return 0;
-    }
-
-    Py_DECREF (attr);
     *file = obj;
     return 1;
 }
 
 int
 Pycairo_reader_converter (PyObject *obj, PyObject** file) {
-    PyObject *attr;
+    PyObject *res;
 
-    attr = PyObject_GetAttrString (obj, "read");
-    if (attr == NULL)
+    /* Check that the file is opened in binary mode by reading a zero length
+     * bytes object from it */
+    res = PyObject_CallMethod (obj, "read", "(i)", (int) 0);
+    if (res == NULL)
         return 0;
 
-    if (!PyCallable_Check (attr)) {
-        Py_DECREF (attr);
+    if (!PyBytes_Check (res)) {
+        Py_DECREF (res);
         PyErr_SetString (
-            PyExc_TypeError, "'read' attribute not callable");
+            PyExc_TypeError, "'read' does not return bytes");
         return 0;
     }
+    Py_DECREF (res);
 
-    Py_DECREF (attr);
     *file = obj;
     return 1;
 }

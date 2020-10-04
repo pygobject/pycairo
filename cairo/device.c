@@ -250,7 +250,7 @@ script_device_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
         PyErr_SetString (PyExc_TypeError,
                          "ScriptDevice takes one argument which must be "
                          "a filename, file object, or a file-like object "
-                         "which has a \"write\" method (like StringIO)");
+                         "which has a \"write\" method (like BytesIO) taking bytes.");
         return NULL;
     }
   }
