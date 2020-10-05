@@ -67,7 +67,7 @@ jobs:
         sudo apt-get update -q
         sudo apt-get install -y libcairo2-dev
         python -m pip install --upgrade setuptools
-        python -m pip install --upgrade pytest flake8 "sphinx<3" sphinx_rtd_theme coverage hypothesis attrs wheel
+        python -m pip install --upgrade pytest flake8 sphinx sphinx_rtd_theme coverage hypothesis attrs wheel
         if [[ "${{ matrix.python-version }}" != "pypy3" ]]; then
           python -m pip install --upgrade mypy
         fi
@@ -126,7 +126,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade wheel
           python -m pip install --upgrade setuptools
-          python -m pip install --upgrade pytest flake8 "sphinx<3" sphinx_rtd_theme coverage hypothesis attrs
+          python -m pip install --upgrade pytest flake8 sphinx sphinx_rtd_theme coverage hypothesis attrs
           python -m pip install --upgrade mypy || true
           python -m pip install --upgrade pygame
           python -m coverage run --branch setup.py test
@@ -158,7 +158,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade wheel
           python -m pip install --upgrade setuptools
-          python -m pip install --upgrade pytest flake8 "sphinx<3" sphinx_rtd_theme coverage hypothesis attrs
+          python -m pip install --upgrade pytest flake8 sphinx sphinx_rtd_theme coverage hypothesis attrs
           python -m pip install --upgrade mypy || true
           python -m pip install --upgrade pygame
           python -m coverage run --branch setup.py test
@@ -198,7 +198,7 @@ jobs:
           python3 -m venv ../venv
           source ../venv/bin/activate
           python -m pip install --upgrade setuptools
-          python -m pip install --upgrade pytest flake8 "sphinx<3" sphinx_rtd_theme coverage hypothesis attrs wheel
+          python -m pip install --upgrade pytest flake8 sphinx sphinx_rtd_theme coverage hypothesis attrs wheel
           python -m pip install --upgrade mypy || true
           # run tests
           python -m coverage run --branch setup.py test

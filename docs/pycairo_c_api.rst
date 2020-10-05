@@ -1,4 +1,4 @@
-.. highlightlang:: c
+.. highlight:: c
 
 
 ***************
@@ -106,7 +106,7 @@ Cairo Context
 
 .. c:type:: PyTypeObject *PycairoContext_Type
 
-.. c:macro::  cairo_t * PycairoContext_GET(PycairoContext *obj)
+.. c:macro:: PycairoContext_GET(obj)
 
     :param PycairoContext obj:
     :returns: :any:`cairo_t` [transfer none]
@@ -419,3 +419,11 @@ See https://www.cairographics.org/manual/ for details.
     cairo_font_options_t
     cairo_path_t
     cairo_font_face_t
+
+
+CPython Types
+=============
+
+.. c:type:: PyObject
+
+.. c:type:: PyTypeObject
