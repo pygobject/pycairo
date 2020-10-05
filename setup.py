@@ -19,7 +19,7 @@ from distutils import log
 from distutils import sysconfig
 
 
-PYCAIRO_VERSION = '1.19.2'
+PYCAIRO_VERSION = '1.20.0'
 CAIRO_VERSION_REQUIRED = '1.15.10'
 
 

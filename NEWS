@@ -2,6 +2,21 @@ Since version 1.11.0 Pycairo uses `Semantic Versioning
 <http://semver.org/>`__ i.e. the newest version is the latest stable one.
 The last version supporting Python 2.7 is 1.18.x.
 
+.. _v1.20.0:
+
+1.20.0 - 2020-10-05
+-------------------
+
+* Require Python 3.6+ :pr:`201`
+* Require cairo 1.15.10+ :pr:`204`
+* docs: support Sphinx 3.0 :pr:`207`
+* meson: add 'tests' option to skip tests :pr:`188`
+* Windows: build wheels :pr:`197`
+* Add support for Python 3.9 and 3.10 :pr:`198` :pr:`202`
+* examples: add a Jupyter Notebook example :pr:`181`
+* Raise an error early when being passed a file object not opened in binary mode :pr:`205`
+* Add a pyproject.toml file :pr:`206`
+
 
 .. _v1.19.1:
 
