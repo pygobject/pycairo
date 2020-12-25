@@ -58,7 +58,7 @@ derive. It cannot be instantiated directly.
       creates implicitly. For example::
 
         context.set_source_surface(image, x, y)
-        surfacepattern.set_filter(context.get_source(), cairo.FILTER_NEAREST)
+        context.get_source().set_filter(cairo.FILTER_NEAREST)
 
       .. versionadded:: 1.12.0
 
