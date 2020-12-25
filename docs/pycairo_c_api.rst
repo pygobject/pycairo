@@ -100,9 +100,9 @@ Cairo Context
 
 .. c:type:: PyObject PycairoContext
 
-    .. c:member:: cairo_t* PycairoContext.ctx
+.. c:member:: cairo_t* PycairoContext.ctx
 
-        The wrapped :any:`cairo_t`
+    The wrapped :any:`cairo_t`
 
 .. c:type:: PyTypeObject *PycairoContext_Type
 
@@ -140,9 +140,9 @@ Cairo Font Face
 
 .. c:type:: PyObject PycairoFontFace
 
-    .. c:member:: cairo_font_face_t* PycairoFontFace.font_face
+.. c:member:: cairo_font_face_t* PycairoFontFace.font_face
 
-    The wrapped :any:`cairo_font_face_t`
+The wrapped :any:`cairo_font_face_t`
 
 .. c:type:: PyTypeObject *PycairoFontFace_Type
 
@@ -168,7 +168,7 @@ Cairo Font Options
 
 .. c:type:: PyObject PycairoFontOptions
 
-    .. c:member:: cairo_font_options_t* PycairoFontOptions.font_options
+.. c:member:: cairo_font_options_t* PycairoFontOptions.font_options
 
 .. c:type:: PyTypeObject *PycairoFontOptions_Type
 
@@ -190,7 +190,7 @@ Cairo Matrix
 
 .. c:type:: PyObject PycairoMatrix
 
-    .. c:member:: cairo_matrix_t PycairoMatrix.matrix
+.. c:member:: cairo_matrix_t PycairoMatrix.matrix
 
 .. c:type:: PyTypeObject *PycairoMatrix_Type
 
@@ -212,7 +212,7 @@ Cairo Path
 
 .. c:type:: PyObject PycairoPath
 
-    .. c:member:: cairo_path_t* PycairoPath.path
+.. c:member:: cairo_path_t* PycairoPath.path
 
 .. c:type:: PyTypeObject *PycairoPath_Type
 
@@ -235,7 +235,7 @@ Cairo Pattern
 
 .. c:type:: PyObject PycairoPattern
 
-    .. c:member:: cairo_pattern_t* PycairoPattern.pattern
+.. c:member:: cairo_pattern_t* PycairoPattern.pattern
 
 .. c:type:: PyTypeObject *PycairoPattern_Type
 
@@ -284,7 +284,7 @@ Cairo Region
 
 .. c:type:: PyObject PycairoRegion
 
-    .. c:member:: cairo_region_t* PycairoRegion.region
+.. c:member:: cairo_region_t* PycairoRegion.region
 
 .. c:type:: PyTypeObject *PycairoRegion_Type
 
@@ -306,7 +306,7 @@ Cairo RectangleInt
 
 .. c:type:: PyObject PycairoRectangleInt
 
-    .. c:member:: cairo_rectangle_int_t* PycairoRectangleInt.rectangle_int
+.. c:member:: cairo_rectangle_int_t* PycairoRectangleInt.rectangle_int
 
 .. c:type:: PyTypeObject *PycairoRectangleInt_Type
 
@@ -329,7 +329,7 @@ Scaled Font
 
 .. c:type:: PyObject PycairoScaledFont
 
-    .. c:member:: cairo_scaled_font_t* PycairoScaledFont.scaled_font
+.. c:member:: cairo_scaled_font_t* PycairoScaledFont.scaled_font
 
 .. c:type:: PyTypeObject *PycairoScaledFont_Type
 
@@ -351,7 +351,7 @@ Cairo Surface
 
 .. c:type:: PyObject PycairoSurface
 
-    .. c:member:: cairo_surface_t* PycairoSurface.surface
+.. c:member:: cairo_surface_t* PycairoSurface.surface
 
 .. c:type:: PyTypeObject *PycairoSurface_Type
 
