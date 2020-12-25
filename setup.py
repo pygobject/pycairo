@@ -405,9 +405,6 @@ class install_pycairo_header(Command):
 def check_setuptools_for_dist():
     if "setuptools" not in sys.modules:
         raise Exception("setuptools not available")
-    version = tuple(map(int, sys.modules["setuptools"].__version__.split(".")))
-    if version < (24, 2, 0):
-        raise Exception("setuptools too old")
 
 
 du_sdist = get_command_class("sdist")
