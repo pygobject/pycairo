@@ -25,7 +25,7 @@ Creating a NumPy array from an ImageSurface:
         width, height = 255, 255
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
         buf = surface.get_data()
-        data = numpy.ndarray(shape=(width, height),
+        data = numpy.ndarray(shape=(height, width),
                              dtype=numpy.uint32,
                              buffer=buf)
 
