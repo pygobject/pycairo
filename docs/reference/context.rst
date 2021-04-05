@@ -809,7 +809,7 @@ safely be changed, without losing the current state. Use
         ctx.rel_line_to(-width, 0)
         ctx.close_path()
 
-   .. method:: rel_curve_to(dx1, dy1, dx2, dy2, dx3, dy4)
+   .. method:: rel_curve_to(dx1, dy1, dx2, dy2, dx3, dy3)
 
       :param dx1: the X offset to the first control point
       :type dx1: float
