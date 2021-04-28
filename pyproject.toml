@@ -1,2 +1,20 @@
+[tool.poetry]
+name = "pycairo"
+version = "1.20.1"
+description = "Python interface for cairo"
+authors = ["Christoph Reiter"]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.0.0"
+hypothesis = "^6.0.0"
+mypy = {version = "^0.812", markers = "platform_python_implementation != 'PyPy'"}
+flake8 = "^3.9.1"
+Sphinx = "^3.5.4"
+sphinx-rtd-theme = "^0.5.2"
+coverage = "^5.5"
+
 [build-system]
 requires = ["setuptools", "wheel"]
