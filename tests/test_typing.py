@@ -1,21 +1,8 @@
 import os
 import io
-import sys
 import types
 
 import cairo
-import pytest
-
-mypy = pytest.importorskip("mypy.api")
-pytestmark = pytest.mark.skipif(
-    sys.version_info[:2] < (3, 6), reason="Py3.6 only")
-pytestmark
-
-
-def test_mypy():
-    out, err, status = mypy.run([os.path.dirname(cairo.__path__[0])])
-    if status != 0:
-        raise Exception("\n" + "\n".join([out, err]))
 
 
 def test_typing():
