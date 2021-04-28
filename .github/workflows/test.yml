@@ -48,6 +48,27 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
 
+  poetry:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update -q
+        sudo apt-get install -y libcairo2-dev
+        python -m pip install --user poetry
+        poetry install
+
+    - name: Run tests
+      run: |
+        poetry run python setup.py test
+
   ubuntu:
     runs-on: ubuntu-latest
     strategy:
