@@ -41,8 +41,9 @@ def _check_output(command):
 
 
 def pkg_config_version_check(pkg, version):
+    pkg_config = os.environ.get('PKG_CONFIG', 'pkg-config')
     command = [
-        "pkg-config",
+        pkg_config,
         "--print-errors",
         "--exists",
         '%s >= %s' % (pkg, version),
@@ -52,7 +53,8 @@ def pkg_config_version_check(pkg, version):
 
 
 def pkg_config_parse(opt, pkg):
-    command = ["pkg-config", opt, pkg]
+    pkg_config = os.environ.get('PKG_CONFIG', 'pkg-config')
+    command = [pkg_config, opt, pkg]
     ret = _check_output(command)
     output = ret.decode()
     opt = opt[-2:]
