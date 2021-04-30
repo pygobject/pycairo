@@ -252,7 +252,7 @@ Pycairo_CAPI_t *Pycairo_CAPI;
 /* Return -1 on error, 0 on success.
  * PyCapsule_Import will set an exception if there's an error.
  */
-static int
+static inline int
 import_cairo(void)
 {
   Pycairo_CAPI = (Pycairo_CAPI_t*) PyCapsule_Import("cairo.CAPI", 0);
