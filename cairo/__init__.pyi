@@ -8,7 +8,8 @@ class CairoError(Exception):
     New in version 1.12.0.
     '''
 class Context:
-    '''Creates a new Context with all graphics state parameters set to default values and with target as a target surface. The target surface should be constructed with a backend-specific function such as ImageSurface (or any other cairo backend surface create variant).
+    '''
+    Creates a new Context with all graphics state parameters set to default values and with target as a target surface. The target surface should be constructed with a backend-specific function such as ImageSurface (or any other cairo backend surface create variant).
 
     Parameters
     ----------
@@ -26,7 +27,9 @@ class Context:
     In case of no memory.
     '''
     def append_path(self, path: Path) -> None:
-        '''Append the path onto the current path. The path may be either the return value from one of Context.copy_path() or Context.copy_path_flat() or it may be constructed manually (in C).'''
+        '''
+        Append the path onto the current path. The path may be either the return value from one of Context.copy_path() or Context.copy_path_flat() or it may be constructed manually (in C).
+        '''
     def arc(self, xc: float, yc: float, radius: float, angle1: float, angle2: float) -> None:
         '''
         Adds a circular arc of the given radius to the current path. The arc is centered at (xc, yc), begins at `angle1` and proceeds in the direction of increasing angles to end at `angle2`. If `angle2` is less than `angle1` it will be progressively increased by `2*PI` until it is greater than `angle1`.
@@ -40,24 +43,43 @@ class Context:
         This function gives the arc in the direction of increasing angles; see `Context.arc_negative()` to get the arc in the direction of decreasing angles.
 
         The arc is circular in user space. To achieve an elliptical arc, you can scale the current transformation matrix by different amounts in the X and Y directions. For example, to draw an ellipse in the box given by x, y, width, height:
-        ### Arguments:\n
-            \t - xc (float) -- X position of the center of the arc
-            \t - yc (float) -- Y position of the of the arc
-            \t - radius (float) -- the radius of the arc
-            \t - angle1 (float) -- the start of the angle, in radians
-            \t - angle2 (float) -- the end of the angle, in radians
+        >>> ctx.save()
+        >>> ctx.translate(x + width / 2., y + height / 2.)
+        >>> ctx.scale(width / 2., height / 2.)
+        >>> ctx.arc(0., 0., 1., 0., 2 * math.pi)
+        >>> ctx.restore()\n
+
+        Parameters
+        ----------
+        >>> xc (float)\n
+        X position of the center of the arc.
+        >>> yc (float)\n
+        Y position of the of the arc
+        >>> radius (float)\n
+        The radius of the arc.
+        >>> angle1 (float)\n
+        The start of the angle, in radians.
+        >>> angle2 (float)\n
+        The end of the angle, in radians.
         '''
     def arc_negative(self, xc: float, yc: float, radius: float, angle1: float, angle2: float) -> None:
         '''
         Adds a circular arc of the given radius to the current path. The arc is centered at (xc, yc), begins at angle1 and proceeds in the direction of decreasing angles to end at angle2. If angle2 is greater than angle1 it will be progressively decreased by 2*PI until it is less than angle1.
 
         See `Context.arc()` for more details. This function differs only in the direction of the arc between the two angles.
-        ### Arguments:\n
-            \t - xc (float) -- X position of the center of the arc
-            \t - yc (float) -- Y position of the of the arc
-            \t - radius (float) -- the radius of the arc
-            \t - angle1 (float) -- the start of the angle, in radians
-            \t - angle2 (float) -- the end of the angle, in radians
+        
+        Parameters
+        ----------
+        >>> xc (float)\n
+        X position of the center of the arc.
+        >>> yc (float)\n
+        Y position of the center of the arc.
+        >>> radius (float)\n
+        The radius of the arc.
+        >>> angle1 (float)\n
+        The start angle, in radians.
+        >>> angle2 (float)\n
+        The end angle, in radians.
         '''
     def clip(self) -> None:
         '''
@@ -75,11 +97,13 @@ class Context:
 
         New in version 1.4.
 
-        ### Returns:\n
-            \t - x1 (float) -- left of the resulting extents
-            \t - y1 (float) -- top of the resulting extents
-            \t - x2 (float) -- right of the resulting extents
-            \t - y2 (float) -- bottom of the resulting extents
+        Returns
+        -------
+        >>> (x1: float, y1: float, x2: float, y2: float)\n
+        - `x1 (float)` -- Left of the resulting extents.
+        - `y1 (float)` -- Top of the resulting extents.
+        - `x2 (float)` -- Right of the resulting extents.
+        - `y2 (float)` -- Bottom of the resulting extents.
         '''
     def clip_preserve(self) -> None:
         '''
@@ -107,8 +131,8 @@ class Context:
 
         Returns
         -------
-        - List[Rectangle]
-            - The current clip region as a list of rectangles in user coordinates. Returns a list of `Rectangle`
+        >>> list(cairo.Rectangle)\n
+        The current clip region as a list of rectangles in user coordinates. Returns a list of `Rectangle`
         '''
     def copy_page(self) -> None:
         '''
@@ -120,11 +144,14 @@ class Context:
         '''
         Creates a copy of the current path and returns it to the user as a `Path`.
 
-        ### Returns:\n
-            \t - Path
+        Returns
+        -------
+        >>> cairo.Path\n
         
-        ### Raises:\n
-            \t - MemoryError -- in case of no memory.
+        Raises
+        ------
+        >>> cairo.MemoryError\n
+        In case of no memory.
         '''
     def copy_path_flat(self) -> Path:
         '''
@@ -132,11 +159,14 @@ class Context:
 
         This function is like `Context.copy_path()` except that any curves in the path will be approximated with piecewise-linear approximations, (accurate to within the current tolerance value). That is, the result is guaranteed to not have any elements of type CAIRO_PATH_CURVE_TO which will instead be replaced by a series of CAIRO_PATH_LINE_TO elements.
 
-        ### Returns:\n
-            \t - Path
+        Returns
+        -------
+        >>> cairo.Path\n
         
-        ### Raises:\n
-            \t - MemoryError -- in case of no memory.
+        Raises
+        ------
+        >>> cairo.MemoryError\n
+        In case of no memory.
         '''
     def curve_to(self, x1: float, y1: float, x2: float, y2: float, x3: float, y3: float) -> None:
         '''
@@ -144,35 +174,50 @@ class Context:
 
         If there is no current point before the call to `curve_to()` this function will behave as if preceded by a call to `ctx.move_to(x1, y1)`.
 
-        ### Arguments:\n
-            \t - x1 (float) -- the X coordinate of the first control point
-            \t - y1 (float) -- the Y coordinate of the first control point
-            \t - x2 (float) -- the X coordinate of the second control point
-            \t - y2 (float) -- the Y coordinate of the second control point
-            \t - x3 (float) -- the X coordinate of the end of the curve
-            \t - y3 (float) -- the Y coordinate of the end of the curve
+        Parameters
+        ----------
+        >>> x1 (float)\n 
+        The X coordinate of the first control point
+        >>> y1 (float)\n 
+        The Y coordinate of the first control point
+        >>> x2 (float)\n 
+        The X coordinate of the second control point
+        >>> y2 (float)\n 
+        The Y coordinate of the second control point
+        >>> x3 (float)\n 
+        The X coordinate of the end of the curve
+        >>> y3 (float)\n 
+        The Y coordinate of the end of the curve
         '''
     def device_to_user(self, x: float, y: float) -> Tuple[float, float]:
         '''
         Transform a coordinate from device space to user space by multiplying the given point by the inverse of the current transformation matrix (CTM).
 
-        ### Arguments:\n
-            \t - x (float) -- X value of coordinate
-            \t - y (float) -- Y value of coordinate
+        Parameters
+        ----------
+        >>> x (float)\n
+        X value of coordinate
+        >>> y (float)\n
+        Y value of coordinate
         
-        ### Returns:\n
-            \t - (x: float, y: float)
+        Returns
+        -------
+        >>> (x: float, y: float)\n
         '''
     def device_to_user_distance(self, dx: float, dy: float) -> Tuple[float, float]:
         '''
         Transform a distance vector from device space to user space. This function is similar to `Context.device_to_user()` except that the translation components of the inverse CTM will be ignored when transforming (dx,dy).
 
-        ### Arguments:\n
-            \t - dx (float) -- X component of a distance vector
-            \t - dy (float) -- Y component of a distance vector
+        Parameters
+        ----------
+        >>> dx (float)\n
+        X component of a distance vector
+        >>> dy (float)\n
+        Y component of a distance vector
         
-        ### Returns:\n
-            \t - (dx: float, dy: float)
+        Returns
+        -------
+        >>> (dx: float, dy: float)\n
         '''
     def fill(self) -> None:
         '''
@@ -188,12 +233,13 @@ class Context:
 
         See `Context.fill()`, `Context.set_fill_rule()` and `Context.fill_preserve()`.
 
-        ### Returns:\n
-            \t - (x1: float, y1: float, x2: float, y2: float)
-            - `x1 (float)` -- left of the resulting extents
-            - `y1 (float)` -- top of the resulting extents
-            - `x2 (float)` -- right of the resulting extents
-            - `y2 (float)` -- bottom of the resulting extents
+        Returns
+        -------
+        >>> (x1: float, y1: float, x2: float, y2: float)\n
+        - `x1 (float)` -- Left of the resulting extents
+        - `y1 (float)` -- Top of the resulting extents
+        - `x2 (float)` -- Right of the resulting extents
+        - `y2 (float)` -- Bottom of the resulting extents
         '''
     def fill_preserve(self) -> None:
         '''
@@ -205,13 +251,16 @@ class Context:
         '''
         Gets the font extents for the currently selected font.
 
-        ### Returns:\n
-            \t(ascent: float, descent: float, height: float, max_x_advance: float, max_y_advance: float)
+        Returns
+        -------
+        >>> (ascent: float, descent: float, height: float, max_x_advance: float, max_y_advance: float)\n
         '''
     def get_antialias(self) -> Antialias:
         '''
-        ### Returns:\n
-            - `cairo.Antialias` -- the current antialias mode, as set by `Context.set_antialias()`.
+        Returns
+        -------
+        >>> cairo.Antialias\n
+        The current antialias mode, as set by `Context.set_antialias()`.
         '''
     def get_current_point(self) -> Tuple[float, float]:
         '''
@@ -225,10 +274,11 @@ class Context:
 
         Some functions unset the current path and as a result, current point: `Context.fill()`, `Context.stroke()`.
 
-        ### Returns:\n
-            \t - (x: float, y: float)
-            - `x (float)` -- X coordinate of the current point
-            - `y (float)` -- Y coordinate of the current point
+        Returns
+        -------
+        >>> (x: float, y: float)\n
+        - `x (float)` -- X coordinate of the current point.
+        - `y (float)` -- Y coordinate of the current point.
         '''
     def get_dash(self) -> Tuple[List[float], float]:
         '''
@@ -236,10 +286,11 @@ class Context:
 
         New in version 1.4.
 
-        ### Returns:\n
-            \t - (dashes: list(float), offset: float)
-            - `dashes` -- return value as a tuple for the dash array
-            - `offset` -- return value as a float for the current dash offset
+        Returns
+        -------
+        >>> (dashes: list(float), offset: float)\n
+        - `dashes list(float)` -- Return value as a tuple for the dash array
+        - `offset (float)` -- Return value as a float for the current dash offset
         '''
     def get_dash_count(self) -> int:
         '''
@@ -1693,19 +1744,19 @@ class Matrix:
 
     The current transformation matrix of a `Context`, represented as a Matrix, defines the transformation from user-space coordinates to device-space coordinates.
 
-    ## Some standard Python operators can be used with matrices:
+    Some standard Python operators can be used with matrices:
 
-    ### To read the values from a Matrix:
-    >>> xx, yx, xy, yy, x0, y0 = matrix
+    To read the values from a Matrix:
+    >>> xx, yx, xy, yy, x0, y0 = matrix\n
 
-    ### To multiply two matrices:
+    To multiply two matrices:
     >>> matrix3 = matrix1.multiply(matrix2)
     >>> # or equivalently
-    >>> matrix3 = matrix1 * matrix2
+    >>> matrix3 = matrix1 * matrix2\n
 
-    ### To compare two matrices:
+    To compare two matrices:
     >>> matrix1 == matrix2
-    >>> matrix1 != matrix2
+    >>> matrix1 != matrix2\n
 
     For more information on matrix transformation see https://www.cairographics.org/cookbook/matrix_transform/
     '''
@@ -1729,13 +1780,13 @@ class Matrix:
         '''
         Parameters
         ----------
-        \t - radians (float)\n
-            - Angle of rotation, in radians. The direction of rotation is defined such that positive angles rotate in the direction from the positive X axis toward the positive Y axis. With the default axis orientation of cairo, positive angles rotate in a clockwise direction.
+        >>> radians (float)\n
+        Angle of rotation, in radians. The direction of rotation is defined such that positive angles rotate in the direction from the positive X axis toward the positive Y axis. With the default axis orientation of cairo, positive angles rotate in a clockwise direction.
         
         Returns
         -------
-        \t - Matrix\n
-            - A new `Matrix` set to a transformation that rotates by radians.
+        >>> cairo.Matrix\n
+        A new `Matrix` set to a transformation that rotates by radians.
         '''
     def invert(self) -> Optional[Matrix]:
         '''
@@ -1743,13 +1794,13 @@ class Matrix:
 
         Returns
         -------
-        \t - Matrix\n
-            - If `Matrix` has an inverse, modifies `Matrix` to be the inverse matrix and returns `None`
+        >>> cairo.Matrix\n
+        If `Matrix` has an inverse, modifies `Matrix` to be the inverse matrix and returns `None`
         
         Raises
         ------
-        \t - cairo.Error
-            - If the `Matrix` has no inverse.
+        >>> cairo.Error\n
+        If the `Matrix` has no inverse.
         '''
     def multiply(self, matrix2: Matrix) -> Matrix:
         '''
@@ -1764,7 +1815,7 @@ class Matrix:
         
         Returns
         -------
-        >>> Matrix\n
+        >>> cairo.Matrix\n
         A new `Matrix`
         '''
     def rotate(self, radians: float) -> None:
@@ -2170,7 +2221,9 @@ class Path:
     `Path` is an iterator.
     '''
 class Pattern:
-    '''Pattern is the abstract base class from which all the other pattern classes derive. It cannot be instantiated directly.'''
+    '''
+    Pattern is the abstract base class from which all the other pattern classes derive. It cannot be instantiated directly.
+    '''
     def get_extend(self) -> Extend:
         '''
         Gets the current extend mode for the Pattern. See `cairo.Extend` attributes for details on the semantics of each extend strategy.
@@ -4025,9 +4078,13 @@ class XlibSurface(Surface):
         '''
 
 def cairo_version() -> int:
-    '''Returns the version of the underlying C cairo library, encoded in a single integer.'''
+    '''
+    Returns the version of the underlying C cairo library, encoded in a single integer.
+    '''
 def cairo_version_string() -> str:
-    '''Returns the version of the underlying C cairo library as a human-readable string of the form “X.Y.Z”.'''
+    '''
+    Returns the version of the underlying C cairo library as a human-readable string of the form “X.Y.Z”.
+    '''
 def get_include() -> str:
     '''
     Gives the include path which should be passed to the compiler.
@@ -4113,9 +4170,9 @@ class Content(Enum):
     COLOR_ALPHA: "Content" = ...
 class Extend(Enum):
     '''
-    These constants are used to describe how Pattern color/alpha will be determined for areas “outside” the pattern’s natural area, (for example, outside the surface bounds or outside the gradient geometry).
+    These constants are used to describe how `Pattern` color/alpha will be determined for areas “outside” the pattern’s natural area, (for example, outside the surface bounds or outside the gradient geometry).
 
-    The default extend mode is NONE for SurfacePattern and PAD for Gradient patterns.
+    The default extend mode is `NONE` for `SurfacePattern` and `PAD` for `Gradient` patterns.
 
     New in version 1.13.
     '''
@@ -4127,7 +4184,7 @@ class FillRule(Enum):
     '''
     These constants are used to select how paths are filled. For both fill rules, whether or not a point is included in the fill is determined by taking a ray from that point to infinity and looking at intersections with the path. The ray can be in any direction, as long as it doesn’t pass through the end point of a segment or have a tricky intersection such as intersecting tangent to the path. (Note that filling is not actually implemented in this way. This is just a description of the rule that is applied.)
 
-    The default fill rule is WINDING.
+    The default fill rule is `WINDING`.
 
     New in version 1.13
     '''
@@ -4135,7 +4192,7 @@ class FillRule(Enum):
     EVEN_ODD: "FillRule" = ...
 class Filter(Enum):
     '''
-    These constants are used to indicate what filtering should be applied when reading pixel values from patterns. See Pattern.set_filter() for indicating the desired filter to be used with a particular pattern.
+    These constants are used to indicate what filtering should be applied when reading pixel values from patterns. See `Pattern`.`set_filter()` for indicating the desired filter to be used with a particular pattern.
 
     New in version 1.13.
     '''
@@ -4156,7 +4213,7 @@ class FontSlant(Enum):
     OBLIQUE: "FontSlant" = ...
 class FontWeight(Enum):
     '''
-    These constants specify variants of a FontFace based on their weight.
+    These constants specify variants of a `FontFace` based on their weight.
 
     New in version 1.13.
     '''
@@ -4164,7 +4221,7 @@ class FontWeight(Enum):
     BOLD: "FontWeight" = ...
 class Format(Enum):
     '''
-    These constants are used to identify the memory format of ImageSurface data.
+    These constants are used to identify the memory format of `ImageSurface` data.
 
     New entries may be added in future versions.
 
@@ -4218,7 +4275,7 @@ class LineCap(Enum):
     '''
     These constants specify how to render the endpoints of the path when stroking.
 
-    The default line cap style is BUTT
+    The default line cap style is `BUTT`
 
     New in version 1.13
     '''
@@ -4229,7 +4286,7 @@ class LineJoin(Enum):
     '''
     These constants specify how to render the junction of two lines when stroking.
 
-    The default line join style is MITER
+    The default line join style is `MITER`
 
     New in version 1.13.
     '''
@@ -4240,7 +4297,7 @@ class Operator(Enum):
     '''
     These constants are used to set the compositing operator for all cairo drawing operations.
 
-    The default operator is OVER.
+    The default operator is `OVER`.
 
     The operators marked as unbounded modify their destination even outside of the mask layer (that is, their effect is not bound by the mask layer). However, their effect can still be limited by way of clipping.
 
@@ -4281,7 +4338,7 @@ class Operator(Enum):
     HSL_LUMINOSITY: "Operator" = ...
 class PathDataType(Enum):
     '''
-    These constants are used to describe the type of one portion of a path when represented as a Path.
+    These constants are used to describe the type of one portion of a path when represented as a `Path`.
 
     New in version 1.13.
     '''
@@ -4315,7 +4372,7 @@ class SVGVersion(Enum):
     VERSION_1_2: "SVGVersion" = ...
 class SubpixelOrder(Enum):
     '''
-    The subpixel order specifies the order of color elements within each pixel on the display device when rendering with an antialiasing mode of Antialias.SUBPIXEL.
+    The subpixel order specifies the order of color elements within each pixel on the display device when rendering with an antialiasing mode of `Antialias.SUBPIXEL`.
 
     New in version 1.13.
     '''
@@ -4325,12 +4382,16 @@ class SubpixelOrder(Enum):
     VRGB: "SubpixelOrder" = ...
     VBGR: "SubpixelOrder" = ...
 class RegionOverlap(Enum):
-    '''New in version 1.13'''
+    '''
+    New in version 1.13
+    '''
     IN: "RegionOverlap" = ...
     OUT: "RegionOverlap" = ...
     PART: "RegionOverlap" = ...
 class Status(Enum):
-    '''New in version 1.13'''
+    '''
+    New in version 1.13
+    '''
     SUCCESS: "Status" = ...
     NO_MEMORY: "Status" = ...
     INVALID_RESTORE: "Status" = ...
@@ -4400,9 +4461,9 @@ class SurfaceObserverMode(Enum):
     RECORD_OPERATIONS: "SurfaceObserverMode" = ...
 class PDFOutlineFlags(Enum):
     '''
-    PDFOutlineFlags is used by the PDFSurface.add_outline() method to specify the attributes of an outline item. These flags may be bitwise-or’d to produce any combination of flags.
+    `PDFOutlineFlags` is used by the `PDFSurface.add_outline()` method to specify the attributes of an outline item. These flags may be bitwise-or’d to produce any combination of flags.
 
-    New in version 1.18.0: Only available with cairo 1.15.10+
+    New in version 1.18.0: Only available with cairo 1.15.10+.
     '''
     OPEN: "PDFOutlineFlags" = ...
     BOLD: "PDFOutlineFlags" = ...
@@ -4417,7 +4478,7 @@ class SVGUnit(Enum):
     - https://www.w3.org/TR/SVG/types.htmlDataTypeLength
     - https://www.w3.org/TR/css-values-3/lengths
 
-    New in version 1.18.0: Only available with cairo 1.15.10+
+    New in version 1.18.0: Only available with cairo 1.15.10+.
     '''
     USER: "SVGUnit" = ...
     EM: "SVGUnit" = ...
@@ -4431,9 +4492,9 @@ class SVGUnit(Enum):
     PERCENT: "SVGUnit" = ...
 class PDFMetadata(Enum):
     '''
-    PDFMetadata is used by the PDFSurface.set_metadata() method to specify the metadata to set.
+    `PDFMetadata` is used by the `PDFSurface.set_metadata()` method to specify the metadata to set.
 
-    New in version 1.18.0: Only available with cairo 1.15.10+
+    New in version 1.18.0: Only available with cairo 1.15.10+.
     '''
     TITLE: "PDFMetadata" = ...
     AUTHOR: "PDFMetadata" = ...
