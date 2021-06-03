@@ -1,6 +1,17 @@
-Since version 1.11.0 Pycairo uses `Semantic Versioning
-<http://semver.org/>`__ i.e. the newest version is the latest stable one.
-The last version supporting Python 2.7 is 1.18.x.
+.. _v1.20.1:
+
+1.20.1 - 2021-06-03
+-------------------
+
+* Use poetry for development :pr:`232`
+* setup.py: Respect the PKG_CONFIG environment variable :pr:`235`
+* Make import_cairo inline in addition to static :pr`224`
+* docs: Fix example in Pattern.set_filter() docs _pr_`221`
+* docs: Fix build with newer sphinx :pr:`222`
+* docs: Fix NumPy width, height-conventions in examples :pr:`231`
+* docs: Last parameter of rel_curve_to should be dy3, not dy4 :pr:`230`
+* mypy: Fixes for mypy 0.800+ :pr:`233`
+* mypy: Don't run mypy via pytest :pr:`234`
 
 .. _v1.20.0:
 
