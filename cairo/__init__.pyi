@@ -867,15 +867,6 @@ class FontOptions:
         >>> hint_style (cairo.HintStyle)\n
         The hint style.
         """
-    def subpixel_order(self, subpixel_order: SubpixelOrder) -> None:
-        """
-        The subpixel order specifies the order of color elements within each pixel on the display device when rendering with an antialiasing mode of `cairo.Antialias.SUBPIXEL`.
-
-        Parameters
-        ----------
-        >>> subpixel_order (cairo.SubpixelOrder)\n
-        The subpixel order.
-        """
     def merge(self, other: "FontOptions") -> None:
         """
         Merges non-default options from other into options , replacing existing values. This operation can be thought of as somewhat similar to compositing other onto options with the operation of `Operator.OVER.`
@@ -1913,7 +1904,7 @@ class Context:
 
         The current point is returned in the user-space coordinate system. If there is no defined current point or if `Context` is in an error status, x and y will both be set to 0.0. It is possible to check this in advance with `Context.has_current_point()`.
 
-        Most path construction functions alter the current point. See the following for details on how they affect the current point: `Context.new_path()`, `Context.new_sub_path()`, `Context.append_path()`, `Context.close_path()`, `Context.move_to()`, `Context.line_to()`, `Context.curve_to()`, `Context.rel_move_to()`, `Context.rel_line_to()`, `Context.rel_curve_to()`, `Context.arc()`, `Context.arc_negative()`, `Context.rectangle()`, `Context.text_path()`, `Context.glyph_path()`, `Context.stroke_to_path()`.
+        Most path construction functions alter the current point. See the following for details on how they affect the current point: `Context.new_path()`, `Context.new_sub_path()`, `Context.append_path()`, `Context.close_path()`, `Context.move_to()`, `Context.line_to()`, `Context.curve_to()`, `Context.rel_move_to()`, `Context.rel_line_to()`, `Context.rel_curve_to()`, `Context.arc()`, `Context.arc_negative()`, `Context.rectangle()`, `Context.text_path()`, `Context.glyph_path()`.
 
         Some functions use and alter the current point but do not otherwise change current path: `Context.show_text()`.
 
@@ -2862,12 +2853,6 @@ class Context:
         >>> cluster_flags (cairo.TextClusterFlags)\n
         Cluster mapping flags.
         """
-    def stroke_to_path(self) -> None:
-        """
-        Note
-        ----
-        This function is not implemented in cairo, but still mentioned in the documentation.
-        """
     def tag_begin(self, tag_name: str, attributes: str) -> None:
         """
         Marks the beginning of the tag_name structure. Call `tag_end()` with the same tag_name to mark the end of the structure.
@@ -3211,26 +3196,6 @@ class MeshPattern(Pattern):
         -------
         >>> int\n
         Number of patches.
-        """
-    def get_patch(self, patch_num: int) -> Path:
-        """
-        Gets path defining the patch `patch_num` for a mesh pattern.
-
-        `patch_num` can range from 0 to n-1 where n is the number returned by `get_patch_count()`.
-
-        Parameters
-        ----------
-        >>> patch_num (int)\n
-        The patch number to return data for.
-
-        Returns
-        -------
-        >>> cairo.Path\n
-        The path defining the patch.
-
-        Raises
-        ------
-        >>> cairo.Error
         """
     def line_to(self, x: float, y: float) -> None:
         """
