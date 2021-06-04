@@ -51,7 +51,7 @@ class Path:
     `Path` is an iterator.
     """
 
-class Rectangle(tuple):
+class Rectangle(Tuple[float, float, float, float]):
     """
     New in version 1.15: In prior versions a (float, float, float, float) tuple was used instead of `Rectangle`.
 
@@ -537,7 +537,7 @@ class Matrix:
         >>> radians (float)\n
         Angle of rotation, in radians. The direction of rotation is defined such that positive angles rotate in the direction from the positive X axis toward the positive Y axis. With the default axis orientation of cairo, positive angles rotate in a clockwise direction.
         """
-    def scale(sx, sy) -> None:
+    def scale(self, sx: float, sy: float) -> None:
         """
         Applies scaling by sx, sy to the transformation in `Matrix`. The effect of the new transformation is to first scale the coordinates by sx and sy, then apply the original transformation to the coordinates.
 
