@@ -40,9 +40,6 @@ def cairo_version_string() -> str:
     Returns the version of the underlying C cairo library as a human-readable string of the form “X.Y.Z”.
     '''
 
-text: str = ...
-pathlike: str = ...
-
 class Path:
     '''
     Path cannot be instantiated directly, it is created by calling `Context.copy_path()` and `Context.copy_path_flat()`.
