@@ -1,5 +1,37 @@
-from typing import Any, Callable, Generic, List, Optional, Sequence, Tuple, Union
+from typing import Any, ByteString, Callable, List, Optional, Sequence, Tuple, Type, Union, TypeVar, Text, BinaryIO
 from enum import Enum
+
+# cairo.HAS
+HAS_ATSUI_FONT: bool = ...
+HAS_FT_FONT: bool = ...
+HAS_GLITZ_SURFACE: bool = ...
+HAS_IMAGE_SURFACE: bool = ...
+HAS_PDF_SURFACE: bool = ...
+HAS_PNG_FUNCTIONS: bool = ...
+HAS_PS_SURFACE: bool = ...
+HAS_RECORDING_SURFACE: bool = ...
+HAS_SVG_SURFACE: bool = ...
+HAS_USER_FONT: bool = ...
+HAS_QUARTZ_SURFACE: bool = ...
+HAS_WIN32_FONT: bool = ...
+HAS_WIN32_SURFACE: bool = ...
+HAS_XCB_SURFACE: bool = ...
+HAS_XLIB_SURFACE: bool = ...
+HAS_MIME_SURFACE: bool = ...
+HAS_SCRIPT_SURFACE: bool = ...
+HAS_TEE_SURFACE: bool = ...
+
+# Other Constants
+PDF_OUTLINE_ROOT: int = ...
+
+version: str = ...
+version_info: Tuple[int, int, int] = ...
+
+CAIRO_VERSION: int = ...
+CAIRO_VERSION_STRING: str = ...
+CAIRO_VERSION_MAJOR: int = ...
+CAIRO_VERSION_MINOR: int = ...
+CAIRO_VERSION_MICRO: int = ...
 
 def cairo_version() -> int:
     '''
@@ -9,65 +41,49 @@ def cairo_version_string() -> str:
     '''
     Returns the version of the underlying C cairo library as a human-readable string of the form “X.Y.Z”.
     '''
-def get_include() -> str:
-    '''
-    Gives the include path which should be passed to the compiler.
-
-    New in version 1.16.0.
-    '''
-
-version: str
-version_info: Tuple[int, int, int]
-CAIRO_VERSION: int
-CAIRO_VERSION_STRING: str
-CAIRO_VERSION_MAJOR: int
-CAIRO_VERSION_MINOR: int
-CAIRO_VERSION_MICRO: int
-
-# cairo.HAS
-HAS_ATSUI_FONT: int
-HAS_FT_FONT: int
-HAS_GLITZ_SURFACE: int
-HAS_IMAGE_SURFACE: int
-HAS_PDF_SURFACE: int
-HAS_PNG_FUNCTIONS: int
-HAS_PS_SURFACE: int
-HAS_RECORDING_SURFACE: int
-HAS_SVG_SURFACE: int
-HAS_USER_FONT: int
-HAS_QUARTZ_SURFACE: int
-HAS_WIN32_FONT: int
-HAS_WIN32_SURFACE: int
-HAS_XCB_SURFACE: int
-HAS_XLIB_SURFACE: int
-HAS_MIME_SURFACE: int
-HAS_SCRIPT_SURFACE: int
-HAS_TEE_SURFACE: int
-
-# cairo.TAG
-TAG_DEST: str
-TAG_LINK: str
-
-# cairo.MIME_TYPE
-MIME_TYPE_JP2: str
-MIME_TYPE_JPEG: str
-MIME_TYPE_PNG: str
-MIME_TYPE_URI: str
-MIME_TYPE_UNIQUE_ID: str
-MIME_TYPE_CCITT_FAX: str
-MIME_TYPE_CCITT_FAX_PARAMS: str
-MIME_TYPE_EPS: str
-MIME_TYPE_EPS_PARAMS: str
-MIME_TYPE_JBIG2: str
-MIME_TYPE_JBIG2_GLOBAL: str
-MIME_TYPE_JBIG2_GLOBAL_ID: str
-
-# Other Constants
-PDF_OUTLINE_ROOT: int
 
 # Other Classes and Functions
-text: str
-pathlike: str
+text: str = ...
+pathlike: str = ...
+
+class Path:
+    '''
+    Path cannot be instantiated directly, it is created by calling `Context.copy_path()` and `Context.copy_path_flat()`.
+
+    `str(path)` lists the path elements.
+
+    See path attributes
+
+    `Path` is an iterator.
+    '''
+
+class Rectangle(tuple):
+    '''
+    New in version 1.15: In prior versions a (float, float, float, float) tuple was used instead of `Rectangle`.
+
+    A data structure for holding a rectangle.
+
+    Parameters
+    ----------
+    >>> x (float)\n
+    X coordinate of the left side of the rectangle.
+    >>> y (float)\n
+    Y coordinate of the the top side of the rectangle.
+    >>> width (float)\n
+    Width of the rectangle.
+    >>> height (float)\n
+    Height of the rectangle.
+
+    Returns
+    -------
+    >>> cairo.Rectangle\n
+    A newly created `Rectangle` instance.
+    '''
+    x: float = ...
+    y: float = ...
+    width: float = ...
+    height: float = ...
+    def __init__(self, x: float, y: float, width: float, height: float) -> None: ...
 
 # Enums
 class Antialias(Enum):
@@ -155,12 +171,12 @@ class Format(Enum):
         '''
         This method provides a stride value that will respect all alignment requirements of the accelerated image-rendering code within cairo. Typical usage will be of the form:
 
-                format = cairo.Format.RGB24
-
-                stride = format.stride_for_width(width)
-
-                surface = cairo.ImageSurface.create_for_data(
-                    data, format, width, height, stride)
+        >>> format = cairo.Format.RGB24
+        >>> 
+        >>>     stride = format.stride_for_width(width)
+        >>> 
+        >>>     surface = cairo.ImageSurface.create_for_data(
+        >>>         data, format, width, height, stride)
 
         Also available under cairo.ImageSurface.format_stride_for_width().
 
@@ -429,209 +445,343 @@ class PDFMetadata(Enum):
     CREATE_DATE: "PDFMetadata" = ...
     MOD_DATE: "PDFMetadata" = ...
 
-# Legacy Constants
-ANTIALIAS_BEST = Antialias.BEST
-ANTIALIAS_DEFAULT = Antialias.DEFAULT
-ANTIALIAS_FAST = Antialias.FAST
-ANTIALIAS_GOOD = Antialias.GOOD
-ANTIALIAS_GRAY = Antialias.GRAY
-ANTIALIAS_NONE = Antialias.NONE
-ANTIALIAS_SUBPIXEL = Antialias.SUBPIXEL
-CONTENT_ALPHA = Content.ALPHA
-CONTENT_COLOR = Content.COLOR
-CONTENT_COLOR_ALPHA = Content.COLOR_ALPHA
-EXTEND_NONE = Extend.NONE
-EXTEND_PAD = Extend.PAD
-EXTEND_REFLECT = Extend.REFLECT
-EXTEND_REPEAT = Extend.REPEAT
-FILL_RULE_EVEN_ODD = FillRule.EVEN_ODD
-FILL_RULE_WINDING = FillRule.WINDING
-FILTER_BEST = Filter.BEST
-FILTER_BILINEAR = Filter.BILINEAR
-FILTER_FAST = Filter.FAST
-FILTER_GAUSSIAN = Filter.GAUSSIAN
-FILTER_GOOD = Filter.GOOD
-FILTER_NEAREST = Filter.NEAREST
-FONT_SLANT_ITALIC = FontSlant.ITALIC
-FONT_SLANT_NORMAL = FontSlant.NORMAL
-FONT_SLANT_OBLIQUE = FontSlant.OBLIQUE
-FONT_WEIGHT_BOLD = FontWeight.BOLD
-FONT_WEIGHT_NORMAL = FontWeight.NORMAL
-FORMAT_A1 = Format.A1
-FORMAT_A8 = Format.A8
-FORMAT_ARGB32 = Format.ARGB32
-FORMAT_INVALID = Format.INVALID
-FORMAT_RGB16_565 = Format.RGB16_565
-FORMAT_RGB24 = Format.RGB24
-FORMAT_RGB30 = Format.RGB30
-HINT_METRICS_DEFAULT = HintMetrics.DEFAULT
-HINT_METRICS_OFF = HintMetrics.OFF
-HINT_METRICS_ON = HintMetrics.ON
-HINT_STYLE_DEFAULT = HintStyle.DEFAULT
-HINT_STYLE_FULL = HintStyle.FULL
-HINT_STYLE_MEDIUM = HintStyle.MEDIUM
-HINT_STYLE_NONE = HintStyle.NONE
-HINT_STYLE_SLIGHT = HintStyle.SLIGHT
-LINE_CAP_BUTT = LineCap.BUTT
-LINE_CAP_ROUND = LineCap.ROUND
-LINE_CAP_SQUARE = LineCap.SQUARE
-LINE_JOIN_BEVEL = LineJoin.BEVEL
-LINE_JOIN_MITER = LineJoin.MITER
-LINE_JOIN_ROUND = LineJoin.ROUND
-OPERATOR_ADD = Operator.ADD
-OPERATOR_ATOP = Operator.ATOP
-OPERATOR_CLEAR = Operator.CLEAR
-OPERATOR_COLOR_BURN = Operator.COLOR_BURN
-OPERATOR_COLOR_DODGE = Operator.COLOR_DODGE
-OPERATOR_DARKEN = Operator.DARKEN
-OPERATOR_DEST = Operator.DEST
-OPERATOR_DEST_ATOP = Operator.DEST_ATOP
-OPERATOR_DEST_IN = Operator.DEST_IN
-OPERATOR_DEST_OUT = Operator.DEST_OUT
-OPERATOR_DEST_OVER = Operator.DEST_OVER
-OPERATOR_DIFFERENCE = Operator.DIFFERENCE
-OPERATOR_EXCLUSION = Operator.EXCLUSION
-OPERATOR_HARD_LIGHT = Operator.HARD_LIGHT
-OPERATOR_HSL_COLOR = Operator.HSL_COLOR
-OPERATOR_HSL_HUE = Operator.HSL_HUE
-OPERATOR_HSL_LUMINOSITY = Operator.HSL_LUMINOSITY
-OPERATOR_HSL_SATURATION = Operator.HSL_SATURATION
-OPERATOR_IN = Operator.IN
-OPERATOR_LIGHTEN = Operator.LIGHTEN
-OPERATOR_MULTIPLY = Operator.MULTIPLY
-OPERATOR_OUT = Operator.OUT
-OPERATOR_OVER = Operator.OVER
-OPERATOR_OVERLAY = Operator.OVERLAY
-OPERATOR_SATURATE = Operator.SATURATE
-OPERATOR_SCREEN = Operator.SCREEN
-OPERATOR_SOFT_LIGHT = Operator.SOFT_LIGHT
-OPERATOR_SOURCE = Operator.SOURCE
-OPERATOR_XOR = Operator.XOR
-PATH_CLOSE_PATH = PathDataType.CLOSE_PATH
-PATH_CURVE_TO = PathDataType.CURVE_TO
-PATH_LINE_TO = PathDataType.LINE_TO
-PATH_MOVE_TO = PathDataType.MOVE_TO
-PDF_VERSION_1_4 = PDFVersion.VERSION_1_4
-PDF_VERSION_1_5 = PDFVersion.VERSION_1_5
-PS_LEVEL_2 = PSLevel.LEVEL_2
-PS_LEVEL_3 = PSLevel.LEVEL_3
-REGION_OVERLAP_IN = RegionOverlap.IN
-REGION_OVERLAP_OUT = RegionOverlap.OUT
-REGION_OVERLAP_PART = RegionOverlap.PART
-SCRIPT_MODE_ASCII = ScriptMode.ASCII
-SCRIPT_MODE_BINARY = ScriptMode.BINARY
-STATUS_CLIP_NOT_REPRESENTABLE = Status.CLIP_NOT_REPRESENTABLE
-STATUS_DEVICE_ERROR = Status.DEVICE_ERROR
-STATUS_DEVICE_FINISHED = Status.DEVICE_FINISHED
-STATUS_DEVICE_TYPE_MISMATCH = Status.DEVICE_TYPE_MISMATCH
-STATUS_FILE_NOT_FOUND = Status.FILE_NOT_FOUND
-STATUS_FONT_TYPE_MISMATCH = Status.FONT_TYPE_MISMATCH
-STATUS_INVALID_CLUSTERS = Status.INVALID_CLUSTERS
-STATUS_INVALID_CONTENT = Status.INVALID_CONTENT
-STATUS_INVALID_DASH = Status.INVALID_DASH
-STATUS_INVALID_DSC_COMMENT = Status.INVALID_DSC_COMMENT
-STATUS_INVALID_FORMAT = Status.INVALID_FORMAT
-STATUS_INVALID_INDEX = Status.INVALID_INDEX
-STATUS_INVALID_MATRIX = Status.INVALID_MATRIX
-STATUS_INVALID_MESH_CONSTRUCTION = Status.INVALID_MESH_CONSTRUCTION
-STATUS_INVALID_PATH_DATA = Status.INVALID_PATH_DATA
-STATUS_INVALID_POP_GROUP = Status.INVALID_POP_GROUP
-STATUS_INVALID_RESTORE = Status.INVALID_RESTORE
-STATUS_INVALID_SIZE = Status.INVALID_SIZE
-STATUS_INVALID_SLANT = Status.INVALID_SLANT
-STATUS_INVALID_STATUS = Status.INVALID_STATUS
-STATUS_INVALID_STRIDE = Status.INVALID_STRIDE
-STATUS_INVALID_STRING = Status.INVALID_STRING
-STATUS_INVALID_VISUAL = Status.INVALID_VISUAL
-STATUS_INVALID_WEIGHT = Status.INVALID_WEIGHT
-STATUS_JBIG2_GLOBAL_MISSING = Status.JBIG2_GLOBAL_MISSING
-STATUS_LAST_STATUS = Status.LAST_STATUS
-STATUS_NEGATIVE_COUNT = Status.NEGATIVE_COUNT
-STATUS_NO_CURRENT_POINT = Status.NO_CURRENT_POINT
-STATUS_NO_MEMORY = Status.NO_MEMORY
-STATUS_NULL_POINTER = Status.NULL_POINTER
-STATUS_PATTERN_TYPE_MISMATCH = Status.PATTERN_TYPE_MISMATCH
-STATUS_READ_ERROR = Status.READ_ERROR
-STATUS_SUCCESS = Status.SUCCESS
-STATUS_SURFACE_FINISHED = Status.SURFACE_FINISHED
-STATUS_SURFACE_TYPE_MISMATCH = Status.SURFACE_TYPE_MISMATCH
-STATUS_TEMP_FILE_ERROR = Status.TEMP_FILE_ERROR
-STATUS_USER_FONT_ERROR = Status.USER_FONT_ERROR
-STATUS_USER_FONT_IMMUTABLE = Status.USER_FONT_IMMUTABLE
-STATUS_USER_FONT_NOT_IMPLEMENTED = Status.USER_FONT_NOT_IMPLEMENTED
-STATUS_WRITE_ERROR = Status.WRITE_ERROR
-SUBPIXEL_ORDER_BGR = SubpixelOrder.BGR
-SUBPIXEL_ORDER_DEFAULT = SubpixelOrder.DEFAULT
-SUBPIXEL_ORDER_RGB = SubpixelOrder.RGB
-SUBPIXEL_ORDER_VBGR = SubpixelOrder. VBGR
-SUBPIXEL_ORDER_VRGB = SubpixelOrder.VRGB
-SURFACE_OBSERVER_NORMAL = SurfaceObserverMode.NORMAL
-SURFACE_OBSERVER_RECORD_OPERATIONS = SurfaceObserverMode.RECORD_OPERATIONS
-SVG_VERSION_1_1 = SVGVersion.VERSION_1_1
-SVG_VERSION_1_2 = SVGVersion.VERSION_1_2
-TEXT_CLUSTER_FLAG_BACKWARD = TextClusterFlags.BACKWARD
-PDF_METADATA_TITLE = PDFMetadata.TITLE
-PDF_METADATA_AUTHOR = PDFMetadata.AUTHOR
-PDF_METADATA_SUBJECT = PDFMetadata.SUBJECT
-PDF_METADATA_KEYWORDS = PDFMetadata.KEYWORDS
-PDF_METADATA_CREATOR = PDFMetadata.CREATOR
-PDF_METADATA_CREATE_DATE = PDFMetadata.CREATE_DATE
-PDF_METADATA_MOD_DATE = PDFMetadata.MOD_DATE
-SVG_UNIT_USER = SVGUnit.USER
-SVG_UNIT_EM = SVGUnit.EM
-SVG_UNIT_EX = SVGUnit.EX
-SVG_UNIT_PX = SVGUnit.PX
-SVG_UNIT_IN = SVGUnit.IN
-SVG_UNIT_CM = SVGUnit.CM
-SVG_UNIT_MM = SVGUnit.MM
-SVG_UNIT_PT = SVGUnit.PT
-SVG_UNIT_PC = SVGUnit.PC
-SVG_UNIT_PERCENT = SVGUnit.PERCENT
-STATUS_TAG_ERROR = Status.TAG_ERROR
-STATUS_FREETYPE_ERROR = Status.FREETYPE_ERROR
-STATUS_WIN32_GDI_ERROR = Status.WIN32_GDI_ERROR
-STATUS_PNG_ERROR = Status.PNG_ERROR
-PDF_OUTLINE_FLAG_OPEN = PDFOutlineFlags.OPEN
-PDF_OUTLINE_FLAG_BOLD = PDFOutlineFlags.BOLD
-PDF_OUTLINE_FLAG_ITALIC = PDFOutlineFlags.ITALIC
-
-class Path:
+class Matrix:
     '''
-    Path cannot be instantiated directly, it is created by calling `Context.copy_path()` and `Context.copy_path_flat()`.
+    Matrix is used throughout cairo to convert between different coordinate spaces. A Matrix holds an affine transformation, such as a scale, rotation, shear, or a combination of these. The transformation of a point (x,y) is given by:
 
-    `str(path)` lists the path elements.
+    >>> x_new = xx * x + xy * y + x0
+    >>> y_new = yx * x + yy * y + y0
 
-    See path attributes
+    The current transformation matrix of a `Context`, represented as a Matrix, defines the transformation from user-space coordinates to device-space coordinates.
 
-    `Path` is an iterator.
+    Some standard Python operators can be used with matrices:
+
+    To read the values from a Matrix:
+    >>> xx, yx, xy, yy, x0, y0 = matrix\n
+
+    To multiply two matrices:
+    >>> matrix3 = matrix1.multiply(matrix2)
+    >>> # or equivalently
+    >>> matrix3 = matrix1 * matrix2\n
+
+    To compare two matrices:
+    >>> matrix1 == matrix2
+    >>> matrix1 != matrix2\n
+
+    For more information on matrix transformation see https://www.cairographics.org/cookbook/matrix_transform/
     '''
+    def __init__(self, xx: float = 1.0, yx: float = 0.0, yy: float = 1.0, x0: float = 0.0, y0: float = 0.0) -> None:
+        '''
+        Create a new Matrix with the affine transformation given by xx, yx, xy, yy, x0, y0. The transformation is given by:
+        >>> x_new = xx * x + xy * y + x0
+        >>> y_new = yx * x + yy * y + y0
 
-class Rectangle(tuple):
+        To create a new identity matrix:
+        >>> matrix = cairo.Matrix()
+
+        To create a matrix with a transformation which translates by tx and ty in the X and Y dimensions, respectively:
+        >>> matrix = cairo.Matrix(x0=tx, y0=ty)
+
+        To create a matrix with a transformation that scales by sx and sy in the X and Y dimensions, respectively:
+        >>> matrix = cairo.Matrix(xx=sy, yy=sy)
+        '''
+    @classmethod
+    def init_rotate(cls, radians: float) -> "Matrix":
+        '''
+        Parameters
+        ----------
+        >>> radians (float)\n
+        Angle of rotation, in radians. The direction of rotation is defined such that positive angles rotate in the direction from the positive X axis toward the positive Y axis. With the default axis orientation of cairo, positive angles rotate in a clockwise direction.
+        
+        Returns
+        -------
+        >>> cairo.Matrix\n
+        A new `Matrix` set to a transformation that rotates by radians.
+        '''
+    def invert(self) -> Optional["Matrix"]:
+        '''
+        Changes `Matrix` to be the inverse of it’s original value. Not all transformation matrices have inverses; if the matrix collapses points together (it is degenerate), then it has no inverse and this function will fail.
+
+        Returns
+        -------
+        >>> cairo.Matrix\n
+        If `Matrix` has an inverse, modifies `Matrix` to be the inverse matrix and returns `None`
+        
+        Raises
+        ------
+        >>> cairo.Error\n
+        If the `Matrix` has no inverse.
+        '''
+    def multiply(self, matrix2: "Matrix") -> "Matrix":
+        '''
+        Multiplies the affine transformations in Matrix and matrix2 together. The effect of the resulting transformation is to first apply the transformation in Matrix to the coordinates and then apply the transformation in matrix2 to the coordinates.
+
+        It is allowable for result to be identical to either Matrix or matrix2.
+
+        Parameters
+        ----------
+        >>> matrix2 (cairo.Matrix)\n
+        A second `Matrix`
+        
+        Returns
+        -------
+        >>> cairo.Matrix\n
+        A new `Matrix`
+        '''
+    def rotate(self, radians: float) -> None:
+        '''
+        Initialize `Matrix` to a transformation that rotates by radians.
+
+        Parameters
+        ----------
+        >>> radians (float)\n
+        Angle of rotation, in radians. The direction of rotation is defined such that positive angles rotate in the direction from the positive X axis toward the positive Y axis. With the default axis orientation of cairo, positive angles rotate in a clockwise direction.
+        '''
+    def scale(sx, sy) -> None:
+        '''
+        Applies scaling by sx, sy to the transformation in `Matrix`. The effect of the new transformation is to first scale the coordinates by sx and sy, then apply the original transformation to the coordinates.
+
+        Parameters
+        ----------
+        >>> sx (float)\n
+        Scale factor in the X direction.
+        >>> sy (float)\n
+        Scale factor in the Y direction.
+        '''
+    def transform_distance(self, dx: float, dy: float) -> Tuple[float, float]:
+        '''
+        Transforms the distance vector (dx,dy) by `Matrix`. This is similar to  `transform_point()` except that the translation components of the transformation are ignored. The calculation of the returned vector is as follows:
+        >>> dx2 = dx1 * a + dy1 * c
+        >>> dy2 = dx1 * b + dy1 * d
+
+        Affine transformations are position invariant, so the same vector always transforms to the same vector. If (x1,y1) transforms to (x2,y2) then (x1+dx1,y1+dy1) will transform to (x1+dx2,y1+dy2) for all values of x1 and x2.
+
+        Parameters
+        ----------
+        >>> dx (float)\n
+        X component of a distance vector.
+        >>> dy (float)\n
+        Y component of a distance vector.
+
+        Returns
+        -------
+        >>> (dx: float, dy: float)\n
+        The transformed distance vector.
+        '''
+    def transform_point(self, x: float, y: float) -> Tuple[float, float]:
+        '''
+        Transforms the point (x, y) by Matrix.
+
+        Parameters
+        ----------
+        >>> x (float)\n
+        X position.
+        >>> y (float)\n
+        Y position.
+
+        Returns
+        -------
+        >>> (x: float, y: float)\n
+        The transformed point.
+        '''
+    def translate(self, tx: float, ty: float) -> None:
+        '''
+        Applies a transformation by tx, ty to the transformation in Matrix. The effect of the new transformation is to first translate the coordinates by tx and ty, then apply the original transformation to the coordinates.
+
+        Parameters
+        ----------
+        >>> tx (float)\n
+        Amount to translate in the X direction.
+        >>> ty (float)\n
+        Amount to translate in the Y direction.
+        '''
+    xx: float = ...
+    yx: float = ...
+    xy: float = ...
+    yy: float = ...
+    x0: float = ...
+    y0: float = ...
+
+class Pattern:
     '''
-    New in version 1.15: In prior versions a (float, float, float, float) tuple was used instead of `Rectangle`.
+    Pattern is the abstract base class from which all the other pattern classes derive. It cannot be instantiated directly.
+    '''
+    def get_extend(self) -> Extend:
+        '''
+        Gets the current extend mode for the Pattern. See `cairo.Extend` attributes for details on the semantics of each extend strategy.
 
-    A data structure for holding a rectangle.
+        Returns
+        -------
+        >>> cairo.Extend\n
+        The current extend strategy used for drawing the `Pattern`.
+        '''
+    def get_matrix(self) -> Matrix:
+        '''
+        Returns
+        -------
+        >>> cairo.Matrix\n
+        A new `Matrix` which stores a copy of the `Pattern`'s transformation matrix.
+        '''
+    def get_filter(self) -> Filter:
+        '''
+        New in version 1.12.0: Used to be a method of `SurfacePattern` before.
+
+        Returns
+        -------
+        >>> cairo.Filter\n
+        The current filter used for resizing the pattern.
+        '''
+    def set_filter(self, filter: Filter) -> None:
+        '''
+        Note that you might want to control filtering even when you do not have an explicit `Pattern` object, (for example when using `Context.set_source_surface()`). In these cases, it is convenient to use `Context.get_source()` to get access to the pattern that cairo creates implicitly. For example:
+        >>> context.set_source_surface(image, x, y)
+        >>> context.get_source().set_filter(cairo.FILTER_NEAREST)
+
+        New in version 1.12.0: Used to be a method of `SurfacePattern` before.
+
+        Parameters
+        ----------
+        >>> filter (cairo.Filter)\n
+        A filter describing the filter to use for resizing the pattern.
+        '''
+    def set_extend(self, extend: Extend) -> None:
+        '''
+        Sets the mode to be used for drawing outside the area of a Pattern.
+
+        The default extend mode is `cairo.Extend.NONE` for `SurfacePattern` and `cairo.Extend.PAD` for `Gradient` Patterns.
+
+        Parameters
+        ----------
+        >>> extend (cairo.Extend)\n
+        An extend describing how the area outside the `Pattern` will be drawn.
+        '''
+    def set_matrix(self, matrix: Matrix) -> None:
+        '''
+        Sets the Pattern’s transformation matrix to matrix. This matrix is a transformation from user space to pattern space.
+
+        When a Pattern is first created it always has the identity matrix for its transformation matrix, which means that pattern space is initially identical to user space.
+
+        Important: Please note that the direction of this transformation matrix is from user space to pattern space. This means that if you imagine the flow from a Pattern to user space (and on to device space), then coordinates in that flow will be transformed by the inverse of the Pattern matrix.
+
+        For example, if you want to make a Pattern appear twice as large as it does by default the correct code to use is:
+        >>> matrix = cairo.Matrix(xx=0.5,yy=0.5)
+        >>> pattern.set_matrix(matrix)
+
+        Meanwhile, using values of 2.0 rather than 0.5 in the code above would cause the Pattern to appear at half of its default size.
+
+        Also, please note the discussion of the user-space locking semantics of `Context.set_source`.
+
+        Parameters
+        ----------
+        >>> matrix (Matrix)
+        '''
+
+class Glyph(Tuple[int, float, float]):
+    '''
+    New in version 1.15: In prior versions a (int, float, float) tuple was used instead of `Glyph`.
+
+    The `Glyph` holds information about a single glyph when drawing or measuring text. A font is (in simple terms) a collection of shapes used to draw text. A glyph is one of these shapes. There can be multiple glyphs for a single character (alternates to be used in different contexts, for example), or a glyph can be a ligature of multiple characters. Cairo doesn’t expose any way of converting input text into glyphs, so in order to use the Cairo interfaces that take arrays of glyphs, you must directly access the appropriate underlying font system.
+
+    Note that the offsets given by x and y are not cumulative. When drawing or measuring text, each glyph is individually positioned with respect to the overall origin
 
     Parameters
     ----------
+    >>> index (int)\n
+    Glyph index in the font. The exact interpretation of the glyph index depends on the font technology being used.
     >>> x (float)\n
-    X coordinate of the left side of the rectangle.
+    The offset in the X direction between the origin used for drawing or measuring the string and the origin of this glyph.
     >>> y (float)\n
-    Y coordinate of the the top side of the rectangle.
-    >>> width (float)\n
-    Width of the rectangle.
-    >>> height (float)\n
-    Height of the rectangle.
+    The offset in the Y direction between the origin used for drawing or measuring the string and the origin of this glyph.
 
     Returns
     -------
-    >>> cairo.Rectangle\n
-    A newly created `Rectangle` instance.
+    >>> cairo.Glyph\n
+    A newly created `Glyph` instance.
     '''
-    x: float
-    y: float
-    width: float
-    height: float
+    index: int = ... # type: ignore
+    x: float = ...
+    y: float = ...
+    def __init__(self, index: int, x: float, y: float) -> None: ...
+
+class TextCluster(Tuple[int, int]):
+    '''
+    New in version 1.15.
+
+    The `TextCluster` structure holds information about a single text cluster. A text cluster is a minimal mapping of some glyphs corresponding to some UTF-8 text.
+
+    For a cluster to be valid, both `num_bytes` and `num_glyphs` should be non-negative, and at least one should be non-zero. Note that clusters with zero glyphs are not as well supported as normal clusters. For example, PDF rendering applications typically ignore those clusters when PDF text is being selected.
+
+    See `Context.show_text_glyphs()` for how clusters are used in advanced text operations.
+
+    Parameters
+    ----------
+    >>> num_bytes (int)\n
+    The number of bytes of UTF-8 text covered by cluster.
+    >>> num_glyphs (int)\n
+    The number of glyphs covered by cluster.
+    '''
+    num_bytes: int = ...
+    num_glyphs: int = ...
+    def __init__(self, num_bytes: int, num_glyphs: int) -> None: ...
+
+class TextExtents(Tuple[float, float, float, float, float, float]):
+    '''
+    New in version 1.15: In prior versions a (float, float, float, float, float, float) tuple was used instead of `TextExtents`.
+
+    The `TextExtents` class stores the extents of a single glyph or a string of glyphs in user-space coordinates. Because text extents are in user-space coordinates, they are mostly, but not entirely, independent of the current transformation matrix. If you call `context.scale(2.0, 2.0)`, text will be drawn twice as big, but the reported text extents will not be doubled. They will change slightly due to hinting (so you can’t assume that metrics are independent of the transformation matrix), but otherwise will remain unchanged.
+
+    Parameters
+    ----------
+    >>> x_bearing (float)\n
+    The horizontal distance from the origin to the leftmost part of the glyphs as drawn. Positive if the glyphs lie entirely to the right of the origin.
+    >>> y_bearing (float)\n
+    The vertical distance from the origin to the topmost part of the glyphs as drawn. Positive only if the glyphs lie completely below the origin; will usually be negative.
+    >>> width (float)\n
+    Width of the glyphs as drawn.
+    >>> height (float)\n
+    Height of the glyphs as drawn.
+    >>> x_advance (float)\n
+    Distance to advance in the X direction after drawing these glyphs.
+    >>> y_advance (float)\n
+    Distance to advance in the Y direction after drawing these glyphs. Will typically be zero except for vertical text layout as found in East-Asian languages.
+
+    Returns
+    -------
+    >>> cairo.TextExtents\n
+    A newly created `TextExtents` instance.
+    '''
+    x_bearing: float = ...
+    y_bearing: float = ...
+    width: float = ...
+    height: float = ...
+    x_advance: float = ...
+    y_advance: float = ...
+    def __init__(self, x_bearing: float, y_bearing: float, width: float, height: float, x_advance: float, y_advance: float) -> None: ...
+
+class RectangleInt:
+    '''
+    RectangleInt is a data structure for holding a rectangle with integer coordinates.
+
+    Allocates a new RectangleInt object.
+
+    New in version 1.11.0.
+
+    Parameters
+    ----------
+    >>> x (int)\n
+    X coordinate of the left side of the rectangle.
+    >>> y (int)\n
+    Y coordinate of the top side of the rectangle.
+    >>> width (int)\n
+    Width of the rectangle.
+    >>> height (int)\n
+    Height of the rectangle.
+    '''
+    x: int = ...
+    y: int = ...
+    width: int = ...
+    height: int = ...
+    def __init__(self, x: int = 0, y: int = 0, width: int = 0, height: int = 0) -> None: ...
 
 class FontFace:
     '''
@@ -643,6 +793,7 @@ class FontFace:
     ----
     This class cannot be instantiated directly, it is returned by `Context.get_font_face()`.
     '''
+
 class FontOptions:
     '''
     Allocates a new FontOptions object with all options initialized to default values.
@@ -792,162 +943,214 @@ class FontOptions:
         The font variations for the font options object. The returned string belongs to the options and must not be modified. It is valid until either the font options object is destroyed or the font variations in this object is modified with `set_variations()`.
         '''
 
-class Matrix:
+class ScaledFont:
     '''
-    Matrix is used throughout cairo to convert between different coordinate spaces. A Matrix holds an affine transformation, such as a scale, rotation, shear, or a combination of these. The transformation of a point (x,y) is given by:
+    Creates a ScaledFont object from a FontFace and matrices that describe the size of the font and the environment in which it will be used.
 
-    >>> x_new = xx * x + xy * y + x0
-    >>> y_new = yx * x + yy * y + y0
+    A ScaledFont is a font scaled to a particular size and device resolution. A ScaledFont is most useful for low-level font usage where a library or application wants to cache a reference to a scaled font to speed up the computation of metrics.
 
-    The current transformation matrix of a `Context`, represented as a Matrix, defines the transformation from user-space coordinates to device-space coordinates.
+    There are various types of scaled fonts, depending on the font backend they use.
 
-    Some standard Python operators can be used with matrices:
-
-    To read the values from a Matrix:
-    >>> xx, yx, xy, yy, x0, y0 = matrix\n
-
-    To multiply two matrices:
-    >>> matrix3 = matrix1.multiply(matrix2)
-    >>> # or equivalently
-    >>> matrix3 = matrix1 * matrix2\n
-
-    To compare two matrices:
-    >>> matrix1 == matrix2
-    >>> matrix1 != matrix2\n
-
-    For more information on matrix transformation see https://www.cairographics.org/cookbook/matrix_transform/
+    Parameters
+    ----------
+    >>> font_face (cairo.FontFace)\n
+    A `FontFace` instance.
+    >>> font_matrix (cairo.Matrix)\n
+    Font space to user space transformation `Matrix` for the font. In the simplest case of a N point font, this matrix is just a scale by N, but it can also be used to shear the font or stretch it unequally along the two axes. See `Context.set_font_matrix()`.
+    >>> ctm (cairo.Matrix)\n
+    User to device transformation `Matrix` with which the font will be used.
+    >>> options (cairo.FontOptions)\n
+    A `FontOptions` instance to use when getting metrics for the font and rendering with it.
     '''
-    def __init__(self, xx: float = 1.0, yx: float = 0.0, yy: float = 1.0, x0: float = 0.0, y0: float = 0.0) -> None:
+    font_face: FontFace = ...
+    font_matrix: Matrix = ...
+    ctm: Matrix = ...
+    options: FontOptions = ...
+    def __init__(self, font_face: FontFace, font_matrix: Matrix, ctm: Matrix, options: FontOptions) -> None: ...
+    def extents(self) -> Tuple[float, float, float, float, float]:
         '''
-        ### Create a new Matrix with the affine transformation given by xx, yx, xy, yy, x0, y0. The transformation is given by:
-        >>> x_new = xx * x + xy * y + x0
-        >>> y_new = yx * x + yy * y + y0
+        Gets the metrics for a ScaledFont.
 
-        ### To create a new identity matrix:
-        >>> matrix = cairo.Matrix()
-
-        ### To create a matrix with a transformation which translates by tx and ty in the X and Y dimensions, respectively:
-        >>> matrix = cairo.Matrix(x0=tx, y0=ty)
-
-        ### To create a matrix with a transformation that scales by sx and sy in the X and Y dimensions, respectively:
-        >>> matrix = cairo.Matrix(xx=sy, yy=sy)
-        '''
-    @classmethod
-    def init_rotate(cls, radians: float) -> "Matrix":
-        '''
-        Parameters
-        ----------
-        >>> radians (float)\n
-        Angle of rotation, in radians. The direction of rotation is defined such that positive angles rotate in the direction from the positive X axis toward the positive Y axis. With the default axis orientation of cairo, positive angles rotate in a clockwise direction.
-        
         Returns
         -------
-        >>> cairo.Matrix\n
-        A new `Matrix` set to a transformation that rotates by radians.
+        >>> (ascent: float, descent: float, height: float, max_x_advance: float, max_y_advance: float)
         '''
-    def invert(self) -> Optional["Matrix"]:
+    def get_ctm(self) -> Matrix:
         '''
-        Changes `Matrix` to be the inverse of it’s original value. Not all transformation matrices have inverses; if the matrix collapses points together (it is degenerate), then it has no inverse and this function will fail.
+        Returns the CTM with which scaled_font was created into ctm. Note that the translation offsets (x0, y0) of the CTM are ignored by `ScaledFont()`. So, the matrix this function returns always has 0, 0 as x0, y0.
+
+        New in version 1.12.0.
 
         Returns
         -------
         >>> cairo.Matrix\n
-        If `Matrix` has an inverse, modifies `Matrix` to be the inverse matrix and returns `None`
-        
-        Raises
-        ------
-        >>> cairo.Error\n
-        If the `Matrix` has no inverse.
+        The CTM.
         '''
-    def multiply(self, matrix2: "Matrix") -> "Matrix":
+    def get_font_face(self) -> FontFace:
         '''
-        Multiplies the affine transformations in Matrix and matrix2 together. The effect of the resulting transformation is to first apply the transformation in Matrix to the coordinates and then apply the transformation in matrix2 to the coordinates.
+        New in version 1.2.
 
-        It is allowable for result to be identical to either Matrix or matrix2.
+        Returns
+        -------
+        >>> cairo.FontFace\n
+        The `FontFace` that this `ScaledFont` was created for.
+        '''
+    def get_font_matrix(self) -> Matrix:
+        '''
+        Returns the font matrix with which scaled_font was created.
 
-        Parameters
-        ----------
-        >>> matrix2 (cairo.Matrix)\n
-        A second `Matrix`
-        
+        New in version 1.12.0.
+
         Returns
         -------
         >>> cairo.Matrix\n
-        A new `Matrix`
+        The Matrix.
         '''
-    def rotate(self, radians: float) -> None:
+    def get_font_options(self) -> FontOptions:
         '''
-        Initialize `Matrix` to a transformation that rotates by radians.
+        Returns the font options with which scaled_font was created.
 
-        Parameters
-        ----------
-        >>> radians (float)\n
-        Angle of rotation, in radians. The direction of rotation is defined such that positive angles rotate in the direction from the positive X axis toward the positive Y axis. With the default axis orientation of cairo, positive angles rotate in a clockwise direction.
-        '''
-    def scale(sx, sy) -> None:
-        '''
-        Applies scaling by sx, sy to the transformation in `Matrix`. The effect of the new transformation is to first scale the coordinates by sx and sy, then apply the original transformation to the coordinates.
-
-        Parameters
-        ----------
-        >>> sx (float)\n
-        Scale factor in the X direction.
-        >>> sy (float)\n
-        Scale factor in the Y direction.
-        '''
-    def transform_distance(self, dx: float, dy: float) -> Tuple[float, float]:
-        '''
-        Transforms the distance vector (dx,dy) by `Matrix`. This is similar to  `transform_point()` except that the translation components of the transformation are ignored. The calculation of the returned vector is as follows:
-        >>> dx2 = dx1 * a + dy1 * c
-        >>> dy2 = dx1 * b + dy1 * d
-
-        Affine transformations are position invariant, so the same vector always transforms to the same vector. If (x1,y1) transforms to (x2,y2) then (x1+dx1,y1+dy1) will transform to (x1+dx2,y1+dy2) for all values of x1 and x2.
-
-        Parameters
-        ----------
-        >>> dx (float)\n
-        X component of a distance vector.
-        >>> dy (float)\n
-        Y component of a distance vector.
+        New in version 1.12.0.
 
         Returns
         -------
-        >>> (dx: float, dy: float)\n
-        The transformed distance vector.
+        >>> cairo.FontOptions\n
+        Font options.
         '''
-    def transform_point(self, x: float, y: float) -> Tuple[float, float]:
+    def get_scale_matrix(self) -> Matrix:
         '''
-        Transforms the point (x, y) by Matrix.
+        The scale matrix is product of the font matrix and the ctm associated with the scaled font, and hence is the matrix mapping from font space to device space.
+
+        New in version 1.8.
+
+        Returns
+        -------
+        >>> cairo.Matrix\n
+        The scale `Matrix`.
+        '''
+    def glyph_extents(self, glyphs: Sequence[Glyph]) -> TextExtents:
+        '''
+        New in version 1.15.
+
+        Gets the extents for a list of glyphs. The extents describe a user-space rectangle that encloses the “inked” portion of the glyphs, (as they would be drawn by `Context.show_glyphs()` if the cairo graphics state were set to the same font_face, font_matrix, ctm, and font_options as scaled_font ). Additionally, the x_advance and y_advance values indicate the amount by which the current point would be advanced by `cairo_show_glyphs()`.
+
+        Note that whitespace glyphs do not contribute to the size of the rectangle (extents.width and extents.height).
+
+        Parameters
+        ----------
+        >>> glyphs list(cairo.Glyph)\n
+        A sequence of `Glyph`.
+
+        Returns
+        -------
+        >>> cairo.TextExtents\n
+        '''
+    def text_extents(self, text: str) -> TextExtents:
+        '''
+        Gets the extents for a string of text. The extents describe a user-space rectangle that encloses the “inked” portion of the text drawn at the origin (0,0) (as it would be drawn by `Context.show_text()` if the cairo graphics state were set to the same font_face, font_matrix, ctm, and font_options as `ScaledFont`). Additionally, the x_advance and y_advance values indicate the amount by which the current point would be advanced by `Context.show_text()`.
+
+        Note that whitespace characters do not directly contribute to the size of the rectangle (width and height). They do contribute indirectly by changing the position of non-whitespace characters. In particular, trailing whitespace characters are likely to not affect the size of the rectangle, though they will affect the x_advance and y_advance values.
+
+        Parameters
+        ----------
+        >>> text (str)
+
+        Returns
+        -------
+        >>> cairo.TextExtents
+        '''
+    def text_to_glyphs(self, x: float, y: float, utf8: str, with_clusters: bool = True) -> Union[Tuple[List[Glyph], List["TextCluster"], TextClusterFlags], List[Glyph]]:
+        '''
+        New in version 1.15.
+
+        Converts UTF-8 text to a list of glyphs, with cluster mapping, that can be used to render later.
+
+        For details of how clusters, and cluster_flags map input UTF-8 text to the output glyphs see `Context.show_text_glyphs()`.
+
+        The output values can be readily passed to `Context.show_text_glyphs()` `Context.show_glyphs()`, or related functions, assuming that the exact same scaled font is used for the operation.
 
         Parameters
         ----------
         >>> x (float)\n
-        X position.
+        X position to place first glyph.
         >>> y (float)\n
-        Y position.
+        Y position to place first glyph.
+        >>> utf8 (str)\n
+        A string of text.
+        >>> with_clusters (bool)\n
+        If `False` only the glyph list will be computed and returned.
 
         Returns
         -------
-        >>> (x: float, y: float)\n
-        The transformed point.
-        '''
-    def translate(self, tx: float, ty: float) -> None:
-        '''
-        Applies a transformation by tx, ty to the transformation in Matrix. The effect of the new transformation is to first translate the coordinates by tx and ty, then apply the original transformation to the coordinates.
+        >>> ([Glyph], [TextCluster], TextClusterFlags) or [Glyph]
 
-        Parameters
-        ----------
-        >>> tx (float)\n
-        Amount to translate in the X direction.
-        >>> ty (float)\n
-        Amount to translate in the Y direction.
+        Raises
+        ------
+        >>> cairo.Error\n
         '''
-    xx: float
-    yx: float
-    xy: float
-    yy: float
-    x0: float
-    y0: float
+
+_SomeDevice = TypeVar("_SomeDevice", bound="Device")
+
+class Device:
+    '''
+    A Device represents the driver interface for drawing operations to a Surface.
+
+    New in version 1.14.
+
+    Note
+    ----
+    New in version 1.17.0: `cairo.Device` can be used as a context manager:
+    >>> # device.finish() will be called on __exit__
+    >>> with cairo.ScriptDevice(f) as device:
+    >>> \tpass
+    '''
+    def finish(self) -> None:
+        '''
+        This function finishes the device and drops all references to external resources. All surfaces, fonts and other objects created for this device will be finished, too. Further operations on the device will not affect the device but will instead trigger a Status.DEVICE_FINISHED error.
+
+        This function may acquire devices.
+
+        New in version 1.14.
+        '''
+    def flush(self) -> None:
+        '''
+        Finish any pending operations for the device and also restore any temporary modifications cairo has made to the device’s state. This function must be called before switching from using the device with Cairo to operating on it directly with native APIs. If the device doesn’t support direct access, then this function does nothing.
+
+        This function may acquire devices.
+
+        New in version 1.14.
+        '''
+    def acquire(self) -> None:
+        '''
+        Acquires the device for the current thread. This function will block until no other thread has acquired the device.
+
+        If the does not raise, you successfully acquired the device. From now on your thread owns the device and no other thread will be able to acquire it until a matching call to `release()`. It is allowed to recursively acquire the device multiple times from the same thread.
+
+        After a successful call to `acquire()`, a matching call to `release()` is required.
+
+        New in version 1.14.
+
+        Note
+        ----
+        You must never acquire two different devices at the same time unless this is explicitly allowed. Otherwise the possibility of deadlocks exist. As various Cairo functions can acquire devices when called, these functions may also cause deadlocks when you call them with an acquired device. So you must not have a device acquired when calling them. These functions are marked in the documentation.
+
+        Raises
+        ------
+        >>> cairo.Error\n
+        If the device is in an error state and could not be acquired.
+        '''
+    def release(self) -> None:
+        '''
+        Releases a device previously acquired using `acquire()`. See that function for details.
+
+        New in version 1.14.
+        '''
+    def __enter__(self: _SomeDevice) -> _SomeDevice: ...
+    __exit__: Any = ...
+
+_PathLike = Union[Text, ByteString]
+_FileLike = BinaryIO
+_SomeSurface = TypeVar("_SomeSurface", bound="Surface")
 
 class Surface:
     '''
@@ -972,7 +1175,33 @@ class Surface:
 
         New in version 1.6.
         '''
-    def create_similar(self, content: "Content", width: int, height: int) -> "Surface":
+    def create_for_rectangle(self, x: float, y: float, width: float, height: float) -> "Surface":
+        '''
+        Create a new surface that is a rectangle within the target surface. All operations drawn to this surface are then clipped and translated onto the target surface. Nothing drawn via this sub-surface outside of its bounds is drawn onto the target surface, making this a useful method for passing constrained child surfaces to library routines that draw directly onto the parent surface, i.e. with no further backend allocations, double buffering or copies.
+
+        New in version 1.12.0.
+
+        Note
+        ----
+        The semantics of subsurfaces have not been finalized yet unless the rectangle is in full device units, is contained within the extents of the target surface, and the target or subsurface’s device transforms are not changed.
+
+        Parameters
+        ----------
+        >>> x (float)\n
+        The x-origin of the sub-surface from the top-left of the target surface (in device-space units).
+        >>> y (float)\n
+        The y-origin of the sub-surface from the topleft of the target surface (in device-space units).
+        >>> width (float)\n
+        Width of the sub-surface (in device-space units).
+        >>> height (float)\n
+        Height of the sub-surface (in device-space units).
+
+        Returns
+        -------
+        >>> cairo.Surface\n
+        A new surface.
+        '''
+    def create_similar(self, content: Content, width: int, height: int) -> "Surface":
         '''
         Create a `Surface` that is as compatible as possible with the existing surface. For example the new surface will have the same fallback resolution and `FontOptions`. Generally, the new surface will also use the same backend, unless that is not possible for some reason.
 
@@ -992,6 +1221,23 @@ class Surface:
         >>> cairo.Surface\n
         A newly allocated `Surface`.
         '''
+    def create_similar_image(self, format: Format, width: int, height: int) -> "ImageSurface":
+        '''
+        Create a new image surface that is as compatible as possible for uploading to and the use in conjunction with an existing surface. However, this surface can still be used like any normal image surface.
+
+        Initially the surface contents are all 0 (transparent if contents have transparency, black otherwise.)
+
+        New in version 1.12.0.
+
+        Parameters
+        ----------
+        >>> format (cairo.Format)\n
+        The format for the new surface.
+        >>> width (int)\n
+        Width of the new surface, in device-space units.
+        >>> height (int)\n
+        Height of the new surface, in device-space units.
+        '''
     def finish(self) -> None:
         '''
         This method finishes the Surface and drops all references to external resources. For example, for the Xlib backend it means that cairo will no longer access the drawable, which can be freed. After calling finish() the only valid operations on a Surface are flushing and finishing it. Further drawing to the surface will not affect the surface but will instead trigger a `cairo.Error` exception.
@@ -1000,7 +1246,7 @@ class Surface:
         '''
         Do any pending drawing for the Surface and also restore any temporary modification’s cairo has made to the Surface’s state. This method must be called before switching from drawing on the Surface with cairo to drawing on it directly with native APIs. If the Surface doesn’t support direct access, then this function does nothing.
         '''
-    def get_content(self) -> "Content":
+    def get_content(self) -> Content:
         '''
         New in version 1.2.
 
@@ -1008,6 +1254,17 @@ class Surface:
         -------
         >>> cairo.Content\n
         The content type of `Surface`, which indicates whether the `Surface` contains color and/or alpha information.
+        '''
+    def get_device(self) -> Optional["Device"]:
+        '''
+        This function returns the device for a surface.
+
+        New in version 1.14.0.
+
+        Returns
+        -------
+        >>> cairo.Device or None\n
+        The device or `None` if the surface does not have an associated device.
         '''
     def get_device_offset(self) -> Tuple[float, float]:
         '''
@@ -1020,6 +1277,16 @@ class Surface:
         >>> (x_offset: float, y_offset: float)\n
         - `x_offset (float)` -- The offset in the X direction, in device units.
         - `y_offset (float)` -- The offset in the Y direction, in device units.
+        '''
+    def get_device_scale(self) -> Tuple[float, float]:
+        '''
+        This function returns the previous device offset set by `Surface.set_device_scale()`.
+
+        New in version 1.14.0.
+        
+        Returns
+        -------
+        >>> (x_scale: float, y_scale: float)\n
         '''
     def get_fallback_resolution(self) -> Tuple[float, float]:
         '''
@@ -1041,41 +1308,6 @@ class Surface:
         -------
         >>> cairo.FontOptions\n
         '''
-    def supports_mime_type(self, mime_type: str) -> bool:
-        '''
-        Returns whether surface supports `mime_type`.
-
-        New in version 1.12.0.
-
-        Parameters
-        ----------
-        >>> mime_type (str)\n
-        The mime type (`cairo.MIME_TYPE`).
-
-        Returns
-        -------
-        >>> bool\n
-        `True` if surface supports mime_type, `False` otherwise.
-        '''
-    def set_mime_data(self, mime_type: str, data: bytes) -> None:
-        '''
-        Attach an image in the format `mime_type` to Surface. To remove the data from a surface, call this function with same mime type and `None` for data.
-
-        The attached image (or filename) data can later be used by backends which support it (currently: PDF, PS, SVG and Win32 Printing surfaces) to emit this data instead of making a snapshot of the surface. This approach tends to be faster and requires less memory and disk space.
-
-        The recognized MIME types are listed under `cairo.MIME_TYPE`.
-
-        See corresponding backend surface docs for details about which MIME types it can handle. Caution: the associated MIME data will be discarded if you draw on the surface afterwards. Use this function with care.
-
-        New in version 1.12.0.
-
-        Parameters
-        ----------
-        >>> mime_type (str)\n
-        The MIME type of the image data (`cairo.MIME_TYPE`).
-        >>> data (bytes)\n
-        The image data to attach to the surface.
-        '''
     def get_mime_data(self, mime_type: str) -> Optional[bytes]:
         '''
         Return mime data previously attached to surface with `set_mime_data()` using the specified mime type. If no data has been attached with the given mime type, `None` is returned.
@@ -1090,6 +1322,43 @@ class Surface:
         Returns
         -------
         >>> bytes or None\n
+        '''
+    def has_show_text_glyphs(self) -> bool:
+        '''
+        Returns whether the surface supports sophisticated `Context.show_text_glyphs()` operations. That is, whether it actually uses the provided text and cluster data to a `Context.show_text_glyphs()` call.
+
+        Note: Even if this function returns `False`, a `Context.show_text_glyphs()` operation targeted at surface will still succeed. It just will act like a `Context.show_glyphs()` operation. Users can use this function to avoid computing UTF-8 text and cluster mapping if the target surface does not use it.
+
+        New in version 1.12.0.
+
+        Returns
+        -------
+        >>> bool\n
+        `True` if surface supports `Context.show_text_glyphs()`, `False` otherwise.
+        '''
+    def map_to_image(self, extents: Optional[RectangleInt]) -> "ImageSurface":
+        '''
+        Returns an image surface that is the most efficient mechanism for modifying the backing store of the target surface.
+
+        Note, the use of the original surface as a target or source whilst it is mapped is undefined. The result of mapping the surface multiple times is undefined. Calling `Surface.finish()` on the resulting image surface results in undefined behavior. Changing the device transform of the image surface or of surface before the image surface is unmapped results in undefined behavior.
+
+        The caller must use `Surface.unmap_image()` to destroy this image surface.
+
+        New in version 1.15.0.
+
+        Parameters
+        ----------
+        >>> extents (cairo.RectangleInt or None)\n
+        Limit the extraction to an rectangular region, or `None` for the whole surface.
+
+        Returns
+        -------
+        >>> cairo.ImageSurface\n
+        Newly allocated image surface.
+
+        Raises
+        ------
+        >>> cairo.Error\n
         '''
     def mark_dirty(self) -> None:
         '''
@@ -1125,6 +1394,19 @@ class Surface:
         >>> y_offset (float)\n
         The offset in the Y direction, in device units.
         '''
+    def set_device_scale(self, x_scale: float, y_scale: float) -> None:
+        '''
+        Sets a scale that is multiplied to the device coordinates determined by the CTM when drawing to surface . One common use for this is to render to very high resolution display devices at a scale factor, so that code that assumes 1 pixel will be a certain size will still work. Setting a transformation via `Context.translate()` isn’t sufficient to do this, since functions like `Context.device_to_user()` will expose the hidden scale.
+
+        New in version 1.14.0.
+
+        Parameters
+        ----------
+        >>> x_scale (float)\n
+        A scale factor in the X direction.
+        >>> y_scale (float)\n
+        A scale factor in the Y direction.
+        '''
     def set_fallback_resolution(self, x_pixels_per_inch: float, y_pixels_per_inch: float) -> None:
         '''
         Set the horizontal and vertical resolution for image fallbacks.
@@ -1148,6 +1430,25 @@ class Surface:
         >>> y_pixels_per_inch (float)\n
         Vertical setting for pixels per inch.
         '''
+    def set_mime_data(self, mime_type: str, data: bytes) -> None:
+        '''
+        Attach an image in the format `mime_type` to Surface. To remove the data from a surface, call this function with same mime type and `None` for data.
+
+        The attached image (or filename) data can later be used by backends which support it (currently: PDF, PS, SVG and Win32 Printing surfaces) to emit this data instead of making a snapshot of the surface. This approach tends to be faster and requires less memory and disk space.
+
+        The recognized MIME types are listed under `cairo.MIME_TYPE`.
+
+        See corresponding backend surface docs for details about which MIME types it can handle. Caution: the associated MIME data will be discarded if you draw on the surface afterwards. Use this function with care.
+
+        New in version 1.12.0.
+
+        Parameters
+        ----------
+        >>> mime_type (str)\n
+        The MIME type of the image data (`cairo.MIME_TYPE`).
+        >>> data (bytes)\n
+        The image data to attach to the surface.
+        '''
     def show_page(self) -> None:
         '''
         Emits and clears the current page for backends that support multiple pages. Use `copy_page()` if you don’t want to clear the page.
@@ -1156,7 +1457,23 @@ class Surface:
 
         New in version 1.6.
         '''
-    def write_to_png(self, fobj: str) -> None:
+    def supports_mime_type(self, mime_type: str) -> bool:
+        '''
+        Returns whether surface supports `mime_type`.
+
+        New in version 1.12.0.
+
+        Parameters
+        ----------
+        >>> mime_type (str)\n
+        The mime type (`cairo.MIME_TYPE`).
+
+        Returns
+        -------
+        >>> bool\n
+        `True` if surface supports mime_type, `False` otherwise.
+        '''
+    def write_to_png(self, fobj: Union[_FileLike, _PathLike]) -> None:
         '''
         Writes the contents of `Surface` to fobj as a PNG image.
 
@@ -1171,120 +1488,6 @@ class Surface:
         If memory could not be allocated for the operation.
         >>> cairo.IOError\n
         If an I/O error occurs while attempting to write the file.
-        '''
-    def create_for_rectangle(self, x: float, y: float, width: float, height: float) -> "Surface":
-        '''
-        Create a new surface that is a rectangle within the target surface. All operations drawn to this surface are then clipped and translated onto the target surface. Nothing drawn via this sub-surface outside of its bounds is drawn onto the target surface, making this a useful method for passing constrained child surfaces to library routines that draw directly onto the parent surface, i.e. with no further backend allocations, double buffering or copies.
-
-        New in version 1.12.0.
-
-        Note
-        ----
-        The semantics of subsurfaces have not been finalized yet unless the rectangle is in full device units, is contained within the extents of the target surface, and the target or subsurface’s device transforms are not changed.
-
-        Parameters
-        ----------
-        >>> x (float)\n
-        The x-origin of the sub-surface from the top-left of the target surface (in device-space units).
-        >>> y (float)\n
-        The y-origin of the sub-surface from the topleft of the target surface (in device-space units).
-        >>> width (float)\n
-        Width of the sub-surface (in device-space units).
-        >>> height (float)\n
-        Height of the sub-surface (in device-space units).
-
-        Returns
-        -------
-        >>> cairo.Surface\n
-        A new surface.
-        '''
-    def create_similar_image(self, format: Format, width: int, height: int) -> "ImageSurface":
-        '''
-        Create a new image surface that is as compatible as possible for uploading to and the use in conjunction with an existing surface. However, this surface can still be used like any normal image surface.
-
-        Initially the surface contents are all 0 (transparent if contents have transparency, black otherwise.)
-
-        New in version 1.12.0.
-
-        Parameters
-        ----------
-        >>> format (cairo.Format)\n
-        The format for the new surface.
-        >>> width (int)\n
-        Width of the new surface, in device-space units.
-        >>> height (int)\n
-        Height of the new surface, in device-space units.
-        '''
-    def has_show_text_glyphs(self) -> bool:
-        '''
-        Returns whether the surface supports sophisticated `Context.show_text_glyphs()` operations. That is, whether it actually uses the provided text and cluster data to a `Context.show_text_glyphs()` call.
-
-        Note: Even if this function returns `False`, a `Context.show_text_glyphs()` operation targeted at surface will still succeed. It just will act like a `Context.show_glyphs()` operation. Users can use this function to avoid computing UTF-8 text and cluster mapping if the target surface does not use it.
-
-        New in version 1.12.0.
-
-        Returns
-        -------
-        >>> bool\n
-        `True` if surface supports `Context.show_text_glyphs()`, `False` otherwise.
-        '''
-    def set_device_scale(self, x_scale: float, y_scale: float) -> None:
-        '''
-        Sets a scale that is multiplied to the device coordinates determined by the CTM when drawing to surface . One common use for this is to render to very high resolution display devices at a scale factor, so that code that assumes 1 pixel will be a certain size will still work. Setting a transformation via `Context.translate()` isn’t sufficient to do this, since functions like `Context.device_to_user()` will expose the hidden scale.
-
-        New in version 1.14.0.
-
-        Parameters
-        ----------
-        >>> x_scale (float)\n
-        A scale factor in the X direction.
-        >>> y_scale (float)\n
-        A scale factor in the Y direction.
-        '''
-    def get_device_scale(self) -> Tuple[float, float]:
-        '''
-        This function returns the previous device offset set by `Surface.set_device_scale()`.
-
-        New in version 1.14.0.
-        
-        Returns
-        -------
-        >>> (x_scale: float, y_scale: float)\n
-        '''
-    def get_device(self) -> Optional["Device"]:
-        '''
-        This function returns the device for a surface.
-
-        New in version 1.14.0.
-
-        Returns
-        -------
-        >>> cairo.Device or None\n
-        The device or `None` if the surface does not have an associated device.
-        '''
-    def map_to_image(self, extents: Optional["RectangleInt"]) -> "ImageSurface":
-        '''
-        Returns an image surface that is the most efficient mechanism for modifying the backing store of the target surface.
-
-        Note, the use of the original surface as a target or source whilst it is mapped is undefined. The result of mapping the surface multiple times is undefined. Calling `Surface.finish()` on the resulting image surface results in undefined behavior. Changing the device transform of the image surface or of surface before the image surface is unmapped results in undefined behavior.
-
-        The caller must use `Surface.unmap_image()` to destroy this image surface.
-
-        New in version 1.15.0.
-
-        Parameters
-        ----------
-        >>> extents (cairo.RectangleInt or None)\n
-        Limit the extraction to an rectangular region, or `None` for the whole surface.
-
-        Returns
-        -------
-        >>> cairo.ImageSurface\n
-        Newly allocated image surface.
-
-        Raises
-        ------
-        >>> cairo.Error\n
         '''
     def unmap_image(self, image: "ImageSurface") -> None:
         '''
@@ -1301,13 +1504,157 @@ class Surface:
         >>> image (cairo.ImageSurface)\n
         The currently mapped image.
         '''
+    def __enter__(self: _SomeSurface) -> _SomeSurface: ...
+    __exit__: Any = ...
 
-class CairoError(Exception):
+class ImageSurface(Surface):
     '''
-    An alias for Error
+    Creates an ImageSurface of the specified format and dimensions. Initially the surface contents are all 0. (Specifically, within each pixel, each color or alpha channel belonging to format will be 0. The contents of bits within a pixel, but not belonging to the given format are undefined).
 
-    New in version 1.12.0.
+    Parameters
+    ----------
+    >>> format (cairo.Format)\n
+    Format of pixels in the surface to create.
+    >>> width (int)\n
+    Width of the surface, in pixels.
+    >>> height (int)\n
+    Height of the surface, in pixels.
+
+    Returns
+    -------
+    >>> cairo.ImageSurface\n
+    A newly allocated `ImageSurface`.
+
+    Raises
+    ------
+    >>> cairo.MemoryError\n
+    In case of no memory.
     '''
+    def __init__(self, format: Format, width: int, height: int) -> None: ...
+    format: Format = ...
+    width: int = ...
+    height: int = ...
+    @classmethod
+    def create_for_data(cls, data: memoryview, format: Format, width: int, height: int, stride: int = ...) -> "ImageSurface":
+        '''
+        Creates an ImageSurface for the provided pixel data. The initial contents of buffer will be used as the initial image contents; you must explicitly clear the buffer, using, for example, `cairo_rectangle()` and `cairo_fill()` if you want it cleared.
+
+        Note that the stride may be larger than width*bytes_per_pixel to provide proper alignment for each pixel and row. This alignment is required to allow high-performance rendering within cairo. The correct way to obtain a legal stride value is to call `cairo.Format.stride_for_width()` with the desired format and maximum image width value, and use the resulting stride value to allocate the data and to create the ImageSurface. See `cairo.Format.stride_for_width()` for example code.
+
+        Parameters
+        ----------
+        >>> data (buffer/memoryview)\n
+        A writable Python buffer/memoryview object.
+        >>> format (cairo.Format)\n
+        The format of pixels in the buffer.
+        >>> width (int)\n
+        The width of the image to be stored in the buffer.
+        >>> height (int)\n
+        The height of the image to be stored in the buffer.
+        >>> stride (int or None)\n
+        The number of bytes between the start of rows in the buffer as allocated. If not given, the value from `cairo.Format.stride_for_width()` is used.
+
+        Returns
+        -------
+        >>> cairo.ImageSurface\n
+        A new `ImageSurface`.
+
+        Raises
+        ------
+        >>> cairo.MemoryError\n
+        In case of no memory.
+        >>> cairo.Error\n
+        In case of invalid stride value.
+        '''
+    @classmethod
+    def create_from_png(cls, fobj: Union[_PathLike, _FileLike]) -> "ImageSurface":
+        '''
+        Parameters
+        ----------
+        >>> fobj (str)\n
+        A `pathlike`, file or file-like object of the PNG to load.
+
+        Returns
+        -------
+        >>> cairo.ImageSurface\n
+        A new `ImageSurface` initialized from the contents of the given PNG file.
+        '''
+    @staticmethod
+    def format_stride_for_width(format: Format, width: int) -> int:
+        '''
+        New in version 1.6.
+
+        See `cairo.Format.stride_for_width()`.
+        '''
+    def get_data(self) -> memoryview:
+        '''
+        New in version 1.2.
+
+        Returns
+        -------
+        >>> memoryview\n
+        A Python buffer object for the data of the `ImageSurface`, for direct inspection or modification. In Python 3 a memoryview object is returned.
+        '''
+    def get_format(self) -> Format:
+        '''
+        New in version 1.2.
+
+        Returns
+        -------
+        >>> cairo.Format\n
+        The format of the `ImageSurface`.
+        '''
+    def get_height(self) -> int:
+        '''
+        Returns
+        -------
+        >>> int\n
+        The height of the `ImageSurface` in pixels.
+        '''
+    def get_stride(self) -> bytes:
+        '''
+        Returns
+        -------
+        >>> bytes\n
+        The stride of the `ImageSurface` in bytes. The stride is the distance in bytes from the beginnning of one row of the image data to the beginning of the next row.
+        '''
+    def get_width(self) -> int:
+        '''
+        Returns
+        -------
+        >>> int\n
+        The width of the `ImageSurface` in pixels.
+        '''
+
+class SurfacePattern(Pattern):
+    '''
+    Parameters
+    ----------
+    >>> surface (Surface)\n
+    A cairo `Surface`.
+
+    Returns
+    -------
+    >>> SurfacePattern\n
+    A newly created `SurfacePattern` for the given surface.
+
+    Raises
+    ------
+    >>> MemoryError\n
+    In case of no memory.
+    '''
+    surface: Surface = ...
+    def __init__(self, surface: Surface) -> None: ...
+    def get_surface(self) -> Surface:
+        '''
+        New in version 1.4.
+
+        Returns
+        -------
+        >>> cairo.Surface\n
+        The `Surface` of the `SurfacePattern`.
+        '''
+
 class Context:
     '''
     Creates a new Context with all graphics state parameters set to default values and with target as a target surface. The target surface should be constructed with a backend-specific function such as ImageSurface (or any other cairo backend surface create variant).
@@ -1327,6 +1674,8 @@ class Context:
     >>> cairo.MemoryError\n
     In case of no memory.
     '''
+    target: Surface = ...
+    def __init__(self, target: Surface) -> None: ...
     def append_path(self, path: Path) -> None:
         '''
         Append the path onto the current path. The path may be either the return value from one of Context.copy_path() or Context.copy_path_flat() or it may be constructed manually (in C).
@@ -1691,7 +2040,7 @@ class Context:
         >>> cairo.Operator\n
         The current compositing operator for a `Context`.
         '''
-    def get_scaled_font(self) -> "ScaledFont":
+    def get_scaled_font(self) -> ScaledFont:
         '''
         New in version 1.4.
 
@@ -1700,7 +2049,7 @@ class Context:
         >>> cairo.ScaledFont\n
         The current `ScaledFont`for a `Context`.
         '''
-    def get_source(self) -> "Pattern":
+    def get_source(self) -> Pattern:
         '''
         Returns
         -------
@@ -1719,7 +2068,7 @@ class Context:
         >>> float\n
         The current tolerance value, as set by `Context.set_tolerance()`.
         '''
-    def glyph_extents(self, glyphs: List["Glyph"]) -> "TextExtents":
+    def glyph_extents(self, glyphs: Sequence[Glyph]) -> TextExtents:
         '''
         Gets the extents for an array of glyphs. The extents describe a user-space rectangle that encloses the “inked” portion of the glyphs, (as they would be drawn by `Context.show_glyphs()`). Additionally, the x_advance and y_advance values indicate the amount by which the current point would be advanced by `Context.show_glyphs()`.
 
@@ -1729,7 +2078,7 @@ class Context:
         -------
         >>> cairo.TextExtents\n
         '''
-    def glyph_path(self, glyphs: List["Glyph"]) -> None:
+    def glyph_path(self, glyphs: Sequence[Glyph]) -> None:
         '''
         Adds closed paths for the glyphs to the current path. The generated path if filled, achieves an effect similar to that of `Context.show_glyphs()`.
 
@@ -1798,7 +2147,7 @@ class Context:
         >>> y (float)\n
         The Y coordinate of the end of the new line.
         '''
-    def mask(self, pattern: "Pattern") -> None:
+    def mask(self, pattern: Pattern) -> None:
         '''
         A drawing operator that paints the current source using the alpha channel of pattern as a mask. (Opaque areas of pattern are painted with the source, transparent areas are not painted.)
 
@@ -1806,7 +2155,7 @@ class Context:
         ----------
         >>> pattern (cairo.Pattern)\n
         '''
-    def mask_surface(self, surface: "Surface", x: float = 0.0, y: float = 0.0) -> None:
+    def mask_surface(self, surface: Surface, x: float = 0.0, y: float = 0.0) -> None:
         '''
         A drawing operator that paints the current source using the alpha channel of surface as a mask. (Opaque areas of surface are painted with the source, transparent areas are not painted.)
 
@@ -1877,7 +2226,7 @@ class Context:
         - `x2 (float)` -- Right of the resulting extents.
         - `y2 (float)` -- Bottom of the resulting extents.
         '''
-    def pop_group(self) -> "SurfacePattern":
+    def pop_group(self) -> SurfacePattern:
         '''
         Terminates the redirection begun by a call to `Context.push_group()` or `Context.push_group_with_content()` and returns a new pattern containing the results of all drawing operations performed to the group.
 
@@ -1927,7 +2276,7 @@ class Context:
 
         New in version 1.2.
         '''
-    def push_group_with_content(self, content: "Content") -> None:
+    def push_group_with_content(self, content: Content) -> None:
         '''
         Temporarily redirects drawing to an intermediate surface known as a group. The redirection lasts until the group is completed by a call to `Context.pop_group()` or `Context.pop_group_to_source()`. These calls provide the result of any drawing to the group as a pattern, (either as an explicit object, or set as the source pattern).
 
@@ -2242,7 +2591,7 @@ class Context:
         >>> op (cairo.Operator)\n
         The compositing operator to set for use in all drawing operations.
         '''
-    def set_scaled_font(self, scaled_font: "ScaledFont") -> None:
+    def set_scaled_font(self, scaled_font: ScaledFont) -> None:
         '''
         Replaces the current font face, font matrix, and font options in the `Context` with those of the `ScaledFont`. Except for some translation, the current CTM of the `Context` should be the same as that of the `ScaledFont`, which can be accessed using `ScaledFont.get_ctm()`.
 
@@ -2252,7 +2601,7 @@ class Context:
         ----------
         >>> scaled_font (cairo.ScaledFont)\n
         '''
-    def set_source(self, source: "Pattern") -> None:
+    def set_source(self, source: Pattern) -> None:
         '''
         Sets the source pattern within `Context` to source. This pattern will then be used for any subsequent drawing operation until a new source pattern is set.
 
@@ -2327,7 +2676,7 @@ class Context:
         >>> tolerance (float)\n
         The tolerance, in device units (typically pixels).
         '''
-    def show_glyphs(self, glyphs: Sequence["Glyph"]) -> None:
+    def show_glyphs(self, glyphs: Sequence[Glyph]) -> None:
         '''
         A drawing operator that generates the shape from an array of glyphs, rendered according to the current font face, font size (font matrix), and font options.
 
@@ -2392,7 +2741,7 @@ class Context:
 
         See `set_line_width()`, `set_line_join()`, `set_line_cap()`, `set_dash()`, and `stroke_preserve()`.
         '''
-    def text_extents(self, text: str) -> "TextExtents":
+    def text_extents(self, text: str) -> TextExtents:
         '''
         Gets the extents for a string of text. The extents describe a user-space rectangle that encloses the “inked” portion of the text, (as it would be drawn by `Context.show_text()`). Additionally, the x_advance and y_advance values indicate the amount by which the current point would be advanced by `Context.show_text()`.
 
@@ -2495,7 +2844,7 @@ class Context:
         >>> bool\n
         `True` if the point is inside, or `False` if outside.
         '''
-    def show_text_glyphs(self, utf8: str, glyphs: List["Glyph"], clusters: List["TextCluster"], cluster_flags: TextClusterFlags) -> None:
+    def show_text_glyphs(self, utf8: str, glyphs: List["Glyph"], clusters: List[TextCluster], cluster_flags: TextClusterFlags) -> None:
         '''
         New in version 1.15.
 
@@ -2568,176 +2917,17 @@ class Context:
         >>> tag_name (str)\n
         The tag name.
         '''
-class Device:
-    '''
-    A Device represents the driver interface for drawing operations to a Surface.
-
-    New in version 1.14.
-
-    Note
-    ----
-    New in version 1.17.0: `cairo.Device` can be used as a context manager:
-    >>> # device.finish() will be called on __exit__
-    >>> with cairo.ScriptDevice(f) as device:
-    >>> \tpass
-    '''
-    def finish(self) -> None:
-        '''
-        This function finishes the device and drops all references to external resources. All surfaces, fonts and other objects created for this device will be finished, too. Further operations on the device will not affect the device but will instead trigger a Status.DEVICE_FINISHED error.
-
-        This function may acquire devices.
-
-        New in version 1.14.
-        '''
-    def flush(self) -> None:
-        '''
-        Finish any pending operations for the device and also restore any temporary modifications cairo has made to the device’s state. This function must be called before switching from using the device with Cairo to operating on it directly with native APIs. If the device doesn’t support direct access, then this function does nothing.
-
-        This function may acquire devices.
-
-        New in version 1.14.
-        '''
-    def acquire(self) -> None:
-        '''
-        Acquires the device for the current thread. This function will block until no other thread has acquired the device.
-
-        If the does not raise, you successfully acquired the device. From now on your thread owns the device and no other thread will be able to acquire it until a matching call to `release()`. It is allowed to recursively acquire the device multiple times from the same thread.
-
-        After a successful call to `acquire()`, a matching call to `release()` is required.
-
-        New in version 1.14.
-
-        Note
-        ----
-        You must never acquire two different devices at the same time unless this is explicitly allowed. Otherwise the possibility of deadlocks exist. As various Cairo functions can acquire devices when called, these functions may also cause deadlocks when you call them with an acquired device. So you must not have a device acquired when calling them. These functions are marked in the documentation.
-
-        Raises
-        ------
-        >>> cairo.Error\n
-        If the device is in an error state and could not be acquired.
-        '''
-    def release(self) -> None:
-        '''
-        Releases a device previously acquired using `acquire()`. See that function for details.
-
-        New in version 1.14.
-        '''
-
-class Pattern:
-    '''
-    Pattern is the abstract base class from which all the other pattern classes derive. It cannot be instantiated directly.
-    '''
-    def get_extend(self) -> Extend:
-        '''
-        Gets the current extend mode for the Pattern. See `cairo.Extend` attributes for details on the semantics of each extend strategy.
-
-        Returns
-        -------
-        >>> cairo.Extend\n
-        The current extend strategy used for drawing the `Pattern`.
-        '''
-    def get_matrix(self) -> Matrix:
-        '''
-        Returns
-        -------
-        >>> cairo.Matrix\n
-        A new `Matrix` which stores a copy of the `Pattern`'s transformation matrix.
-        '''
-    def get_filter(self) -> Filter:
-        '''
-        New in version 1.12.0: Used to be a method of `SurfacePattern` before.
-
-        Returns
-        -------
-        >>> cairo.Filter\n
-        The current filter used for resizing the pattern.
-        '''
-    def set_filter(self, filter: Filter) -> None:
-        '''
-        Note that you might want to control filtering even when you do not have an explicit `Pattern` object, (for example when using `Context.set_source_surface()`). In these cases, it is convenient to use `Context.get_source()` to get access to the pattern that cairo creates implicitly. For example:
-        >>> context.set_source_surface(image, x, y)
-        >>> context.get_source().set_filter(cairo.FILTER_NEAREST)
-
-        New in version 1.12.0: Used to be a method of `SurfacePattern` before.
-
-        Parameters
-        ----------
-        >>> filter (cairo.Filter)\n
-        A filter describing the filter to use for resizing the pattern.
-        '''
-    def set_extend(self, extend: Extend) -> None:
-        '''
-        Sets the mode to be used for drawing outside the area of a Pattern.
-
-        The default extend mode is `cairo.Extend.NONE` for `SurfacePattern` and `cairo.Extend.PAD` for `Gradient` Patterns.
-
-        Parameters
-        ----------
-        >>> extend (cairo.Extend)\n
-        An extend describing how the area outside the `Pattern` will be drawn.
-        '''
-    def set_matrix(self, matrix: Matrix) -> None:
-        '''
-        Sets the Pattern’s transformation matrix to matrix. This matrix is a transformation from user space to pattern space.
-
-        When a Pattern is first created it always has the identity matrix for its transformation matrix, which means that pattern space is initially identical to user space.
-
-        Important: Please note that the direction of this transformation matrix is from user space to pattern space. This means that if you imagine the flow from a Pattern to user space (and on to device space), then coordinates in that flow will be transformed by the inverse of the Pattern matrix.
-
-        For example, if you want to make a Pattern appear twice as large as it does by default the correct code to use is:
-        >>> matrix = cairo.Matrix(xx=0.5,yy=0.5)
-        >>> pattern.set_matrix(matrix)
-
-        Meanwhile, using values of 2.0 rather than 0.5 in the code above would cause the Pattern to appear at half of its default size.
-
-        Also, please note the discussion of the user-space locking semantics of `Context.set_source`.
-
-        Parameters
-        ----------
-        >>> matrix (Matrix)
-        '''
 
 class Error(Exception):
     '''This exception is raised when a cairo object returns an error status.'''
-    status: Status
+    status: Status = ...
 
-class FreeTypeFontFace(FontFace):
-    '''
-    FreeType Fonts - Font support for FreeType.
+CairoError = Error
 
-    The FreeType font backend is primarily used to render text on GNU/Linux systems, but can be used on other platforms too.
-
-    Note
-    ----
-    FreeType Fonts are not implemented in pycairo because there is no open source Python bindings to FreeType (and fontconfig) that provides a C API. This a possible project idea for anyone interested in adding FreeType support to pycairo.
-    '''
-class Glyph:
-    '''
-    New in version 1.15: In prior versions a (int, float, float) tuple was used instead of `Glyph`.
-
-    The `Glyph` holds information about a single glyph when drawing or measuring text. A font is (in simple terms) a collection of shapes used to draw text. A glyph is one of these shapes. There can be multiple glyphs for a single character (alternates to be used in different contexts, for example), or a glyph can be a ligature of multiple characters. Cairo doesn’t expose any way of converting input text into glyphs, so in order to use the Cairo interfaces that take arrays of glyphs, you must directly access the appropriate underlying font system.
-
-    Note that the offsets given by x and y are not cumulative. When drawing or measuring text, each glyph is individually positioned with respect to the overall origin
-
-    Parameters
-    ----------
-    >>> index (int)\n
-    Glyph index in the font. The exact interpretation of the glyph index depends on the font technology being used.
-    >>> x (float)\n
-    The offset in the X direction between the origin used for drawing or measuring the string and the origin of this glyph.
-    >>> y (float)\n
-    The offset in the Y direction between the origin used for drawing or measuring the string and the origin of this glyph.
-
-    Returns
-    -------
-    >>> cairo.Glyph\n
-    A newly created `Glyph` instance.
-    '''
-    index: int
-    x: float
-    y: float
 class Gradient(Pattern):
-    '''Gradient is an abstract base class from which other Pattern classes derive. It cannot be instantiated directly.'''
+    '''
+    Gradient is an abstract base class from which other Pattern classes derive. It cannot be instantiated directly.
+    '''
     def add_color_stop_rgb(self, offset: float, red: float, green: float, blue: float) -> None:
         '''
         Adds an opaque color stop to a Gradient pattern. The offset specifies the location along the gradient’s control vector. For example, a LinearGradient’s control vector is from (x0,y0) to (x1,y1) while a RadialGradient’s control vector is from any point on the start circle to the corresponding point on the end circle.
@@ -2788,127 +2978,7 @@ class Gradient(Pattern):
         -------
         >>> [(offset: float, red: float, green: float, blue: float, alpha: float),...]
         '''
-class ImageSurface(Surface):
-    '''
-    Creates an ImageSurface of the specified format and dimensions. Initially the surface contents are all 0. (Specifically, within each pixel, each color or alpha channel belonging to format will be 0. The contents of bits within a pixel, but not belonging to the given format are undefined).
 
-    Parameters
-    ----------
-    >>> format (cairo.Format)\n
-    Format of pixels in the surface to create.
-    >>> width (int)\n
-    Width of the surface, in pixels.
-    >>> height (int)\n
-    Height of the surface, in pixels.
-
-    Returns
-    -------
-    >>> cairo.ImageSurface\n
-    A newly allocated `ImageSurface`.
-
-    Raises
-    ------
-    >>> cairo.MemoryError\n
-    In case of no memory.
-    '''
-    format: Format
-    width: int
-    height: int
-    @classmethod
-    def create_for_data(cls, data: memoryview, format: Format, width: int, height: int, stride: Optional[int]) -> "ImageSurface":
-        '''
-        Creates an ImageSurface for the provided pixel data. The initial contents of buffer will be used as the initial image contents; you must explicitly clear the buffer, using, for example, `cairo_rectangle()` and `cairo_fill()` if you want it cleared.
-
-        Note that the stride may be larger than width*bytes_per_pixel to provide proper alignment for each pixel and row. This alignment is required to allow high-performance rendering within cairo. The correct way to obtain a legal stride value is to call `cairo.Format.stride_for_width()` with the desired format and maximum image width value, and use the resulting stride value to allocate the data and to create the ImageSurface. See `cairo.Format.stride_for_width()` for example code.
-
-        Parameters
-        ----------
-        >>> data (buffer/memoryview)\n
-        A writable Python buffer/memoryview object.
-        >>> format (cairo.Format)\n
-        The format of pixels in the buffer.
-        >>> width (int)\n
-        The width of the image to be stored in the buffer.
-        >>> height (int)\n
-        The height of the image to be stored in the buffer.
-        >>> stride (int or None)\n
-        The number of bytes between the start of rows in the buffer as allocated. If not given, the value from `cairo.Format.stride_for_width()` is used.
-
-        Returns
-        -------
-        >>> cairo.ImageSurface\n
-        A new `ImageSurface`.
-
-        Raises
-        ------
-        >>> cairo.MemoryError\n
-        In case of no memory.
-        >>> cairo.Error\n
-        In case of invalid stride value.
-        '''
-    @classmethod
-    def create_from_png(cls, fobj: str) -> "ImageSurface":
-        '''
-        Parameters
-        ----------
-        >>> fobj (str)\n
-        A `pathlike`, file or file-like object of the PNG to load.
-
-        Returns
-        -------
-        >>> cairo.ImageSurface\n
-        A new `ImageSurface` initialized from the contents of the given PNG file.
-        '''
-    @staticmethod
-    def format_stride_for_width(format: Format, width: int) -> int:
-        '''
-        New in version 1.6.
-
-        See `cairo.Format.strid_for_width()`.
-        '''
-    def get_data(self) -> memoryview:
-        '''
-        New in version 1.2.
-
-        Returns
-        -------
-        >>> memoryview\n
-        A Python buffer object for the data of the `ImageSurface`, for direct inspection or modification. In Python 3 a memoryview object is returned.
-        '''
-    def get_format(self) -> Format:
-        '''
-        New in version 1.2.
-
-        Returns
-        -------
-        >>> cairo.Format\n
-        The format of the `ImageSurface`.
-        '''
-    def get_height(self) -> int:
-        '''
-        Returns
-        -------
-        >>> int\n
-        The height of the `ImageSurface` in pixels.
-        '''
-    def get_stride(self) -> bytes:
-        '''
-        Returns
-        -------
-        >>> bytes\n
-        The stride of the `ImageSurface` in bytes. The stride is the distance in bytes from the beginnning of one row of the image data to the beginning of the next row.
-        '''
-    def get_width(self) -> int:
-        '''
-        Returns
-        -------
-        >>> int\n
-        The width of the `ImageSurface` in pixels.
-        '''
-class IOError(Error, Exception):
-    '''
-    New in version 1.15: Prior to 1.15 IOError was raised instead of this type.
-    '''
 class LinearGradient(Gradient):
     '''
     Create a new `LinearGradient` along the line defined by (x0, y0) and (x1, y1). Before using the `Gradient` pattern, a number of color stops should be defined using `Gradient.add_color_stop_rgb()` or `Gradient.add_color_stop_rgba()`
@@ -2936,10 +3006,11 @@ class LinearGradient(Gradient):
     >>> MemoryError\n
     In case of no memory.
     '''
-    x0: float
-    y0: float
-    x1: float
-    y1: float
+    x0: float = ...
+    y0: float = ...
+    x1: float = ...
+    y1: float = ...
+    def __init__(self, x0: float, y0: float, x1: float, y1: float) -> None: ...
     def get_linear_points(self) -> Tuple[float, float, float, float]:
         '''
         Gets the gradient endpoints for a `LinearGradient`.
@@ -2955,8 +3026,6 @@ class LinearGradient(Gradient):
         - `y1 (float)` - Return value for the y coordinate of the second point.
         '''
 
-class MemoryError(Error, Exception):
-    '''New in version 1.15: Prior to 1.15 MemoryError was raised instead of this type.'''
 class MeshPattern(Pattern):
     '''
     New in version 1.14.
@@ -3043,6 +3112,7 @@ class MeshPattern(Pattern):
     ------
     >>> cairo.Error
     '''
+    def __init__(self) -> None: ...
     def begin_patch(self) -> None:
         '''
         Begin a patch in a mesh pattern.
@@ -3300,9 +3370,10 @@ class PDFSurface(Surface):
     >>> cairo.MemoryError\n
     In case of no memory.
     '''
-    fobj: Optional[str]
-    width_in_points: float
-    height_in_points: float
+    fobj: Union[_PathLike, _FileLike] = ...
+    width_in_points: float = ...
+    height_in_points: float = ...
+    def __init__(self, fobj: Union[_PathLike, _FileLike], width_in_points: float, height_in_points: float) -> None: ...
     def set_size(self, width_in_points: float, height_in_points: float) -> None:
         '''
         Changes the size of a PDFSurface for the current (and subsequent) pages.
@@ -3420,6 +3491,7 @@ class PDFSurface(Surface):
         >>> height (int)\n
         Thumbnail height.
         '''
+
 class PSSurface(Surface):
     '''
     The PSSurface is used to render cairo graphics to Adobe PostScript files and is a multi-page vector surface backend.
@@ -3445,9 +3517,10 @@ class PSSurface(Surface):
     >>> cairo.MemoryError\n
     In case of no memory.
     '''
-    fobj: Optional[str]
-    width_in_points: float
-    height_in_points: float
+    fobj: Union[_FileLike, _PathLike] = ...
+    width_in_points: float = ...
+    height_in_points: float = ...
+    def __init__(self, fobj: Union[_FileLike, _PathLike], width_in_points: float, height_in_points: float) -> None: ...
     def dsc_begin_page_setup(self) -> None:
         '''
         This method indicates that subsequent calls to `dsc_comment()` should direct comments to the PageSetup section of the PostScript output.
@@ -3613,6 +3686,109 @@ class PSSurface(Surface):
         >>> list(cairo.PSLevel)\n
         Supported level list.
         '''
+
+class SVGSurface(Surface):
+    '''
+    The SVGSurface is used to render cairo graphics to SVG files and is a multi-page vector surface backend.
+
+    Parameters
+    ----------
+    >>> fobj (str or None)\n
+    (`None`, `pathlike`, file or file-like object) – A filename or writable file object. `None` may be used to specify no output. This will generate a `SVGSurface` that may be queried and used as a source, without generating a temporary file.
+    >>> width_in_points (float)\n
+    Width of the surface, in points (1 point == 1/72.0 inch).
+    >>> height_in_points (float)\n
+    Height of the surface, in points (1 point == 1/72.0 inch).
+
+    Returns
+    -------
+    >>> cairo.SVGSurface\n
+    A new `SVGSurface` of the specified size in points to be written to `fobj`.
+
+    Raises
+    ------
+    >>> cairo.MemoryError\n
+    In case of no memory.
+    '''
+    fobj: Union[_PathLike, _FileLike] = ...
+    width_in_points: float = ...
+    height_in_points: float = ...
+    def __init__(self, fobj: Union[_PathLike, _FileLike], width_in_points: float, height_in_points: float) -> None: ...
+    def restrict_to_version(self, version: SVGVersion) -> None:
+        '''
+        Restricts the generated SVG file to version . See `get_versions()` for a list of available version values that can be used here.
+
+        This function should only be called before any drawing operations have been performed on the given surface. The simplest way to do this is to call this function immediately after creating the surface.
+
+        New in version 1.12.0.
+
+        Parameters
+        ----------
+        >>> version (cairo.SVGVersion)\n
+        '''
+    @staticmethod
+    def get_versions() -> List[SVGVersion]:
+        '''
+        Retrieve the list of supported versions. See `restrict_to_version()`.
+
+        New in version 1.12.0.
+
+        Returns
+        -------
+        >>> list(cairo.SVGVersion)\n
+        Supported version list.
+        '''
+    @staticmethod
+    def version_to_string(version: SVGVersion) -> str:
+        '''
+        Get the string representation of the given version ID. See `get_versions()` for a way to get the list of valid version IDs.
+
+        New in version 1.12.0.
+
+        Parameters
+        ----------
+        >>> version (cairo.SVGVersion)\n
+
+        Returns
+        -------
+        >>> str\n
+        The string associated to the given version.
+
+        Raises
+        ------
+        >>> ValueError\n
+        If the version isn't valid.
+        '''
+    def get_document_unit(self) -> SVGUnit:
+        '''
+        Get the unit of the `SVGSurface`.
+
+        New in version 1.18.0: Only available with cairo 1.15.10+.
+
+        Returns
+        -------
+        >>> cairo.SVGUnit\n
+        The SVG unit of the `SVGSurface`.
+        '''
+    def set_document_unit(self, unit: SVGUnit) -> None:
+        '''
+        Use the specified unit for the width and height of the generated SVG file. See `SVGUnit` for a list of available unit values that can be used here.
+
+        This function can be called at any time before generating the SVG file.
+
+        However to minimize the risk of ambiguities it’s recommended to call it before any drawing operations have been performed on the given surface, to make it clearer what the unit used in the drawing operations is.
+
+        The simplest way to do this is to call this function immediately after creating the SVG surface.
+
+        Note if this function is never called, the default unit for SVG documents generated by cairo will be “pt”. This is for historical reasons.
+
+        New in version 1.18.0: Only available with cairo 1.15.10+.
+
+        Parameters
+        ----------
+        >>> unit (cairo.SVGUnit)\n
+        '''
+
 class RadialGradient(Gradient):
     '''
     Creates a new `RadialGradient` pattern between the two circles defined by (cx0, cy0, radius0) and (cx1, cy1, radius1). Before using the gradient pattern, a number of color stops should be defined using `Gradient.add_color_stop_rgb()` or `Gradient.add_color_stop_rgba()`.
@@ -3644,12 +3820,13 @@ class RadialGradient(Gradient):
     >>> MemoryError\n
     In case of no memory.
     '''
-    cx0: float
-    cy0: float
-    radius0: float
-    cx1: float
-    cy1: float
-    radius1: float
+    cx0: float = ...
+    cy0: float = ...
+    radius0: float = ...
+    cx1: float = ...
+    cy1: float = ...
+    radius1: float = ...
+    def __init__(self, cx0: float, cy0: float, radius0: float, cx1: float, cy1: float, radius1: float) -> None: ...
     def get_radial_circles(self) -> Tuple[float, float, float, float, float, float]:
         '''
         Gets the Gradient endpoint circles for a RadialGradient, each specified as a center coordinate and a radius.
@@ -3666,6 +3843,10 @@ class RadialGradient(Gradient):
         - `y1 (float)` - Return value for the y coordinate of the center of the second circle.
         - `r1 (float)` - Return value for the radius of the second circle.
         '''
+
+_AcquireCallback = Callable[[Surface, RectangleInt], Surface]
+_ReleaseCallback = Callable[[Surface], None]
+
 class RasterSourcePattern(Pattern):
     '''
     Creates a new user pattern for providing pixel data.
@@ -3716,7 +3897,7 @@ class RasterSourcePattern(Pattern):
         ------
         >>> cairo.Error
         '''
-        def acquire(self, target: "Surface", extents: "RectangleInt") -> "Surface":
+        def acquire(self, target: Surface, extents: RectangleInt) -> Surface:
             '''
             This function is called when a pattern is being rendered from. It should create a surface that provides the pixel data for the region of interest as defined by extents, though the surface itself does not have to be limited to that area. For convenience the surface should probably be of image type, created with `Surface.create_similar_image()` for the target (which enables the number of copies to be reduced during transfer to the device). Another option, might be to return a similar surface to the target for explicit handling by the application of a set of cached sources on the device. The region of sample data provided should be defined using `Surface.set_device_offset()` to specify the top-left corner of the sample data (along with width and height of the surface).
 
@@ -3731,7 +3912,7 @@ class RasterSourcePattern(Pattern):
             -------
             >>> cairo.Surface
             '''
-        def release(self, surface: "Surface") -> None:
+        def release(self, surface: Surface) -> None:
             '''
             This function is called when the pixel data is no longer being accessed by the pattern for the rendering operation.
 
@@ -3740,7 +3921,7 @@ class RasterSourcePattern(Pattern):
             >>> surface (Surface)\n
             The surface created during acquire.
             '''
-    def get_acquire(self) -> Tuple[Optional[Callable[["Surface", "RectangleInt"], Surface]], Optional[Callable[["Surface"], None]]]:
+    def get_acquire(self) -> Tuple[Optional[_AcquireCallback], Optional[_ReleaseCallback]]:
         '''
         Queries the current acquire and release callbacks.
 
@@ -3751,6 +3932,7 @@ class RasterSourcePattern(Pattern):
         >>> (acquire: Optional[callable], release: Optional[callable])\n
         A tuple of callables or `None` as set through `set_acquire()`.
         '''
+
 class RecordingSurface(Surface):
     '''
     Creates a RecordingSurface which can be used to record all drawing operations at the highest level (that is, the level of paint, mask, stroke, fill and show_text_glyphs). The RecordingSurface can then be “replayed” against any target surface by using it as a source to drawing operations.
@@ -3777,8 +3959,9 @@ class RecordingSurface(Surface):
     >>> rectangle (cairo.Rectangle or None)\n
     `Rectangle` that bound the recorded operations, or `None` to record unbounded operations.
     '''
-    content: Content
-    rectangle: Optional[Rectangle]
+    content: Content = ...
+    rectangle: Optional[Rectangle] = ...
+    def __init__(self, content: Content, rectangle: Optional[Rectangle]) -> None: ...
     def ink_extents(self) -> Tuple[float, float, float, float]:
         '''
         Measures the extents of the operations stored within the `RecordingSurface`. This is useful to compute the required size of an `ImageSurface` (or equivalent) into which to replay the full sequence of drawing operations.
@@ -3808,29 +3991,6 @@ class RecordingSurface(Surface):
         A `Rectangle` or `None` if the surface is unbounded.
         '''
 
-class RectangleInt:
-    '''
-    RectangleInt is a data structure for holding a rectangle with integer coordinates.
-
-    Allocates a new RectangleInt object.
-
-    New in version 1.11.0.
-
-    Parameters
-    ----------
-    >>> x (int)\n
-    X coordinate of the left side of the rectangle.
-    >>> y (int)\n
-    Y coordinate of the top side of the rectangle.
-    >>> width (int)\n
-    Width of the rectangle.
-    >>> height (int)\n
-    Height of the rectangle.3
-    '''
-    x: int
-    y: int
-    width: int
-    height: int
 class Region:
     '''
     Allocates a new empty region object or a region object with the containing rectangle(s).
@@ -3844,7 +4004,8 @@ class Region:
     >>> rectangle_int (RectangleInt or [RectangleInt])\n
     A rectangle or a list of rectangles.
     '''
-    rectangle_int: Union[RectangleInt, List[RectangleInt]]
+    rectangle_int: Union[RectangleInt, List[RectangleInt]] = ...
+    def __init__(self, rectangle: Union[RectangleInt, List[RectangleInt]]) -> None: ...
     def copy(self) -> "Region":
         '''
         Allocates a new Region object copying the area from original.
@@ -3941,7 +4102,7 @@ class Region:
         >>> dy (int)\n
         Amount to translate in the y direction.
         '''
-    def intersect(self, other: Union["Region", RectangleInt]) -> "Region":
+    def intersect(self, other: "Union[Region, RectangleInt]") -> "Region":
         '''
         Parameters
         ----------
@@ -3952,7 +4113,7 @@ class Region:
         >>> cairo.Region\n
         The intersection of the region and the passed region or rectangle.
         '''
-    def subtract(self, other: Union["Region", RectangleInt]) -> "Region":
+    def subtract(self, other: "Union[Region, RectangleInt]") -> "Region":
         '''
         Parameters
         ----------
@@ -3963,7 +4124,7 @@ class Region:
         >>> cairo.Region\n
         The result of the subtraction of the region and the passed region or rectangle.
         '''
-    def union(self, other: Union["Region", RectangleInt]) -> "Region":
+    def union(self, other: "Union[Region, RectangleInt]") -> "Region":
         '''
         Parameters
         ----------
@@ -3974,7 +4135,7 @@ class Region:
         >>> cairo.Region\n
         The union of the region and the passed region or rectangle.
         '''
-    def xor(self, other: Union["Region", RectangleInt]) -> "Region":
+    def xor(self, other: "Union[Region, RectangleInt]") -> "Region":
         '''
         Parameters
         ----------
@@ -3985,150 +4146,7 @@ class Region:
         >>> cairo.Region\n
         The exclusive difference of the region and the passed region or rectangle.
         '''
-class ScaledFont:
-    '''
-    Creates a ScaledFont object from a FontFace and matrices that describe the size of the font and the environment in which it will be used.
 
-    A ScaledFont is a font scaled to a particular size and device resolution. A ScaledFont is most useful for low-level font usage where a library or application wants to cache a reference to a scaled font to speed up the computation of metrics.
-
-    There are various types of scaled fonts, depending on the font backend they use.
-
-    Parameters
-    ----------
-    >>> font_face (cairo.FontFace)\n
-    A `FontFace` instance.
-    >>> font_matrix (cairo.Matrix)\n
-    Font space to user space transformation `Matrix` for the font. In the simplest case of a N point font, this matrix is just a scale by N, but it can also be used to shear the font or stretch it unequally along the two axes. See `Context.set_font_matrix()`.
-    >>> ctm (cairo.Matrix)\n
-    User to device transformation `Matrix` with which the font will be used.
-    >>> options (cairo.FontOptions)\n
-    A `FontOptions` instance to use when getting metrics for the font and rendering with it.
-    '''
-    font_face: FontFace
-    font_matrix: Matrix
-    ctm: Matrix
-    options: FontOptions
-    def extents(self) -> Tuple[float, float, float, float, float]:
-        '''
-        Gets the metrics for a ScaledFont.
-
-        Returns
-        -------
-        >>> (ascent: float, descent: float, height: float, max_x_advance: float, max_y_advance: float)
-        '''
-    def get_ctm(self) -> Matrix:
-        '''
-        Returns the CTM with which scaled_font was created into ctm. Note that the translation offsets (x0, y0) of the CTM are ignored by `ScaledFont()`. So, the matrix this function returns always has 0, 0 as x0, y0.
-
-        New in version 1.12.0.
-
-        Returns
-        -------
-        >>> cairo.Matrix\n
-        The CTM.
-        '''
-    def get_font_face(self) -> FontFace:
-        '''
-        New in version 1.2.
-
-        Returns
-        -------
-        >>> cairo.FontFace\n
-        The `FontFace` that this `ScaledFont` was created for.
-        '''
-    def get_font_matrix(self) -> Matrix:
-        '''
-        Returns the font matrix with which scaled_font was created.
-
-        New in version 1.12.0.
-
-        Returns
-        -------
-        >>> cairo.Matrix\n
-        The Matrix.
-        '''
-    def get_font_options(self) -> FontOptions:
-        '''
-        Returns the font options with which scaled_font was created.
-
-        New in version 1.12.0.
-
-        Returns
-        -------
-        >>> cairo.FontOptions\n
-        Font options.
-        '''
-    def get_scale_matrix(self) -> Matrix:
-        '''
-        The scale matrix is product of the font matrix and the ctm associated with the scaled font, and hence is the matrix mapping from font space to device space.
-
-        New in version 1.8.
-
-        Returns
-        -------
-        >>> cairo.Matrix\n
-        The scale `Matrix`.
-        '''
-    def glyph_extents(self, glyphs: List[Glyph]) -> "TextExtents":
-        '''
-        New in version 1.15.
-
-        Gets the extents for a list of glyphs. The extents describe a user-space rectangle that encloses the “inked” portion of the glyphs, (as they would be drawn by `Context.show_glyphs()` if the cairo graphics state were set to the same font_face, font_matrix, ctm, and font_options as scaled_font ). Additionally, the x_advance and y_advance values indicate the amount by which the current point would be advanced by `cairo_show_glyphs()`.
-
-        Note that whitespace glyphs do not contribute to the size of the rectangle (extents.width and extents.height).
-
-        Parameters
-        ----------
-        >>> glyphs list(cairo.Glyph)\n
-        A sequence of `Glyph`.
-
-        Returns
-        -------
-        >>> cairo.TextExtents\n
-        '''
-    def text_extents(self, text: str) -> "TextExtents":
-        '''
-        Gets the extents for a string of text. The extents describe a user-space rectangle that encloses the “inked” portion of the text drawn at the origin (0,0) (as it would be drawn by `Context.show_text()` if the cairo graphics state were set to the same font_face, font_matrix, ctm, and font_options as `ScaledFont`). Additionally, the x_advance and y_advance values indicate the amount by which the current point would be advanced by `Context.show_text()`.
-
-        Note that whitespace characters do not directly contribute to the size of the rectangle (width and height). They do contribute indirectly by changing the position of non-whitespace characters. In particular, trailing whitespace characters are likely to not affect the size of the rectangle, though they will affect the x_advance and y_advance values.
-
-        Parameters
-        ----------
-        >>> text (str)
-
-        Returns
-        -------
-        >>> cairo.TextExtents
-        '''
-    def text_to_glyphs(self, x: float, y: float, utf8: str, with_clusters: bool = True) -> Union[Tuple[List[Glyph], List["TextCluster"], TextClusterFlags], List[Glyph]]:
-        '''
-        New in version 1.15.
-
-        Converts UTF-8 text to a list of glyphs, with cluster mapping, that can be used to render later.
-
-        For details of how clusters, and cluster_flags map input UTF-8 text to the output glyphs see `Context.show_text_glyphs()`.
-
-        The output values can be readily passed to `Context.show_text_glyphs()` `Context.show_glyphs()`, or related functions, assuming that the exact same scaled font is used for the operation.
-
-        Parameters
-        ----------
-        >>> x (float)\n
-        X position to place first glyph.
-        >>> y (float)\n
-        Y position to place first glyph.
-        >>> utf8 (str)\n
-        A string of text.
-        >>> with_clusters (bool)\n
-        If `False` only the glyph list will be computed and returned.
-
-        Returns
-        -------
-        >>> ([Glyph], [TextCluster], TextClusterFlags) or [Glyph]
-
-        Raises
-        ------
-        >>> cairo.Error\n
-        '''
 class ScriptDevice(Device):
     '''
     Creates a output device for emitting the script, used when creating the individual surfaces.
@@ -4140,6 +4158,8 @@ class ScriptDevice(Device):
     >>> fobj (str)\n
     (pathlike, file or file-like object) – A filename or writable file object.
     '''
+    fobj: Union[_FileLike, _PathLike] = ...
+    def __init__(self, fobj: Union[_FileLike, _PathLike]) -> None: ...
     def set_mode(self, mode: ScriptMode) -> None:
         '''
         Change the output mode of the script.
@@ -4180,6 +4200,7 @@ class ScriptDevice(Device):
         ------
         >>> cairo.Error
         '''
+
 class ScriptSurface(Surface):
     '''
     Create a new surface that will emit its rendering through `script`.
@@ -4208,12 +4229,13 @@ class ScriptSurface(Surface):
     ------
     >>> cairo.Error\n
     '''
-    script: ScriptDevice
-    content: Content
-    width: float
-    height: float
+    script: ScriptDevice = ...
+    content: Content = ...
+    width: float = ...
+    height: float = ...
+    def __init__(self, script: ScriptDevice, content: Content, width: float, height: float) -> None: ...
     @classmethod
-    def create_for_target(cls, script: "ScriptDevice", target: "Surface") -> "ScriptSurface":
+    def create_for_target(cls, script: ScriptDevice, target: Surface) -> "ScriptSurface":
         '''
         Create a proxy surface that will render to `target` and record the operations to `device`.
 
@@ -4226,6 +4248,47 @@ class ScriptSurface(Surface):
         >>> target (cairo.Surface)\n
         The target surface to wrap.
         '''
+
+class Win32Surface(Surface):
+    '''
+    Creates a cairo surface that targets the given DC. The DC will be queried for its initial clip extents, and this will be used as the size of the cairo surface. The resulting surface will always be of format `cairo.FORMAT_RGB24`, see `cairo.Format`.
+
+    The Microsoft Windows surface is used to render cairo graphics to Microsoft Windows windows, bitmaps, and printing device contexts.
+
+    Parameters
+    ----------
+    >>> hdc (int)\n
+    The DC to create a surface for.
+
+    Returns
+    -------
+    >>> cairo.Win32Surface\n
+    A newly created surface.
+    '''
+    hdc: int = ...
+    def __init__(self, hdc: int) -> None: ...
+
+class Win32PrintingSurface(Surface):
+    '''
+    Creates a cairo surface that targets the given DC. The DC will be queried for its initial clip extents, and this will be used as the size of the cairo surface. The DC should be a printing DC; antialiasing will be ignored, and GDI will be used as much as possible to draw to the surface.
+
+    The returned surface will be wrapped using the paginated surface to provide correct complex rendering behaviour; `cairo.Surface.show_page()` and associated methods must be used for correct output.
+
+    The Win32PrintingSurface is a multi-page vector surface type.
+
+    Parameters
+    ----------
+    >>> hdc (int)\n
+    The DC to create a surface for.
+
+    Returns
+    -------
+    >>> cairo.Win32PrintingSurface\n
+    A newly created surface.
+    '''
+    hdc: int = ...
+    def __init__(self, hdc: int) -> None: ...
+
 class SolidPattern(Pattern):
     '''
     Creates a new SolidPattern corresponding to a translucent color. The color components are floating point numbers in the range 0 to 1. If the values passed in are outside that range, they will be clamped.
@@ -4250,10 +4313,11 @@ class SolidPattern(Pattern):
     >>> MemoryError\n
     In case of no memory.
     '''
-    red: float
-    green: float
-    blue: float
-    alpha: float
+    red: float = ...
+    green: float = ...
+    blue: float = ...
+    alpha: float = ...
+    def __init__(self, red: float, green: float, blue: float, alpha: float=1.0) -> None: ...
     def get_rgba(self) -> Tuple[float, float, float, float]:
         '''
         Gets the solid color for a `SolidPattern`.
@@ -4265,133 +4329,6 @@ class SolidPattern(Pattern):
         >>> (red: float, green: float, blue: float, alpha: float)\n
         '''
 
-class SurfacePattern(Pattern):
-    '''
-    Parameters
-    ----------
-    >>> surface (Surface)\n
-    A cairo `Surface`.
-
-    Returns
-    -------
-    >>> SurfacePattern\n
-    A newly created `SurfacePattern` for the given surface.
-
-    Raises
-    ------
-    >>> MemoryError\n
-    In case of no memory.
-    '''
-    surface: Surface
-    def get_surface(self) -> Surface:
-        '''
-        New in version 1.4.
-
-        Returns
-        -------
-        >>> cairo.Surface\n
-        The `Surface` of the `SurfacePattern`.
-        '''
-class SVGSurface(Surface):
-    '''
-    The SVGSurface is used to render cairo graphics to SVG files and is a multi-page vector surface backend.
-
-    Parameters
-    ----------
-    >>> fobj (str or None)\n
-    (`None`, `pathlike`, file or file-like object) – A filename or writable file object. `None` may be used to specify no output. This will generate a `SVGSurface` that may be queried and used as a source, without generating a temporary file.
-    >>> width_in_points (float)\n
-    Width of the surface, in points (1 point == 1/72.0 inch).
-    >>> height_in_points (float)\n
-    Height of the surface, in points (1 point == 1/72.0 inch).
-
-    Returns
-    -------
-    >>> cairo.SVGSurface\n
-    A new `SVGSurface` of the specified size in points to be written to `fobj`.
-
-    Raises
-    ------
-    >>> cairo.MemoryError\n
-    In case of no memory.
-    '''
-    fobj: Optional[str]
-    width_in_points: float
-    height_in_points: float
-    def restrict_to_version(self, version: SVGVersion) -> None:
-        '''
-        Restricts the generated SVG file to version . See `get_versions()` for a list of available version values that can be used here.
-
-        This function should only be called before any drawing operations have been performed on the given surface. The simplest way to do this is to call this function immediately after creating the surface.
-
-        New in version 1.12.0.
-
-        Parameters
-        ----------
-        >>> version (cairo.SVGVersion)\n
-        '''
-    @staticmethod
-    def get_versions() -> List[SVGVersion]:
-        '''
-        Retrieve the list of supported versions. See `restrict_to_version()`.
-
-        New in version 1.12.0.
-
-        Returns
-        -------
-        >>> list(cairo.SVGVersion)\n
-        Supported version list.
-        '''
-    @staticmethod
-    def version_to_string(version: SVGVersion) -> str:
-        '''
-        Get the string representation of the given version ID. See `get_versions()` for a way to get the list of valid version IDs.
-
-        New in version 1.12.0.
-
-        Parameters
-        ----------
-        >>> version (cairo.SVGVersion)\n
-
-        Returns
-        -------
-        >>> str\n
-        The string associated to the given version.
-
-        Raises
-        ------
-        >>> ValueError\n
-        If the version isn't valid.
-        '''
-    def get_document_unit(self) -> SVGUnit:
-        '''
-        Get the unit of the `SVGSurface`.
-
-        New in version 1.18.0: Only available with cairo 1.15.10+.
-
-        Returns
-        -------
-        >>> cairo.SVGUnit\n
-        The SVG unit of the `SVGSurface`.
-        '''
-    def set_document_unit(self, unit: SVGUnit) -> None:
-        '''
-        Use the specified unit for the width and height of the generated SVG file. See `SVGUnit` for a list of available unit values that can be used here.
-
-        This function can be called at any time before generating the SVG file.
-
-        However to minimize the risk of ambiguities it’s recommended to call it before any drawing operations have been performed on the given surface, to make it clearer what the unit used in the drawing operations is.
-
-        The simplest way to do this is to call this function immediately after creating the SVG surface.
-
-        Note if this function is never called, the default unit for SVG documents generated by cairo will be “pt”. This is for historical reasons.
-
-        New in version 1.18.0: Only available with cairo 1.15.10+.
-
-        Parameters
-        ----------
-        >>> unit (cairo.SVGUnit)\n
-        '''
 class TeeSurface(Surface):
     '''
     This surface supports redirecting all its input to multiple surfaces.
@@ -4410,7 +4347,8 @@ class TeeSurface(Surface):
     ------
     >>> cairo.Error\n
     '''
-    master: Surface
+    master: Surface = ...
+    def __init__(self, master: Surface) -> None: ...
     def add(self, target: Surface) -> None:
         '''
         Adds the surface.
@@ -4453,57 +4391,7 @@ class TeeSurface(Surface):
         -------
         >>> cairo.Error\n
         '''
-class TextCluster(tuple):
-    '''
-    New in version 1.15.
 
-    The `TextCluster` structure holds information about a single text cluster. A text cluster is a minimal mapping of some glyphs corresponding to some UTF-8 text.
-
-    For a cluster to be valid, both `num_bytes` and `num_glyphs` should be non-negative, and at least one should be non-zero. Note that clusters with zero glyphs are not as well supported as normal clusters. For example, PDF rendering applications typically ignore those clusters when PDF text is being selected.
-
-    See `Context.show_text_glyphs()` for how clusters are used in advanced text operations.
-
-    Parameters
-    ----------
-    >>> num_bytes (int)\n
-    The number of bytes of UTF-8 text covered by cluster.
-    >>> num_glyphs (int)\n
-    The number of glyphs covered by cluster.
-    '''
-    num_bytes: int
-    num_glyphs: int
-class TextExtents(tuple):
-    '''
-    New in version 1.15: In prior versions a (float, float, float, float, float, float) tuple was used instead of `TextExtents`.
-
-    The `TextExtents` class stores the extents of a single glyph or a string of glyphs in user-space coordinates. Because text extents are in user-space coordinates, they are mostly, but not entirely, independent of the current transformation matrix. If you call `context.scale(2.0, 2.0)`, text will be drawn twice as big, but the reported text extents will not be doubled. They will change slightly due to hinting (so you can’t assume that metrics are independent of the transformation matrix), but otherwise will remain unchanged.
-
-    Parameters
-    ----------
-    >>> x_bearing (float)\n
-    The horizontal distance from the origin to the leftmost part of the glyphs as drawn. Positive if the glyphs lie entirely to the right of the origin.
-    >>> y_bearing (float)\n
-    The vertical distance from the origin to the topmost part of the glyphs as drawn. Positive only if the glyphs lie completely below the origin; will usually be negative.
-    >>> width (float)\n
-    Width of the glyphs as drawn.
-    >>> height (float)\n
-    Height of the glyphs as drawn.
-    >>> x_advance (float)\n
-    Distance to advance in the X direction after drawing these glyphs.
-    >>> y_advance (float)\n
-    Distance to advance in the Y direction after drawing these glyphs. Will typically be zero except for vertical text layout as found in East-Asian languages.
-
-    Returns
-    -------
-    >>> cairo.TextExtents\n
-    A newly created `TextExtents` instance.
-    '''
-    x_bearing: float
-    y_bearing: float
-    width: float
-    height: float
-    x_advance: float
-    y_advance: float
 class ToyFontFace(FontFace):
     '''
     The cairo.ToyFontFace class can be used instead of Context.select_font_face() to create a toy font independently of a context.
@@ -4530,9 +4418,10 @@ class ToyFontFace(FontFace):
     >>> cairo.ToyFontFace\n
     A newly created `ToyFontFace` instance.
     '''
-    family: str
-    slant: FontSlant
-    weight: FontWeight
+    family: str = ...
+    slant: FontSlant = ...
+    weight: FontWeight = ...
+    def __init__(self, family: str, slant: FontSlant=..., weight: FontWeight=...) -> None: ...
     def get_family(self) -> str:
         '''
         Returns
@@ -4558,50 +4447,7 @@ class ToyFontFace(FontFace):
         >>> cairo.FontWeight\n
         The font weight value.
         '''
-class UserFontFace(FontFace):
-    '''
-    The user-font feature allows the cairo user to provide drawings for glyphs in a font. This is most useful in implementing fonts in non-standard formats, like SVG fonts and Flash fonts, but can also be used by games and other application to draw “funky” fonts.
 
-    Note
-    ----
-    UserFontFace support has not (yet) been added to pycairo. If you need this feature in pycairo register your interest by sending a message to the cairo mailing list, or by opening a pycairo bug report.
-    '''
-class Win32PrintingSurface(Surface):
-    '''
-    Creates a cairo surface that targets the given DC. The DC will be queried for its initial clip extents, and this will be used as the size of the cairo surface. The DC should be a printing DC; antialiasing will be ignored, and GDI will be used as much as possible to draw to the surface.
-
-    The returned surface will be wrapped using the paginated surface to provide correct complex rendering behaviour; `cairo.Surface.show_page()` and associated methods must be used for correct output.
-
-    The Win32PrintingSurface is a multi-page vector surface type.
-
-    Parameters
-    ----------
-    >>> hdc (int)\n
-    The DC to create a surface for.
-
-    Returns
-    -------
-    >>> cairo.Win32PrintingSurface\n
-    A newly created surface.
-    '''
-    hdc: int
-class Win32Surface(Surface):
-    '''
-    Creates a cairo surface that targets the given DC. The DC will be queried for its initial clip extents, and this will be used as the size of the cairo surface. The resulting surface will always be of format `cairo.FORMAT_RGB24`, see `cairo.Format`.
-
-    The Microsoft Windows surface is used to render cairo graphics to Microsoft Windows windows, bitmaps, and printing device contexts.
-
-    Parameters
-    ----------
-    >>> hdc (int)\n
-    The DC to create a surface for.
-
-    Returns
-    -------
-    >>> cairo.Win32Surface\n
-    A newly created surface.
-    '''
-    hdc: int
 class XCBSurface(Surface):
     '''
     Creates a cairo surface that targets the given drawable (pixmap or window).
@@ -4627,11 +4473,12 @@ class XCBSurface(Surface):
     >>> height (int)\n
     The surface height.
     '''
-    connection: Any
-    drawable: Any
-    visualtype: Any
-    width: int
-    height: int
+    connection: Any = ...
+    drawable: Any = ...
+    visualtype: Any = ...
+    width: int = ...
+    height: int = ...
+    def __init__(self, connection: Any, drawable: Any, visualtype: Any, width: int, height: int) -> None: ...
     def set_size(self, width: int, height: int) -> None:
         '''
         Informs cairo of the new size of the X Drawable underlying the surface. For a surface created for a Window (rather than a Pixmap), this function must be called each time the size of the window changes. (For a subwindow, you are normally resizing the window yourself, but for a toplevel window, it is necessary to listen for ConfigureNotify events.)
@@ -4645,6 +4492,7 @@ class XCBSurface(Surface):
         >>> height (int)\n
         The height of the surface.
         '''
+
 class XlibSurface(Surface):
     '''
     The XLib surface is used to render cairo graphics to X Window System windows and pixmaps using the XLib library.
@@ -4683,4 +4531,226 @@ class XlibSurface(Surface):
         The width of the X Drawable underlying the surface in pixels.
         '''
 
+class FreeTypeFontFace(FontFace):
+    '''
+    FreeType Fonts - Font support for FreeType.
 
+    The FreeType font backend is primarily used to render text on GNU/Linux systems, but can be used on other platforms too.
+
+    Note
+    ----
+    FreeType Fonts are not implemented in pycairo because there is no open source Python bindings to FreeType (and fontconfig) that provides a C API. This a possible project idea for anyone interested in adding FreeType support to pycairo.
+    '''
+
+class IOError(Error):
+    '''
+    New in version 1.15: Prior to 1.15 IOError was raised instead of this type.
+    '''
+
+class MemoryError(Error):
+    '''New in version 1.15: Prior to 1.15 MemoryError was raised instead of this type.'''
+
+class UserFontFace(FontFace):
+    '''
+    The user-font feature allows the cairo user to provide drawings for glyphs in a font. This is most useful in implementing fonts in non-standard formats, like SVG fonts and Flash fonts, but can also be used by games and other application to draw “funky” fonts.
+
+    Note
+    ----
+    UserFontFace support has not (yet) been added to pycairo. If you need this feature in pycairo register your interest by sending a message to the cairo mailing list, or by opening a pycairo bug report.
+    '''
+
+def get_include() -> _PathLike:
+    '''
+    Gives the include path which should be passed to the compiler.
+
+    New in version 1.16.0.
+
+    Returns
+    -------
+    >>> str\n
+    A path to the directory containing the C header files.
+    '''
+
+# cairo.MIME_TYPE
+MIME_TYPE_JP2: str = ...
+MIME_TYPE_JPEG: str = ...
+MIME_TYPE_PNG: str = ...
+MIME_TYPE_URI: str = ...
+MIME_TYPE_UNIQUE_ID: str = ...
+MIME_TYPE_CCITT_FAX: str = ...
+MIME_TYPE_CCITT_FAX_PARAMS: str = ...
+MIME_TYPE_EPS: str = ...
+MIME_TYPE_EPS_PARAMS: str = ...
+MIME_TYPE_JBIG2: str = ...
+MIME_TYPE_JBIG2_GLOBAL: str = ...
+MIME_TYPE_JBIG2_GLOBAL_ID: str = ...
+
+# cairo.TAG
+TAG_DEST: str = ...
+TAG_LINK: str = ...
+
+# Legacy Constants
+ANTIALIAS_BEST = Antialias.BEST
+ANTIALIAS_DEFAULT = Antialias.DEFAULT
+ANTIALIAS_FAST = Antialias.FAST
+ANTIALIAS_GOOD = Antialias.GOOD
+ANTIALIAS_GRAY = Antialias.GRAY
+ANTIALIAS_NONE = Antialias.NONE
+ANTIALIAS_SUBPIXEL = Antialias.SUBPIXEL
+CONTENT_ALPHA = Content.ALPHA
+CONTENT_COLOR = Content.COLOR
+CONTENT_COLOR_ALPHA = Content.COLOR_ALPHA
+EXTEND_NONE = Extend.NONE
+EXTEND_PAD = Extend.PAD
+EXTEND_REFLECT = Extend.REFLECT
+EXTEND_REPEAT = Extend.REPEAT
+FILL_RULE_EVEN_ODD = FillRule.EVEN_ODD
+FILL_RULE_WINDING = FillRule.WINDING
+FILTER_BEST = Filter.BEST
+FILTER_BILINEAR = Filter.BILINEAR
+FILTER_FAST = Filter.FAST
+FILTER_GAUSSIAN = Filter.GAUSSIAN
+FILTER_GOOD = Filter.GOOD
+FILTER_NEAREST = Filter.NEAREST
+FONT_SLANT_ITALIC = FontSlant.ITALIC
+FONT_SLANT_NORMAL = FontSlant.NORMAL
+FONT_SLANT_OBLIQUE = FontSlant.OBLIQUE
+FONT_WEIGHT_BOLD = FontWeight.BOLD
+FONT_WEIGHT_NORMAL = FontWeight.NORMAL
+FORMAT_A1 = Format.A1
+FORMAT_A8 = Format.A8
+FORMAT_ARGB32 = Format.ARGB32
+FORMAT_INVALID = Format.INVALID
+FORMAT_RGB16_565 = Format.RGB16_565
+FORMAT_RGB24 = Format.RGB24
+FORMAT_RGB30 = Format.RGB30
+HINT_METRICS_DEFAULT = HintMetrics.DEFAULT
+HINT_METRICS_OFF = HintMetrics.OFF
+HINT_METRICS_ON = HintMetrics.ON
+HINT_STYLE_DEFAULT = HintStyle.DEFAULT
+HINT_STYLE_FULL = HintStyle.FULL
+HINT_STYLE_MEDIUM = HintStyle.MEDIUM
+HINT_STYLE_NONE = HintStyle.NONE
+HINT_STYLE_SLIGHT = HintStyle.SLIGHT
+LINE_CAP_BUTT = LineCap.BUTT
+LINE_CAP_ROUND = LineCap.ROUND
+LINE_CAP_SQUARE = LineCap.SQUARE
+LINE_JOIN_BEVEL = LineJoin.BEVEL
+LINE_JOIN_MITER = LineJoin.MITER
+LINE_JOIN_ROUND = LineJoin.ROUND
+OPERATOR_ADD = Operator.ADD
+OPERATOR_ATOP = Operator.ATOP
+OPERATOR_CLEAR = Operator.CLEAR
+OPERATOR_COLOR_BURN = Operator.COLOR_BURN
+OPERATOR_COLOR_DODGE = Operator.COLOR_DODGE
+OPERATOR_DARKEN = Operator.DARKEN
+OPERATOR_DEST = Operator.DEST
+OPERATOR_DEST_ATOP = Operator.DEST_ATOP
+OPERATOR_DEST_IN = Operator.DEST_IN
+OPERATOR_DEST_OUT = Operator.DEST_OUT
+OPERATOR_DEST_OVER = Operator.DEST_OVER
+OPERATOR_DIFFERENCE = Operator.DIFFERENCE
+OPERATOR_EXCLUSION = Operator.EXCLUSION
+OPERATOR_HARD_LIGHT = Operator.HARD_LIGHT
+OPERATOR_HSL_COLOR = Operator.HSL_COLOR
+OPERATOR_HSL_HUE = Operator.HSL_HUE
+OPERATOR_HSL_LUMINOSITY = Operator.HSL_LUMINOSITY
+OPERATOR_HSL_SATURATION = Operator.HSL_SATURATION
+OPERATOR_IN = Operator.IN
+OPERATOR_LIGHTEN = Operator.LIGHTEN
+OPERATOR_MULTIPLY = Operator.MULTIPLY
+OPERATOR_OUT = Operator.OUT
+OPERATOR_OVER = Operator.OVER
+OPERATOR_OVERLAY = Operator.OVERLAY
+OPERATOR_SATURATE = Operator.SATURATE
+OPERATOR_SCREEN = Operator.SCREEN
+OPERATOR_SOFT_LIGHT = Operator.SOFT_LIGHT
+OPERATOR_SOURCE = Operator.SOURCE
+OPERATOR_XOR = Operator.XOR
+PATH_CLOSE_PATH = PathDataType.CLOSE_PATH
+PATH_CURVE_TO = PathDataType.CURVE_TO
+PATH_LINE_TO = PathDataType.LINE_TO
+PATH_MOVE_TO = PathDataType.MOVE_TO
+PDF_VERSION_1_4 = PDFVersion.VERSION_1_4
+PDF_VERSION_1_5 = PDFVersion.VERSION_1_5
+PS_LEVEL_2 = PSLevel.LEVEL_2
+PS_LEVEL_3 = PSLevel.LEVEL_3
+REGION_OVERLAP_IN = RegionOverlap.IN
+REGION_OVERLAP_OUT = RegionOverlap.OUT
+REGION_OVERLAP_PART = RegionOverlap.PART
+SCRIPT_MODE_ASCII = ScriptMode.ASCII
+SCRIPT_MODE_BINARY = ScriptMode.BINARY
+STATUS_CLIP_NOT_REPRESENTABLE = Status.CLIP_NOT_REPRESENTABLE
+STATUS_DEVICE_ERROR = Status.DEVICE_ERROR
+STATUS_DEVICE_FINISHED = Status.DEVICE_FINISHED
+STATUS_DEVICE_TYPE_MISMATCH = Status.DEVICE_TYPE_MISMATCH
+STATUS_FILE_NOT_FOUND = Status.FILE_NOT_FOUND
+STATUS_FONT_TYPE_MISMATCH = Status.FONT_TYPE_MISMATCH
+STATUS_INVALID_CLUSTERS = Status.INVALID_CLUSTERS
+STATUS_INVALID_CONTENT = Status.INVALID_CONTENT
+STATUS_INVALID_DASH = Status.INVALID_DASH
+STATUS_INVALID_DSC_COMMENT = Status.INVALID_DSC_COMMENT
+STATUS_INVALID_FORMAT = Status.INVALID_FORMAT
+STATUS_INVALID_INDEX = Status.INVALID_INDEX
+STATUS_INVALID_MATRIX = Status.INVALID_MATRIX
+STATUS_INVALID_MESH_CONSTRUCTION = Status.INVALID_MESH_CONSTRUCTION
+STATUS_INVALID_PATH_DATA = Status.INVALID_PATH_DATA
+STATUS_INVALID_POP_GROUP = Status.INVALID_POP_GROUP
+STATUS_INVALID_RESTORE = Status.INVALID_RESTORE
+STATUS_INVALID_SIZE = Status.INVALID_SIZE
+STATUS_INVALID_SLANT = Status.INVALID_SLANT
+STATUS_INVALID_STATUS = Status.INVALID_STATUS
+STATUS_INVALID_STRIDE = Status.INVALID_STRIDE
+STATUS_INVALID_STRING = Status.INVALID_STRING
+STATUS_INVALID_VISUAL = Status.INVALID_VISUAL
+STATUS_INVALID_WEIGHT = Status.INVALID_WEIGHT
+STATUS_JBIG2_GLOBAL_MISSING = Status.JBIG2_GLOBAL_MISSING
+STATUS_LAST_STATUS = Status.LAST_STATUS
+STATUS_NEGATIVE_COUNT = Status.NEGATIVE_COUNT
+STATUS_NO_CURRENT_POINT = Status.NO_CURRENT_POINT
+STATUS_NO_MEMORY = Status.NO_MEMORY
+STATUS_NULL_POINTER = Status.NULL_POINTER
+STATUS_PATTERN_TYPE_MISMATCH = Status.PATTERN_TYPE_MISMATCH
+STATUS_READ_ERROR = Status.READ_ERROR
+STATUS_SUCCESS = Status.SUCCESS
+STATUS_SURFACE_FINISHED = Status.SURFACE_FINISHED
+STATUS_SURFACE_TYPE_MISMATCH = Status.SURFACE_TYPE_MISMATCH
+STATUS_TEMP_FILE_ERROR = Status.TEMP_FILE_ERROR
+STATUS_USER_FONT_ERROR = Status.USER_FONT_ERROR
+STATUS_USER_FONT_IMMUTABLE = Status.USER_FONT_IMMUTABLE
+STATUS_USER_FONT_NOT_IMPLEMENTED = Status.USER_FONT_NOT_IMPLEMENTED
+STATUS_WRITE_ERROR = Status.WRITE_ERROR
+SUBPIXEL_ORDER_BGR = SubpixelOrder.BGR
+SUBPIXEL_ORDER_DEFAULT = SubpixelOrder.DEFAULT
+SUBPIXEL_ORDER_RGB = SubpixelOrder.RGB
+SUBPIXEL_ORDER_VBGR = SubpixelOrder. VBGR
+SUBPIXEL_ORDER_VRGB = SubpixelOrder.VRGB
+SURFACE_OBSERVER_NORMAL = SurfaceObserverMode.NORMAL
+SURFACE_OBSERVER_RECORD_OPERATIONS = SurfaceObserverMode.RECORD_OPERATIONS
+SVG_VERSION_1_1 = SVGVersion.VERSION_1_1
+SVG_VERSION_1_2 = SVGVersion.VERSION_1_2
+TEXT_CLUSTER_FLAG_BACKWARD = TextClusterFlags.BACKWARD
+PDF_METADATA_TITLE = PDFMetadata.TITLE
+PDF_METADATA_AUTHOR = PDFMetadata.AUTHOR
+PDF_METADATA_SUBJECT = PDFMetadata.SUBJECT
+PDF_METADATA_KEYWORDS = PDFMetadata.KEYWORDS
+PDF_METADATA_CREATOR = PDFMetadata.CREATOR
+PDF_METADATA_CREATE_DATE = PDFMetadata.CREATE_DATE
+PDF_METADATA_MOD_DATE = PDFMetadata.MOD_DATE
+SVG_UNIT_USER = SVGUnit.USER
+SVG_UNIT_EM = SVGUnit.EM
+SVG_UNIT_EX = SVGUnit.EX
+SVG_UNIT_PX = SVGUnit.PX
+SVG_UNIT_IN = SVGUnit.IN
+SVG_UNIT_CM = SVGUnit.CM
+SVG_UNIT_MM = SVGUnit.MM
+SVG_UNIT_PT = SVGUnit.PT
+SVG_UNIT_PC = SVGUnit.PC
+SVG_UNIT_PERCENT = SVGUnit.PERCENT
+STATUS_TAG_ERROR = Status.TAG_ERROR
+STATUS_FREETYPE_ERROR = Status.FREETYPE_ERROR
+STATUS_WIN32_GDI_ERROR = Status.WIN32_GDI_ERROR
+STATUS_PNG_ERROR = Status.PNG_ERROR
+PDF_OUTLINE_FLAG_OPEN = PDFOutlineFlags.OPEN
+PDF_OUTLINE_FLAG_BOLD = PDFOutlineFlags.BOLD
+PDF_OUTLINE_FLAG_ITALIC = PDFOutlineFlags.ITALIC
