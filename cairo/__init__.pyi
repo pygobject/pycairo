@@ -950,6 +950,8 @@ class FontOptions:
         >>> str\n
         The font variations for the font options object. The returned string belongs to the options and must not be modified. It is valid until either the font options object is destroyed or the font variations in this object is modified with `set_variations()`.
         """
+    def get_hint_metrics(self) -> HintMetrics: ...
+    def set_subpixel_order(self, subpixel_order: SubpixelOrder) -> None: ...
 
 class ScaledFont:
     """
@@ -3333,6 +3335,7 @@ class MeshPattern(Pattern):
         ------
         >>> cairo.Error
         """
+    def get_path(self, patch_num: int) -> Path: ...
 
 class PDFSurface(Surface):
     """
@@ -3846,7 +3849,7 @@ class RasterSourcePattern(Pattern):
     >>> cairo.Error
     """
     def __init__(self, content: Content, width: int, height: int) -> None: ...
-    def get_acquire(self) -> Tuple[Optional[_AcquireCallback], Optional[_ReleaseCallback]]: ...
+    def set_acquire(self, acquire: Optional[_AcquireCallback], release: Optional[_ReleaseCallback]) -> None: ...
     def get_acquire(self) -> Tuple[Optional[_AcquireCallback], Optional[_ReleaseCallback]]:
         """
         Queries the current acquire and release callbacks.
