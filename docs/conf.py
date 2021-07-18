@@ -1,8 +1,29 @@
 # -*- coding: utf-8 -*-
 
+import os
+import types
+import sys
+
+
+dir_ = os.path.dirname(os.path.realpath(__file__))
+
+
+def exec_module(path):
+    globals_ = {}
+    with open(path, encoding="utf-8") as h:
+        exec(h.read(), globals_)
+    module = types.ModuleType("")
+    module.__dict__.update(globals_)
+    return module
+
+
+sys.modules["cairo"] = exec_module(os.path.join(dir_, "..", "cairo", "__init__.pyi"))
+
+
 extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.extlinks',
+    'sphinx.ext.autodoc',
 ]
 intersphinx_mapping = {
     'python3': ('https://docs.python.org/3', None),
@@ -34,3 +55,5 @@ extlinks = {
     'user': ('https://github.com/%s', ''),
 }
 suppress_warnings = ["image.nonlocal_uri"]
+
+autoclass_content = 'both'
