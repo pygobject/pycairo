@@ -5,7 +5,7 @@
 
 * Use poetry for development :pr:`232`
 * setup.py: Respect the PKG_CONFIG environment variable :pr:`235`
-* Make import_cairo inline in addition to static :pr`224`
+* Make import_cairo inline in addition to static :pr:`224`
 * docs: Fix example in Pattern.set_filter() docs :pr:`221`
 * docs: Fix build with newer sphinx :pr:`222`
 * docs: Fix NumPy width, height-conventions in examples :pr:`231`
