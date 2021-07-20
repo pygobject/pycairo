@@ -12,7 +12,7 @@ pytest = "^6.0.0"
 hypothesis = "^6.0.0"
 mypy = {version = "^0.812", markers = "platform_python_implementation != 'PyPy'"}
 flake8 = "^3.9.1"
-Sphinx = "^3.5.4"
+Sphinx = "^4.1.1"
 sphinx-rtd-theme = "^0.5.2"
 coverage = "^5.5"
 
