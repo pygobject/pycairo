@@ -42,42 +42,43 @@ def cairo_version_string() -> str:
 
 class Path:
     """
-    Path cannot be instantiated directly, it is created by calling `Context.copy_path()` and `Context.copy_path_flat()`.
+    *Path* cannot be instantiated directly, it is created by calling
+    :meth:`Context.copy_path` and :meth:`Context.copy_path_flat`.
 
-    `str(path)` lists the path elements.
+    str(path) lists the path elements.
 
-    See path attributes
+    See :class:`path attributes <cairo.PathDataType>`
 
-    `Path` is an iterator.
+    Path is an iterator.
+
+    See examples/warpedtext.py for example usage.
     """
 
 class Rectangle(Tuple[float, float, float, float]):
     """
-    New in version 1.15: In prior versions a (float, float, float, float) tuple was used instead of `Rectangle`.
+    .. versionadded:: 1.15
+        In prior versions a (float, float, float, float) tuple was
+        used instead of :class:`Rectangle`.
 
     A data structure for holding a rectangle.
-
-    Parameters
-    ----------
-    >>> x (float)\n
-    X coordinate of the left side of the rectangle.
-    >>> y (float)\n
-    Y coordinate of the the top side of the rectangle.
-    >>> width (float)\n
-    Width of the rectangle.
-    >>> height (float)\n
-    Height of the rectangle.
-
-    Returns
-    -------
-    >>> cairo.Rectangle\n
-    A newly created `Rectangle` instance.
     """
+
     x: float = ...
     y: float = ...
     width: float = ...
     height: float = ...
-    def __init__(self, x: float, y: float, width: float, height: float) -> None: ...
+
+    def __init__(self, x: float, y: float, width: float, height: float) -> None:
+        """
+        :param x:
+            X coordinate of the left side of the rectangle
+        :param y:
+            Y coordinate of the the top side of the rectangle
+        :param width:
+            width of the rectangle
+        :param height:
+            height of the rectangle
+        """
 
 class _IntEnum(int):
     def __init__(self, value: int) -> None: ...
