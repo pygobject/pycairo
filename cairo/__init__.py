@@ -1,5 +1,17 @@
+import os
+added_dirs = []
+if os.name == 'nt' and hasattr(os, 'add_dll_directory'):
+    path = os.environ.get('PATH', '')
+    for p in path.split(os.pathsep):
+        if p != "" and os.path.isfile(os.path.join(p, 'cairo.dll')):
+            # Found a cairo.dll -> add to the list
+            added_dirs.append(os.add_dll_directory(p))
 from ._cairo import *  # noqa: F401,F403
-
+if added_dirs:
+    # remove the added dirs
+    for d in added_dirs:
+        d.close()
+    del added_dirs
 
 def get_include():
     """Returns a path to the directory containing the C header files"""
