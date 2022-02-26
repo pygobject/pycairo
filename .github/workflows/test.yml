@@ -38,6 +38,7 @@ jobs:
       - name: Run tests
         shell: msys2 {0}
         run: |
+          export SETUPTOOLS_USE_DISTUTILS=stdlib
           export CFLAGS="-std=c90 -Wall -Wno-long-long -Werror -coverage"
           python -m coverage run --branch setup.py test
           python -m coverage xml -i
