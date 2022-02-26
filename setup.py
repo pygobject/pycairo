@@ -559,7 +559,7 @@ def main():
             'License :: OSI Approved :: Mozilla Public License 1.1 (MPL 1.1)',
         ],
         cmdclass=cmdclass,
-        python_requires='>=3.6, <4',
+        python_requires='>=3.7',
     )
 
 

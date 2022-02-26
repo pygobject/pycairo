@@ -14,8 +14,8 @@ pymod = import('python')
 python = pymod.find_installation(get_option('python'))
 
 pyver = python.language_version()
-if pyver.version_compare('< 3.6')
-  error('Requires Python >= 3.6')
+if pyver.version_compare('< 3.7')
+  error('Requires Python >= 3.7')
 endif
 
 configure_file(
