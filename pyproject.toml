@@ -15,6 +15,7 @@ flake8 = "^3.9.2"
 Sphinx = "^4.3.2"
 sphinx-rtd-theme = "^1.0.0"
 coverage = "^6.3.2"
+sphinx-autobuild = "^2021.3.14"
 
 [build-system]
 requires = ["setuptools", "wheel"]
