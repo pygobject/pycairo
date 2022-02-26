@@ -4,10 +4,7 @@ all:
 clean:
 	rm -rf _build
 
-.PHONY: clean show linkcheck watch
-
-show: all
-	xdg-open _build/index.html
+.PHONY: clean linkcheck watch
 
 linkcheck:
 	sphinx-build -b linkcheck -n . _build
