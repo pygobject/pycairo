@@ -1162,58 +1162,87 @@ _SomeDevice = TypeVar("_SomeDevice", bound="Device")
 
 class Device:
     """
-    A Device represents the driver interface for drawing operations to a Surface.
+    A :class:`Device` represents the driver interface for drawing operations
+    to a :class:`Surface`.
 
-    New in version 1.14.
+    .. versionadded:: 1.14
 
-    Note
-    ----
-    New in version 1.17.0: `cairo.Device` can be used as a context manager:
-    >>> # device.finish() will be called on __exit__
-    >>> with cairo.ScriptDevice(f) as device:
-    >>> \tpass
+    .. note::
+
+        .. versionadded:: 1.17.0
+
+            :class:`cairo.Device` can be used as a context manager:
+
+        .. code:: python
+
+            # device.finish() will be called on __exit__
+            with cairo.ScriptDevice(f) as device:
+                pass
     """
+
     def finish(self) -> None:
         """
-        This function finishes the device and drops all references to external resources. All surfaces, fonts and other objects created for this device will be finished, too. Further operations on the device will not affect the device but will instead trigger a Status.DEVICE_FINISHED error.
+        This function finishes the device and drops all references to external
+        resources. All surfaces, fonts and other objects created for this
+        device will be finished, too. Further operations on the device will
+        not affect the device but will instead trigger a
+        :attr:`Status.DEVICE_FINISHED` error.
 
         This function may acquire devices.
 
-        New in version 1.14.
+        .. versionadded:: 1.14
         """
+
     def flush(self) -> None:
         """
-        Finish any pending operations for the device and also restore any temporary modifications cairo has made to the device’s state. This function must be called before switching from using the device with Cairo to operating on it directly with native APIs. If the device doesn’t support direct access, then this function does nothing.
+        Finish any pending operations for the device and also restore any
+        temporary modifications cairo has made to the device's state. This
+        function must be called before switching from using the device with
+        Cairo to operating on it directly with native APIs. If the device
+        doesn't support direct access, then this function does nothing.
 
         This function may acquire devices.
 
-        New in version 1.14.
+        .. versionadded:: 1.14
         """
+
     def acquire(self) -> None:
         """
-        Acquires the device for the current thread. This function will block until no other thread has acquired the device.
+        :raises cairo.Error:
+            If the device is in an error state and could not be acquired.
 
-        If the does not raise, you successfully acquired the device. From now on your thread owns the device and no other thread will be able to acquire it until a matching call to `release()`. It is allowed to recursively acquire the device multiple times from the same thread.
+        Acquires the device for the current thread. This function will block
+        until no other thread has acquired the device.
 
-        After a successful call to `acquire()`, a matching call to `release()` is required.
+        If the does not raise, you successfully acquired the device. From now
+        on your thread owns the device and no other thread will be able to
+        acquire it until a matching call to :meth:`release`. It is allowed to
+        recursively acquire the device multiple times from the same thread.
 
-        New in version 1.14.
+        After a successful call to :meth:`acquire`, a matching call to
+        :meth:`release` is required.
 
-        Note
-        ----
-        You must never acquire two different devices at the same time unless this is explicitly allowed. Otherwise the possibility of deadlocks exist. As various Cairo functions can acquire devices when called, these functions may also cause deadlocks when you call them with an acquired device. So you must not have a device acquired when calling them. These functions are marked in the documentation.
+        .. note::
 
-        Raises
-        ------
-        >>> cairo.Error\n
-        If the device is in an error state and could not be acquired.
+            You must never acquire two different devices at the same time
+            unless this is explicitly allowed. Otherwise the possibility of
+            deadlocks exist. As various Cairo functions can acquire devices
+            when called, these functions may also cause deadlocks when you
+            call them with an acquired device. So you must not have a device
+            acquired when calling them. These functions are marked in the
+            documentation.
+
+        .. versionadded:: 1.14
         """
+
     def release(self) -> None:
         """
-        Releases a device previously acquired using `acquire()`. See that function for details.
+        Releases a device previously acquired using :meth:`acquire`. See that
+        function for details.
 
-        New in version 1.14.
+        .. versionadded:: 1.14
         """
+
     def __enter__(self: _SomeDevice) -> _SomeDevice: ...
     __exit__: Any = ...
 
@@ -4128,55 +4157,45 @@ class Region:
 
 class ScriptDevice(Device):
     """
-    Creates a output device for emitting the script, used when creating the individual surfaces.
-
-    New in version 1.14.
-
-    Parameters
-    ----------
-    >>> fobj (str)\n
-    (_PathLike, file or file-like object) – A filename or writable file object.
+    .. versionadded:: 1.14
     """
-    def __init__(self, fobj: Union[_FileLike, _PathLike]) -> None: ...
+
+    def __init__(self, fobj: Union[_FileLike, _PathLike]) -> None:
+        """
+        :param fobj: a filename or writable file object.
+
+        Creates a output device for emitting the script, used when creating the
+        individual surfaces.
+        """
+
     def set_mode(self, mode: ScriptMode) -> None:
         """
-        Change the output mode of the script.
+        :param mode: the new mode
 
-        Parameters
-        ----------
-        >>> mode (cairo.ScriptMode)\n
-        The new mode.
+        Change the output mode of the script
         """
+
     def get_mode(self) -> ScriptMode:
         """
-        Queries the script for its current output mode.
+        :returns: the current output mode of the script
 
-        Returns
-        -------
-        >>> cairo.ScriptMode\n
-        The current output mode of the script.
+        Queries the script for its current output mode.
         """
+
     def write_comment(self, comment: str) -> None:
         """
-        Emit a string verbatim into the script.
+        :param comment: the string to emit
 
-        Parameters
-        ----------
-        >>> comment (str)\n
-        The string to emit.
+        Emit a string verbatim into the script.
         """
+
     def from_recording_surface(self, recording_surface: RecordingSurface) -> None:
         """
-        Converts the record operations in `recording_surface` into a script.
+        :param recording_surface:
+            the recording surface to replay
+        :raises cairo.Error:
 
-        Parameters
-        ----------
-        >>> recording_surface (cairo.RecordingSurface)\n
-        The recording surface to replay.
-
-        Raises
-        ------
-        >>> cairo.Error
+        Converts the record operations in recording_surface into a script.
         """
 
 class ScriptSurface(Surface):
