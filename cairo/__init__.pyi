@@ -773,24 +773,26 @@ class RectangleInt:
 
     Allocates a new RectangleInt object.
 
-    New in version 1.11.0.
-
-    Parameters
-    ----------
-    >>> x (int)\n
-    X coordinate of the left side of the rectangle.
-    >>> y (int)\n
-    Y coordinate of the top side of the rectangle.
-    >>> width (int)\n
-    Width of the rectangle.
-    >>> height (int)\n
-    Height of the rectangle.
+    .. versionadded:: 1.11.0
     """
+
     height: int = ...
     width: int = ...
     x: int = ...
     y: int = ...
-    def __init__(self, x: int=0, y: int=0, width: int=0, height: int=0) -> None: ...
+
+    def __init__(self, x: int=0, y: int=0, width: int=0, height: int=0) -> None:
+        """
+        :param x:
+            X coordinate of the left side of the rectangle.
+        :param y:
+            Y coordinate of the top side of the rectangle.
+        :param width:
+            Width of the rectangle.
+        :param height:
+            Height of the rectangle.
+        """
+
 
 class FontFace:
     """
@@ -3888,155 +3890,99 @@ class Region:
     """
     Allocates a new empty region object or a region object with the containing rectangle(s).
 
-    New in version 1.11.0.
-
     Region is a simple graphical data type representing an area of integer-aligned rectangles. They are often used on raster surfaces to track areas of interest, such as change or clip areas.
 
-    Parameters
-    ----------
-    >>> rectangle_int (RectangleInt or [RectangleInt])\n
-    A rectangle or a list of rectangles.
+    .. versionadded:: 1.11.0
     """
-    def __init__(self, rectangle: Union[RectangleInt, List[RectangleInt]]) -> None: ...
+
+    def __init__(self, rectangle: Union[RectangleInt, List[RectangleInt]]) -> None:
+        """
+        :param rectangle_int: a rectangle or a list of rectangle
+        """
+
     def copy(self) -> "Region":
         """
-        Allocates a new Region object copying the area from original.
+        :returns: A newly allocated :class:`Region`.
 
-        Returns
-        -------
-        >>> cairo.Region\n
-        A newly allocated `Region`.
-
-        Raises
-        ------
-        >>> cairo.Error\n
-        If memory cannot be allocated.
+        Allocates a new *Region* object copying the area from original.
         """
+
     def get_extents(self) -> RectangleInt:
         """
-        Returns
-        -------
-        >>> cairo.RectangleInt\n
-        The bounding rectangle of region.
+        :returns: The bounding rectangle of region
         """
+
     def num_rectangles(self) -> int:
         """
-        Returns
-        -------
-        >>> int\n
-        The number of rectangles contained in region.
+        :returns: The number of rectangles contained in region
         """
+
     def get_rectangle(self, nth: int) -> RectangleInt:
         """
-        Parameters
-        ----------
-        >>> nth (int)\n
-        A number indicating which rectangle should be returned.
-
-        Returns
-        -------
-        >>> cairo.RectangleInt\n
-        The nth rectangle from the region.
+        :param nth: a number indicating which rectangle should be returned
+        :returns: The *nth* rectangle from the region
         """
+
     def is_empty(self) -> bool:
         """
-        Returns
-        -------
-        >>> bool\n
-        Whether region is empty.
+        :returns: Whether region is empty
         """
+
     def contains_point(self, x: int, y: int) -> bool:
         """
-        Parameters
-        ----------
-        >>> x (int)\n
-        The X coordinate of a point.
-        >>> y (int)\n
-        The Y coordinate of a point.
-
-        Returns
-        -------
-        >>> bool\n
-        Whether (x, y) is contained in the region.
+        :param x: The x coordinate of a point
+        :param y: The y coordinate of a point
+        :returns: Whether (x , y) is contained in the region
         """
+
     def contains_rectangle(self, rectangle: RectangleInt) -> RegionOverlap:
         """
-        Checks whether rectangle is inside, outside or partially contained in region.
+        :param rectangle: a region
+        :returns: region overlap
 
-        Parameters
-        ----------
-        >>> rectangle (cairo.RectangleInt)\n
-
-        Returns
-        -------
-        >>> cairo.RegionOverlap\n
-        Region overlap.
+        Checks whether rectangle is inside, outside or partially contained in
+        region
         """
+
     def equal(self, region: "Region") -> bool:
         """
-        Parameters
-        ----------
-        >>> region (cairo.Region)\n
-
-        Returns
-        -------
-        >>> bool\n
-        Whether both regions contained the same coverage.
+        :param region: a region
+        :returns: Whether both regions contained the same coverage
         """
+
     def translate(self, dx: int, dy: int) -> None:
         """
-        Translates region by (dx, dy).
+        :param dx: Amount to translate in the x direction
+        :param dy: Amount to translate in the y direction
 
-        Parameters
-        ----------
-        >>> dx (int)\n
-        Amount to translate in the x direction.
-        >>> dy (int)\n
-        Amount to translate in the y direction.
+        Translates region by (dx , dy ).
         """
+
     def intersect(self, other: "Union[Region, RectangleInt]") -> "Region":
         """
-        Parameters
-        ----------
-        >>> other (cairo.Region or cairo.RectangleInt)\n
-
-        Returns
-        -------
-        >>> cairo.Region\n
-        The intersection of the region and the passed region or rectangle.
+        :param other: region or rectangle
+        :returns: The intersection of the region and the passed region or
+            rectangle
         """
+
     def subtract(self, other: "Union[Region, RectangleInt]") -> "Region":
         """
-        Parameters
-        ----------
-        >>> other (cairo.Region or cairo.RectangleInt)\n
-
-        Returns
-        -------
-        >>> cairo.Region\n
-        The result of the subtraction of the region and the passed region or rectangle.
+        :param other: region or rectangle
+        :returns: The result of the subtraction of the region and the passed
+            region or rectangle
         """
+
     def union(self, other: "Union[Region, RectangleInt]") -> "Region":
         """
-        Parameters
-        ----------
-        >>> other (cairo.Region or cairo.RectangleInt)\n
-
-        Returns
-        -------
-        >>> cairo.Region\n
-        The union of the region and the passed region or rectangle.
+        :param other: region or rectangle
+        :returns: The union of the region and the passed region or rectangle
         """
+
     def xor(self, other: "Union[Region, RectangleInt]") -> "Region":
         """
-        Parameters
-        ----------
-        >>> other (cairo.Region or cairo.RectangleInt)\n
-
-        Returns
-        -------
-        >>> cairo.Region\n
-        The exclusive difference of the region and the passed region or rectangle.
+        :param other: region or rectangle
+        :returns: The exclusive difference of the region and the passed region
+            or rectangle
         """
 
 class ScriptDevice(Device):
