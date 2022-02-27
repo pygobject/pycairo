@@ -12,20 +12,14 @@ subclass thereof, is raised.
 cairo.Error()
 =============
 
-.. exception:: Error
+.. autoexception:: Error
+    :members:
+    :undoc-members:
 
-    This exception is raised when a cairo object returns an error status.
-
-    .. attribute:: status
-
-        :type: :class:`cairo.Status`
-
-.. exception:: CairoError
-
-    An alias for :exc:`Error`
-
-    .. versionadded:: 1.12.0
-
+.. autoexception:: CairoError
+    :members:
+    :undoc-members:
+ 
 .. exception:: MemoryError
 
     :bases: :exc:`Error`, :exc:`python3:MemoryError`

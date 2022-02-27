@@ -6,31 +6,6 @@ Cairo Context
 
 .. currentmodule:: cairo
 
-.. comment block
-   example reST:
-   (add back '..' where required at column 0)
- . class:: module.C[(signature)]
-   .. classmethod:: name(signature)
-   .. staticmethod:: name(signature)
-   .. method:: method(signature)
-
-      :param p1: xxx
-      :type p1: int
-      :param p2: xxx
-      :type p2: str
-      :returns: xxx
-      :rtype: list of strings
-      :raises: xxx
-
-      .. versionadded:: 1.6
-   links:
-     :data:`cairo.ANTIALIAS_SUBPIXEL`
-     :class:`Context`
-     :exc:`cairo.Error`
-     :meth:`.copy_page`
-     :meth:`Context.copy_page`
-
-
 class Context()
 ===============
 
