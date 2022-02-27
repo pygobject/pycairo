@@ -146,218 +146,537 @@ class Antialias(_IntEnum):
     """
     Specifies the type of antialiasing to do when rendering text or shapes.
 
-    New in version 1.13.
+    .. versionadded:: 1.13
     """
+
     BEST: "Antialias" = ...
+    """
+    Hint that the backend should render at the highest quality, sacrificing
+    speed if necessary.
+    """
+
     DEFAULT: "Antialias" = ...
+    """Use the default antialiasing for the subsystem and target device"""
+
     FAST: "Antialias" = ...
+    """
+    Hint that the backend should perform some antialiasing but prefer
+    speed over quality.
+    """
+
     GOOD: "Antialias" = ...
+    """The backend should balance quality against performance."""
+
     GRAY: "Antialias" = ...
+    """
+    Perform single-color antialiasing (using shades of gray for black text
+    on a white background, for example).
+    """
+
     NONE: "Antialias" = ...
+    """Use a bilevel alpha mask"""
+
     SUBPIXEL: "Antialias" = ...
+    """
+    Perform antialiasing by taking advantage of the order of subpixel
+    elements on devices such as LCD panels.
+    """
 
 class Content(_IntEnum):
     """
-    These constants are used to describe the content that a Surface will contain, whether color information, alpha information (translucence vs. opacity), or both.
+    These constants are used to describe the content that a :class:`Surface`
+    will contain, whether color information, alpha information (translucence
+    vs. opacity), or both.
 
-    New in version 1.13.
+    .. versionadded:: 1.13
     """
+
     ALPHA: "Content" = ...
+    """The surface will hold alpha content only."""
+
     COLOR: "Content" = ...
+    """The surface will hold color content only."""
+
     COLOR_ALPHA: "Content" = ...
+    """The surface will hold color and alpha content."""
 
 class FillRule(_IntEnum):
     """
-    These constants are used to select how paths are filled. For both fill rules, whether or not a point is included in the fill is determined by taking a ray from that point to infinity and looking at intersections with the path. The ray can be in any direction, as long as it doesn’t pass through the end point of a segment or have a tricky intersection such as intersecting tangent to the path. (Note that filling is not actually implemented in this way. This is just a description of the rule that is applied.)
+    These constants are used to select how paths are filled. For both fill
+    rules, whether or not a point is included in the fill is determined by
+    taking a ray from that point to infinity and looking at intersections with
+    the path. The ray can be in any direction, as long as it doesn't pass
+    through the end point of a segment or have a tricky intersection such as
+    intersecting tangent to the path. (Note that filling is not actually
+    implemented in this way. This is just a description of the rule that is
+    applied.)
 
-    The default fill rule is `WINDING`.
+    The default fill rule is :attr:`WINDING`.
 
-    New in version 1.13
+    .. versionadded:: 1.13
     """
+
     EVEN_ODD: "FillRule" = ...
+    """
+    Counts the total number of intersections, without regard to the
+    orientation of the contour. If the total number of intersections is
+    odd, the point will be filled.
+    """
+
     WINDING: "FillRule" = ...
+    """
+    If the path crosses the ray from left-to-right, counts +1. If the path
+    crosses the ray from right to left, counts -1. (Left and right are
+    determined from the perspective of looking along the ray from the
+    starting point.) If the total count is non-zero, the point will be
+    filled.
+    """
 
 class Format(_IntEnum):
     """
-    These constants are used to identify the memory format of `ImageSurface` data.
+    These constants are used to identify the memory format of
+    :class:`ImageSurface` data.
 
     New entries may be added in future versions.
 
-    New in version 1.13.
+    .. versionadded:: 1.13
     """
+
     def stride_for_width(self, width: int) -> int:
         """
-        This method provides a stride value that will respect all alignment requirements of the accelerated image-rendering code within cairo. Typical usage will be of the form:
+        :param width: the desired width of an :class:`ImageSurface`
+            to be created.
+        :returns: the appropriate stride to use given the desired format and
+            width, or -1 if either the format is invalid or the width too
+            large.
 
-        >>> format = cairo.Format.RGB24
-        >>>
-        >>>     stride = format.stride_for_width(width)
-        >>>
-        >>>     surface = cairo.ImageSurface.create_for_data(
-        >>>         data, format, width, height, stride)
+        This method provides a stride value that will respect all alignment
+        requirements of the accelerated image-rendering code within cairo.
+        Typical usage will be of the form::
 
-        Also available under cairo.ImageSurface.format_stride_for_width().
+            format = cairo.Format.RGB24
+            stride = format.stride_for_width(width)
+            surface = cairo.ImageSurface.create_for_data(
+                data, format, width, height, stride)
 
-        New in version 1.14.
+        Also available under
+        :meth:`cairo.ImageSurface.format_stride_for_width`.
+
+        .. versionadded:: 1.14
         """
+
     A1: "Format" = ...
+    """
+    each pixel is a 1-bit quantity holding an alpha value. Pixels are
+    packed together into 32-bit quantities. The ordering of the bits
+    matches the endianess of the platform. On a big-endian machine, the
+    first pixel is in the uppermost bit, on a little-endian machine the
+    first pixel is in the least-significant bit.
+    """
+
     A8: "Format" = ...
+    """
+    each pixel is a 8-bit quantity holding an alpha value.
+    """
+
     ARGB32: "Format" = ...
+    """
+    each pixel is a 32-bit quantity, with alpha in the upper 8 bits, then
+    red, then green, then blue. The 32-bit quantities are stored
+    native-endian. Pre-multiplied alpha is used. (That is, 50% transparent
+    red is 0x80800000, not 0x80ff0000.)
+    """
+
     INVALID: "Format" = ...
+    """no such format exists or is supported."""
+
     RGB16_565: "Format" = ...
+    """
+    each pixel is a 16-bit quantity with red in the upper 5 bits, then
+    green in the middle 6 bits, and blue in the lower 5 bits.
+    """
+
     RGB24: "Format" = ...
+    """
+    each pixel is a 32-bit quantity, with the upper 8 bits unused. Red,
+    Green, and Blue are stored in the remaining 24 bits in that order.
+    """
+
     RGB30: "Format" = ...
+    """
+    like :data:`RGB24` but with 10bpc.
+    """
 
 class HintMetrics(_IntEnum):
     """
-    These constants specify whether to hint font metrics; hinting font metrics means quantizing them so that they are integer values in device space. Doing this improves the consistency of letter and line spacing, however it also means that text will be laid out differently at different zoom factors.
+    These constants specify whether to hint font metrics; hinting font metrics
+    means quantizing them so that they are integer values in device space.
+    Doing this improves the consistency of letter and line spacing, however it
+    also means that text will be laid out differently at different zoom
+    factors.
 
-    New in version 1.13.
+    .. versionadded:: 1.13
     """
+
     DEFAULT: "HintMetrics" = ...
+    """
+    Hint metrics in the default manner for the font backend and target
+    device
+    """
+
     OFF: "HintMetrics" = ...
+    """"Do not hint font metrics"""
+
     ON: "HintMetrics" = ...
+    """Hint font metrics"""
 
 class HintStyle(_IntEnum):
     """
-    These constants specify the type of hinting to do on font outlines. Hinting is the process of fitting outlines to the pixel grid in order to improve the appearance of the result. Since hinting outlines involves distorting them, it also reduces the faithfulness to the original outline shapes. Not all of the outline hinting styles are supported by all font backends.
+    These constants specify the type of hinting to do on font outlines.
+    Hinting is the process of fitting outlines to the pixel grid in order to
+    improve the appearance of the result. Since hinting outlines involves
+    distorting them, it also reduces the faithfulness to the original outline
+    shapes. Not all of the outline hinting styles are supported by all font
+    backends.
 
     New entries may be added in future versions.
 
-    New in version 1.13.
+    .. versionadded:: 1.13
     """
+
     DEFAULT: "HintStyle" = ...
+    """
+    Use the default hint style for font backend and target device
+    """
+
     FULL: "HintStyle" = ...
+    """
+    Hint outlines to maximize contrast
+    """
+
     MEDIUM: "HintStyle" = ...
+    """
+    Hint outlines with medium strength giving a compromise between fidelity
+    to the original shapes and contrast
+    """
+
     NONE: "HintStyle" = ...
+    """Do not hint outlines"""
+
     SLIGHT: "HintStyle" = ...
+    """
+    Hint outlines slightly to improve contrast while retaining good
+    fidelity to the original shapes.
+    """
 
 class SubpixelOrder(_IntEnum):
     """
-    The subpixel order specifies the order of color elements within each pixel on the display device when rendering with an antialiasing mode of `Antialias.SUBPIXEL`.
+    The subpixel order specifies the order of color elements within each pixel
+    on the display device when rendering with an antialiasing mode of
+    :attr:`Antialias.SUBPIXEL`.
 
-    New in version 1.13.
+    .. versionadded:: 1.13
     """
+
     BGR: "SubpixelOrder" = ...
+    """Subpixel elements are arranged horizontally with blue at the left"""
+
     DEFAULT: "SubpixelOrder" = ...
+    """Use the default subpixel order for for the target device"""
+
     RGB: "SubpixelOrder" = ...
+    """Subpixel elements are arranged horizontally with red at the left"""
+
     VBGR: "SubpixelOrder" = ...
+    """Subpixel elements are arranged vertically with blue at the top"""
+
     VRGB: "SubpixelOrder" = ...
+    """Subpixel elements are arranged vertically with red at the top"""
 
 class LineCap(_IntEnum):
     """
-    These constants specify how to render the endpoints of the path when stroking.
+    These constants specify how to render the endpoints of the path when
+    stroking.
 
-    The default line cap style is `BUTT`
+    The default line cap style is :attr:`BUTT`
 
-    New in version 1.13
+    .. versionadded:: 1.13
     """
+
     BUTT: "LineCap" = ...
+    """start(stop) the line exactly at the start(end) point"""
+
     ROUND: "LineCap" = ...
+    """use a round ending, the center of the circle is the end point"""
+
     SQUARE: "LineCap" = ...
+    """use squared ending, the center of the square is the end point"""
 
 class LineJoin(_IntEnum):
     """
-    These constants specify how to render the junction of two lines when stroking.
+    These constants specify how to render the junction of two lines when
+    stroking.
 
-    The default line join style is `MITER`
+    The default line join style is :attr:`MITER`
 
-    New in version 1.13.
+    .. versionadded:: 1.13
     """
+
     BEVEL: "LineJoin" = ...
+    """
+    use a cut-off join, the join is cut off at half the line width from
+    the joint point
+    """
+
     MITER: "LineJoin" = ...
+    """
+    use a sharp (angled) corner, see :meth:`Context.set_miter_limit`
+    """
+
     ROUND: "LineJoin" = ...
+    """use a rounded join, the center of the circle is the joint point"""
 
 class Filter(_IntEnum):
     """
-    These constants are used to indicate what filtering should be applied when reading pixel values from patterns. See `Pattern`.`set_filter()` for indicating the desired filter to be used with a particular pattern.
+    These constants are used to indicate what filtering should be applied when
+    reading pixel values from patterns. See :meth:`Pattern.set_filter` for
+    indicating the desired filter to be used with a particular pattern.
 
-    New in version 1.13.
+    .. versionadded:: 1.13
     """
+
     BEST: "Filter" = ...
+    """
+    The highest-quality available, performance may not be suitable for
+    interactive use.
+    """
+
     BILINEAR: "Filter" = ...
+    """Linear interpolation in two dimensions"""
+
     FAST: "Filter" = ...
+    """A high-performance filter, with quality similar *FILTER_NEAREST*"""
+
     GAUSSIAN: "Filter" = ...
+    """
+    This filter value is currently unimplemented, and should not be used
+    in current code.
+    """
+
     GOOD: "Filter" = ...
+    """
+    A reasonable-performance filter, with quality similar to
+    *FILTER_BILINEAR*
+    """
+
     NEAREST: "Filter" = ...
+    """Nearest-neighbor filtering"""
 
 class Operator(_IntEnum):
     """
-    These constants are used to set the compositing operator for all cairo drawing operations.
+    These constants are used to set the compositing operator for all cairo
+    drawing operations.
 
-    The default operator is `OVER`.
+    The default operator is :attr:`OVER`.
 
-    The operators marked as unbounded modify their destination even outside of the mask layer (that is, their effect is not bound by the mask layer). However, their effect can still be limited by way of clipping.
+    The operators marked as *unbounded* modify their destination even outside
+    of the mask layer (that is, their effect is not bound by the mask layer).
+    However, their effect can still be limited by way of clipping.
 
-    To keep things simple, the operator descriptions here document the behavior for when both source and destination are either fully transparent or fully opaque. The actual implementation works for translucent layers too.
+    To keep things simple, the operator descriptions here document the
+    behavior for when both source and destination are either fully transparent
+    or fully opaque.  The actual implementation works for translucent layers
+    too.
 
-    For a more detailed explanation of the effects of each operator, including the mathematical definitions, see https://cairographics.org/operators.
+    For a more detailed explanation of the effects of each operator, including
+    the mathematical definitions, see https://cairographics.org/operators.
 
-    New in version 1.13.
+    .. versionadded:: 1.13
     """
+
     ADD: "Operator" = ...
+    """source and destination layers are accumulated"""
+
     ATOP: "Operator" = ...
+    """draw source on top of destination content and only there"""
+
     CLEAR: "Operator" = ...
+    """clear destination layer (bounded)"""
+
     COLOR_BURN: "Operator" = ...
+    """darkens the destination color to reflect the source color."""
+
     COLOR_DODGE: "Operator" = ...
+    """brightens the destination color to reflect the source color."""
+
     DARKEN: "Operator" = ...
+    """
+    replaces the destination with the source if it is darker, otherwise
+    keeps the source.
+    """
+
     DEST: "Operator" = ...
+    """ignore the source"""
+
     DEST_ATOP: "Operator" = ...
+    """leave destination on top of source content and only there (unbounded)"""
+
     DEST_IN: "Operator" = ...
+    """leave destination only where there was source content (unbounded)"""
+
     DEST_OUT: "Operator" = ...
+    """leave destination only where there was no source content"""
+
     DEST_OVER: "Operator" = ...
+    """draw destination on top of source"""
+
     DIFFERENCE: "Operator" = ...
+    """Takes the difference of the source and destination color."""
+
     EXCLUSION: "Operator" = ...
+    """Produces an effect similar to difference, but with lower contrast."""
+
     HARD_LIGHT: "Operator" = ...
+    """Multiplies or screens, dependent on source color."""
+
     HSL_COLOR: "Operator" = ...
+    """
+    Creates a color with the hue and saturation of the source and the
+    luminosity of the target. This preserves the gray levels of the target
+    and is useful for coloring monochrome images or tinting color images.
+    """
+
     HSL_HUE: "Operator" = ...
+    """
+    Creates a color with the hue of the source and the saturation and
+    luminosity of the target.
+    """
+
     HSL_LUMINOSITY: "Operator" = ...
+    """
+    Creates a color with the luminosity of the source and the hue and
+    saturation of the target. This produces an inverse effect to
+    :attr:`HSL_COLOR`
+    """
+
     HSL_SATURATION: "Operator" = ...
+    """
+    Creates a color with the saturation of the source and the hue and
+    luminosity of the target. Painting with this mode onto a gray area
+    produces no change.
+    """
+
     IN: "Operator" = ...
+    """draw source where there was destination content (unbounded)"""
+
     LIGHTEN: "Operator" = ...
+    """
+    replaces the destination with the source if it is lighter, otherwise
+    keeps the source.
+    """
+
     MULTIPLY: "Operator" = ...
+    """
+    source and destination layers are multiplied. This causes the result
+    to be at least as dark as the darker inputs.
+    """
+
     OUT: "Operator" = ...
+    """draw source where there was no destination content (unbounded)"""
+
     OVER: "Operator" = ...
+    """draw source layer on top of destination layer (bounded)"""
+
     OVERLAY: "Operator" = ...
+    """
+    multiplies or screens, depending on the lightness of the destination
+    color.
+    """
+
     SATURATE: "Operator" = ...
+    """like over, but assuming source and dest are disjoint geometries"""
+
     SCREEN: "Operator" = ...
+    """
+    source and destination are complemented and multiplied. This causes
+    the result to be at least as light as the lighter inputs.
+    """
+
     SOFT_LIGHT: "Operator" = ...
+    """Darkens or lightens, dependent on source color."""
+
     SOURCE: "Operator" = ...
+    """replace destination layer (bounded)"""
+
     XOR: "Operator" = ...
+    """source and destination are shown where there is only one of them"""
 
 class Extend(_IntEnum):
     """
-    These constants are used to describe how `Pattern` color/alpha will be determined for areas “outside” the pattern’s natural area, (for example, outside the surface bounds or outside the gradient geometry).
+    These constants are used to describe how :class:`Pattern` color/alpha will
+    be determined for areas "outside" the pattern's natural area, (for
+    example, outside the surface bounds or outside the gradient geometry).
 
-    The default extend mode is `NONE` for `SurfacePattern` and `PAD` for `Gradient` patterns.
+    The default extend mode is :attr:`NONE` for :class:`SurfacePattern` and
+    :attr:`PAD` for :class:`Gradient` patterns.
 
-    New in version 1.13.
+    .. versionadded:: 1.13
     """
+
     NONE: "Extend" = ...
+    """pixels outside of the source pattern are fully transparent"""
+
     PAD: "Extend" = ...
+    """
+    pixels outside of the pattern copy the closest pixel from the source
+    (Since 1.2; but only implemented for surface patterns since 1.6)
+    """
+
     REFLECT: "Extend" = ...
+    """
+    the pattern is tiled by reflecting at the edges (Implemented for
+    surface patterns since 1.6)
+    """
+
     REPEAT: "Extend" = ...
+    """the pattern is tiled by repeating"""
 
 class FontSlant(_IntEnum):
     """
-    These constants specify variants of a FontFace based on their slant.
+    These constants specify variants of a :class:`FontFace` based on their
+    slant.
 
-    New in version 1.13.
+    .. versionadded:: 1.13
     """
+
     ITALIC: "FontSlant" = ...
+    """Italic font style"""
+
     NORMAL: "FontSlant" = ...
+    """Upright font style"""
+
     OBLIQUE: "FontSlant" = ...
+    """Oblique font style"""
 
 class FontWeight(_IntEnum):
     """
-    These constants specify variants of a `FontFace` based on their weight.
+    These constants specify variants of a :class:`FontFace` based on their
+    weight.
 
-    New in version 1.13.
+    .. versionadded:: 1.13
     """
+
     BOLD: "FontWeight" = ...
+    """Bold font weight"""
+
     NORMAL: "FontWeight" = ...
+    """Normal font weight"""
 
 class Status(_IntEnum):
+    """
+    .. versionadded:: 1.13
+    """
+
     CLIP_NOT_REPRESENTABLE: "Status" = ...
     DEVICE_ERROR: "Status" = ...
     DEVICE_FINISHED: "Status" = ...
@@ -383,6 +702,9 @@ class Status(_IntEnum):
     INVALID_VISUAL: "Status" = ...
     INVALID_WEIGHT: "Status" = ...
     JBIG2_GLOBAL_MISSING: "Status" = ...
+    """
+    .. versionadded:: 1.14
+    """
     LAST_STATUS: "Status" = ...
     NEGATIVE_COUNT: "Status" = ...
     NO_CURRENT_POINT: "Status" = ...
@@ -399,111 +721,207 @@ class Status(_IntEnum):
     USER_FONT_NOT_IMPLEMENTED: "Status" = ...
     WRITE_ERROR: "Status" = ...
     TAG_ERROR: "Status" = ...
+    """
+    .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+    """
     FREETYPE_ERROR: "Status" = ...
+    """
+    .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+    """
     PNG_ERROR: "Status" = ...
+    """
+    .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+    """
     WIN32_GDI_ERROR: "Status" = ...
+    """
+    .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+    """
 
 class PDFVersion(_IntEnum):
     """
-    These constants are used to describe the version number of the PDF specification that a generated PDF file will conform to.
+    These constants are used to describe the version number of the PDF
+    specification that a generated PDF file will conform to.
 
-    New in version 1.13.
+    .. versionadded:: 1.13
     """
+
     VERSION_1_4: "PDFVersion" = ...
+    """The version 1.4 of the PDF specification."""
+
     VERSION_1_5: "PDFVersion" = ...
+    """The version 1.5 of the PDF specification."""
 
 class PSLevel(_IntEnum):
     """
-    These constants are used to describe the language level of the PostScript Language Reference that a generated PostScript file will conform to. Note: the constants are only defined when cairo has been compiled with PS support enabled.
+    These constants are used to describe the language level of the PostScript
+    Language Reference that a generated PostScript file will conform to.
+    Note: the constants are only defined when cairo has been compiled with PS
+    support enabled.
 
-    New in version 1.13.
+    .. versionadded:: 1.13
     """
+
     LEVEL_2: "PSLevel" = ...
+    """The language level 2 of the PostScript specification."""
+
     LEVEL_3: "PSLevel" = ...
+    """The language level 3 of the PostScript specification."""
 
 class PathDataType(_IntEnum):
     """
-    These constants are used to describe the type of one portion of a path when represented as a `Path`.
+    These constants are used to describe the type of one portion of a path
+    when represented as a :class:`Path`.
 
-    New in version 1.13.
+    .. versionadded:: 1.13
     """
+
     CLOSE_PATH: "PathDataType" = ...
+    """A close-path operation"""
+
     CURVE_TO: "PathDataType" = ...
+    """A curve-to operation"""
+
     LINE_TO: "PathDataType" = ...
+    """ A line-to operation"""
+
     MOVE_TO: "PathDataType" = ...
+    """A move-to operation"""
 
 class RegionOverlap(_IntEnum):
     """
-    New in version 1.13
+    .. versionadded:: 1.13
     """
+
     IN: "RegionOverlap" = ...
+    """The contents are entirely inside the region."""
+
     OUT: "RegionOverlap" = ...
+    """The contents are entirely outside the region."""
+
     PART: "RegionOverlap" = ...
+    """The contents are partially inside and partially outside the region."""
 
 class SVGVersion(_IntEnum):
     """
-    These constants are used to describe the version number of the SVG specification that a generated SVG file will conform to.
+    These constants are used to describe the version number of the SVG
+    specification that a generated SVG file will conform to.
 
-    New in version 1.13.
+    .. versionadded:: 1.13
     """
+
     VERSION_1_1: "SVGVersion" = ...
+    """The version 1.1 of the SVG specification."""
+
     VERSION_1_2: "SVGVersion" = ...
+    """The version 1.2 of the SVG specification."""
 
 class SVGUnit(_IntEnum):
     """
-    SVGUnit is used to describe the units valid for coordinates and lengths in the SVG specification.
+    :class:`SVGUnit` is used to describe the units valid for coordinates and
+    lengths in the SVG specification.
 
     See also:
-    ---------
-    - https://www.w3.org/TR/SVG/coords.htmlUnits
-    - https://www.w3.org/TR/SVG/types.htmlDataTypeLength
-    - https://www.w3.org/TR/css-values-3/lengths
 
-    New in version 1.18.0: Only available with cairo 1.15.10+.
+    * https://www.w3.org/TR/SVG/coords.htmlUnits
+    * https://www.w3.org/TR/SVG/types.htmlDataTypeLength
+    * https://www.w3.org/TR/css-values-3/lengths
+
+    .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
     """
+
     USER: "SVGUnit" = ...
+    """
+    User unit, a value in the current coordinate system. If used in the
+    root element for the initial coordinate systems it corresponds to
+    pixels.
+    """
+
     EM: "SVGUnit" = ...
+    """The size of the element's font."""
+
     EX: "SVGUnit" = ...
+    """The x-height of the element’s font."""
+
     PX: "SVGUnit" = ...
+    """Pixels (1px = 1/96th of 1in)."""
+
     IN: "SVGUnit" = ...
+    """Inches (1in = 2.54cm = 96px)"""
+
     CM: "SVGUnit" = ...
+    """Centimeters (1cm = 96px/2.54)."""
+
     MM: "SVGUnit" = ...
+    """Millimeters (1mm = 1/10th of 1cm)."""
+
     PT: "SVGUnit" = ...
+    """Points (1pt = 1/72th of 1in)."""
+
     PC: "SVGUnit" = ...
+    """Picas (1pc = 1/6th of 1in)."""
+
     PERCENT: "SVGUnit" = ...
+    """Percent, a value that is some fraction of another reference value."""
 
 class PDFMetadata(_IntEnum):
     """
-    `PDFMetadata` is used by the `PDFSurface.set_metadata()` method to specify the metadata to set.
+    :class:`PDFMetadata` is used by the :meth:`PDFSurface.set_metadata` method
+    to specify the metadata to set.
 
-    New in version 1.18.0: Only available with cairo 1.15.10+.
+    .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
     """
+
     TITLE: "PDFMetadata" = ...
+    """The document title"""
+
     AUTHOR: "PDFMetadata" = ...
+    """The document author"""
+
     SUBJECT: "PDFMetadata" = ...
+    """The document subject"""
+
     KEYWORDS: "PDFMetadata" = ...
+    """The document keywords"""
+
     CREATOR: "PDFMetadata" = ...
+    """The document creator"""
+
     CREATE_DATE: "PDFMetadata" = ...
+    """The document creation date"""
+
     MOD_DATE: "PDFMetadata" = ...
+    """The document modification date"""
 
 class PDFOutlineFlags(_IntEnum):
     """
-    `PDFOutlineFlags` is used by the `PDFSurface.add_outline()` method to specify the attributes of an outline item. These flags may be bitwise-or’d to produce any combination of flags.
+    :class:`PDFOutlineFlags` is used by the :meth:`PDFSurface.add_outline`
+    method to specify the attributes of an outline item. These flags may be
+    bitwise-or'd to produce any combination of flags.
 
-    New in version 1.18.0: Only available with cairo 1.15.10+.
+    .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
     """
+
     OPEN: "PDFOutlineFlags" = ...
+    """The outline item defaults to open in the PDF viewer"""
+
     BOLD: "PDFOutlineFlags" = ...
+    """The outline item is displayed by the viewer in bold text"""
+
     ITALIC: "PDFOutlineFlags" = ...
+    """The outline item is displayed by the viewer in italic text"""
 
 class ScriptMode(_IntEnum):
     """
     A set of script output variants.
 
-    New in version 1.14.
+    .. versionadded:: 1.14
     """
+
     ASCII: "ScriptMode" = ...
+    """the output will be in readable text (default)"""
+
     BINARY: "ScriptMode" = ...
+    """the output will use byte codes."""
 
 class Matrix:
     """
@@ -868,9 +1286,14 @@ class TextClusterFlags(_IntEnum):
     """
     Specifies properties of a text cluster mapping.
 
-    New in version 1.14.
+    .. versionadded:: 1.14
     """
+
     BACKWARD: "TextClusterFlags" = ...
+    """
+    The clusters in the cluster array map to glyphs in the glyph array
+    from end to start.
+    """
 
 class TextExtents(Tuple[float, float, float, float, float, float]):
     """
@@ -1877,1258 +2300,1536 @@ class SurfacePattern(Pattern):
 
 class Context:
     """
-    Creates a new Context with all graphics state parameters set to default values and with target as a target surface. The target surface should be constructed with a backend-specific function such as ImageSurface (or any other cairo backend surface create variant).
+    *Context* is the main object used when drawing with cairo. To draw with cairo,
+    you create a *Context*, set the target surface, and drawing options for the
+    *Context*, create shapes with functions like :meth:`Context.move_to` and
+    :meth:`Context.line_to`, and then draw shapes with :meth:`Context.stroke` or
+    :meth:`Context.fill`.
 
-    Parameters
-    ----------
-    >>> target (cairo.Surface)\n
-    Target `Surface` for the context.
-
-    Returns
-    -------
-    >>> cairo.Context\n
-    A newly allocated `Context`.
-
-    Raises
-    ------
-    >>> cairo.MemoryError\n
-    In case of no memory.
+    *Contexts* can be pushed to a stack via :meth:`Context.save`. They may then
+    safely be changed, without losing the current state. Use
+    :meth:`Context.restore` to restore to the saved state.
     """
-    def __init__(self, target: Surface) -> None: ...
+
+    def __init__(self, target: Surface) -> None:
+        """
+        :param target: target :class:`Surface` for the context
+        :raises: :exc:`MemoryError` in case of no memory
+
+        Creates a new *Context* with all graphics state parameters set to default
+        values and with *target* as a target surface. The target surface should be
+        constructed with a backend-specific function such as :class:`ImageSurface`
+        (or any other cairo backend surface create variant).
+        """
+
     def append_path(self, path: Path) -> None:
         """
-        Append the path onto the current path. The path may be either the return value from one of Context.copy_path() or Context.copy_path_flat() or it may be constructed manually (in C).
+        :param path: :class:`Path` to be appended
+
+        Append the *path* onto the current path. The *path* may be either the
+        return value from one of :meth:`Context.copy_path` or
+        :meth:`Context.copy_path_flat` or it may be constructed manually (in C).
         """
+
     def arc(self, xc: float, yc: float, radius: float, angle1: float, angle2: float) -> None:
         """
-        Adds a circular arc of the given radius to the current path. The arc is centered at (xc, yc), begins at `angle1` and proceeds in the direction of increasing angles to end at `angle2`. If `angle2` is less than `angle1` it will be progressively increased by `2*PI` until it is greater than `angle1`.
+        :param xc: X position of the center of the arc
+        :param yc: Y position of the center of the arc
+        :param radius: the radius of the arc
+        :param angle1: the start angle, in radians
+        :param angle2: the end angle, in radians
 
-        If there is a current point, an initial line segment will be added to the path to connect the current point to the beginning of the arc. If this initial line is undesired, it can be avoided by calling `Context.new_sub_path()` before calling `Context.arc()`.
+        Adds a circular arc of the given *radius* to the current path.  The arc
+        is centered at (*xc, yc*), begins at *angle1* and proceeds in the
+        direction of increasing angles to end at *angle2*. If *angle2* is less
+        than *angle1* it will be progressively increased by 2*PI until it is
+        greater than *angle1*.
 
-        Angles are measured in radians. An angle of 0.0 is in the direction of the positive X axis (in user space). An angle of `PI/2.0 radians (90 degrees)` is in the direction of the positive Y axis (in user space). Angles increase in the direction from the positive X axis toward the positive Y axis. So with the default transformation matrix, angles increase in a clockwise direction.
+        If there is a current point, an initial line segment will be added to
+        the path to connect the current point to the beginning of the arc. If
+        this initial line is undesired, it can be avoided by calling
+        :meth:`Context.new_sub_path` before calling :meth:`Context.arc`.
 
-        To convert from degrees to radians, use `degrees * (math.pi / 180)`.
+        Angles are measured in radians. An angle of 0.0 is in the direction of
+        the positive X axis (in user space). An angle of PI/2.0 radians (90
+        degrees) is in the direction of the positive Y axis (in user
+        space). Angles increase in the direction from the positive X axis toward
+        the positive Y axis. So with the default transformation matrix, angles
+        increase in a clockwise direction.
 
-        This function gives the arc in the direction of increasing angles; see `Context.arc_negative()` to get the arc in the direction of decreasing angles.
+        To convert from degrees to radians, use ``degrees * (math.pi / 180)``.
 
-        The arc is circular in user space. To achieve an elliptical arc, you can scale the current transformation matrix by different amounts in the X and Y directions. For example, to draw an ellipse in the box given by x, y, width, height:
-        >>> ctx.save()
-        >>> ctx.translate(x + width / 2., y + height / 2.)
-        >>> ctx.scale(width / 2., height / 2.)
-        >>> ctx.arc(0., 0., 1., 0., 2 * math.pi)
-        >>> ctx.restore()\n
+        This function gives the arc in the direction of increasing angles; see
+        :meth:`Context.arc_negative` to get the arc in the direction of
+        decreasing angles.
 
-        Parameters
-        ----------
-        >>> xc (float)\n
-        X position of the center of the arc.
-        >>> yc (float)\n
-        Y position of the of the arc
-        >>> radius (float)\n
-        The radius of the arc.
-        >>> angle1 (float)\n
-        The start of the angle, in radians.
-        >>> angle2 (float)\n
-        The end of the angle, in radians.
+        The arc is circular in user space. To achieve an elliptical arc,
+        you can scale the current transformation matrix by different
+        amounts in the X and Y directions. For example, to draw an ellipse
+        in the box given by *x, y, width, height*::
+
+            ctx.save()
+            ctx.translate(x + width / 2., y + height / 2.)
+            ctx.scale(width / 2., height / 2.)
+            ctx.arc(0., 0., 1., 0., 2 * math.pi)
+            ctx.restore()
         """
+
     def arc_negative(self, xc: float, yc: float, radius: float, angle1: float, angle2: float) -> None:
         """
-        Adds a circular arc of the given radius to the current path. The arc is centered at (xc, yc), begins at angle1 and proceeds in the direction of decreasing angles to end at angle2. If angle2 is greater than angle1 it will be progressively decreased by 2*PI until it is less than angle1.
+        :param xc: X position of the center of the arc
+        :param yc: Y position of the center of the arc
+        :param radius: the radius of the arc
+        :param angle1: the start angle, in radians
+        :param angle2: the end angle, in radians
 
-        See `Context.arc()` for more details. This function differs only in the direction of the arc between the two angles.
+        Adds a circular arc of the given *radius* to the current path. The arc
+        is centered at (*xc, yc*), begins at *angle1* and proceeds in the
+        direction of decreasing angles to end at *angle2*. If *angle2* is
+        greater than *angle1* it will be progressively decreased by 2*PI until
+        it is less than *angle1*.
 
-        Parameters
-        ----------
-        >>> xc (float)\n
-        X position of the center of the arc.
-        >>> yc (float)\n
-        Y position of the center of the arc.
-        >>> radius (float)\n
-        The radius of the arc.
-        >>> angle1 (float)\n
-        The start angle, in radians.
-        >>> angle2 (float)\n
-        The end angle, in radians.
+        See :meth:`Context.arc` for more details. This function differs only in
+        the direction of the arc between the two angles.
         """
+
     def clip(self) -> None:
         """
-        Establishes a new clip region by intersecting the current clip region with the current path as it would be filled by `Context.fill()` and according to the current `fill rule` (see `Context.set_fill_rule()`).
+        Establishes a new clip region by intersecting the current clip region
+        with the current path as it would be filled by :meth:`Context.fill` and
+        according to the current :class:`fill rule <cairo.FillRule>` (see
+        :meth:`Context.set_fill_rule`).
 
-        After `clip()`, the current path will be cleared from the `Context`.
+        After :meth:`.clip`, the current path will be cleared from the
+        :class:`Context`.
 
-        The current clip region affects all drawing operations by effectively masking out any changes to the surface that are outside the current clip region.
+        The current clip region affects all drawing operations by effectively
+        masking out any changes to the surface that are outside the current clip
+        region.
 
-        Calling `clip()` can only make the clip region smaller, never larger. But the current clip is part of the graphics state, so a temporary restriction of the clip region can be achieved by calling `clip()` within a `Context.save()`/`Context.restore()` pair. The only other means of increasing the size of the clip region is `Context.reset_clip()`.
+        Calling :meth:`.clip` can only make the clip region smaller, never
+        larger. But the current clip is part of the graphics state, so a
+        temporary restriction of the clip region can be achieved by calling
+        :meth:`.clip` within a :meth:`Context.save`/:meth:`Context.restore`
+        pair. The only other means of increasing the size of the clip region is
+        :meth:`Context.reset_clip`.
         """
+
     def clip_extents(self) -> Tuple[float, float, float, float]:
         """
-        Computes a bounding box in user coordinates covering the area inside the current clip.
+        :returns: (x1, y1, x2, y2), all float
 
-        New in version 1.4.
+        * *x1*: left of the resulting extents
+        * *y1*: top of the resulting extents
+        * *x2*: right of the resulting extents
+        * *y2*: bottom of the resulting extents
 
-        Returns
-        -------
-        >>> (x1: float, y1: float, x2: float, y2: float)\n
-        - `x1 (float)` -- Left of the resulting extents.
-        - `y1 (float)` -- Top of the resulting extents.
-        - `x2 (float)` -- Right of the resulting extents.
-        - `y2 (float)` -- Bottom of the resulting extents.
+        Computes a bounding box in user coordinates covering the area inside the
+        current clip.
+
+        .. versionadded:: 1.4
         """
+
     def clip_preserve(self) -> None:
         """
-        Establishes a new clip region by intersecting the current clip region with the current path as it would be filled by `Context.fill()` and according to the current `fill rule` (see `Context.set_fill_rule()`).
+        Establishes a new clip region by intersecting the current clip region
+        with the current path as it would be filled by :meth:`Context.fill` and
+        according to the current :class:`fill rule <cairo.FillRule>` (see
+        :meth:`Context.set_fill_rule`).
 
-        Unlike `Context.clip()`, `clip_preserve()` preserves the path within the `Context`.
+        Unlike :meth:`Context.clip`, :meth:`.clip_preserve` preserves the path
+        within the :class:`Context`.
 
-        The current clip region affects all drawing operations by effectively masking out any changes to the surface that are outside the current clip region.
+        The current clip region affects all drawing operations by effectively
+        masking out any changes to the surface that are outside the current clip
+        region.
 
-        Calling `clip_preserve()` can only make the clip region smaller, never larger. But the current clip is part of the graphics state, so a temporary restriction of the clip region can be achieved by calling `clip_preserve()` within a `Context.save()`/`Context.restore()` pair. The only other means of increasing the size of the clip region is `Context.reset_clip()`.
+        Calling :meth:`.clip_preserve` can only make the clip region smaller,
+        never larger. But the current clip is part of the graphics state, so a
+        temporary restriction of the clip region can be achieved by calling
+        :meth:`.clip_preserve` within a
+        :meth:`Context.save`/:meth:`Context.restore` pair. The only other means
+        of increasing the size of the clip region is :meth:`Context.reset_clip`.
         """
+
     def close_path(self) -> None:
         """
-        Adds a line segment to the path from the current point to the beginning of the current sub-path, (the most recent point passed to `Context.move_to()`), and closes this sub-path. After this call the current point will be at the joined endpoint of the sub-path.
+        Adds a line segment to the path from the current point to the beginning
+        of the current sub-path, (the most recent point passed to
+        :meth:`Context.move_to`), and closes this sub-path. After this call the
+        current point will be at the joined endpoint of the sub-path.
 
-        The behavior of `close_path()` is distinct from simply calling `Context.line_to()` with the equivalent coordinate in the case of stroking. When a closed sub-path is stroked, there are no caps on the ends of the sub-path. Instead, there is a line join connecting the final and initial segments of the sub-path.
+        The behavior of :meth:`.close_path` is distinct from simply calling
+        :meth:`Context.line_to` with the equivalent coordinate in the case of
+        stroking. When a closed sub-path is stroked, there are no caps on the
+        ends of the sub-path. Instead, there is a line join connecting the final
+        and initial segments of the sub-path.
 
-        If there is no current point before the call to `close_path()`, this function will have no effect.
+        If there is no current point before the call to :meth:`.close_path`,
+        this function will have no effect.
 
-        Note: As of cairo version 1.2.4 any call to `close_path()` will place an explicit MOVE_TO element into the path immediately after the CLOSE_PATH element, (which can be seen in `Context.copy_path()` for example). This can simplify path processing in some cases as it may not be necessary to save the “last move_to point” during processing as the MOVE_TO immediately after the CLOSE_PATH will provide that point.
+        Note: As of cairo version 1.2.4 any call to :meth:`.close_path` will
+        place an explicit MOVE_TO element into the path immediately after the
+        CLOSE_PATH element, (which can be seen in :meth:`Context.copy_path` for
+        example). This can simplify path processing in some cases as it may not
+        be necessary to save the "last move_to point" during processing as the
+        MOVE_TO immediately after the CLOSE_PATH will provide that point.
         """
+
     def copy_clip_rectangle_list(self) -> List[Rectangle]:
         """
-        New in version 1.4
+        :returns: the current clip region as a list of rectangles in user
+            coordinates. Returns a list of :class:`Rectangle`
 
-        Returns
-        -------
-        >>> list(cairo.Rectangle)\n
-        The current clip region as a list of rectangles in user coordinates. Returns a list of `Rectangle`
+        .. versionadded:: 1.4
         """
+
     def copy_page(self) -> None:
         """
-        Emits the current page for backends that support multiple pages, but doesn’t clear it, so, the contents of the current page will be retained for the next page too. Use `Context.show_page()` if you want to get an empty page after the emission.
+        Emits the current page for backends that support multiple pages, but
+        doesn't clear it, so, the contents of the current page will be retained
+        for the next page too.  Use :meth:`Context.show_page` if you want to get
+        an empty page after the emission.
 
-        This is a convenience function that simply calls `Surface.copy_page()` on Context’s target.
+        This is a convenience function that simply calls
+        :meth:`Surface.copy_page` on *Context's* target.
         """
+
     def copy_path(self) -> Path:
         """
-        Creates a copy of the current path and returns it to the user as a `Path`.
+        :returns: :class:`Path`
+        :raises: :exc:`MemoryError` in case of no memory
 
-        Returns
-        -------
-        >>> cairo.Path\n
-
-        Raises
-        ------
-        >>> cairo.MemoryError\n
-        In case of no memory.
+        Creates a copy of the current path and returns it to the user as a
+        :class:`Path`.
         """
+
     def copy_path_flat(self) -> Path:
         """
-        Gets a flattened copy of the current path and returns it to the user as a `Path`.
+        :returns: :class:`Path`
+        :raises: :exc:`MemoryError` in case of no memory
 
-        This function is like `Context.copy_path()` except that any curves in the path will be approximated with piecewise-linear approximations, (accurate to within the current tolerance value). That is, the result is guaranteed to not have any elements of type CAIRO_PATH_CURVE_TO which will instead be replaced by a series of CAIRO_PATH_LINE_TO elements.
+        Gets a flattened copy of the current path and returns it to the
+        user as a :class:`Path`.
 
-        Returns
-        -------
-        >>> cairo.Path\n
-
-        Raises
-        ------
-        >>> cairo.MemoryError\n
-        In case of no memory.
+        This function is like :meth:`Context.copy_path` except that any curves
+        in the path will be approximated with piecewise-linear approximations,
+        (accurate to within the current tolerance value). That is, the result is
+        guaranteed to not have any elements of type CAIRO_PATH_CURVE_TO which
+        will instead be replaced by a series of CAIRO_PATH_LINE_TO elements.
         """
+
     def curve_to(self, x1: float, y1: float, x2: float, y2: float, x3: float, y3: float) -> None:
         """
-        Adds a cubic Bézier spline to the path from the current point to position (x3, y3) in user-space coordinates, using (x1, y1) and (x2, y2) as the control points. After this call the current point will be (x3, y3).
+        :param x1: the X coordinate of the first control point
+        :param y1: the Y coordinate of the first control point
+        :param x2: the X coordinate of the second control point
+        :param y2: the Y coordinate of the second control point
+        :param x3: the X coordinate of the end of the curve
+        :param y3: the Y coordinate of the end of the curve
 
-        If there is no current point before the call to `curve_to()` this function will behave as if preceded by a call to `ctx.move_to(x1, y1)`.
+        Adds a cubic Bézier spline to the path from the current point to
+        position *(x3, y3)* in user-space coordinates, using *(x1, y1)* and
+        *(x2, y2)* as the control points. After this call the current point will
+        be *(x3, y3)*.
 
-        Parameters
-        ----------
-        >>> x1 (float)\n
-        The X coordinate of the first control point
-        >>> y1 (float)\n
-        The Y coordinate of the first control point
-        >>> x2 (float)\n
-        The X coordinate of the second control point
-        >>> y2 (float)\n
-        The Y coordinate of the second control point
-        >>> x3 (float)\n
-        The X coordinate of the end of the curve
-        >>> y3 (float)\n
-        The Y coordinate of the end of the curve
+        If there is no current point before the call to :meth:`.curve_to`
+        this function will behave as if preceded by a call to
+        ``ctx.move_to(x1, y1)``.
         """
+
     def device_to_user(self, x: float, y: float) -> Tuple[float, float]:
         """
-        Transform a coordinate from device space to user space by multiplying the given point by the inverse of the current transformation matrix (CTM).
+        :param x: X value of coordinate
+        :param y: Y value of coordinate
+        :returns: (x, y), both float
 
-        Parameters
-        ----------
-        >>> x (float)\n
-        X value of coordinate
-        >>> y (float)\n
-        Y value of coordinate
-
-        Returns
-        -------
-        >>> (x: float, y: float)\n
+        Transform a coordinate from device space to user space by multiplying
+        the given point by the inverse of the current transformation matrix
+        (CTM).
         """
+
     def device_to_user_distance(self, dx: float, dy: float) -> Tuple[float, float]:
         """
-        Transform a distance vector from device space to user space. This function is similar to `Context.device_to_user()` except that the translation components of the inverse CTM will be ignored when transforming (dx,dy).
+        :param dx: X component of a distance vector
+        :param dy: Y component of a distance vector
+        :returns: (dx, dy), both float
 
-        Parameters
-        ----------
-        >>> dx (float)\n
-        X component of a distance vector
-        >>> dy (float)\n
-        Y component of a distance vector
-
-        Returns
-        -------
-        >>> (dx: float, dy: float)\n
+        Transform a distance vector from device space to user space. This
+        function is similar to :meth:`Context.device_to_user` except that the
+        translation components of the inverse CTM will be ignored when
+        transforming *(dx,dy)*.
         """
+
     def fill(self) -> None:
         """
-        A drawing operator that fills the current path according to the current `fill rule`, (each sub-path is implicitly closed before being filled). After `fill()`, the current path will be cleared from the `Context`. See `Context.set_fill_rule()` and `Context.fill_preserve()`.
+        A drawing operator that fills the current path according to the current
+        :class:`fill rule <cairo.FillRule>`, (each sub-path is implicitly
+        closed before being filled). After :meth:`.fill`, the current path will
+        be cleared from the :class:`Context`. See :meth:`Context.set_fill_rule`
+        and :meth:`Context.fill_preserve`.
         """
+
     def fill_extents(self) -> Tuple[float, float, float, float]:
         """
-        Computes a bounding box in user coordinates covering the area that would be affected, (the “inked” area), by a `Context.fill()` operation given the current path and fill parameters. If the current path is empty, returns an empty rectangle (0,0,0,0). Surface dimensions and clipping are not taken into account.
+        :returns: (x1, y1, x2, y2), all float
 
-        Contrast with `Context.path_extents()`, which is similar, but returns non-zero extents for some paths with no inked area, (such as a simple line segment).
+        * *x1*: left of the resulting extents
+        * *y1*: top of the resulting extents
+        * *x2*: right of the resulting extents
+        * *y2*: bottom of the resulting extents
 
-        Note that `fill_extents()` must necessarily do more work to compute the precise inked areas in light of the fill rule, so `Context.path_extents()` may be more desirable for sake of performance if the non-inked path extents are desired.
+        Computes a bounding box in user coordinates covering the area that would
+        be affected, (the "inked" area), by a :meth:`Context.fill` operation
+        given the current path and fill parameters. If the current path is
+        empty, returns an empty rectangle (0,0,0,0). Surface dimensions and
+        clipping are not taken into account.
 
-        See `Context.fill()`, `Context.set_fill_rule()` and `Context.fill_preserve()`.
+        Contrast with :meth:`Context.path_extents`, which is similar, but returns
+        non-zero extents for some paths with no inked area, (such as a
+        simple line segment).
 
-        Returns
-        -------
-        >>> (x1: float, y1: float, x2: float, y2: float)\n
-        - `x1 (float)` -- Left of the resulting extents
-        - `y1 (float)` -- Top of the resulting extents
-        - `x2 (float)` -- Right of the resulting extents
-        - `y2 (float)` -- Bottom of the resulting extents
+        Note that :meth:`.fill_extents` must necessarily do more work to compute
+        the precise inked areas in light of the fill rule, so
+        :meth:`Context.path_extents` may be more desirable for sake of
+        performance if the non-inked path extents are desired.
+
+        See :meth:`Context.fill`, :meth:`Context.set_fill_rule` and
+        :meth:`Context.fill_preserve`.
         """
+
     def fill_preserve(self) -> None:
         """
-        A drawing operator that fills the current path according to the current `fill rule`, (each sub-path is implicitly closed before being filled). Unlike `Context.fill()`, `fill_preserve()` preserves the path within the `Context`.
+        A drawing operator that fills the current path according to the current
+        :class:`fill rule <cairo.FillRule>`, (each sub-path is implicitly
+        closed before being filled). Unlike :meth:`Context.fill`,
+        :meth:`.fill_preserve` preserves the path within the :class:`Context`.
 
-        See `Context.set_fill_rule()` and `Context.fill()`.
+        See :meth:`Context.set_fill_rule` and :meth:`Context.fill`.
         """
+
     def font_extents(self) -> Tuple[float, float, float, float, float]:
         """
-        Gets the font extents for the currently selected font.
+        :returns: (ascent, descent, height, max_x_advance, max_y_advance),
+            all float
 
-        Returns
-        -------
-        >>> (ascent: float, descent: float, height: float, max_x_advance: float, max_y_advance: float)\n
+        Gets the font extents for the currently selected font.
         """
+
     def get_antialias(self) -> Antialias:
         """
-        Returns
-        -------
-        >>> cairo.Antialias\n
-        The current antialias mode, as set by `Context.set_antialias()`.
+        :returns: the current antialias mode,
+            as set by :meth:`Context.set_antialias`.
         """
+
     def get_current_point(self) -> Tuple[float, float]:
         """
-        Gets the current point of the current path, which is conceptually the final point reached by the path so far.
+        :returns: (x, y), both float
 
-        The current point is returned in the user-space coordinate system. If there is no defined current point or if `Context` is in an error status, x and y will both be set to 0.0. It is possible to check this in advance with `Context.has_current_point()`.
+        * *x*: X coordinate of the current point
+        * *y*: Y coordinate of the current point
 
-        Most path construction functions alter the current point. See the following for details on how they affect the current point: `Context.new_path()`, `Context.new_sub_path()`, `Context.append_path()`, `Context.close_path()`, `Context.move_to()`, `Context.line_to()`, `Context.curve_to()`, `Context.rel_move_to()`, `Context.rel_line_to()`, `Context.rel_curve_to()`, `Context.arc()`, `Context.arc_negative()`, `Context.rectangle()`, `Context.text_path()`, `Context.glyph_path()`.
+        Gets the current point of the current path, which is conceptually the
+        final point reached by the path so far.
 
-        Some functions use and alter the current point but do not otherwise change current path: `Context.show_text()`.
+        The current point is returned in the user-space coordinate system. If
+        there is no defined current point or if :class:`Context` is in an error
+        status, *x* and *y* will both be set to 0.0. It is possible to check this
+        in advance with :meth:`Context.has_current_point`.
 
-        Some functions unset the current path and as a result, current point: `Context.fill()`, `Context.stroke()`.
+        Most path construction functions alter the current point. See the
+        following for details on how they affect the current point:
+        :meth:`Context.new_path`, :meth:`Context.new_sub_path`,
+        :meth:`Context.append_path`, :meth:`Context.close_path`,
+        :meth:`Context.move_to`, :meth:`Context.line_to`,
+        :meth:`Context.curve_to`, :meth:`Context.rel_move_to`,
+        :meth:`Context.rel_line_to`, :meth:`Context.rel_curve_to`,
+        :meth:`Context.arc`, :meth:`Context.arc_negative`,
+        :meth:`Context.rectangle`, :meth:`Context.text_path`,
+        :meth:`Context.glyph_path`, `Context.stroke_to_path`.
 
-        Returns
-        -------
-        >>> (x: float, y: float)\n
-        - `x (float)` -- X coordinate of the current point.
-        - `y (float)` -- Y coordinate of the current point.
+        Some functions use and alter the current point but do not otherwise
+        change current path:
+        :meth:`Context.show_text`.
+
+        Some functions unset the current path and as a result, current point:
+        :meth:`Context.fill`, :meth:`Context.stroke`.
         """
+
     def get_dash(self) -> Tuple[List[float], float]:
         """
+        :returns: (dashes, offset)
+
+        * *dashes*: return value as a tuple for the dash array
+        * *offset*: return value as float for the current dash offset
+
         Gets the current dash array.
 
-        New in version 1.4.
-
-        Returns
-        -------
-        >>> (dashes: list(float), offset: float)\n
-        - `dashes list(float)` -- Return value as a tuple for the dash array
-        - `offset (float)` -- Return value as a float for the current dash offset
+        .. versionadded:: 1.4
         """
+
     def get_dash_count(self) -> int:
         """
-        See also `Context.set_dash()` and `Context.get_dash()`.
+        :returns: the length of the dash array, or 0 if no dash array set.
 
-        New in version 1.4.
+        See also :meth:`Context.set_dash` and :meth:`Context.get_dash`.
 
-        Returns
-        -------
-        >>> int\n
-        The length of the dash array, or 0 if no dash array set.
+        .. versionadded:: 1.4
         """
+
     def get_fill_rule(self) -> FillRule:
         """
-        Returns
-        -------
-        >>> cairo.FillRule\n
-        The current fill rule, as set by `Context.set_fill_rule()`.
+        :returns: the current fill rule, as
+            set by :meth:`Context.set_fill_rule`.
         """
+
     def get_font_face(self) -> FontFace:
         """
-        Returns
-        -------
-        >>> cairo.FontFace\n
-        The current `FontFace` for the `Context`.
+        :returns: the current :class:`FontFace` for the :class:`Context`.
         """
+
     def get_font_matrix(self) -> Matrix:
         """
-        See `Context.set_font_matrix()`.
+        :returns: the current :class:`Matrix` for the :class:`Context`.
 
-        Returns
-        -------
-        >>> cairo.Matrix\n
-        The current `Matrix` for the `Context`.
+        See :meth:`Context.set_font_matrix`.
         """
+
     def get_font_options(self) -> FontOptions:
         """
-        Retrieves font rendering options set via `Context.set_font_options()`. Note that the returned options do not include any options derived from the underlying surface; they are literally the options passed to `Context.set_font_options()`.
+        :returns: the current :class:`FontOptions` for the :class:`Context`.
 
-        Returns
-        -------
-        >>> cairo.FontOptions\n
-        The current `FontOptions` for the `Context`.
+        Retrieves font rendering options set via
+        :meth:`Context.set_font_options`. Note that the returned options do not
+        include any options derived from the underlying surface; they are
+        literally the options passed to :meth:`Context.set_font_options`.
         """
+
     def get_group_target(self) -> Surface:
         """
-        Gets the current destination `Surface` for the `Context`. This is either the original target surface as passed to `Context` or the target surface for the current group as started by the most recent call to `Context.push_group()` or `Context.push_group_with_content()`.
+        :returns: the target :class:`Surface`.
 
-        New in version 1.2.
+        Gets the current destination :class:`Surface` for the
+        :class:`Context`. This is either the original target surface as passed
+        to :class:`Context` or the target surface for the current group as
+        started by the most recent call to :meth:`Context.push_group` or
+        :meth:`Context.push_group_with_content`.
 
-        Returns
-        -------
-        >>> cairo.Surface\n
-        The target `Surface`.
+        .. versionadded:: 1.2
         """
+
     def get_line_cap(self) -> LineCap:
         """
-        Returns
-        -------
-        >>> cairo.LineCap\n
-        The current line cap style, as set by `Context.set_line_cap()`.
+        :returns: the current line cap style, as
+            set by :meth:`Context.set_line_cap`.
         """
+
     def get_line_join(self) -> LineJoin:
         """
-        Returns
-        -------
-        >>> cairo.LineJoin\n
-        The current line join style, as set by `Context.set_line_join()`.
+        :returns: the current line join style, as
+            set by :meth:`Context.set_line_join`.
         """
+
     def get_line_width(self) -> float:
         """
-        This function returns the current line width value exactly as set by `Context.set_line_width()`. Note that the value is unchanged even if the CTM has changed between the calls to `Context.set_line_width()` and `get_line_width()`.
+        :returns: the current line width
 
-        Returns
-        -------
-        >>> float\n
-        The current line width.
+        This function returns the current line width value exactly as set by
+        :meth:`Context.set_line_width`. Note that the value is unchanged even if
+        the CTM has changed between the calls to :meth:`Context.set_line_width`
+        and :meth:`.get_line_width`.
         """
+
     def get_matrix(self) -> Matrix:
         """
-        Returns
-        -------
-        >>> cairo.Matrix\n
-        The current transformation `Matrix` (CTM).
+        :returns: the current transformation :class:`Matrix` (CTM)
         """
+
     def get_miter_limit(self) -> float:
         """
-        Returns
-        -------
-        >>> float\n
-        The current miter limit, as set by `Context.set_miter_limit()`.
+        :returns: the current miter limit, as set by
+            :meth:`Context.set_miter_limit`.
         """
+
     def get_operator(self) -> Operator:
         """
-        Returns
-        -------
-        >>> cairo.Operator\n
-        The current compositing operator for a `Context`.
+        :returns: the current compositing operator
+            for a :class:`Context`.
         """
+
     def get_scaled_font(self) -> ScaledFont:
         """
-        New in version 1.4.
+        :returns: the current :class:`ScaledFont` for a :class:`Context`.
 
-        Returns
-        -------
-        >>> cairo.ScaledFont\n
-        The current `ScaledFont`for a `Context`.
+        .. versionadded:: 1.4
         """
+
     def get_source(self) -> Pattern:
         """
-        Returns
-        -------
-        >>> cairo.Pattern\n
-        The current source `Pattern` for a `Context`.
+        :returns: the current source :class:`Pattern` for  a :class:`Context`.
         """
+
     def get_target(self) -> Surface:
         """
-        Returns
-        -------
-        >>> cairo.Surface\n
-        The target `Surface` for the `Context`.
+        :returns: the target :class:`Surface` for the :class:`Context`
         """
+
     def get_tolerance(self) -> float:
         """
-        >>> float\n
-        The current tolerance value, as set by `Context.set_tolerance()`.
+        :returns: the current tolerance value, as set by
+            :meth:`Context.set_tolerance`
         """
+
     def glyph_extents(self, glyphs: Sequence[Glyph]) -> TextExtents:
         """
-        Gets the extents for an array of glyphs. The extents describe a user-space rectangle that encloses the “inked” portion of the glyphs, (as they would be drawn by `Context.show_glyphs()`). Additionally, the x_advance and y_advance values indicate the amount by which the current point would be advanced by `Context.show_glyphs()`.
+        :param glyphs: glyphs, a sequence of :class:`Glyph`
 
-        Note that whitespace glyphs do not contribute to the size of the rectangle (extents.width and extents.height).
+        Gets the extents for an array of glyphs. The extents describe a
+        user-space rectangle that encloses the "inked" portion of the glyphs,
+        (as they would be drawn by :meth:`Context.show_glyphs`). Additionally,
+        the x_advance and y_advance values indicate the amount by which the
+        current point would be advanced by :meth:`Context.show_glyphs`.
 
-        Returns
-        -------
-        >>> cairo.TextExtents\n
+        Note that whitespace glyphs do not contribute to the size of the
+        rectangle (extents.width and extents.height).
         """
+
     def glyph_path(self, glyphs: Sequence[Glyph]) -> None:
         """
-        Adds closed paths for the glyphs to the current path. The generated path if filled, achieves an effect similar to that of `Context.show_glyphs()`.
+        :param glyphs: glyphs to show, a sequence of :class:`Glyph`
 
-        Parameters
-        ----------
-        >>> glyphs (list(cairo.Glyph))\n
-        Glyphs to show, a sequence of `Glyph`.
+        Adds closed paths for the glyphs to the current path. The generated path
+        if filled, achieves an effect similar to that of
+        :meth:`Context.show_glyphs`.
         """
+
     def has_current_point(self) -> bool:
         """
-        See `Context.get_current_point()` for details on the current point.
+        :returns: True iff a current point is defined on the current path.
+            See :meth:`Context.get_current_point` for details on the current point.
 
-        New in version 1.6.
-
-        Returns
-        -------
-        >>> bool\n
-        `True` if a current point is defined on the current path.
+        .. versionadded:: 1.6
         """
+
     def identity_matrix(self) -> None:
         """
-        Resets the current transformation `Matrix` (CTM) by setting it equal to the identity matrix. That is, the user-space and device-space axes will be aligned and one user-space unit will transform to one device-space unit.
+        Resets the current transformation :class:`Matrix` (CTM) by setting it
+        equal to the identity matrix. That is, the user-space and device-space
+        axes will be aligned and one user-space unit will transform to one
+        device-space unit.
         """
+
     def in_fill(self, x: float, y: float) -> bool:
         """
-        See `Context.fill()`, `Context.set_fill_rule()` and `Context.fill_preserve()`.
+        :param x: X coordinate of the point to test
+        :param y: Y coordinate of the point to test
+        :returns: True iff the point is inside the area that would be affected
+            by a :meth:`Context.fill` operation given the current path and filling
+            parameters. Surface dimensions and clipping are not taken into account.
 
-        Parameters
-        ----------
-        >>> x (float)\n
-        X coordinate of the point to test.
-        >>> y (float)\n
-        Y coordinate of the point to test.
-
-        Returns
-        -------
-        >>> bool\n
-        True if the point is inside the area that would be affected by a `Context.fill()` operation given the current path and filling parameters. Surface dimensions and clipping are not taken into account.
+        See :meth:`Context.fill`, :meth:`Context.set_fill_rule` and
+        :meth:`Context.fill_preserve`.
         """
+
     def in_stroke(self, x: float, y: float) -> bool:
         """
-        See `Context.stroke()`, `Context.set_line_width()`, `Context.set_line_join()`, `Context.set_line_cap()`, `Context.set_dash()`, and `Context.stroke_preserve()`.
+        :param x: X coordinate of the point to test
+        :param y: Y coordinate of the point to test
 
-        Parameters
-        ----------
-        >>> x (float)\n
-        X coordinate of the point to test.
-        >>> y (float)\n
-        Y coordinate of the point to test.
+        :returns: True iff the point is inside the area that would be affected
+            by a :meth:`Context.stroke` operation given the current path and
+            stroking parameters. Surface dimensions and clipping are not taken
+            into account.
 
-        Returns
-        -------
-        >>> bool\n
-        True if the point is inside the area that would be affected by a `Context.stroke()` operation given the current path and filling parameters. Surface dimensions and clipping are not taken into account.
+        See :meth:`Context.stroke`, :meth:`Context.set_line_width`,
+        :meth:`Context.set_line_join`, :meth:`Context.set_line_cap`,
+        :meth:`Context.set_dash`, and :meth:`Context.stroke_preserve`.
         """
+
     def line_to(self, x: float, y: float) -> None:
         """
-        Adds a line to the path from the current point to position (x, y) in user-space coordinates. After this call the current point will be (x, y).
+        :param x: the X coordinate of the end of the new line
+        :param y: the Y coordinate of the end of the new line
 
-        If there is no current point before the call to `line_to()` this function will behave as `ctx.move_to(x, y)`.
+        Adds a line to the path from the current point to position *(x, y)* in
+        user-space coordinates. After this call the current point will be *(x,
+        y)*.
 
-        Parameters
-        ----------
-        >>> x (float)\n
-        The X coordinate of the end of the new line.
-        >>> y (float)\n
-        The Y coordinate of the end of the new line.
+        If there is no current point before the call to :meth:`.line_to`
+        this function will behave as ``ctx.move_to(x, y)``.
         """
+
     def mask(self, pattern: Pattern) -> None:
         """
-        A drawing operator that paints the current source using the alpha channel of pattern as a mask. (Opaque areas of pattern are painted with the source, transparent areas are not painted.)
+        :param pattern: a :class:`Pattern`
 
-        Parameters
-        ----------
-        >>> pattern (cairo.Pattern)\n
+        A drawing operator that paints the current source using the alpha
+        channel of *pattern* as a mask. (Opaque areas of *pattern* are painted
+        with the source, transparent areas are not painted.)
         """
+
     def mask_surface(self, surface: Surface, x: float = 0.0, y: float = 0.0) -> None:
         """
-        A drawing operator that paints the current source using the alpha channel of surface as a mask. (Opaque areas of surface are painted with the source, transparent areas are not painted.)
+        :param surface: a :class:`Surface`
+        :param x: X coordinate at which to place the origin of *surface*
+        :param y: Y coordinate at which to place the origin of *surface*
 
-        Parameters
-        ----------
-        >>> surface (cairo.Surface)\n
-        A `Surface`.
-        >>> x (float)\n
-        X coordinate at which to place the origin of `surface`.
-        >>> y (float)\n
-        Y coordinate at which to place the origin of `surface`.
+        A drawing operator that paints the current source using the alpha
+        channel of *surface* as a mask. (Opaque areas of *surface* are painted
+        with the source, transparent areas are not painted.)
         """
+
     def move_to(self, x: float, y: float) -> None:
         """
-        Begin a new sub-path. After this call the current point will be (x, y).
+        :param x: the X coordinate of the new position
+        :param y: the Y coordinate of the new position
 
-        Parameters
-        ----------
-        >>> x (float)\n
-        The X coordinate of the new position.
-        >>> y (float)\n
-        The Y coordinate of the new position.
+        Begin a new sub-path. After this call the current point will be *(x,
+        y)*.
         """
+
     def new_path(self) -> None:
         """
-        Clears the current path. After this call there will be no path and no current point.
+        Clears the current path. After this call there will be no path and no
+        current point.
         """
+
     def new_sub_path(self) -> None:
         """
-        Begin a new sub-path. Note that the existing path is not affected. After this call there will be no current point.
+        Begin a new sub-path. Note that the existing path is not affected. After
+        this call there will be no current point.
 
-        In many cases, this call is not needed since new sub-paths are frequently started with `Context.move_to()`.
+        In many cases, this call is not needed since new sub-paths are
+        frequently started with :meth:`Context.move_to`.
 
-        A call to `new_sub_path()` is particularly useful when beginning a new sub-path with one of the `Context.arc()` calls. This makes things easier as it is no longer necessary to manually compute the arc’s initial coordinates for a call to `Context.move_to()`.
+        A call to :meth:`.new_sub_path` is particularly useful when beginning a
+        new sub-path with one of the :meth:`Context.arc` calls. This makes
+        things easier as it is no longer necessary to manually compute the arc's
+        initial coordinates for a call to :meth:`Context.move_to`.
 
-        New in version 1.6.
+        .. versionadded:: 1.6
         """
+
     def paint(self) -> None:
         """
-        A drawing operator that paints the current source everywhere within the current clip region.
+        A drawing operator that paints the current source everywhere within the
+        current clip region.
         """
+
     def paint_with_alpha(self, alpha: float) -> None:
         """
-        A drawing operator that paints the current source everywhere within the current clip region using a mask of constant alpha value alpha. The effect is similar to `Context.paint()`, but the drawing is faded out using the alpha value.
+        :param alpha: alpha value, between 0 (transparent) and 1 (opaque)
 
-        Parameters
-        ----------
-        >>> alpha (float)\n
-        Alpha value, between 0 (transparent) and 1 (opaque).
+        A drawing operator that paints the current source everywhere within the
+        current clip region using a mask of constant alpha value *alpha*. The
+        effect is similar to :meth:`Context.paint`, but the drawing is faded out
+        using the alpha value.
         """
+
     def path_extents(self) -> Tuple[float, float, float, float]:
         """
-        Computes a bounding box in user-space coordinates covering the points on the current path. If the current path is empty, returns an empty rectangle (0, 0, 0, 0). Stroke parameters, fill rule, surface dimensions and clipping are not taken into account.
+        :returns: (x1, y1, x2, y2), all float
 
-        Contrast with `Context.fill_extents()` and `Context.stroke_extents()` which return the extents of only the area that would be “inked” by the corresponding drawing operations.
+        * *x1*: left of the resulting extents
+        * *y1*: top of the resulting extents
+        * *x2*: right of the resulting extents
+        * *y2*: bottom of the resulting extents
 
-        The result of `path_extents()` is defined as equivalent to the limit of `Context.stroke_extents()` with `cairo.LINE_CAP_ROUND` as the line width approaches 0.0, (but never reaching the empty-rectangle returned by `Context.stroke_extents()` for a line width of 0.0).
+        Computes a bounding box in user-space coordinates covering the points on
+        the current path. If the current path is empty, returns an empty
+        rectangle (0, 0, 0, 0). Stroke parameters, fill rule, surface
+        dimensions and clipping are not taken into account.
 
-        Specifically, this means that zero-area sub-paths such as `Context.move_to()`; `Context.line_to()` segments, (even degenerate cases where the coordinates to both calls are identical), will be considered as contributing to the extents. However, a lone `Context.move_to()` will not contribute to the results of `Context.path_extents()`.
+        Contrast with :meth:`Context.fill_extents` and
+        :meth:`Context.stroke_extents` which return the extents of only the area
+        that would be "inked" by the corresponding drawing operations.
 
-        New in version 1.6.
+        The result of :meth:`.path_extents` is defined as equivalent to the
+        limit of :meth:`Context.stroke_extents` with cairo.LINE_CAP_ROUND as the
+        line width approaches 0.0, (but never reaching the empty-rectangle
+        returned by :meth:`Context.stroke_extents` for a line width of 0.0).
 
-        Returns
-        -------
-        >>> (x1: float, y1: float, x2: float, y2: float)\n
-        - `x1 (float)` -- Left of the resulting extents.
-        - `y1 (float)` -- Top of the resulting extents.
-        - `x2 (float)` -- Right of the resulting extents.
-        - `y2 (float)` -- Bottom of the resulting extents.
+        Specifically, this means that zero-area sub-paths such as
+        :meth:`Context.move_to`; :meth:`Context.line_to` segments, (even
+        degenerate cases where the coordinates to both calls are identical),
+        will be considered as contributing to the extents. However, a lone
+        :meth:`Context.move_to` will not contribute to the results of
+        :meth:`Context.path_extents`.
+
+        .. versionadded:: 1.6
         """
+
     def pop_group(self) -> SurfacePattern:
         """
-        Terminates the redirection begun by a call to `Context.push_group()` or `Context.push_group_with_content()` and returns a new pattern containing the results of all drawing operations performed to the group.
+        :returns: a newly created :class:`SurfacePattern` containing the results
+            of all drawing operations performed to the group.
 
-        The `pop_group()` function calls `Context.restore()`, (balancing a call to `Context.save()` by the ` Context.push_group()` function), so that any changes to the graphics state will not be visible outside the group.
+        Terminates the redirection begun by a call to :meth:`Context.push_group`
+        or :meth:`Context.push_group_with_content` and returns a new pattern
+        containing the results of all drawing operations performed to the group.
 
-        New in version 1.2.
+        The :meth:`.pop_group` function calls :meth:`Context.restore`,
+        (balancing a call to :meth:`Context.save` by the
+        :meth:`Context.push_group` function), so that any changes to the graphics
+        state will not be visible outside the group.
 
-        Returns
-        -------
-        >>> cairo.SurfacePattern\n
-        A newly created `SurfacePattern` containing the results of all drawing operations performed to the group.
+        .. versionadded:: 1.2
         """
+
     def pop_group_to_source(self) -> None:
         """
-        Terminates the redirection begun by a call to `Context.push_group()` or `Context.push_group_with_content()` and installs the resulting pattern as the source `Pattern` in the given `Context`.
+        Terminates the redirection begun by a call to :meth:`Context.push_group`
+        or :meth:`Context.push_group_with_content` and installs the resulting
+        pattern as the source :class:`Pattern` in the given :class:`Context`.
 
-        The behavior of this function is equivalent to the sequence of operations:
-        >>> group = cairo_pop_group()
-        >>> ctx.set_source(group)\n
+        The behavior of this function is equivalent to the sequence of
+        operations::
 
-        but is more convenient as their is no need for a variable to store the short-lived pointer to the pattern.
+            group = cairo_pop_group()
+            ctx.set_source(group)
 
-        The `Context.pop_group()` function calls `Context.restore()`, (balancing a call to `Context.save()` by the `Context.push_group()` function), so that any changes to the graphics state will not be visible outside the group.
+        but is more convenient as their is no need for a variable to store
+        the short-lived pointer to the pattern.
 
-        New in version 1.2.
+        The :meth:`Context.pop_group` function calls :meth:`Context.restore`,
+        (balancing a call to :meth:`Context.save` by the
+        :meth:`Context.push_group` function), so that any changes to the graphics
+        state will not be visible outside the group.
+
+        .. versionadded:: 1.2
         """
+
     def push_group(self) -> None:
         """
-        Temporarily redirects drawing to an intermediate surface known as a group. The redirection lasts until the group is completed by a call to `Context.pop_group()` or `Context.pop_group_to_source()`. These calls provide the result of any drawing to the group as a pattern, (either as an explicit object, or set as the source pattern).
+        Temporarily redirects drawing to an intermediate surface known as a
+        group. The redirection lasts until the group is completed by a call to
+        :meth:`Context.pop_group` or :meth:`Context.pop_group_to_source`. These
+        calls provide the result of any drawing to the group as a pattern,
+        (either as an explicit object, or set as the source pattern).
 
-        This group functionality can be convenient for performing intermediate compositing. One common use of a group is to render objects as opaque within the group, (so that they occlude each other), and then blend the result with translucence onto the destination.
+        This group functionality can be convenient for performing intermediate
+        compositing. One common use of a group is to render objects as opaque
+        within the group, (so that they occlude each other), and then blend the
+        result with translucence onto the destination.
 
-        Groups can be nested arbitrarily deep by making balanced calls to `Context.push_group()`/`Context.pop_group()`. Each call pushes/pops the new target group onto/from a stack.
+        Groups can be nested arbitrarily deep by making balanced calls to
+        :meth:`Context.push_group`/:meth:`Context.pop_group`. Each call
+        pushes/pops the new target group onto/from a stack.
 
-        The `push_group()` function calls `Context.save()` so that any changes to the graphics state will not be visible outside the group, (the `pop_group` functions call `Context.restore()`).
+        The :meth:`.push_group` function calls :meth:`Context.save` so that any
+        changes to the graphics state will not be visible outside the group,
+        (the pop_group functions call :meth:`Context.restore`).
 
-        By default the intermediate group will have a cairo.Content type of `cairo.Content.COLOR_ALPHA`. Other content types can be chosen for the group by using `Context.push_group_with_content()` instead.
+        By default the intermediate group will have a :class:`cairo.Content`
+        type of :attr:`cairo.Content.COLOR_ALPHA`. Other content types can be
+        chosen for the group by using :meth:`Context.push_group_with_content`
+        instead.
 
-        As an example, here is how one might fill and stroke a path with translucence, but without any portion of the fill being visible under the stroke:
-        >>> ctx.push_group()
-        >>> ctx.set_source(fill_pattern)
-        >>> ctx.fill_preserve()
-        >>> ctx.set_source(stroke_pattern)
-        >>> ctx.stroke()
-        >>> ctx.pop_group_to_source()
-        >>> ctx.paint_with_alpha(alpha)
+        As an example, here is how one might fill and stroke a path with
+        translucence, but without any portion of the fill being visible
+        under the stroke::
 
-        New in version 1.2.
+            ctx.push_group()
+            ctx.set_source(fill_pattern)
+            ctx.fill_preserve()
+            ctx.set_source(stroke_pattern)
+            ctx.stroke()
+            ctx.pop_group_to_source()
+            ctx.paint_with_alpha(alpha)
+
+        .. versionadded:: 1.2
         """
+
     def push_group_with_content(self, content: Content) -> None:
         """
-        Temporarily redirects drawing to an intermediate surface known as a group. The redirection lasts until the group is completed by a call to `Context.pop_group()` or `Context.pop_group_to_source()`. These calls provide the result of any drawing to the group as a pattern, (either as an explicit object, or set as the source pattern).
+        :param cairo.Content content: a content indicating the
+            type of group that will be created
 
-        The group will have a content type of content. The ability to control this content type is the only distinction between this function and `Context.push_group()` which you should see for a more detailed description of group rendering.
+        Temporarily redirects drawing to an intermediate surface known as a
+        group. The redirection lasts until the group is completed by a call to
+        :meth:`Context.pop_group` or :meth:`Context.pop_group_to_source`. These
+        calls provide the result of any drawing to the group as a pattern,
+        (either as an explicit object, or set as the source pattern).
 
-        New in version 1.2.
+        The group will have a content type of *content*. The ability to control
+        this content type is the only distinction between this function and
+        :meth:`Context.push_group` which you should see for a more detailed
+        description of group rendering.
 
-        Parameters
-        ----------
-        >>> content (cairo.Content)\n
-        A content indicating the type of group that will be created.
+        .. versionadded:: 1.2
         """
+
     def rectangle(self, x: float, y: float, width: float, height: float) -> None:
         """
-        Adds a closed sub-path rectangle of the given size to the current path at position (x, y) in user-space coordinates.
+        :param x: the X coordinate of the top left corner of the rectangle
+        :param y: the Y coordinate to the top left corner of the rectangle
+        :param width: the width of the rectangle
+        :param height: the height of the rectangle
 
-        This function is logically equivalent to:
-        >>> ctx.move_to(x, y)
-        >>> ctx.rel_line_to(width, 0)
-        >>> ctx.rel_line_to(0, height)
-        >>> ctx.rel_line_to(-width, 0)
-        >>> ctx.close_path()
+        Adds a closed sub-path rectangle of the given size to the current path
+        at position *(x, y)* in user-space coordinates.
 
-        Parameters
-        ----------
-        >>> x (float)\n
-        The X coordinate of the top left corner of the rectangle.
-        >>> y (float)\n
-        The Y coordinate of the top left corner of the rectangle.
-        >>> width (float)\n
-        The width of the rectangle.
-        >>> height (float)\n
-        The height of the rectangle.
+        This function is logically equivalent to::
+
+            ctx.move_to(x, y)
+            ctx.rel_line_to(width, 0)
+            ctx.rel_line_to(0, height)
+            ctx.rel_line_to(-width, 0)
+            ctx.close_path()
         """
+
     def rel_curve_to(self, dx1: float, dy1: float, dx2: float, dy2: float, dx3: float, dy3: float) -> None:
         """
-        Relative-coordinate version of `Context.curve_to()`. All offsets are relative to the current point. Adds a cubic Bézier spline to the path from the current point to a point offset from the current point by (dx3, dy3), using points offset by (dx1, dy1) and (dx2, dy2) as the control points. After this call the current point will be offset by (dx3, dy3).
+        :param dx1: the X offset to the first control point
+        :param dy1: the Y offset to the first control point
+        :param dx2: the X offset to the second control point
+        :param dy2: the Y offset to the second control point
+        :param dx3: the X offset to the end of the curve
+        :param dy3: the Y offset to the end of the curve
+        :raises: :exc:`cairo.Error` if called with no current point.
 
-        Given a current point of (x, y), `ctx.rel_curve_to(dx1, dy1, dx2, dy2, dx3, dy3)` is logically equivalent to `ctx.curve_to(x+dx1, y+dy1, x+dx2, y+dy2, x+dx3, y+dy3)`.
+        Relative-coordinate version of :meth:`Context.curve_to`. All
+        offsets are relative to the current point. Adds a cubic Bézier spline to
+        the path from the current point to a point offset from the current point
+        by *(dx3, dy3)*, using points offset by *(dx1, dy1)* and *(dx2, dy2)* as
+        the control points. After this call the current point will be offset by
+        *(dx3, dy3)*.
 
-        Parameters
-        ----------
-        >>> dx1 (float)\n
-        The X offset to the first control point.
-        >>> dy1 (float)\n
-        The Y offset to the first control point.
-        >>> dx2 (float)\n
-        The X offset to the second control point.
-        >>> dy2 (float)\n
-        The Y offset to the second control point.
-        >>> dx3 (float)\n
-        The X offset to the end of the curve.
-        >>> dy3 (float)\n
-        The Y offset to the end of the curve.
-
-        Raises
-        ------
-        >>> cairo.Error\n
-        If called with no current point.
+        Given a current point of (x, y), ``ctx.rel_curve_to(dx1, dy1, dx2, dy2,
+        dx3, dy3)`` is logically equivalent to ``ctx.curve_to(x+dx1, y+dy1,
+        x+dx2, y+dy2, x+dx3, y+dy3)``.
         """
+
     def rel_line_to(self, dx: float, dy: float) -> None:
         """
-        Relative-coordinate version of `Context.line_to()`. Adds a line to the path from the current point to a point that is offset from the current point by (dx, dy) in user space. After this call the current point will be offset by (dx, dy).
+        :param dx: the X offset to the end of the new line
+        :param dy: the Y offset to the end of the new line
+        :raises: :exc:`cairo.Error` if called with no current point.
 
-        Given a current point of (x, y), `ctx.rel_line_to(dx, dy)` is logically equivalent to `ctx.line_to(x + dx, y + dy)`.
+        Relative-coordinate version of :meth:`Context.line_to`. Adds a line to
+        the path from the current point to a point that is offset from the
+        current point by *(dx, dy)* in user space. After this call the current
+        point will be offset by *(dx, dy)*.
 
-        Parameters
-        ----------
-        >>> dx (float)\n
-        The X offset to the end of the new line.
-        >>> dy (float)\n
-        The Y offset to the end of the new line.
-
-        Raises
-        ------
-        >>> cairo.Error\n
-        If called with no current point.
+        Given a current point of (x, y), ``ctx.rel_line_to(dx, dy)`` is logically
+        equivalent to ``ctx.line_to(x + dx, y + dy)``.
         """
+
     def rel_move_to(self, dx: float, dy: float) -> None:
         """
-        Begin a new sub-path. After this call the current point will offset by (dx, dy).
+        :param dx: the X offset
+        :param dy: the Y offset
+        :raises: :exc:`cairo.Error` if called with no current point.
 
-        Given a current point of (x, y), `ctx.rel_move_to(dx, dy)` is logically equivalent to `ctx.(x + dx, y + dy)`.
+        Begin a new sub-path. After this call the current point will offset by
+        *(dx, dy)*.
 
-        Parameters
-        ----------
-        >>> dx (float)\n
-        The X offset.
-        >>> dy (float)\n
-        The Y offset.
-
-        Raises
-        ------
-        >>> cairo.Error\n
-        If called with no current point.
+        Given a current point of (x, y), ``ctx.rel_move_to(dx, dy)`` is logically
+        equivalent to ``ctx.(x + dx, y + dy)``.
         """
+
     def reset_clip(self) -> None:
         """
-        Reset the current clip region to its original, unrestricted state. That is, set the clip region to an infinitely large shape containing the target surface. Equivalently, if infinity is too hard to grasp, one can imagine the clip region being reset to the exact bounds of the target surface.
+        Reset the current clip region to its original, unrestricted state. That
+        is, set the clip region to an infinitely large shape containing the
+        target surface. Equivalently, if infinity is too hard to grasp, one can
+        imagine the clip region being reset to the exact bounds of the target
+        surface.
 
-        Note that code meant to be reusable should not call `reset_clip()` as it will cause results unexpected by higher-level code which calls `clip()`. Consider using `save()` and `restore()` around `clip()` as a more robust means of temporarily restricting the clip region.
+        Note that code meant to be reusable should not call :meth:`.reset_clip`
+        as it will cause results unexpected by higher-level code which calls
+        :meth:`.clip`. Consider using :meth:`.save` and :meth:`.restore` around
+        :meth:`.clip` as a more robust means of temporarily restricting the clip
+        region.
         """
+
     def restore(self) -> None:
         """
-        Restores `Context` to the state saved by a preceding call to `save()` and removes that state from the stack of saved states.
+        Restores :class:`Context` to the state saved by a preceding call to
+        :meth:`.save` and removes that state from the stack of saved states.
         """
+
     def rotate(self, angle: float) -> None:
         """
-        Modifies the current transformation matrix (CTM) by rotating the user-space axes by angle radians. The rotation of the axes takes places after any existing transformation of user space. The rotation direction for positive angles is from the positive X axis toward the positive Y axis.
+        :param angle: angle (in radians) by which the user-space axes will be
+            rotated
 
-        Parameters
-        ----------
-        >>> angle (float)\n
-        Angle (in radians) by which the user-space axes will be rotated.
+        Modifies the current transformation matrix (CTM) by rotating the
+        user-space axes by *angle* radians. The rotation of the axes takes places
+        after any existing transformation of user space. The rotation direction
+        for positive angles is from the positive X axis toward the positive Y
+        axis.
         """
+
     def save(self) -> None:
         """
-        Makes a copy of the current state of Context and saves it on an internal stack of saved states. When `restore()` is called, `Context` will be restored to the saved state. Multiple calls to `save()` and `restore()` can be nested; each call to `restore()` restores the state from the matching paired `save()`.
+        Makes a copy of the current state of :class:`Context` and saves it on an
+        internal stack of saved states. When :meth:`.restore` is called,
+        :class:`Context` will be restored to the saved state. Multiple calls to
+        :meth:`.save` and :meth:`.restore` can be nested; each call to
+        :meth:`.restore` restores the state from the matching paired
+        :meth:`.save`.
         """
+
     def scale(self, sx: float, sy: float) -> None:
         """
-        Modifies the current transformation matrix (CTM) by scaling the X and Y user-space axes by sx and sy respectively. The scaling of the axes takes place after any existing transformation of user space.
+        :param sx: scale factor for the X dimension
+        :param sy: scale factor for the Y dimension
 
-        Parameters
-        ----------
-        >>> sx (float)\n
-        Scale factor for the X dimension.
-        >>> sy (float)\n
-        Scale factor for the Y dimension.
+        Modifies the current transformation matrix (CTM) by scaling the X and Y
+        user-space axes by *sx* and *sy* respectively. The scaling of the axes
+        takes place after any existing transformation of user space.
         """
+
     def select_font_face(self, family: str, slant: FontSlant = FontSlant.NORMAL, weight: FontWeight = FontWeight.NORMAL) -> None:
         """
-        Note: The `select_font_face()` function call is part of what the cairo designers call the “toy” text API. It is convenient for short demos and simple programs, but it is not expected to be adequate for serious text-using applications.
+        :param family: a font family name
+        :param slant: the font slant of the font,
+            defaults to :attr:`cairo.FontSlant.NORMAL`.
+        :param weight: the font weight of the
+            font, defaults to :attr:`cairo.FontWeight.NORMAL`.
 
-        Selects a family and style of font from a simplified description as a family name, slant and weight. Cairo provides no operation to list available family names on the system (this is a “toy”, remember), but the standard CSS2 generic family names, (“serif”, “sans-serif”, “cursive”, “fantasy”, “monospace”), are likely to work as expected.
+        Note: The :meth:`.select_font_face` function call is part of what the
+        cairo designers call the "toy" text API. It is convenient for short
+        demos and simple programs, but it is not expected to be adequate for
+        serious text-using applications.
 
-        For “real” font selection, see the font-backend-specific `font_face_create` functions for the font backend you are using. (For example, if you are using the freetype-based cairo-ft font backend, see `cairo_ft_font_face_create_for_ft_face()` or `cairo_ft_font_face_create_for_pattern()`.) The resulting font face could then be used with `cairo_scaled_font_create()` and `cairo_set_scaled_font()`.
+        Selects a family and style of font from a simplified description as a
+        family name, slant and weight. Cairo provides no operation to list
+        available family names on the system (this is a "toy", remember), but
+        the standard CSS2 generic family names, ("serif", "sans-serif",
+        "cursive", "fantasy", "monospace"), are likely to work as expected.
 
-        Similarly, when using the “real” font support, you can call directly into the underlying font system, (such as fontconfig or freetype), for operations such as listing available fonts, etc.
+        For "real" font selection, see the font-backend-specific
+        font_face_create functions for the font backend you are using. (For
+        example, if you are using the freetype-based cairo-ft font backend, see
+        cairo_ft_font_face_create_for_ft_face() or
+        cairo_ft_font_face_create_for_pattern().) The resulting font face could
+        then be used with cairo_scaled_font_create() and
+        cairo_set_scaled_font().
 
-        It is expected that most applications will need to use a more comprehensive font handling and text layout library, (for example, pango), in conjunction with cairo.
+        Similarly, when using the "real" font support, you can call directly
+        into the underlying font system, (such as fontconfig or freetype), for
+        operations such as listing available fonts, etc.
 
-        If text is drawn without a call to `select_font_face()`, (nor `set_font_face()` nor `set_scaled_font()`), the default family is platform-specific, but is essentially “sans-serif”. Default slant is `cairo.FontSlant.NORMAL`, and default weight is cairo.`FontWeight.NORMAL`.
+        It is expected that most applications will need to use a more
+        comprehensive font handling and text layout library, (for example,
+        pango), in conjunction with cairo.
 
-        This function is equivalent to a call to `ToyFontFace` followed by `set_font_face()`.
+        If text is drawn without a call to :meth:`.select_font_face`, (nor
+        :meth:`.set_font_face` nor :meth:`.set_scaled_font`), the default family
+        is platform-specific, but is essentially "sans-serif".  Default slant is
+        :attr:`cairo.FontSlant.NORMAL`, and default weight is
+        :attr:`cairo.FontWeight.NORMAL`.
 
-        Parameters
-        ----------
-        >>> family (str)\n
-        A font family name.
-        >>> slant (cairo.FontSlant)\n
-        The slant of the font, defaults to `cairo.FontSlant.NORMAL`.
-        >>> weight (cairo.FontWeight)\n
-        The weight of the font, defaults to `cairo.FontWeight.NORMAL`.
+        This function is equivalent to a call to :class:`ToyFontFace`
+        followed by :meth:`.set_font_face`.
         """
+
     def set_antialias(self, antialias: Antialias) -> None:
         """
-        Set the antialiasing mode of the rasterizer used for drawing shapes. This value is a hint, and a particular backend may or may not support a particular value. At the current time, no backend supports `cairo.Antialias.SUBPIXEL` when drawing shapes.
+        :param antialias: the new antialias mode
 
-        Note that this option does not affect text rendering, instead see `FontOptions.set_antialias()`.
+        Set the antialiasing mode of the rasterizer used for drawing shapes.
+        This value is a hint, and a particular backend may or may not support a
+        particular value.  At the current time, no backend supports
+        :attr:`cairo.Antialias.SUBPIXEL` when drawing shapes.
 
-        Parameters
-        ----------
-        >>> antialias (cairo.Antialias)\n
-        The new antialias mode.
+        Note that this option does not affect text rendering, instead see
+        :meth:`FontOptions.set_antialias`.
         """
+
     def set_dash(self, dashes: Sequence[float], offset: float = 0) -> None:
         """
-        Sets the dash pattern to be used by `stroke()`. A dash pattern is specified by dashes - a sequence of positive values. Each value provides the length of alternate “on” and “off” portions of the stroke. The offset specifies an offset into the pattern at which the stroke begins.
+        :param dashes: a sequence specifying alternate lengths of on and off
+            stroke portions as float.
+        :param offset: an offset into the dash pattern at which the stroke
+            should start, defaults to 0.
+        :raises: :exc:`cairo.Error` if any value in *dashes* is negative, or if
+            all values are 0.
 
-        Each “on” segment will have caps applied as if the segment were a separate sub-path. In particular, it is valid to use an “on” length of 0.0 with `cairo.LineCap.ROUND` or `cairo.LineCap.SQUARE` in order to distributed dots or squares along a path.
+        Sets the dash pattern to be used by :meth:`.stroke`. A dash pattern is
+        specified by *dashes* - a sequence of positive values. Each value
+        provides the length of alternate "on" and "off" portions of the
+        stroke. The *offset* specifies an offset into the pattern at which the
+        stroke begins.
 
-        Note: The length values are in user-space units as evaluated at the time of stroking. This is not necessarily the same as the user space at the time of `set_dash()`.
+        Each "on" segment will have caps applied as if the segment were a
+        separate sub-path. In particular, it is valid to use an "on" length of
+        0.0 with :attr:`cairo.LineCap.ROUND` or :attr:`cairo.LineCap.SQUARE`
+        in order to distributed dots or squares along a path.
+
+        Note: The length values are in user-space units as evaluated at the time
+        of stroking. This is not necessarily the same as the user space at the
+        time of :meth:`.set_dash`.
 
         If the number of dashes is 0 dashing is disabled.
 
-        If the number of dashes is 1 a symmetric pattern is assumed with alternating on and off portions of the size specified by the single value in dashes.
-
-        Parameters
-        ----------
-        >>> dashes (Sequence(float))\n
-        A sequence specifying alternate lengths of on and off stroke portions as float.
-        >>> offset (float)\n
-        An offset into the dash pattern at which the stroke should start, defaults to 0.
-
-        Raises
-        ------
-        >>> cairo.Error\n
-        If any value in dashes is negative, or if all values are 0.
+        If the number of dashes is 1 a symmetric pattern is assumed with
+        alternating on and off portions of the size specified by the single
+        value in *dashes*.
         """
+
     def set_fill_rule(self, fill_rule: FillRule) -> None:
         """
-        The default fill rule is `cairo.FillRule.WINDING`.
+        :param fill_rule: a fill rule to set the
+            within the cairo context. The fill rule is used to determine which
+            regions are inside or outside a complex (potentially
+            self-intersecting) path. The current fill rule affects both
+            :meth:`.fill` and :meth:`.clip`.
 
-        Parameters
-        ----------
-        >>> fill_rule (cairo.FillRule)\n
-        A fill rule to set within the cairo context. The fill rule is used to determine which regions are inside or outside a complex (potentially self-intersecting) path. The current fill rule affects both `fill()` and `clip()`.
+        The default fill rule is :attr:`cairo.FillRule.WINDING`.
         """
+
     def set_font_face(self, font_face: Optional[FontFace]) -> None:
         """
-        Replaces the current `FontFace` object in the `Context` with `ont_face`.
+        :param font_face: a :class:`FontFace`, or None to restore to the
+            default :class:`FontFace`
 
-        Parameters
-        ----------
-        >>> font_face (cairo.FontFace or None)\n
-        A `FontFace`, or `None` to restore to the default `FontFace`.
+        Replaces the current :class:`FontFace` object in the :class:`Context`
+        with *font_face*.
         """
+
     def set_font_matrix(self, matrix: Matrix) -> None:
         """
-        Sets the current font matrix to matrix. The font matrix gives a transformation from the design space of the font (in this space, the em-square is 1 unit by 1 unit) to user space. Normally, a simple scale is used (see `set_font_size()`), but a more complex font matrix can be used to shear the font or stretch it unequally along the two axes.
+        :param matrix: a :class:`Matrix` describing a transform to be applied to
+            the current font.
 
-        Parameters
-        ----------
-        >>> matrix (cairo.Matrix)\n
-        A `Matrix` describing a transform to be applied to the current font.
+        Sets the current font matrix to *matrix*. The font matrix gives a
+        transformation from the design space of the font (in this space, the
+        em-square is 1 unit by 1 unit) to user space. Normally, a simple scale
+        is used (see :meth:`.set_font_size`), but a more complex font matrix can
+        be used to shear the font or stretch it unequally along the two axes
         """
+
     def set_font_options(self, options: FontOptions) -> None:
         """
-        Sets a set of custom font rendering options for the Context. Rendering options are derived by merging these options with the options derived from underlying surface; if the value in options has a default value (like `cairo.Antialias.DEFAULT`), then the value from the surface is used.
+        :param options: :class:`FontOptions` to use
 
-        Parameters
-        ----------
-        >>> options (cairo.FontOptions)\n
-        `FontOptions` to use.
+        Sets a set of custom font rendering options for the :class:`Context`.
+        Rendering options are derived by merging these options with the options
+        derived from underlying surface; if the value in *options* has a default
+        value (like :attr:`cairo.Antialias.DEFAULT`), then the value from the
+        surface is used.
         """
+
     def set_font_size(self, size: float) -> None:
         """
-        Sets the current font matrix to a scale by a factor of size, replacing any font matrix previously set with `set_font_size()` or `set_font_matrix()`. This results in a font size of size user space units. (More precisely, this matrix will result in the font’s em-square being a size by size square in user space.)
+        :param size: the new font size, in user space units
 
-        If text is drawn without a call to `set_font_size()`, (nor `set_font_matrix()` nor `set_scaled_font()`), the default font size is 10.0.
+        Sets the current font matrix to a scale by a factor of *size*, replacing
+        any font matrix previously set with :meth:`.set_font_size` or
+        :meth:`.set_font_matrix`. This results in a font size of *size* user
+        space units. (More precisely, this matrix will result in the font's
+        em-square being a *size* by *size* square in user space.)
 
-        Parameters
-        ----------
-        >>> size (float)\n
-        The new font size, in user space units.
+        If text is drawn without a call to :meth:`.set_font_size`, (nor
+        :meth:`.set_font_matrix` nor :meth:`.set_scaled_font`), the default font
+        size is 10.0.
         """
+
     def set_line_cap(self, line_cap: LineCap) -> None:
         """
-        Sets the current line cap style within the Context.
+        :param line_cap: a line cap style
 
-        As with the other stroke parameters, the current line cap style is examined by `stroke()`, `stroke_extents()`, and `stroke_to_path()`, but does not have any effect during path construction.
+        Sets the current line cap style within the :class:`Context`.
 
-        The default line cap style is `cairo.LineCap.BUTT`.
+        As with the other stroke parameters, the current line cap style is
+        examined by :meth:`.stroke`, :meth:`.stroke_extents`, and
+        `Context.stroke_to_path`, but does not have any effect during path
+        construction.
 
-        Parameters
-        ----------
-        >>> line_cap (cairo.LineCap)\n
-        A line cap style.
+        The default line cap style is :attr:`cairo.LineCap.BUTT`.
         """
+
     def set_line_join(self, line_join: LineJoin) -> None:
         """
-        Sets the current line join style within the Context.
+        :param line_join: a line join style
 
-        As with the other stroke parameters, the current line join style is examined by `stroke()`, `stroke_extents()`, and `stroke_to_path()`, but does not have any effect during path construction.
+        Sets the current line join style within the :class:`Context`.
 
-        The default line join style is `cairo.LineJoin.MITER`.
+        As with the other stroke parameters, the current line join style is
+        examined by :meth:`.stroke`, :meth:`.stroke_extents`, and
+        `Context.stroke_to_path`, but does not have any effect during path
+        construction.
 
-        Parameters
-        ----------
-        >>> line_join (cairo.LineJoin)\n
-        A line join style.
+        The default line join style is :attr:`cairo.LineJoin.MITER`.
         """
+
     def set_line_width(self, width: float) -> None:
         """
-        Sets the current line width within the `Context`. The line width value specifies the diameter of a pen that is circular in user space, (though device-space pen may be an ellipse in general due to scaling/shear/rotation of the CTM).
+        :param width: a line width
 
-        Note: When the description above refers to user space and CTM it refers to the user space and CTM in effect at the time of the stroking operation, not the user space and CTM in effect at the time of the call to `set_line_width()`. The simplest usage makes both of these spaces identical. That is, if there is no change to the CTM between a call to `set_line_width()` and the stroking operation, then one can just pass user-space values to `set_line_width()` and ignore this note.
+        Sets the current line width within the :class:`Context`. The line width
+        value specifies the diameter of a pen that is circular in user space,
+        (though device-space pen may be an ellipse in general due to
+        scaling/shear/rotation of the CTM).
 
-        As with the other stroke parameters, the current line width is examined by `stroke()`, `stroke_extents()`, and `stroke_to_path()`, but does not have any effect during path construction.
+        Note: When the description above refers to user space and CTM it refers
+        to the user space and CTM in effect at the time of the stroking
+        operation, not the user space and CTM in effect at the time of the call
+        to :meth:`.set_line_width`. The simplest usage makes both of these
+        spaces identical. That is, if there is no change to the CTM between a
+        call to :meth:`.set_line_width` and the stroking operation, then one can
+        just pass user-space values to :meth:`.set_line_width` and ignore this
+        note.
+
+        As with the other stroke parameters, the current line width is examined
+        by :meth:`.stroke`, :meth:`.stroke_extents`, and
+        `Context.stroke_to_path`, but does not have any effect during path
+        construction.
 
         The default line width value is 2.0.
-
-        Parameters
-        ----------
-        >>> width (float)\n
-        A line width.
         """
+
     def set_matrix(self, matrix: Matrix) -> None:
         """
-        Modifies the current transformation matrix (CTM) by setting it equal to matrix.
+        :param matrix: a transformation :class:`Matrix` from user space to
+            device space.
 
-        Parameters
-        ----------
-        >>> matrix (cairo.Matrix)\n
-        A transformation `Matrix` from user space to device space.
+        Modifies the current transformation matrix (CTM) by setting it equal to
+        *matrix*.
         """
+
     def set_miter_limit(self, limit: float) -> None:
         """
-        Sets the current miter limit within the Context.
+        :param limit: miter limit to set
 
-        If the current line join style is set to cairo.LineJoin.MITER (see `set_line_join()`), the miter limit is used to determine whether the lines should be joined with a bevel instead of a miter. Cairo divides the length of the miter by the line width. If the result is greater than the miter limit, the style is converted to a bevel.
+        Sets the current miter limit within the :class:`Context`.
 
-        As with the other stroke parameters, the current line miter limit is examined by `stroke()`, `stroke_extents()`, and `stroke_to_path()`, but does not have any effect during path construction.
+        If the current line join style is set to :attr:`cairo.LineJoin.MITER`
+        (see :meth:`.set_line_join`), the miter limit is used to determine
+        whether the lines should be joined with a bevel instead of a miter.
+        Cairo divides the length of the miter by the line width. If the result
+        is greater than the miter limit, the style is converted to a bevel.
 
-        The default miter limit value is 10.0, which will convert joins with interior angles less than 11 degrees to bevels instead of miters. For reference, a miter limit of 2.0 makes the miter cutoff at 60 degrees, and a miter limit of 1.414 makes the cutoff at 90 degrees.
+        As with the other stroke parameters, the current line miter limit is
+        examined by :meth:`.stroke`, :meth:`.stroke_extents`, and
+        `Context.stroke_to_path`, but does not have any effect during path
+        construction.
 
-        A miter limit for a desired angle can be computed as:
-        >>> miter limit = 1/math.sin(angle/2)
+        The default miter limit value is 10.0, which will convert joins with
+        interior angles less than 11 degrees to bevels instead of miters. For
+        reference, a miter limit of 2.0 makes the miter cutoff at 60 degrees,
+        and a miter limit of 1.414 makes the cutoff at 90 degrees.
 
-        Parameters
-        ----------
-        >>> limit (float)\n
-        Miter limit to set.
+        A miter limit for a desired angle can be computed as::
+
+            miter limit = 1/math.sin(angle/2)
         """
+
     def set_operator(self, op: Operator) -> None:
         """
-        The default operator is `cairo.Operator.OVER`.
+        :param op: the compositing operator to set
+            for use in all drawing operations.
 
-        Parameters
-        ----------
-        >>> op (cairo.Operator)\n
-        The compositing operator to set for use in all drawing operations.
+        The default operator is :attr:`cairo.Operator.OVER`.
         """
+
     def set_scaled_font(self, scaled_font: ScaledFont) -> None:
         """
-        Replaces the current font face, font matrix, and font options in the `Context` with those of the `ScaledFont`. Except for some translation, the current CTM of the `Context` should be the same as that of the `ScaledFont`, which can be accessed using `ScaledFont.get_ctm()`.
+        :param scaled_font: a :class:`ScaledFont`
 
-        New in version 1.2.
+        Replaces the current font face, font matrix, and font options in the
+        :class:`Context` with those of the :class:`ScaledFont`. Except for some
+        translation, the current CTM of the :class:`Context` should be the same
+        as that of the :class:`ScaledFont`, which can be accessed using
+        :meth:`ScaledFont.get_ctm`.
 
-        Parameters
-        ----------
-        >>> scaled_font (cairo.ScaledFont)\n
+        .. versionadded:: 1.2
         """
+
     def set_source(self, source: Pattern) -> None:
         """
-        Sets the source pattern within `Context` to source. This pattern will then be used for any subsequent drawing operation until a new source pattern is set.
+        :param source: a :class:`Pattern` to be used as the source for
+            subsequent drawing operations.
 
-        Note: The pattern’s transformation matrix will be locked to the user space in effect at the time of `set_source()`. This means that further modifications of the current transformation matrix will not affect the source pattern. See `Pattern.set_matrix()`.
+        Sets the source pattern within :class:`Context` to *source*. This
+        pattern will then be used for any subsequent drawing operation until a
+        new source pattern is set.
 
-        The default source pattern is a solid pattern that is opaque black, (that is, it is equivalent to `set_source_rgb(0.0, 0.0, 0.0)`.
+        Note: The pattern's transformation matrix will be locked to the user
+        space in effect at the time of :meth:`.set_source`. This means that
+        further modifications of the current transformation matrix will not
+        affect the source pattern. See :meth:`Pattern.set_matrix`.
 
-        Parameters
-        ----------
-        >>> source (cairo.Pattern)\n
-        A `Pattern` to be used as the source for subsequent drawing operations.
+        The default source pattern is a solid pattern that is opaque black,
+        (that is, it is equivalent to ``set_source_rgb(0.0, 0.0, 0.0)``.
         """
+
     def set_source_rgb(self, red: float, green: float, blue: float) -> None:
         """
-        Sets the source pattern within `Context` to an opaque color. This opaque color will then be used for any subsequent drawing operation until a new source pattern is set.
+        :param red: red component of color
+        :param green: green component of color
+        :param blue: blue component of color
 
-        The color components are floating point numbers in the range 0 to 1. If the values passed in are outside that range, they will be clamped.
+        Sets the source pattern within :class:`Context` to an opaque color. This
+        opaque color will then be used for any subsequent drawing operation
+        until a new source pattern is set.
 
-        The default source pattern is opaque black, (that is, it is equivalent to `set_source_rgb(0.0, 0.0, 0.0)`.
+        The color components are floating point numbers in the range 0 to
+        1. If the values passed in are outside that range, they will be
+        clamped.
 
-        Parameters
-        ----------
-        >>> red (float)\n
-        Red component of color.
-        >>> green (float)\n
-        Green component of color.
-        >>> blue (float)\n
-        Blue component of color.
+        The default source pattern is opaque black, (that is, it is
+        equivalent to ``set_source_rgb(0.0, 0.0, 0.0)``.
         """
+
     def set_source_rgba(self, red: float, green: float, blue: float, alpha: float = 1.0) -> None:
         """
-        Sets the source pattern within `Context` to a translucent color. This color will then be used for any subsequent drawing operation until a new source pattern is set.
+        :param red: red component of color
+        :param green: green component of color
+        :param blue: blue component of color
+        :param alpha: alpha component of color
 
-        The color and alpha components are floating point numbers in the range 0 to 1. If the values passed in are outside that range, they will be clamped.
+        Sets the source pattern within :class:`Context` to a translucent
+        color. This color will then be used for any subsequent drawing operation
+        until a new source pattern is set.
 
-        The default source pattern is opaque black, (that is, it is equivalent to `set_source_rgba(0.0, 0.0, 0.0, 1.0)`.
+        The color and alpha components are floating point numbers in the range 0
+        to 1. If the values passed in are outside that range, they will be
+        clamped.
 
-        Parameters
-        ----------
-        >>> red (float)\n
-        Red component of color.
-        >>> green (float)\n
-        Green component of color.
-        >>> blue (float)\n
-        Blue component of color.
-        >>> alpha (float)\n
-        Alpha component of color.
+        The default source pattern is opaque black, (that is, it is
+        equivalent to ``set_source_rgba(0.0, 0.0, 0.0, 1.0)``.
         """
+
     def set_source_surface(self, surface: Surface, x: float = 0.0, y: float = 0.0) -> None:
         """
-        This is a convenience function for creating a pattern from a Surface and setting it as the source in `Context` with `set_source()`.
+        :param surface: a :class:`Surface` to be used to set the source pattern
+        :param x: User-space X coordinate for surface origin
+        :param y: User-space Y coordinate for surface origin
 
-        The x and y parameters give the user-space coordinate at which the surface origin should appear. (The surface origin is its upper-left corner before any transformation has been applied.) The x and y patterns are negated and then set as translation values in the pattern matrix.
+        This is a convenience function for creating a pattern from a
+        :class:`Surface` and setting it as the source in :class:`Context` with
+        :meth:`.set_source`.
 
-        Other than the initial translation pattern matrix, as described above, all other pattern attributes, (such as its extend mode), are set to the default values as in `SurfacePattern`. The resulting pattern can be queried with `get_source()` so that these attributes can be modified if desired, (eg. to create a repeating pattern with `Pattern.set_extend()`).
+        The *x* and *y* parameters give the user-space coordinate at which the
+        surface origin should appear. (The surface origin is its upper-left
+        corner before any transformation has been applied.) The *x* and *y*
+        patterns are negated and then set as translation values in the pattern
+        matrix.
 
-        Parameters
-        ----------
-        >>> surface (cairo.Surface)\n
-        A `Surface` to be used to set the source pattern.
-        >>> x (float)\n
-        User-space X coordinate for the surface's origin.
-        >>> y (float)\n
-        User-space Y coordinate for the surface's origin.
+        Other than the initial translation pattern matrix, as described above,
+        all other pattern attributes, (such as its extend mode), are set to the
+        default values as in :class:`SurfacePattern`.  The resulting pattern can
+        be queried with :meth:`.get_source` so that these attributes can be
+        modified if desired, (eg. to create a repeating pattern with
+        :meth:`.Pattern.set_extend`).
         """
+
     def set_tolerance(self, tolerance: float) -> None:
         """
-        Sets the tolerance used when converting paths into trapezoids. Curved segments of the path will be subdivided until the maximum deviation between the original path and the polygonal approximation is less than tolerance. The default value is 0.1. A larger value will give better performance, a smaller value, better appearance. (Reducing the value from the default value of 0.1 is unlikely to improve appearance significantly.) The accuracy of paths within Cairo is limited by the precision of its internal arithmetic, and the prescribed tolerance is restricted to the smallest representable internal value.
+        :param tolerance: the tolerance, in device units (typically pixels)
 
-        Parameters
-        ----------
-        >>> tolerance (float)\n
-        The tolerance, in device units (typically pixels).
+        Sets the tolerance used when converting paths into trapezoids.  Curved
+        segments of the path will be subdivided until the maximum deviation
+        between the original path and the polygonal approximation is less than
+        *tolerance*. The default value is 0.1. A larger value will give better
+        performance, a smaller value, better appearance. (Reducing the value
+        from the default value of 0.1 is unlikely to improve appearance
+        significantly.)  The accuracy of paths within Cairo is limited by the
+        precision of its internal arithmetic, and the prescribed *tolerance* is
+        restricted to the smallest representable internal value.
         """
+
     def show_glyphs(self, glyphs: Sequence[Glyph]) -> None:
         """
-        A drawing operator that generates the shape from an array of glyphs, rendered according to the current font face, font size (font matrix), and font options.
+        :param glyphs: glyphs to show as a sequence of :class:`Glyph`
 
-        Parameters
-        ----------
-        >>> glyphs (Sequence(cairo.Glyph))\n
-        Glyphs to show as a sequence of `Glyph`.
+        A drawing operator that generates the shape from an array of glyphs,
+        rendered according to the current font face, font size (font matrix),
+        and font options.
         """
+
     def show_page(self) -> None:
         """
-        Emits and clears the current page for backends that support multiple pages. Use `copy_page()` if you don’t want to clear the page.
+        Emits and clears the current page for backends that support multiple
+        pages. Use :meth:`.copy_page` if you don't want to clear the page.
 
-        This is a convenience function that simply calls `ctx.get_target().show_page()`
+        This is a convenience function that simply calls
+        ``ctx.get_target() . show_page()``
         """
+
     def show_text(self, text: str) -> None:
         """
-        A drawing operator that generates the shape from a string of text, rendered according to the current font_face, font_size (font_matrix), and font_options.
+        :param text: text
 
-        This function first computes a set of glyphs for the string of text. The first glyph is placed so that its origin is at the current point. The origin of each subsequent glyph is offset from that of the previous glyph by the advance values of the previous glyph.
+        A drawing operator that generates the shape from a string of text,
+        rendered according to the current font_face, font_size (font_matrix),
+        and font_options.
 
-        After this call the current point is moved to the origin of where the next glyph would be placed in this same progression. That is, the current point will be at the origin of the final glyph offset by its advance values. This allows for easy display of a single logical string with multiple calls to `show_text()`.
+        This function first computes a set of glyphs for the string of text. The
+        first glyph is placed so that its origin is at the current point. The
+        origin of each subsequent glyph is offset from that of the previous
+        glyph by the advance values of the previous glyph.
 
-        Note: The `show_text()` function call is part of what the cairo designers call the “toy” text API. It is convenient for short demos and simple programs, but it is not expected to be adequate for serious text-using applications. See `show_glyphs()` for the “real” text display API in cairo.
+        After this call the current point is moved to the origin of where the
+        next glyph would be placed in this same progression. That is, the
+        current point will be at the origin of the final glyph offset by its
+        advance values. This allows for easy display of a single logical string
+        with multiple calls to :meth:`.show_text`.
 
-        Parameters
-        ----------
-        >>> text (str)\n
+        Note: The :meth:`.show_text` function call is part of what the cairo
+        designers call the "toy" text API. It is convenient for short demos
+        and simple programs, but it is not expected to be adequate for
+        serious text-using applications. See :meth:`.show_glyphs` for the
+        "real" text display API in cairo.
         """
+
     def stroke(self) -> None:
         """
-        A drawing operator that strokes the current path according to the current line width, line join, line cap, and dash settings. After `stroke()`, the current path will be cleared from the cairo context. See `set_line_width()`, `set_line_join()`, `set_line_cap()`, `set_dash()`, and `stroke_preserve()`.
+        A drawing operator that strokes the current path according to the
+        current line width, line join, line cap, and dash settings. After
+        :meth:`.stroke`, the current path will be cleared from the cairo
+        context. See :meth:`.set_line_width`, :meth:`.set_line_join`,
+        :meth:`.set_line_cap`, :meth:`.set_dash`, and :meth:`.stroke_preserve`.
 
-        Note: Degenerate segments and sub-paths are treated specially and provide a useful result. These can result in two different situations:
+        Note: Degenerate segments and sub-paths are treated specially and
+        provide a useful result. These can result in two different situations:
 
-        1. Zero-length “on” segments set in `set_dash()`. If the cap style is `cairo.LineCap.ROUND` or `cairo.LineCap.SQUARE` then these segments will be drawn as circular dots or squares respectively. In the case of `cairo.LineCap.SQUARE`, the orientation of the squares is determined by the direction of the underlying path.
+        1. Zero-length "on" segments set in :meth:`.set_dash`. If the cap
+        style is :attr:`cairo.LineCap.ROUND` or :attr:`cairo.LineCap.SQUARE`
+        then these segments will be drawn as circular dots or squares
+        respectively. In the case of :attr:`cairo.LineCap.SQUARE`, the
+        orientation of the squares is determined by the direction of the
+        underlying path.
 
-        2. A sub-path created by `move_to()` followed by either a `close_path()` or one or more calls to `line_to()` to the same coordinate as the `move_to()`. If the cap style is `cairo.LineCap.ROUND` then these sub-paths will be drawn as circular dots. Note that in the case of `cairo.LineCap.SQUARE` a degenerate sub-path will not be drawn at all, (since the correct orientation is indeterminate).
+        2. A sub-path created by :meth:`.move_to` followed by either a
+        :meth:`.close_path` or one or more calls to :meth:`.line_to` to the same
+        coordinate as the :meth:`.move_to`. If the cap style is
+        :attr:`cairo.LineCap.ROUND` then these sub-paths will be drawn as
+        circular dots. Note that in the case of :attr:`cairo.LineCap.SQUARE` a
+        degenerate sub-path will not be drawn at all, (since the correct
+        orientation is indeterminate).
 
-        In no case will a cap style of `cairo.LineCap.BUTT` cause anything to be drawn in the case of either degenerate segments or sub-paths.
+        In no case will a cap style of :attr:`cairo.LineCap.BUTT` cause anything
+        to be drawn in the case of either degenerate segments or sub-paths.
         """
+
     def stroke_extents(self) -> Tuple[float, float, float, float]:
         """
-        Computes a bounding box in user coordinates covering the area that would be affected, (the “inked” area), by a `stroke()` operation given the current path and stroke parameters. If the current path is empty, returns an empty rectangle (0, 0, 0, 0). Surface dimensions and clipping are not taken into account.
+        :returns: (x1, y1, x2, y2), all float
 
-        Note that if the line width is set to exactly zero, then `stroke_extents()` will return an empty rectangle. Contrast with `path_extents()` which can be used to compute the non-empty bounds as the line width approaches zero.
+        * *x1*: left of the resulting extents
+        * *y1*: top of the resulting extents
+        * *x2*: right of the resulting extents
+        * *y2*: bottom of the resulting extents
 
-        Note that `stroke_extents()` must necessarily do more work to compute the precise inked areas in light of the stroke parameters, so `path_extents()` may be more desirable for sake of performance if non-inked path extents are desired.
+        Computes a bounding box in user coordinates covering the area that would
+        be affected, (the "inked" area), by a :meth:`.stroke` operation given
+        the current path and stroke parameters. If the current path is empty,
+        returns an empty rectangle (0, 0, 0, 0). Surface dimensions and
+        clipping are not taken into account.
 
-        See `stroke()`, `set_line_width()`, `set_line_join()`, `set_line_cap()`, `set_dash()`, and `stroke_preserve()`.
+        Note that if the line width is set to exactly zero, then
+        :meth:`.stroke_extents` will return an empty rectangle. Contrast with
+        :meth:`.path_extents` which can be used to compute the non-empty bounds
+        as the line width approaches zero.
 
-        Returns
-        ----------
-        >>> (x1: float, y1: float, x2: float, y2: float)\n
-        - `x1 (float)` -- Left of the resulting extents.
-        - `y1 (float)` -- Top of the resulting extents.
-        - `x2 (float)` -- Right of the resulting extents.
-        - `y2 (float)` -- Bottom of the resulting extents.
+        Note that :meth:`.stroke_extents` must necessarily do more work to
+        compute the precise inked areas in light of the stroke parameters, so
+        :meth:`.path_extents` may be more desirable for sake of performance if
+        non-inked path extents are desired.
+
+        See :meth:`.stroke`, :meth:`.set_line_width`, :meth:`.set_line_join`,
+        :meth:`.set_line_cap`, :meth:`.set_dash`, and :meth:`.stroke_preserve`.
         """
+
     def stroke_preserve(self) -> None:
         """
-        A drawing operator that strokes the current path according to the current line width, line join, line cap, and dash settings. Unlike `stroke()`, `stroke_preserve()` preserves the path within the cairo context.
+        A drawing operator that strokes the current path according to the
+        current line width, line join, line cap, and dash settings. Unlike
+        :meth:`.stroke`, :meth:`.stroke_preserve` preserves the path within the
+        cairo context.
 
-        See `set_line_width()`, `set_line_join()`, `set_line_cap()`, `set_dash()`, and `stroke_preserve()`.
+        See :meth:`.set_line_width`, :meth:`.set_line_join`,
+        :meth:`.set_line_cap`, :meth:`.set_dash`, and :meth:`.stroke_preserve`.
         """
+
     def text_extents(self, text: str) -> TextExtents:
         """
-        Gets the extents for a string of text. The extents describe a user-space rectangle that encloses the “inked” portion of the text, (as it would be drawn by `Context.show_text()`). Additionally, the x_advance and y_advance values indicate the amount by which the current point would be advanced by `Context.show_text()`.
+        :param text: text to get extents for
 
-        Note that whitespace characters do not directly contribute to the size of the rectangle (`extents.width` and `extents.height`). They do contribute indirectly by changing the position of non-whitespace characters. In particular, trailing whitespace characters are likely to not affect the size of the rectangle, though they will affect the `x_advance` and `y_advance` values.
+        Gets the extents for a string of text. The extents describe a user-space
+        rectangle that encloses the "inked" portion of the text, (as it would be
+        drawn by :meth:`Context.show_text`). Additionally, the x_advance and
+        y_advance values indicate the amount by which the current point would be
+        advanced by :meth:`Context.show_text`.
 
-        Parameters
-        ----------
-        >>> text (str)\n
-        Text to get extents for.
-
-        Returns
-        -------
-        >>> cairo.TextExtents\n
+        Note that whitespace characters do not directly contribute to the size
+        of the rectangle (extents.width and extents.height). They do contribute
+        indirectly by changing the position of non-whitespace characters. In
+        particular, trailing whitespace characters are likely to not affect the
+        size of the rectangle, though they will affect the x_advance and
+        y_advance values.
         """
+
     def text_path(self, text: str) -> None:
         """
-        Adds closed paths for text to the current path. The generated path if filled, achieves an effect similar to that of `Context.show_text()`.
+        :param text: text
 
-        Text conversion and positioning is done similar to `Context.show_text()`.
+        Adds closed paths for text to the current path. The generated path if
+        filled, achieves an effect similar to that of :meth:`Context.show_text`.
 
-        Like `Context.show_text()`, After this call the current point is moved to the origin of where the next glyph would be placed in this same progression. That is, the current point will be at the origin of the final glyph offset by its advance values. This allows for chaining multiple calls to to `Context.text_path()` without having to set current point in between.
+        Text conversion and positioning is done similar to
+        :meth:`Context.show_text`.
 
-        Note: The `text_path()` function call is part of what the cairo designers call the “toy” text API. It is convenient for short demos and simple programs, but it is not expected to be adequate for serious text-using applications. See `Context.glyph_path()` for the “real” text path API in cairo.
+        Like :meth:`Context.show_text`, After this call the current point is
+        moved to the origin of where the next glyph would be placed in this same
+        progression. That is, the current point will be at the origin of the
+        final glyph offset by its advance values.  This allows for chaining
+        multiple calls to to :meth:`Context.text_path` without having to set
+        current point in between.
 
-        Parameters
-        ----------
-        >>> text (str)\n
+        Note: The :meth:`.text_path` function call is part of what the cairo
+        designers call the "toy" text API. It is convenient for short demos and
+        simple programs, but it is not expected to be adequate for serious
+        text-using applications. See :meth:`Context.glyph_path` for the "real"
+        text path API in cairo.
         """
+
     def transform(self, matrix: Matrix) -> None:
         """
-        Modifies the current transformation matrix (CTM) by applying matrix as an additional transformation. The new transformation of user space takes place after any existing transformation.
+        :param matrix: a transformation :class:`Matrix` to be applied to the
+            user-space axes
 
-        Parameters
-        ----------
-        >>> matrix (cairo.Matrix)\n
-        A transformation `Matrix` to be applied to the user-space axes.
+        Modifies the current transformation matrix (CTM) by applying *matrix* as
+        an additional transformation. The new transformation of user space takes
+        place after any existing transformation.
         """
+
     def translate(self, tx: float, ty: float) -> None:
         """
-        Modifies the current transformation matrix (CTM) by translating the user-space origin by (tx, ty). This offset is interpreted as a user-space coordinate according to the CTM in place before the new call to `translate()`. In other words, the translation of the user-space origin takes place after any existing transformation.
+        :param tx: amount to translate in the X direction
+        :param ty: amount to translate in the Y direction
 
-        Parameters
-        ----------
-        >>> tx (float)\n
-        Amount to translate in the X direction.
-        >>> ty (float)\n
-        Amount to translate in the Y direction.
+        Modifies the current transformation matrix (CTM) by translating the
+        user-space origin by *(tx, ty)*. This offset is interpreted as a
+        user-space coordinate according to the CTM in place before the new call
+        to :meth:`.translate`. In other words, the translation of the user-space
+        origin takes place after any existing transformation.
         """
+
     def user_to_device(self, x: float, y: float) -> Tuple[float, float]:
         """
-        Transform a coordinate from user-space to device-space by multiplying the given point by the current transformation matrix (CTM).
+        :param x: X value of coordinate
+        :param y: Y value of coordinate
+        :returns: (x, y), both float
 
-        Parameters
-        ----------
-        >>> x (float)\n
-        X value of coordinate.
-        >>> y (float)\n
-        Y value of coordinate.
+        * *x*: X value of coordinate
+        * *y*: Y value of coordinate
 
-        Returns
-        -------
-        >>> (x: float, y: float)\n
-        - `x (float)` -- Converted device-space X coordinate.
-        - `y (float)` -- Converted device-space Y coordinate.
+        Transform a coordinate from user space to device space by multiplying
+        the given point by the current transformation matrix (CTM).
         """
+
     def user_to_device_distance(self, dx: float, dy: float) -> Tuple[float, float]:
         """
-        Transform a distance vector from user space to device space. This function is similar to `Context.user_to_device()` except that the translation components of the CTM will be ignored when transforming (dx,dy).
+        :param dx: X value of a distance vector
+        :param dy: Y value of a distance vector
+        :returns: (dx, dy), both float
 
-        Parameters
-        ----------
-        >>> dx (float)\n
-        X value of a distance vector.
-        >>> dy (float)\n
-        Y value of a distance vector.
+        * *dx*: X value of a distance vector
+        * *dy*: Y value of a distance vector
 
-        Returns
-        -------
-        >>> (dx: float, dy: float)\n
-        - `dx (float)` -- Converted to device-space X value of a distance vector.
-        - `dy (float)` -- Converted to device-space Y value of a distance vector.
+        Transform a distance vector from user space to device space. This
+        function is similar to :meth:`Context.user_to_device` except that the
+        translation components of the CTM will be ignored when transforming
+        *(dx,dy)*.
         """
+
     def in_clip(self, x: float, y: float) -> bool:
         """
-        Tests whether the given point is inside the area that would be visible through the current clip, i.e. the area that would be filled by a `paint()` operation.
+        :param x: X coordinate of the point to test
+        :param y: Y coordinate of the point to test
+        :returns: :obj:`True` if the point is inside, or :obj:`False` if outside.
 
-        See `clip()`, and `clip_preserve()`.
+        Tests whether the given point is inside the area that would be visible
+        through the current clip, i.e. the area that would be filled by a
+        :meth:`paint` operation.
 
-        New in version 1.12.0.
+        See :meth:`clip`, and :meth:`clip_preserve`.
 
-        Parameters
-        ----------
-        >>> x (float)\n
-        X coordinate of the point to test.
-        >>> y (float)\n
-        Y coordinate of the point to test.
-
-        Returns
-        -------
-        >>> bool\n
-        `True` if the point is inside, or `False` if outside.
+        .. versionadded:: 1.12.0
         """
+
     def show_text_glyphs(self, utf8: str, glyphs: List["Glyph"], clusters: List[TextCluster], cluster_flags: TextClusterFlags) -> None:
         """
-        New in version 1.15.
+        :param utf8: a string of text
+        :param glyphs: list of glyphs to show
+        :param clusters: list of cluster mapping information
+        :param cluster_flags: cluster mapping flags
+        :raises Error:
 
-        This operation has rendering effects similar to `Context.show_glyphs()` but, if the target surface supports it, uses the provided text and cluster mapping to embed the text for the glyphs shown in the output. If the target does not support the extended attributes, this function acts like the basic `Context.show_glyphs()` as if it had been passed `glyphs`.
+        .. versionadded:: 1.15
 
-        The mapping between `utf8` and `glyphs` is provided by a list of `clusters`. Each cluster covers a number of text bytes and glyphs, and neighboring clusters cover neighboring areas of `utf8` and glyphs . The clusters should collectively cover utf8 and glyphs in entirety.
+        This operation has rendering effects similar to
+        :meth:`Context.show_glyphs` but, if the target surface supports it, uses
+        the provided text and cluster mapping to embed the text for the glyphs
+        shown in the output. If the target does not support the extended
+        attributes, this function acts like the basic
+        :meth:`Context.show_glyphs` as if it had been passed ``glyphs`` .
 
-        The first cluster always covers bytes from the beginning of utf8 . If `cluster_flags` do not have the `TextClusterFlags.BACKWARD` set, the first cluster also covers the beginning of glyphs , otherwise it covers the end of the glyphs array and following clusters move backward.
+        The mapping between utf8 and glyphs is provided by a list of clusters.
+        Each cluster covers a number of text bytes and glyphs, and neighboring
+        clusters cover neighboring areas of utf8 and glyphs . The clusters
+        should collectively cover utf8 and glyphs in entirety.
 
-        See `TextCluster` for constraints on valid clusters.
+        The first cluster always covers bytes from the beginning of utf8 . If
+        ``cluster_flags`` do not have the :attr:`TextClusterFlags.BACKWARD` set,
+        the first cluster also covers the beginning of glyphs , otherwise it
+        covers the end of the glyphs array and following clusters move backward.
 
-        Parameters
-        ----------
-        >>> utf8 (str)\n
-        A string of text.
-        >>> glyphs (list(cairo.Glyph))\n
-        A list of glyphs to show.
-        >>> clusters (list(cairo.TextCluster))\n
-        A list of cluster mapping information.
-        >>> cluster_flags (cairo.TextClusterFlags)\n
-        Cluster mapping flags.
+        See :class:`TextCluster` for constraints on valid clusters.
         """
+
     def tag_begin(self, tag_name: str, attributes: str) -> None:
         """
-        Marks the beginning of the tag_name structure. Call `tag_end()` with the same tag_name to mark the end of the structure.
+        :param tag_name: tag name
+        :param attributes: tag attributes
 
-        The attributes string is of the form “key1=value2 key2=value2 …”. Values may be boolean (true/false or 1/0), integer, float, string, or an array.
+        Marks the beginning of the tag_name structure. Call :meth:`tag_end`
+        with the same tag_name to mark the end of the structure.
 
-        String values are enclosed in single quotes (‘). Single quotes and backslashes inside the string should be escaped with a backslash.
+        The attributes string is of the form "key1=value2 key2=value2 ...".
+        Values may be boolean (true/false or 1/0), integer, float, string, or
+        an array.
 
-        Boolean values may be set to true by only specifying the key. eg the attribute string “key” is the equivalent to “key=true”.
+        String values are enclosed in single quotes ('). Single quotes and
+        backslashes inside the string should be escaped with a backslash.
 
-        Arrays are enclosed in ‘[]’. eg “rect=[1.2 4.3 2.0 3.0]”.
+        Boolean values may be set to true by only specifying the key. eg the
+        attribute string "key" is the equivalent to "key=true".
+
+        Arrays are enclosed in '[]'. eg "rect=[1.2 4.3 2.0 3.0]".
 
         If no attributes are required, attributes can be an empty string.
 
-        See `Tags and Links Description` for the list of tags and attributes.
+        See `Tags and Links Description
+        <https://www.cairographics.org/manual/cairo-Tags-and-Links.html#cairo-Tags-and-Links.description>`__
+        for the list of tags and attributes.
 
-        Invalid nesting of tags or invalid attributes will cause the context to shutdown with a status of `Status.TAG_ERROR`.
+        Invalid nesting of tags or invalid attributes will cause the context
+        to shutdown with a status of :attr:`Status.TAG_ERROR`.
 
-        See `tag_end()`.
+        See :meth:`tag_end`.
 
-        New in version 1.18.0: Only available with cairo 1.15.10+.
-
-        Parameters
-        ----------
-        >>> tag_name (str)\n
-        Tag name.
-        >>> attributes (str)\n
-        Tag attributes.
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
         """
+
     def tag_end(self, tag_name: str) -> None:
         """
-        Marks the end of the `tag_name` structure.
+        :param tag_name: tag name
 
-        Invalid nesting of tags will cause the context to shutdown with a status of `Status.TAG_ERROR`.
+        Marks the end of the tag_name structure.
 
-        See `tag_begin()`.
+        Invalid nesting of tags will cause the context to shutdown with a
+        status of :attr:`Status.TAG_ERROR`.
 
-        New in version 1.18.0: Only available with cairo 1.15.10+.
+        See :meth:`tag_begin`.
 
-        Parameters
-        ----------
-        >>> tag_name (str)\n
-        The tag name.
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
         """
 
 class Error(Exception):
@@ -3136,6 +3837,11 @@ class Error(Exception):
     status: Status = ...
 
 CairoError = Error
+"""
+An alias for :exc:`Error`
+
+.. versionadded:: 1.12.0
+"""
 
 class Gradient(Pattern):
     """
@@ -4436,10 +5142,14 @@ class SurfaceObserverMode(_IntEnum):
     """
     Whether operations should be recorded.
 
-    New in version 1.14.
+    .. versionadded:: 1.14
     """
+
     NORMAL: "SurfaceObserverMode" = ...
+    """no recording is done"""
+
     RECORD_OPERATIONS: "SurfaceObserverMode" = ...
+    """operations are recorded"""
 
 class TeeSurface(Surface):
     """
