@@ -1151,75 +1151,13 @@ if it is available.
 class ScriptSurface(:class:`Surface`)
 =====================================
 
-The script surface provides the ability to render to a native script that
-matches the cairo drawing model. The scripts can be replayed using tools under
-the util/cairo-script directory, or with cairo-perf-trace.
-
-
-.. class:: ScriptSurface(script, content, width, height)
-
-    :param cairo.ScriptDevice script: the script (output device)
-    :param cairo.Content content: the content of the surface
-    :param float width: width in pixels
-    :param float height: height in pixels
-    :rtype: cairo.ScriptSurface
-    :raises cairo.Error:
-
-    Create a new surface that will emit its rendering through ``script``.
-
-    .. versionadded:: 1.14
-
-    .. classmethod:: create_for_target(script, target)
-
-        :param cairo.ScriptDevice script: the script (output device)
-        :param cairo.Surface target: a target surface to wrap
-        :rtype: cairo.ScriptSurface
-        :raises cairo.Error:
-
-        Create a proxy surface that will render to ``target`` and record the
-        operations to ``device``.
-
-        .. versionadded:: 1.14
-
+.. autoclass:: ScriptSurface
+    :members:
+    :undoc-members:
 
 class TeeSurface(:class:`Surface`)
 =====================================
 
-This surface supports redirecting all its input to multiple surfaces.
-
-.. class:: TeeSurface(master)
-
-    :param cairo.Surface master:
-    :rtype: cairo.TeeSurface
-    :raises cairo.Error:
-
-    .. versionadded:: 1.14
-
-    .. method:: add(target)
-
-        :param cairo.Surface target:
-        :raises cairo.Error:
-
-        Add the surface
-
-        .. versionadded:: 1.14
-
-    .. method:: remove(target)
-
-        :param cairo.Surface target:
-        :raises cairo.Error:
-
-        Remove the surface
-
-        .. versionadded:: 1.14
-
-    .. method:: index(index)
-
-        :param int index:
-        :rtype: cairo.Surface
-        :raises cairo.Error:
-
-        Returns the surface at index ``index``. The master surface is
-        at index 0.
-
-        .. versionadded:: 1.14
+.. autoclass:: TeeSurface
+    :members:
+    :undoc-members:

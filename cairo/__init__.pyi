@@ -872,145 +872,153 @@ class FontFace:
 
 class FontOptions:
     """
-    Allocates a new FontOptions object with all options initialized to default values.
+    Allocates a new FontOptions object with all options initialized to default
+    values.
 
     Implements `__eq__` and `__ne__` using `equal()` since 1.12.0.
 
     An opaque structure holding all options that are used when rendering fonts.
 
-    Individual features of a FontOptions can be set or accessed using functions named FontOptions.set_<feature_name> and FontOptions.get_<feature_name>, like `FontOptions.set_antialias()` and `FontOptions.get_antialias()`.
+    Individual features of a FontOptions can be set or accessed using functions
+    named FontOptions.set_<feature_name> and FontOptions.get_<feature_name>,
+    like `FontOptions.set_antialias()` and `FontOptions.get_antialias()`.
 
-    New features may be added to a `FontOptions` in the future. For this reason, `FontOptions.copy()`, `FontOptions.equal()`, `FontOptions.merge()`, and `FontOptions.hash()` should be used to copy, check for equality, merge, or compute a hash value of `FontOptions` objects.
-
-    Returns
-    -------
-    >>> cairo.FontOptions\n
-    A newly allocated FontOptions.
+    New features may be added to a `FontOptions` in the future. For this reason,
+    `FontOptions.copy()`, `FontOptions.equal()`, `FontOptions.merge()`, and
+    `FontOptions.hash()` should be used to copy, check for equality, merge, or
+    compute a hash value of `FontOptions` objects.
     """
+
     def get_antialias(self) -> Antialias:
         """
-        Returns
-        -------
-        >>> cairo.Antialias\n
-        The antialias mode for the `FontOptions` object.
+        :returns: the antialias mode for the *FontOptions* object
         """
+
     def get_hint_style(self) -> HintStyle:
         """
-        Returns
-        -------
-        >>> cairo.HintStyle\n
-        The hint style for the `FontOptions` object.
+        :returns: the hint style for the *FontOptions* object
         """
+
     def get_subpixel_order(self) -> SubpixelOrder:
         """
-        Returns
-        -------
-        >>> cairo.SubpixelOrder\n
-        The subpixel order for the `FontOptions` object.
+        :returns: the subpixel order for the *FontOptions* object
         """
+
     def set_antialias(self, antialias: Antialias) -> None:
         """
-        This specifies the ype of antialiasing to do when rendering text.
+        :param antialias: the antialias mode
 
-        Parameters
-        ----------
-        >>> antialias (cairo.Antialias)\n
-        The antialias mode.
+        This specifies the type of antialiasing to do when rendering text.
         """
+
     def set_hint_metrics(self, hint_metrics: HintMetrics) -> None:
         """
-        This controls whether metrics are quantized to integer values in device units.
+        :param hint_metrics: the hint metrics mode
 
-        Parameters
-        ----------
-        >>> hint_metrics (cairo.HintMetrics)\n
-        The hint metrics mode.
+        This controls whether metrics are quantized to integer values in device
+        units.
         """
+
     def set_hint_style(self, hint_style: HintStyle) -> None:
         """
-        This controls whether to fit font outlines to the pixel grid, and if so, whether to optimize for fidelity or contrast.
+        :param hint_style: the hint style
 
-        Parameters
-        ----------
-        >>> hint_style (cairo.HintStyle)\n
-        The hint style.
+        This controls whether to fit font outlines to the pixel grid, and if so,
+        whether to optimize for fidelity or contrast.
         """
+
     def merge(self, other: "FontOptions") -> None:
         """
-        Merges non-default options from other into options , replacing existing values. This operation can be thought of as somewhat similar to compositing other onto options with the operation of `Operator.OVER.`
+        :param FontOptions other: another :class:`FontOptions`
 
-        New in version 1.12.0.
+        Merges non-default options from other into options , replacing existing
+        values. This operation can be thought of as somewhat similar to
+        compositing other onto options with the operation of
+        :attr:`Operator.OVER`.
 
-        Parameters
-        ----------
-        >>> other (cairo.FontOptions)\n
-        Another `FontOptions`
+        .. versionadded:: 1.12.0
         """
+
     def copy(self) -> "FontOptions":
         """
-        Returns a new font options object copying the option values from original.
+        :returns: a new :class:`FontOptions`
 
-        New in version 1.12.0.
+        Returns a new font options object copying the option values from
+        original.
 
-        Returns
-        -------
-        >>> cairo.FontOptions
+        .. versionadded:: 1.12.0
         """
+
     def hash(self) -> int:
         """
-        Compute a hash for the font options object; this value will be useful when storing an object containing a `FontOptions` in a hash table.
+        :returns: the hash value for the font options object
 
-        New in version 1.12.0.
+        Compute a hash for the font options object; this value will be useful
+        when storing an object containing a :class:`FontOptions` in a hash
+        table.
 
-        Returns
-        -------
-        >>> int\n
-        The hash value for the font options object.
+        .. versionadded:: 1.12.0
         """
+
     def equal(self, other: "FontOptions") -> bool:
         """
+        :param other: another :class:`FontOptions`
+        :returns: :obj:`True` if all fields of the two font options objects
+            match. Note that this function will return :obj:`False` if either
+            object is in error.
+
         Compares two font options objects for equality.
 
-        New in version 1.12.0.
-
-        Parameters
-        ----------
-        >>> other (cairo.FontOptions)\n
-        Another `FontOptions`
-
-        Returns
-        -------
-        >>> bool\n
-        `True` if all fields of the two font options objects match. Note that this function will return `False` if either object is in error.
+        .. versionadded:: 1.12.0
         """
+
     def set_variations(self, variations: Optional[str]) -> None:
         """
-        Sets the OpenType font variations for the font options object. Font variations are specified as a string with a format that is similar to the CSS font-variation-settings. The string contains a comma-separated list of axis assignments, which each assignment consists of a 4-character axis name and a value, separated by whitespace and optional equals sign.
+        :param variations: the new font variations, or :obj:`None`
+
+        Sets the OpenType font variations for the font options object. Font
+        variations are specified as a string with a format that is similar to
+        the CSS font-variation-settings. The string contains a comma-separated
+        list of axis assignments, which each assignment consists of a
+        4-character axis name and a value, separated by whitespace and
+        optional equals sign.
 
         Examples:
-        - wght=200,wdth=140.5
-        - wght 200 , wdth 140.5
 
-        New in version 1.18.0: Only available with cairo 1.15.12+
+        * wght=200,wdth=140.5
+        * wght 200 , wdth 140.5
 
-        Parameters
-        ----------
-        >>> variations (str or None)\n
-        The new font variations, or `None`.
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.12+
         """
+
     def get_variations(self) -> str:
         """
-        Gets the OpenType font variations for the font options object. See `set_variations()` for details about the string format.
+        :returns:
+            the font variations for the font options object. The returned
+            string belongs to the options and must not be modified. It is
+            valid until either the font options object is destroyed or the
+            font variations in this object is modified with
+            :meth:`set_variations`.
 
-        New in version 1.18.0: Only available with cairo 1.15.12+
+        Gets the OpenType font variations for the font options object. See
+        :meth:`set_variations` for details about the string format.
 
-        Returns
-        -------
-        >>> str\n
-        The font variations for the font options object. The returned string belongs to the options and must not be modified. It is valid until either the font options object is destroyed or the font variations in this object is modified with `set_variations()`.
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.12+
         """
-    def get_hint_metrics(self) -> HintMetrics: ...
-    def set_subpixel_order(self, subpixel_order: SubpixelOrder) -> None: ...
+
+    def get_hint_metrics(self) -> HintMetrics:
+        """
+        :returns: the hint metrics mode for the *FontOptions* object
+        """
+
+    def set_subpixel_order(self, subpixel_order: SubpixelOrder) -> None:
+        """
+        :param subpixel_order: the subpixel order
+
+        The subpixel order specifies the order of color elements within each
+        pixel on the display device when rendering with an antialiasing mode of
+        :attr:`cairo.Antialias.SUBPIXEL`.
+        """
 
 class ScaledFont:
 
@@ -4097,46 +4105,35 @@ class ScriptDevice(Device):
 
 class ScriptSurface(Surface):
     """
-    Create a new surface that will emit its rendering through `script`.
+    The script surface provides the ability to render to a native script that
+    matches the cairo drawing model. The scripts can be replayed using tools
+    under the util/cairo-script directory, or with cairo-perf-trace.
 
-    New in version 1.14.
-
-    The script surface provides the ability to render to a native script that matches the cairo drawing model. The scripts can be replayed using tools under the util/cairo-script directory, or with cairo-perf-trace.
-
-    Parameters
-    ----------
-    >>> script (cairo.ScriptDevice)\n
-    The script (output device).
-    >>> content (cairo.Content)\n
-    The content of the surface.
-    >>> width (float)\n
-    Width in pixels.
-    >>> height (float)\n
-    Height in pixels.
-
-    Returns
-    -------
-    >>> cairo.ScriptSurface\n
-    A newly created `ScriptSurface`.
-
-    Raises
-    ------
-    >>> cairo.Error\n
+    .. versionadded:: 1.14
     """
-    def __init__(self, script: ScriptDevice, content: Content, width: float, height: float) -> None: ...
+
+    def __init__(self, script: ScriptDevice, content: Content, width: float, height: float) -> None:
+        """
+        :param script: the script (output device)
+        :param content: the content of the surface
+        :param width: width in pixels
+        :param height: height in pixels
+        :raises cairo.Error:
+
+        Create a new surface that will emit its rendering through ``script``.
+        """
+
     @classmethod
     def create_for_target(cls, script: ScriptDevice, target: Surface) -> "ScriptSurface":
         """
-        Create a proxy surface that will render to `target` and record the operations to `device`.
+        :param script: the script (output device)
+        :param target: a target surface to wrap
+        :raises cairo.Error:
 
-        New in version 1.14
+        Create a proxy surface that will render to ``target`` and record the
+        operations to ``device``.
 
-        Parameters
-        ----------
-        >>> script (cairo.ScriptDevice)\n
-        The script (output device).
-        >>> target (cairo.Surface)\n
-        The target surface to wrap.
+        .. versionadded:: 1.14
         """
 
 class Win32Surface(Surface):
@@ -4226,62 +4223,40 @@ class TeeSurface(Surface):
     """
     This surface supports redirecting all its input to multiple surfaces.
 
-    New in version 1.14.
-
-    Parameters
-    ----------
-    >>> master (cairo.Surface)\n
-
-    Returns
-    -------
-    >>> cairo.TeeSurface\n
-
-    Raises
-    ------
-    >>> cairo.Error\n
+    .. versionadded:: 1.14
     """
+
     def __init__(self, master: Surface) -> None: ...
+
     def add(self, target: Surface) -> None:
         """
-        Adds the surface.
+        :param target:
+        :raises cairo.Error:
 
-        New in version 1.14.
+        Add the surface
 
-        Parameters
-        ----------
-        >>> target (cairo.Surface)\n
-
-        Raises
-        ------
-        >>> cairo.Error\n
+        .. versionadded:: 1.14
         """
+
     def remove(self, target: Surface) -> None:
         """
-        Removes the surface.
+        :param target:
+        :raises cairo.Error:
 
-        New in version 1.14.
+        Remove the surface
 
-        Parameters
-        ----------
-        >>> target (cairo.Surface)\n
-
-        Raises
-        ------
-        >>> cairo.Error\n
+        .. versionadded:: 1.14
         """
+
     def index(self, index: int) -> Surface:
         """
-        Returns the surface at index `index`. The master surface is at index 0.
+        :param index:
+        :raises cairo.Error:
 
-        New in version 1.14.
+        Returns the surface at index ``index``. The master surface is
+        at index 0.
 
-        Parameters
-        ----------
-        >>> index (int)\n
-
-        Returns
-        -------
-        >>> cairo.Error\n
+        .. versionadded:: 1.14
         """
 
 class ToyFontFace(FontFace):
