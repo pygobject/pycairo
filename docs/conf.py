@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-import types
 import sys
 
 from sphinx.util import logging
@@ -13,16 +12,12 @@ dir_ = os.path.dirname(os.path.realpath(__file__))
 
 
 def exec_module(path):
-    globals_ = {}
-    with open(path, encoding="utf-8") as h:
-        exec(h.read(), globals_)
-    module = types.ModuleType("")
-    module.__dict__.update(globals_)
-    return module
+    import importlib.machinery
+    loader = importlib.machinery.SourceFileLoader("cairo", path)
+    return loader.load_module()
 
 
 sys.modules["cairo"] = exec_module(os.path.join(dir_, "..", "cairo", "__init__.pyi"))
-
 
 extensions = [
     'sphinx.ext.intersphinx',
@@ -60,4 +55,13 @@ extlinks = {
 }
 suppress_warnings = ["image.nonlocal_uri"]
 
-autoclass_content = 'both'
+autoclass_content = 'class'
+
+autodoc_default_options = {
+    'member-order': 'bysource',
+}
+
+autodoc_type_aliases = {
+    '_PathLike': 'cairo._PathLike',
+    '_FileLike': 'cairo._FileLike',
+}

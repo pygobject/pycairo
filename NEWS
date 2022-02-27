@@ -236,7 +236,7 @@ Fixes:
 
 Fixes:
   * Improved support for Python filesystem paths including
-    :class:`os.PathLike`. See :class:`pathlike` for details.
+    :class:`os.PathLike`. See :class:`_PathLike` for details.
   * Various minor fixes
 
 Changes:
