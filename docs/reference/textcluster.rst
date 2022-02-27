@@ -12,3 +12,5 @@ class TextCluster(tuple)
 .. autoclass:: TextCluster
     :members:
     :undoc-members:
+
+    .. automethod:: __init__

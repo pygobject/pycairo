@@ -55,7 +55,7 @@ extlinks = {
 }
 suppress_warnings = ["image.nonlocal_uri"]
 
-autoclass_content = 'both'
+autoclass_content = 'class'
 
 autodoc_default_options = {
     'member-order': 'bysource',

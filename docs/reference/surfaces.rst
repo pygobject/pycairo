@@ -1155,9 +1155,14 @@ class ScriptSurface(:class:`Surface`)
     :members:
     :undoc-members:
 
+    .. automethod:: __init__
+
+
 class TeeSurface(:class:`Surface`)
 =====================================
 
 .. autoclass:: TeeSurface
     :members:
     :undoc-members:
+
+    .. automethod:: __init__

@@ -39,6 +39,8 @@ There are various types of *FontFace*, depending on the font backend they
 use.
 
 .. autoclass:: FontFace
+    :members:
+    :undoc-members:
 
 
 class FreeTypeFontFace(:class:`FontFace`)
@@ -61,6 +63,7 @@ The *cairo.ToyFontFace* class can be used instead of :meth:`Context.select_font_
     :members:
     :undoc-members:
 
+    .. automethod:: __init__
 
 class UserFontFace(:class:`FontFace`)
 =====================================
@@ -90,6 +93,8 @@ use.
     :members:
     :undoc-members:
 
+    .. automethod:: __init__
+
 
 class FontOptions()
 ===================
@@ -110,3 +115,5 @@ objects.
 .. autoclass:: FontOptions
     :members:
     :undoc-members:
+
+    .. automethod:: __init__

@@ -18,6 +18,8 @@ areas of interest, such as change or clip areas.
     :members:
     :undoc-members:
 
+    .. automethod:: __init__
+
 class RectangleInt()
 ====================
 
@@ -27,3 +29,5 @@ coordinates.
 .. autoclass:: cairo.RectangleInt
     :members:
     :undoc-members:
+
+    .. automethod:: __init__
