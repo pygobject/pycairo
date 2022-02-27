@@ -21,3 +21,5 @@ class ScriptDevice(:class:`Device`)
 .. autoclass:: ScriptDevice
     :members:
     :undoc-members:
+
+    .. automethod:: __init__

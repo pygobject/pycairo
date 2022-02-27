@@ -710,104 +710,132 @@ class Matrix:
 
 class Pattern:
     """
-    Pattern is the abstract base class from which all the other pattern classes derive. It cannot be instantiated directly.
+    *Pattern* is the abstract base class from which all the other pattern classes
+    derive. It cannot be instantiated directly.
     """
+
     def get_extend(self) -> Extend:
         """
-        Gets the current extend mode for the Pattern. See `cairo.Extend` attributes for details on the semantics of each extend strategy.
+        :returns: the current extend strategy used for drawing the *Pattern*.
 
-        Returns
-        -------
-        >>> cairo.Extend\n
-        The current extend strategy used for drawing the `Pattern`.
+        Gets the current extend mode for the *Pattern*. See
+        :class:`cairo.Extend` attributes for details on the semantics of each
+        extend strategy.
         """
+
     def get_matrix(self) -> Matrix:
         """
-        Returns
-        -------
-        >>> cairo.Matrix\n
-        A new `Matrix` which stores a copy of the `Pattern`'s transformation matrix.
+        :returns: a new :class:`Matrix` which stores a copy of the *Pattern's*
+            transformation matrix
         """
+
     def get_filter(self) -> Filter:
         """
-        New in version 1.12.0: Used to be a method of `SurfacePattern` before.
+        :returns: the current filter used for
+            resizing the pattern.
 
-        Returns
-        -------
-        >>> cairo.Filter\n
-        The current filter used for resizing the pattern.
+        .. versionadded:: 1.12.0
+
+            Used to be a method of :class:`SurfacePattern` before
         """
+
     def set_filter(self, filter: Filter) -> None:
         """
-        Note that you might want to control filtering even when you do not have an explicit `Pattern` object, (for example when using `Context.set_source_surface()`). In these cases, it is convenient to use `Context.get_source()` to get access to the pattern that cairo creates implicitly. For example:
-        >>> context.set_source_surface(image, x, y)
-        >>> context.get_source().set_filter(cairo.FILTER_NEAREST)
+        :param filter: a filter describing the filter
+            to use for resizing the pattern
 
-        New in version 1.12.0: Used to be a method of `SurfacePattern` before.
+        Note that you might want to control filtering even when you do not have
+        an explicit *Pattern* object, (for example when using
+        :meth:`Context.set_source_surface`). In these cases, it is convenient to
+        use :meth:`Context.get_source` to get access to the pattern that cairo
+        creates implicitly. For example::
 
-        Parameters
-        ----------
-        >>> filter (cairo.Filter)\n
-        A filter describing the filter to use for resizing the pattern.
+            context.set_source_surface(image, x, y)
+            context.get_source().set_filter(cairo.FILTER_NEAREST)
+
+        .. versionadded:: 1.12.0
+
+            Used to be a method of :class:`SurfacePattern` before
         """
+
     def set_extend(self, extend: Extend) -> None:
         """
-        Sets the mode to be used for drawing outside the area of a Pattern.
+        :param extend: an extend describing how the
+            area outside of the *Pattern* will be drawn
 
-        The default extend mode is `cairo.Extend.NONE` for `SurfacePattern` and `cairo.Extend.PAD` for `Gradient` Patterns.
+        Sets the mode to be used for drawing outside the area of a *Pattern*.
 
-        Parameters
-        ----------
-        >>> extend (cairo.Extend)\n
-        An extend describing how the area outside the `Pattern` will be drawn.
+        The default extend mode is :attr:`cairo.Extend.NONE` for
+        :class:`SurfacePattern` and :attr:`cairo.Extend.PAD` for
+        :class:`Gradient` Patterns.
         """
+
     def set_matrix(self, matrix: Matrix) -> None:
         """
-        Sets the Pattern’s transformation matrix to matrix. This matrix is a transformation from user space to pattern space.
+        :param matrix: a :class:`Matrix`
 
-        When a Pattern is first created it always has the identity matrix for its transformation matrix, which means that pattern space is initially identical to user space.
+        Sets the *Pattern's* transformation matrix to *matrix*. This matrix is a
+        transformation from user space to pattern space.
 
-        Important: Please note that the direction of this transformation matrix is from user space to pattern space. This means that if you imagine the flow from a Pattern to user space (and on to device space), then coordinates in that flow will be transformed by the inverse of the Pattern matrix.
+        When a *Pattern* is first created it always has the identity matrix for
+        its transformation matrix, which means that pattern space is initially
+        identical to user space.
 
-        For example, if you want to make a Pattern appear twice as large as it does by default the correct code to use is:
-        >>> matrix = cairo.Matrix(xx=0.5,yy=0.5)
-        >>> pattern.set_matrix(matrix)
+        Important: Please note that the direction of this transformation matrix
+        is from user space to pattern space. This means that if you imagine the
+        flow from a *Pattern* to user space (and on to device space), then
+        coordinates in that flow will be transformed by the inverse of the
+        *Pattern* matrix.
 
-        Meanwhile, using values of 2.0 rather than 0.5 in the code above would cause the Pattern to appear at half of its default size.
+        For example, if you want to make a *Pattern* appear twice as large as it
+        does by default the correct code to use is::
 
-        Also, please note the discussion of the user-space locking semantics of `Context.set_source`.
+            matrix = cairo.Matrix(xx=0.5,yy=0.5)
+            pattern.set_matrix(matrix)
 
-        Parameters
-        ----------
-        >>> matrix (Matrix)
+        Meanwhile, using values of 2.0 rather than 0.5 in the code above would
+        cause the *Pattern* to appear at half of its default size.
+
+        Also, please note the discussion of the user-space locking semantics of
+        :class:`Context.set_source`.
         """
 
 class Glyph(Tuple[int, float, float]):
     """
-    New in version 1.15: In prior versions a (int, float, float) tuple was used instead of `Glyph`.
+    The :class:`Glyph` holds information about a single glyph when drawing or
+    measuring text. A font is (in simple terms) a collection of shapes used to
+    draw text. A glyph is one of these shapes. There can be multiple glyphs
+    for a single character (alternates to be used in different contexts, for
+    example), or a glyph can be a ligature of multiple characters. Cairo
+    doesn't expose any way of converting input text into glyphs, so in order
+    to use the Cairo interfaces that take arrays of glyphs, you must directly
+    access the appropriate underlying font system.
 
-    The `Glyph` holds information about a single glyph when drawing or measuring text. A font is (in simple terms) a collection of shapes used to draw text. A glyph is one of these shapes. There can be multiple glyphs for a single character (alternates to be used in different contexts, for example), or a glyph can be a ligature of multiple characters. Cairo doesn’t expose any way of converting input text into glyphs, so in order to use the Cairo interfaces that take arrays of glyphs, you must directly access the appropriate underlying font system.
+    Note that the offsets given by x and y are not cumulative. When drawing or
+    measuring text, each glyph is individually positioned with respect to the
+    overall origin
 
-    Note that the offsets given by x and y are not cumulative. When drawing or measuring text, each glyph is individually positioned with respect to the overall origin
-
-    Parameters
-    ----------
-    >>> index (int)\n
-    Glyph index in the font. The exact interpretation of the glyph index depends on the font technology being used.
-    >>> x (float)\n
-    The offset in the X direction between the origin used for drawing or measuring the string and the origin of this glyph.
-    >>> y (float)\n
-    The offset in the Y direction between the origin used for drawing or measuring the string and the origin of this glyph.
-
-    Returns
-    -------
-    >>> cairo.Glyph\n
-    A newly created `Glyph` instance.
+    .. versionadded:: 1.15
+        In prior versions a (int, float, float) tuple was used instead
+        of :class:`Glyph`.
     """
+
     index: int = ... # type: ignore
     x: float = ...
     y: float = ...
-    def __init__(self, index: int, x: float, y: float) -> None: ...
+
+    def __init__(self, index: int, x: float, y: float) -> None:
+        """
+        :param index:
+            glyph index in the font. The exact interpretation of the glyph index
+            depends on the font technology being used.
+        :param x:
+            the offset in the X direction between the origin used for drawing or
+            measuring the string and the origin of this glyph.
+        :param y:
+            the offset in the Y direction between the origin used for drawing or
+            measuring the string and the origin of this glyph.
+        """
 
 class TextCluster(Tuple[int, int]):
     """
@@ -1834,31 +1862,17 @@ class ImageSurface(Surface):
         """
 
 class SurfacePattern(Pattern):
-    """
-    Parameters
-    ----------
-    >>> surface (Surface)\n
-    A cairo `Surface`.
 
-    Returns
-    -------
-    >>> SurfacePattern\n
-    A newly created `SurfacePattern` for the given surface.
+    def __init__(self, surface: Surface) -> None:
+        """
+        :param surface: a cairo :class:`Surface`
+        """
 
-    Raises
-    ------
-    >>> MemoryError\n
-    In case of no memory.
-    """
-    def __init__(self, surface: Surface) -> None: ...
     def get_surface(self) -> Surface:
         """
-        New in version 1.4.
+        :returns: the :class:`Surface` of the *SurfacePattern*.
 
-        Returns
-        -------
-        >>> cairo.Surface\n
-        The `Surface` of the `SurfacePattern`.
+        .. versionadded:: 1.4
         """
 
 class Context:
@@ -3125,401 +3139,407 @@ CairoError = Error
 
 class Gradient(Pattern):
     """
-    Gradient is an abstract base class from which other Pattern classes derive. It cannot be instantiated directly.
+    *Gradient* is an abstract base class from which other *Pattern* classes
+    derive. It cannot be instantiated directly.
     """
+
     def add_color_stop_rgb(self, offset: float, red: float, green: float, blue: float) -> None:
         """
-        Adds an opaque color stop to a Gradient pattern. The offset specifies the location along the gradient’s control vector. For example, a LinearGradient’s control vector is from (x0,y0) to (x1,y1) while a RadialGradient’s control vector is from any point on the start circle to the corresponding point on the end circle.
+        :param offset: an offset in the range [0.0 .. 1.0]
+        :param red: red component of color
+        :param green: green component of color
+        :param blue: blue component of color
 
-        The color is specified in the same way as in `Context.set_source_rgb()`.
+        Adds an opaque color stop to a *Gradient* pattern. The offset specifies
+        the location along the gradient's control vector. For example, a
+        *LinearGradient's* control vector is from (x0,y0) to (x1,y1) while a
+        *RadialGradient's* control vector is from any point on the start circle
+        to the corresponding point on the end circle.
 
-        If two (or more) stops are specified with identical offset values, they will be sorted according to the order in which the stops are added, (stops added earlier will compare less than stops added later). This can be useful for reliably making sharp color transitions instead of the typical blend.
+        The color is specified in the same way as in :meth:`Context.set_source_rgb`.
 
-        Parameters
-        ----------
-        >>> offset (float)\n
-        An offset in the range [0.0 .. 1.0].
-        >>> red (float)\n
-        Red component of a color.
-        >>> green (float)\n
-        Green component of a color.
-        >>> blue (float)\n
-        Blue component of a color.
+        If two (or more) stops are specified with identical offset values, they
+        will be sorted according to the order in which the stops are added,
+        (stops added earlier will compare less than stops added later). This can
+        be useful for reliably making sharp color transitions instead of the
+        typical blend.
         """
+
     def add_color_stop_rgba(self, offset: float, red: float, green: float, blue: float, alpha: float) -> None:
         """
-        Adds an opaque color stop to a Gradient pattern. The offset specifies the location along the gradient’s control vector. For example, a LinearGradient’s control vector is from (x0,y0) to (x1,y1) while a RadialGradient’s control vector is from any point on the start circle to the corresponding point on the end circle.
+        :param offset: an offset in the range [0.0 .. 1.0]
+        :param red: red component of color
+        :param green: green component of color
+        :param blue: blue component of color
+        :param alpha: alpha component of color
 
-        The color is specified in the same way as in `Context.set_source_rgb()`.
+        Adds an opaque color stop to a *Gradient* pattern. The offset specifies
+        the location along the gradient's control vector. For example, a
+        *LinearGradient's* control vector is from (x0,y0) to (x1,y1) while a
+        *RadialGradient's* control vector is from any point on the start circle
+        to the corresponding point on the end circle.
 
-        If two (or more) stops are specified with identical offset values, they will be sorted according to the order in which the stops are added, (stops added earlier will compare less than stops added later). This can be useful for reliably making sharp color transitions instead of the typical blend.
+        The color is specified in the same way as in :meth:`Context.set_source_rgb`.
 
-        Parameters
-        ----------
-        >>> offset (float)\n
-        An offset in the range [0.0 .. 1.0].
-        >>> red (float)\n
-        Red component of a color.
-        >>> green (float)\n
-        Green component of a color.
-        >>> blue (float)\n
-        Blue component of a color.
-        >>> alpha (float)\n
-        Alpha component of a color.
+        If two (or more) stops are specified with identical offset values, they
+        will be sorted according to the order in which the stops are added,
+        (stops added earlier will compare less than stops added later). This can
+        be useful for reliably making sharp color transitions instead of the
+        typical blend.
         """
+
     def get_color_stops_rgba(self) -> List[Tuple[float, float, float, float, float]]:
         """
-        Gets the color and offset information for all color stops specified in the given gradient pattern.
+        :returns: a list of (offset, red, green, blue, alpha) tuples of float
 
-        New in version 1.14.
+        Gets the color and offset information for all color stops specified in
+        the given gradient pattern.
 
-        Returns
-        -------
-        >>> [(offset: float, red: float, green: float, blue: float, alpha: float),...]
+        .. versionadded:: 1.14
         """
 
 class LinearGradient(Gradient):
-    """
-    Create a new `LinearGradient` along the line defined by (x0, y0) and (x1, y1). Before using the `Gradient` pattern, a number of color stops should be defined using `Gradient.add_color_stop_rgb()` or `Gradient.add_color_stop_rgba()`
+    def __init__(self, x0: float, y0: float, x1: float, y1: float) -> None:
+        """
+        :param x0: x coordinate of the start point
+        :param y0: y coordinate of the start point
+        :param x1: x coordinate of the end point
+        :param y1: y coordinate of the end point
 
-    Note: The coordinates here are in pattern space. For a new `Pattern`, pattern space is identical to user space, but the relationship between the spaces can be changed with `Pattern.set_matrix()`
+        Create a new *LinearGradient* along the line defined by (x0, y0) and (x1,
+        y1).  Before using the *Gradient* pattern, a number of color stops should
+        be defined using :meth:`Gradient.add_color_stop_rgb` or
+        :meth:`Gradient.add_color_stop_rgba`
 
-    Parameters
-    ----------
-    >>> x0 (float)\n
-    X coordinate of the start point.
-    >>> y0 (float)\n
-    Y coordinate of the start point.
-    >>> x1 (float)\n
-    X coordinate of the end point.
-    >>> y1 (float)\n
-    Y coordinate of the end point.
+        Note: The coordinates here are in pattern space. For a new *Pattern*,
+        pattern space is identical to user space, but the relationship between the
+        spaces can be changed with :meth:`Pattern.set_matrix`
+        """
 
-    Returns
-    -------
-    >>> LinearGradient\n
-    A new `LinearGradient`.
-
-    Raises
-    ------
-    >>> MemoryError\n
-    In case of no memory.
-    """
-    def __init__(self, x0: float, y0: float, x1: float, y1: float) -> None: ...
     def get_linear_points(self) -> Tuple[float, float, float, float]:
         """
-        Gets the gradient endpoints for a `LinearGradient`.
+        :returns: (x0, y0, x1, y1) - a tuple of float
 
-        New in version 1.4.
+            * x0: return value for the x coordinate of the first point
+            * y0: return value for the y coordinate of the first point
+            * x1: return value for the x coordinate of the second point
+            * y1: return value for the y coordinate of the second point
 
-        Returns
-        -------
-        >>> (x0: float, y0: float, x1: float, y1: float)\n
-        - `x0 (float)` - Return value for the x coordinate of the first point.
-        - `y0 (float)` - Return value for the y coordinate of the first point.
-        - `x1 (float)` - Return value for the x coordinate of the second point.
-        - `y1 (float)` - Return value for the y coordinate of the second point.
+        Gets the gradient endpoints for a *LinearGradient*.
+
+        .. versionadded:: 1.4
         """
 
 class MeshPattern(Pattern):
     """
-    New in version 1.14.
+    Mesh patterns are tensor-product patch meshes (type 7 shadings in PDF).
+    Mesh patterns may also be used to create other types of shadings that are
+    special cases of tensor-product patch meshes such as Coons patch meshes
+    (type 6 shading in PDF) and Gouraud-shaded triangle meshes (type 4 and 5
+    shadings in PDF).
 
-    Create a new mesh pattern.
+    Mesh patterns consist of one or more tensor-product patches, which should
+    be defined before using the mesh pattern. Using a mesh pattern with a
+    partially defined patch as source or mask will put the context in an error
+    status with a status of :attr:`cairo.Status.INVALID_MESH_CONSTRUCTION`.
 
-    Mesh patterns are tensor-product patch meshes (type 7 shadings in PDF). Mesh patterns may also be used to create other types of shadings that are special cases of tensor-product patch meshes such as Coons patch meshes (type 6 shading in PDF) and Gouraud-shaded triangle meshes (type 4 and 5 shadings in PDF).
+    A tensor-product patch is defined by 4 Bézier curves (side 0, 1, 2, 3) and
+    by 4 additional control points (P0, P1, P2, P3) that provide further
+    control over the patch and complete the definition of the tensor-product
+    patch. The corner C0 is the first point of the patch.
 
-    Mesh patterns consist of one or more tensor-product patches, which should be defined before using the mesh pattern. Using a mesh pattern with a partially defined patch as source or mask will put the context in an error status with a status of `cairo.Status.INVALID_MESH_CONSTRUCTION`.
+    Degenerate sides are permitted so straight lines may be used. A zero
+    length line on one side may be used to create 3 sided patches.
 
-    A tensor-product patch is defined by 4 Bézier curves (side 0, 1, 2, 3) and by 4 additional control points (P0, P1, P2, P3) that provide further control over the patch and complete the definition of the tensor-product patch. The corner C0 is the first point of the patch.
+    ::
 
-    Degenerate sides are permitted so straight lines may be used. A zero length line on one side may be used to create 3 sided patches.
+              C1     Side 1       C2
+               +---------------+
+               |               |
+               |  P1       P2  |
+               |               |
+        Side 0 |               | Side 2
+               |               |
+               |               |
+               |  P0       P3  |
+               |               |
+               +---------------+
+             C0     Side 3        C3
 
-    >>>      C1     Side 1      C2
-    >>>        +---------------+
-    >>>        |               |
-    >>>        |  P1       P2  |
-    >>>        |               |
-    >>> Side 0 |               | Side 2
-    >>>        |               |
-    >>>        |               |
-    >>>        |  P0       P3  |
-    >>>        |               |
-    >>>        +---------------+
-    >>>      C0     Side 3      C3
+    Each patch is constructed by first calling :meth:`begin_patch`, then
+    :meth:`move_to` to specify the first point in the patch (C0). Then the
+    sides are specified with calls to :meth:`curve_to` and :meth:`line_to`.
 
-    Each patch is constructed by first calling `begin_patch()`, then `move_to()` to specify the first point in the patch (C0). Then the sides are specified with calls to `curve_to()` and `line_to()`.
+    The four additional control points (P0, P1, P2, P3) in a patch can be
+    specified with :meth:`set_control_point`.
 
-    The four additional control points (P0, P1, P2, P3) in a patch can be specified with `set_control_point()`.
+    At each corner of the patch (C0, C1, C2, C3) a color may be specified with
+    :meth:`set_corner_color_rgb` or :meth:`set_corner_color_rgba`. Any corner
+    whose color is not explicitly specified defaults to transparent black.
 
-    At each corner of the patch (C0, C1, C2, C3) a color may be specified with `set_corner_color_rgb()` or `set_corner_color_rgba()`. Any corner whose color is not explicitly specified defaults to transparent black.
+    A Coons patch is a special case of the tensor-product patch where the
+    control points are implicitly defined by the sides of the patch. The
+    default value for any control point not specified is the implicit value
+    for a Coons patch, i.e. if no control points are specified the patch is a
+    Coons patch.
 
-    A Coons patch is a special case of the tensor-product patch where the control points are implicitly defined by the sides of the patch. The default value for any control point not specified is the implicit value for a Coons patch, i.e. if no control points are specified the patch is a Coons patch.
+    A triangle is a special case of the tensor-product patch where the control
+    points are implicitly defined by the sides of the patch, all the sides are
+    lines and one of them has length 0, i.e. if the patch is specified using
+    just 3 lines, it is a triangle. If the corners connected by the 0-length
+    side have the same color, the patch is a Gouraud-shaded triangle.
 
-    A triangle is a special case of the tensor-product patch where the control points are implicitly defined by the sides of the patch, all the sides are lines and one of them has length 0, i.e. if the patch is specified using just 3 lines, it is a triangle. If the corners connected by the 0-length side have the same color, the patch is a Gouraud-shaded triangle.
+    Patches may be oriented differently to the above diagram. For example the
+    first point could be at the top left. The diagram only shows the
+    relationship between the sides, corners and control points. Regardless of
+    where the first point is located, when specifying colors, corner 0 will
+    always be the first point, corner 1 the point between side 0 and side 1
+    etc.
 
-    Patches may be oriented differently to the above diagram. For example the first point could be at the top left. The diagram only shows the relationship between the sides, corners and control points. Regardless of where the first point is located, when specifying colors, corner 0 will always be the first point, corner 1 the point between side 0 and side 1 etc.
+    Calling :meth:`end_patch` completes the current patch. If less than 4
+    sides have been defined, the first missing side is defined as a line from
+    the current point to the first point of the patch (C0) and the other sides
+    are degenerate lines from C0 to C0. The corners between the added sides
+    will all be coincident with C0 of the patch and their color will be set to
+    be the same as the color of C0.
 
-    Calling `end_patch()` completes the current patch. If less than 4 sides have been defined, the first missing side is defined as a line from the current point to the first point of the patch (C0) and the other sides are degenerate lines from C0 to C0. The corners between the added sides will all be coincident with C0 of the patch and their color will be set to be the same as the color of C0.
+    Additional patches may be added with additional calls to
+    :meth:`begin_patch`/:meth:`end_patch`.
 
-    Additional patches may be added with additional calls to `begin_patch()`/`end_patch()`.
+    ::
 
-    >>> # Add a Coons patch
-    >>> pattern = cairo.MeshPattern()
-    >>> pattern.begin_patch()
-    >>> pattern.move_to(0, 0)
-    >>> pattern.curve_to(30, -30, 60, 30, 100, 0)
-    >>> pattern.curve_to(60, 30, 130, 60, 100, 100)
-    >>> pattern.curve_to(60, 70, 30, 130, 0, 100)
-    >>> pattern.curve_to(30, 70, -30, 30, 0, 0)
-    >>> pattern.set_corner_color_rgb(0, 1, 0, 0)
-    >>> pattern.set_corner_color_rgb(1, 0, 1, 0)
-    >>> pattern.set_corner_color_rgb(2, 0, 0, 1)
-    >>> pattern.set_corner_color_rgb(3, 1, 1, 0)
-    >>> pattern.end_patch()
-    >>>
-    >>> # Add a Gouraud-shaded triangle
-    >>> pattern = cairo.MeshPattern()
-    >>> pattern.begin_patch()
-    >>> pattern.move_to(100, 100)
-    >>> pattern.line_to(130, 130)
-    >>> pattern.line_to(130, 70)
-    >>> pattern.set_corner_color_rgb(0, 1, 0, 0)
-    >>> pattern.set_corner_color_rgb(1, 0, 1, 0)
-    >>> pattern.set_corner_color_rgb(2, 0, 0, 1)
-    >>> pattern.end_patch()
+        # Add a Coons patch
+        pattern = cairo.MeshPattern()
+        pattern.begin_patch()
+        pattern.move_to(0, 0)
+        pattern.curve_to(30, -30, 60, 30, 100, 0)
+        pattern.curve_to(60, 30, 130, 60, 100, 100)
+        pattern.curve_to(60, 70, 30, 130, 0, 100)
+        pattern.curve_to(30, 70, -30, 30, 0, 0)
+        pattern.set_corner_color_rgb(0, 1, 0, 0)
+        pattern.set_corner_color_rgb(1, 0, 1, 0)
+        pattern.set_corner_color_rgb(2, 0, 0, 1)
+        pattern.set_corner_color_rgb(3, 1, 1, 0)
+        pattern.end_patch()
 
-    When two patches overlap, the last one that has been added is drawn over the first one.
+        # Add a Gouraud-shaded triangle
+        pattern = cairo.MeshPattern()
+        pattern.begin_patch()
+        pattern.move_to(100, 100)
+        pattern.line_to(130, 130)
+        pattern.line_to(130, 70)
+        pattern.set_corner_color_rgb(0, 1, 0, 0)
+        pattern.set_corner_color_rgb(1, 0, 1, 0)
+        pattern.set_corner_color_rgb(2, 0, 0, 1)
+        pattern.end_patch()
 
-    When a patch folds over itself, points are sorted depending on their parameter coordinates inside the patch. The v coordinate ranges from 0 to 1 when moving from side 3 to side 1; the u coordinate ranges from 0 to 1 when going from side 0 to side
+    When two patches overlap, the last one that has been added is drawn over
+    the first one.
 
-    Points with higher v coordinate hide points with lower v coordinate. When two points have the same v coordinate, the one with higher u coordinate is above. This means that points nearer to side 1 are above points nearer to side 3; when this is not sufficient to decide which point is above (for example when both points belong to side 1 or side 3) points nearer to side 2 are above points nearer to side 0.
+    When a patch folds over itself, points are sorted depending on their
+    parameter coordinates inside the patch. The v coordinate ranges from 0 to
+    1 when moving from side 3 to side 1; the u coordinate ranges from 0 to 1
+    when going from side 0 to side
 
-    For a complete definition of tensor-product patches, see the PDF specification (ISO32000), which describes the parametrization in detail.
+    Points with higher v coordinate hide points with lower v coordinate. When
+    two points have the same v coordinate, the one with higher u coordinate is
+    above. This means that points nearer to side 1 are above points nearer to
+    side 3; when this is not sufficient to decide which point is above (for
+    example when both points belong to side 1 or side 3) points nearer to side
+    2 are above points nearer to side 0.
 
-    Note: The coordinates are always in pattern space. For a new pattern, pattern space is identical to user space, but the relationship between the spaces can be changed with `Pattern.set_matrix()`.
+    For a complete definition of tensor-product patches, see the PDF
+    specification (ISO32000), which describes the parametrization in detail.
 
-    Returns
-    -------
-    >>> cairo.MeshPattern
+    Note: The coordinates are always in pattern space. For a new pattern,
+    pattern space is identical to user space, but the relationship between the
+    spaces can be changed with :meth:`Pattern.set_matrix`.
 
-    Raises
-    ------
-    >>> cairo.Error
+    .. versionadded:: 1.14
     """
-    def __init__(self) -> None: ...
+
+    def __init__(self) -> None:
+        """
+        Create a new mesh pattern.
+
+        .. versionadded:: 1.14
+        """
+
     def begin_patch(self) -> None:
         """
+        :raises Error:
+
         Begin a patch in a mesh pattern.
 
-        After calling this function, the patch shape should be defined with `move_to()`, `line_to()` and `curve_to()`.
+        After calling this function, the patch shape should be defined with
+        :meth:`move_to`, :meth:`line_to` and :meth:`curve_to`.
 
-        After defining the patch, `end_patch()` must be called before using pattern as a source or mask.
-
-        Raises
-        ------
-        >>> cairo.Error
+        After defining the patch, :meth:`end_patch` must be called before
+        using pattern as a source or mask.
         """
+
     def curve_to(self, x1: float, y1: float, x2: float, y2: float, x3: float, y3: float) -> None:
         """
-        Adds a cubic Bézier spline to the current patch from the current point to position (x3 , y3 ) in pattern-space coordinates, using (x1 , y1 ) and (x2 , y2 ) as the control points.
+        :param x1: the X coordinate of the first control point
+        :param y1: the Y coordinate of the first control point
+        :param x2: the X coordinate of the second control point
+        :param y2: the Y coordinate of the second control point
+        :param x3: the X coordinate of the end of the curve
+        :param y3: the Y coordinate of the end of the curve
+        :raises Error:
 
-        If the current patch has no current point before the call to `curve_to()`, this function will behave as if preceded by a call to `pattern.move_to(x1, y1)`.
+        Adds a cubic Bézier spline to the current patch from the current point
+        to position (x3 , y3 ) in pattern-space coordinates, using (x1 , y1 )
+        and (x2 , y2 ) as the control points.
+
+        If the current patch has no current point before the call to
+        :meth:`curve_to`, this function will behave as if
+        preceded by a call to ``pattern.move_to(x1, y1)``.
 
         After this call the current point will be (x3 , y3 ).
-
-        Parameters
-        ----------
-        >>> x1 (float)\n
-        The X coordinate of the first control point.
-        >>> y1 (float)\n
-        The Y coordinate of the first control point.
-        >>> x2 (float)\n
-        The X coordinate of the second control point.
-        >>> y2 (float)\n
-        The Y coordinate of the second control point.
-        >>> x3 (float)\n
-        The X coordinate of the end control point.
-        >>> y3 (float)\n
-        The Y coordinate of the end control point.
-
-        Raises
-        ------
-        >>> cairo.Error
         """
+
     def end_patch(self) -> None:
         """
+        :raises Error:
+
         Indicates the end of the current patch in a mesh pattern.
 
-        If the current patch has less than 4 sides, it is closed with a straight line from the current point to the first point of the patch as if `line_to()` was used.
-
-        Raises
-        ------
-        >>> cairo.Error
+        If the current patch has less than 4 sides, it is closed with a
+        straight line from the current point to the first point of the patch
+        as if :meth:`line_to` was used.
         """
+
     def get_control_point(self, patch_num: int, point_num: int) -> Tuple[float, float]:
         """
-        Gets the control point point_num of patch patch_num for a mesh pattern.
+        :param patch_num: the patch number to return data for
+        :param point_num: he control point number to return data for
+        :returns: a (x, y) tuple of float - coordinates of the control point
+        :raises Error:
 
-        `patch_num` can range from 0 to n-1 where n is the number returned by `get_patch_count()`.
+        Gets the control point point_num of patch patch_num for a mesh
+        pattern.
 
-        Valid values for `point_num` are from 0 to 3 and identify the control points as explained in `MeshPattern`.
+        ``patch_num`` can range from 0 to n-1 where n is the number returned
+        by :meth:`get_patch_count`.
 
-        Parameters
-        ----------
-        >>> patch_num (int)\n
-        The patch number to return data for.
-        >>> point_num (int)\n
-        The control point number to return data for.
-
-        Returns
-        -------
-        >>> (x: float, y: float)\n
-        Coordinates of the control point.
-
-        Raises
-        ------
-        >>> cairo.Error
+        Valid values for ``point_num`` are from 0 to 3 and identify the control
+        points as explained in :class:`MeshPattern`.
         """
+
     def get_corner_color_rgba(self, patch_num: int, corner_num: int) -> Tuple[float, float, float, float]:
         """
-        Gets the color information in corner `corner_num` of patch `patch_num` for a mesh pattern.
+        :param patch_num: the patch number to return data for
+        :param corner_num: the corner number to return data for
+        :returns: a (red, green, blue, alpha) tuple of float
+        :raises Error:
 
-        `patch_num` can range from 0 to n-1 where n is the number returned by `get_patch_count()`.
+        Gets the color information in corner ``corner_num`` of patch
+        ``patch_num`` for a mesh pattern.
 
-        Valid values for `corner_num` are from 0 to 3 and identify the corners as explained in `MeshPattern`.
+        ``patch_num`` can range from 0 to n-1 where n is the number returned
+        by :meth:`get_patch_count`.
 
-        Parameters
-        ----------
-        >>> patch_num (int)\n
-        The patch number to return data for.
-        >>> corner_num (int)\n
-        The corner number to return data for.
-
-        Returns
-        -------
-        >>> (red: float, green: float, blue: float, alpha: float)\n
-        RGBA components of the corner color.
-
-        Raises
-        ------
-        >>> cairo.Error
+        Valid values for ``corner_num`` are from 0 to 3 and identify the
+        corners as explained in :class:`MeshPattern`.
         """
+
     def get_patch_count(self) -> int:
         """
+        :returns: number of patches
+
         Gets the number of patches specified in the given mesh pattern.
 
-        The number only includes patches which have been finished by calling `end_patch()`. For example it will be 0 during the definition of the first patch.
-
-        Returns
-        -------
-        >>> int\n
-        Number of patches.
+        The number only includes patches which have been finished by calling
+        :meth:`end_patch`. For example it will be 0 during the definition of
+        the first patch.
         """
+
     def line_to(self, x: float, y: float) -> None:
         """
-        Adds a line to the current patch from the current point to position (x, y) in pattern-space coordinates.
+        :param x: the X coordinate of the end of the new line
+        :param y: the Y coordinate of the end of the new line
+        :raises Error:
 
-        If there is no current point before the call to `line_to()` this function will behave as `pattern.move_to(x, y)`.
+        Adds a line to the current patch from the current point to position (x
+        , y ) in pattern-space coordinates.
 
-        After this call the current point will be (x, y).
+        If there is no current point before the call to :meth:`line_to` this
+        function will behave as ``pattern.move_to(x ,y)``.
 
-        Parameters
-        ----------
-        >>> x (float)\n
-        The X coordinate of the end of the new line.
-        >>> y (float)\n
-        The Y coordinate of the end of the new line.
-
-        Raises
-        ------
-        >>> cairo.Error
+        After this call the current point will be (x , y ).
         """
+
     def move_to(self, x: float, y: float) -> None:
         """
+        :param x: the X coordinate of the new position
+        :param y: the Y coordinate of the new position
+        :raises Error:
+
         Define the first point of the current patch in a mesh pattern.
 
-        After this call the current point will be (x, y).
-
-        Parameters
-        ----------
-        >>> x (float)\n
-        The X coordinate of the new position.
-        >>> y (float)\n
-        The Y coordinate of the new position.
-
-        Raises
-        ------
-        >>> cairo.Error
+        After this call the current point will be (x , y ).
         """
+
     def set_control_point(self, point_num: int, x: float, y: float) -> None:
         """
+        :param point_num: the control point to set the position for
+        :param x: the X coordinate of the control point
+        :param y: the Y coordinate of the control point
+        :raises Error:
+
         Set an internal control point of the current patch.
 
-        Valid values for `point_num` are from 0 to 3 and identify the control points as explained in `MeshPattern`.
-
-        Parameters
-        ----------
-        >>> point_num (int)\n
-        The control point to set the position for.
-        >>> x (float)\n
-        The X coordinate of the control point.
-        >>> y (float)\n
-        The Y coordinate of the control point.
-
-        Raises
-        ------
-        >>> cairo.Error
+        Valid values for point_num are from 0 to 3 and identify the control
+        points as explained in :class:`MeshPattern`.
         """
+
     def set_corner_color_rgb(self, corner_num: int, red: float, green: float, blue: float) -> None:
         """
+        :param corner_num: the corner to set the color for
+        :param red: red component of color
+        :param green: green component of color
+        :param blue: blue component of color
+        :raises Error:
+
         Sets the color of a corner of the current patch in a mesh pattern.
 
-        The color is specified in the same way as in `Context.set_source_rgb()`.
+        The color is specified in the same way as in
+        :meth:`Context.set_source_rgb`.
 
-        Valid values for `corner_num` are from 0 to 3 and identify the corners as explained in `MeshPattern`.
-
-        Parameters
-        ----------
-        >>> corner_num (int)\n
-        The corner to set the color for.
-        >>> red (float)\n
-        Red component of the color.
-        >>> green (float)\n
-        Green component of the color.
-        >>> blue (float)\n
-        Bleu component of the color.
-
-        Raises
-        ------
-        >>> cairo.Error
+        Valid values for corner_num are from 0 to 3 and identify the corners
+        as explained in :class:`MeshPattern`.
         """
+
     def set_corner_color_rgba(self, corner_num: int, red: float, green: float, blue: float, alpha: float) -> None:
         """
+        :param corner_num: the corner to set the color for
+        :param red: red component of color
+        :param green: green component of color
+        :param blue: blue component of color
+        :param alpha: alpha component of color
+        :raises Error:
+
         Sets the color of a corner of the current patch in a mesh pattern.
 
-        The color is specified in the same way as in `Context.set_source_rgba()`.
+        The color is specified in the same way as in
+        :meth:`Context.set_source_rgba`.
 
-        Valid values for `corner_num` are from 0 to 3 and identify the corners as explained in `MeshPattern`.
-
-        Parameters
-        ----------
-        >>> corner_num (int)\n
-        The corner to set the color for.
-        >>> red (float)\n
-        Red component of the color.
-        >>> green (float)\n
-        Green component of the color.
-        >>> blue (float)\n
-        Blue component of the color.
-        >>> alpha (float)\n
-        Alpha component of the color.
-
-        Raises
-        ------
-        >>> cairo.Error
+        Valid values for corner_num are from 0 to 3 and identify the corners
+        as explained in :class:`MeshPattern`.
         """
-    def get_path(self, patch_num: int) -> Path: ...
+
+    def get_path(self, patch_num: int) -> Path:
+        """
+        :param patch_num: the patch number to return data for
+        :returns: the path defining the patch
+        :raises Error:
+
+        Gets path defining the patch ``patch_num`` for a mesh pattern.
+
+        ``patch_num`` can range from 0 to n-1 where n is the number returned
+        by :meth:`get_patch_count`.
+        """
 
 class PDFSurface(Surface):
     """
@@ -3961,52 +3981,41 @@ class SVGSurface(Surface):
         """
 
 class RadialGradient(Gradient):
-    """
-    Creates a new `RadialGradient` pattern between the two circles defined by (cx0, cy0, radius0) and (cx1, cy1, radius1). Before using the gradient pattern, a number of color stops should be defined using `Gradient.add_color_stop_rgb()` or `Gradient.add_color_stop_rgba()`.
 
-    Note: The coordinates here are in pattern space. For a new pattern, pattern space is identical to user space, but the relationship between the spaces can be changed with `Pattern.set_matrix()`.
+    def __init__(self, cx0: float, cy0: float, radius0: float, cx1: float, cy1: float, radius1: float) -> None:
+        """
+        :param cx0: x coordinate for the center of the start circle
+        :param cy0: y coordinate for the center of the start circle
+        :param radius0: radius of the start circle
+        :param cx1: x coordinate for the center of the end circle
+        :param cy1: y coordinate for the center of the end circle
+        :param radius1: radius of the end circle
 
-    Parameters
-    ----------
-    >>> cx0 (float)\n
-    X coordinate for the center of the start circle.
-    >>> cy0 (float)\n
-    Y coordinate for the center of the start circle.
-    >>> radius0 (float)\n
-    Radius of the start circle.
-    >>> cx1 (float)\n
-    X coordinate for the center of the end circle.
-    >>> cy1 (float)\n
-    Y coordinate for the center of the end circle.
-    >>> radius1 (float)
-    Radius of the end circle.
+        Creates a new *RadialGradient* pattern between the two circles defined by
+        (cx0, cy0, radius0) and (cx1, cy1, radius1).  Before using the gradient
+        pattern, a number of color stops should be defined using
+        :meth:`Gradient.add_color_stop_rgb` or :meth:`Gradient.add_color_stop_rgba`.
 
-    Returns
-    -------
-    >>> RadialGradient\n
-    The newly created `RadialGradient`.
+        Note: The coordinates here are in pattern space. For a new pattern, pattern
+        space is identical to user space, but the relationship between the spaces
+        can be changed with :meth:`Pattern.set_matrix`.
+        """
 
-    Raises
-    ------
-    >>> MemoryError\n
-    In case of no memory.
-    """
-    def __init__(self, cx0: float, cy0: float, radius0: float, cx1: float, cy1: float, radius1: float) -> None: ...
     def get_radial_circles(self) -> Tuple[float, float, float, float, float, float]:
         """
-        Gets the Gradient endpoint circles for a RadialGradient, each specified as a center coordinate and a radius.
+        :returns: (x0, y0, r0, x1, y1, r1) - a tuple of float
 
-        New in version 1.4.
+            * x0: return value for the x coordinate of the center of the first circle
+            * y0: return value for the y coordinate of the center of the first circle
+            * r0: return value for the radius of the first circle
+            * x1: return value for the x coordinate of the center of the second circle
+            * y1: return value for the y coordinate of the center of the second circle
+            * r1: return value for the radius of the second circle
 
-        Returns
-        -------
-        >>> (x0: float, y0: float, r0: float, x1: float, y1: float, r1: float)\n
-        - `x0 (float)` - Return value for the x coordinate of the center of the first circle.
-        - `y0 (float)` - Return value for the y coordinate of the center of the first circle.
-        - `r0 (float)` - Return value for the radius of the first circle.
-        - `x1 (float)` - Return value for the x coordinate of the center of the second circle.
-        - `y1 (float)` - Return value for the y coordinate of the center of the second circle.
-        - `r1 (float)` - Return value for the radius of the second circle.
+        Gets the *Gradient* endpoint circles for a *RadialGradient*, each
+        specified as a center coordinate and a radius.
+
+        .. versionadded:: 1.4
         """
 
 _AcquireCallback = Callable[[Surface, RectangleInt], Surface]
@@ -4014,46 +4023,105 @@ _ReleaseCallback = Callable[[Surface], None]
 
 class RasterSourcePattern(Pattern):
     """
-    Creates a new user pattern for providing pixel data.
+    The raster source provides the ability to supply arbitrary pixel data whilst
+    rendering. The pixels are queried at the time of rasterisation by means of
+    user callback functions, allowing for the ultimate flexibility. For example,
+    in handling compressed image sources, you may keep a MRU cache of decompressed
+    images and decompress sources on the fly and discard old ones to conserve
+    memory.
 
-    Use the setter functions to associate callbacks with the returned pattern.
+    For the raster source to be effective, you must at least specify the acquire
+    and release callbacks which are used to retrieve the pixel data for the region
+    of interest and demark when it can be freed afterwards. Other callbacks are
+    provided for when the pattern is copied temporarily during rasterisation, or
+    more permanently as a snapshot in order to keep the pixel data available for
+    printing.
 
-    New in version 1.15.
-
-    The raster source provides the ability to supply arbitrary pixel data whilst rendering. The pixels are queried at the time of rasterisation by means of user callback functions, allowing for the ultimate flexibility. For example, in handling compressed image sources, you may keep a MRU cache of decompressed images and decompress sources on the fly and discard old ones to conserve memory.
-
-    For the raster source to be effective, you must at least specify the acquire and release callbacks which are used to retrieve the pixel data for the region of interest and demark when it can be freed afterwards. Other callbacks are provided for when the pattern is copied temporarily during rasterisation, or more permanently as a snapshot in order to keep the pixel data available for printing.
-
-    Parameters
-    ----------
-    >>> content (Content)\n
-    Content type for the pixel data that will be returned. Knowing the content type ahead of time is used for analysing the operation and picking the appropriate rendering path.
-    >>> width (int)\n
-    Maximum size of the sample area.
-    >>> height (int)\n
-    Maximum size of the sample area.
-
-    Returns
-    -------
-    >>> cairo.RasterSourcePattern\n
-    A newly created `RasterSourcePattern`.
-
-    Raises
-    ------
-    >>> cairo.Error
+    .. versionadded:: 1.15
     """
-    def __init__(self, content: Content, width: int, height: int) -> None: ...
-    def set_acquire(self, acquire: Optional[_AcquireCallback], release: Optional[_ReleaseCallback]) -> None: ...
+
+    def __init__(self, content: Content, width: int, height: int) -> None:
+        """
+        :param content:
+            content type for the pixel data that will be returned. Knowing the
+            content type ahead of time is used for analysing the operation and
+            picking the appropriate rendering path.
+        :param width:
+            maximum size of the sample area
+        :param height:
+            maximum size of the sample area
+
+        Creates a new user pattern for providing pixel data.
+
+        Use the setter functions to associate callbacks with the returned pattern.
+
+        .. versionadded:: 1.15
+        """
+
+    def set_acquire(self, acquire: Optional[_AcquireCallback], release: Optional[_ReleaseCallback]) -> None:
+        """
+        :param acquire:
+            acquire callback or :obj:`None` to unset it
+        :type acquire: :obj:`callable`
+        :param release:
+            (optional) release callback or :obj:`None`
+        :type release: :obj:`callable`
+        :raises Error:
+
+        Specifies the callbacks used to generate the image surface for a
+        rendering operation (acquire) and the function used to cleanup that
+        surface afterwards.
+
+        The acquire callback should create a surface (preferably an image
+        surface created to match the target using
+        :meth:`Surface.create_similar_image`) that defines at least the region
+        of interest specified by extents. The surface is allowed to be the
+        entire sample area, but if it does contain a subsection of the sample
+        area, the surface extents should be provided by setting the device
+        offset (along with its width and height) using
+        :meth:`Surface.set_device_offset`.
+
+        .. function:: acquire(target, extents)
+
+            :param Surface target:
+                the rendering target surface
+            :param RectangleInt extents:
+                rectangular region of interest in pixels in sample space
+            :rtype: Surface
+
+            This function is called when a pattern is being rendered from. It
+            should create a surface that provides the pixel data for the
+            region of interest as defined by extents, though the surface
+            itself does not have to be limited to that area. For convenience
+            the surface should probably be of image type, created with
+            :meth:`Surface.create_similar_image` for the target (which enables
+            the number of copies to be reduced during transfer to the device).
+            Another option, might be to return a similar surface to the target
+            for explicit handling by the application of a set of cached
+            sources on the device. The region of sample data provided should
+            be defined using :meth:`Surface.set_device_offset` to specify the
+            top-left corner of the sample data (along with width and height of
+            the surface).
+
+        .. function:: release(surface)
+
+            :param Surface surface:
+                the surface created during acquire
+
+            This function is called when the pixel data is no longer being
+            accessed by the pattern for the rendering operation.
+
+        .. versionadded:: 1.15
+        """
+
     def get_acquire(self) -> Tuple[Optional[_AcquireCallback], Optional[_ReleaseCallback]]:
         """
+        :returns: a (acquire, release) tuple of callables or None as set
+            through :meth:`set_acquire`
+
         Queries the current acquire and release callbacks.
 
-        New in version 1.15.
-
-        Returns
-        -------
-        >>> (acquire: Optional[callable], release: Optional[callable])\n
-        A tuple of callables or `None` as set through `set_acquire()`.
+        .. versionadded:: 1.15
         """
 
 class RecordingSurface(Surface):
@@ -4342,39 +4410,26 @@ class Win32PrintingSurface(Surface):
         """
 
 class SolidPattern(Pattern):
-    """
-    Creates a new SolidPattern corresponding to a translucent color. The color components are floating point numbers in the range 0 to 1. If the values passed in are outside that range, they will be clamped.
 
-    Parameters
-    ----------
-    >>> red (float)\n
-    Red component of the color.
-    >>> green (float)\n
-    Green component of the color.
-    >>> blue (float)\n
-    Blue component of the color.
-    >>> alpha (float)\n
-    Alpha component of the color
+    def __init__(self, red: float, green: float, blue: float, alpha: float=1.0) -> None:
+        """
+        :param red: red component of the color
+        :param green: green component of the color
+        :param blue: blue component of the color
+        :param alpha: alpha component of the color
 
-    Returns
-    -------
-    A new `SolidPattern`.
+        Creates a new *SolidPattern* corresponding to a translucent color. The
+        color components are floating point numbers in the range 0 to 1. If the
+        values passed in are outside that range, they will be clamped.
+        """
 
-    Raises
-    ------
-    >>> MemoryError\n
-    In case of no memory.
-    """
-    def __init__(self, red: float, green: float, blue: float, alpha: float=1.0) -> None: ...
     def get_rgba(self) -> Tuple[float, float, float, float]:
         """
-        Gets the solid color for a `SolidPattern`.
+        :returns: (red, green, blue, alpha) a tuple of float
 
-        New in version 1.4.
+        Gets the solid color for a *SolidPattern*.
 
-        Returns
-        -------
-        >>> (red: float, green: float, blue: float, alpha: float)\n
+        .. versionadded:: 1.4
         """
 
 class SurfaceObserverMode(_IntEnum):
