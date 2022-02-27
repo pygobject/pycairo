@@ -43,21 +43,5 @@ Mailing list:
 
 See the ":ref:`reference_index`" for further details.
 
-To use the pycairo library::
-
-    import cairo
-
-To build/install the library::
-
-    python3 setup.py build
-    python3 setup.py install
-
-To run the tests::
-
-    python3 setup.py test
-
 For examples of pycairo code see the 'examples' directory that comes with the
 pycairo distribution.
-
-For author information see the git history as well as the now deleted
-"ChangeLog" file in the git history.
