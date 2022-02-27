@@ -920,7 +920,7 @@ safely be changed, without losing the current state. Use
    .. method:: select_font_face(family[, slant[, weight]])
 
       :param family: a font family name
-      :type family: text
+      :type family: str
       :param cairo.FontSlant slant: the font slant of the font,
         defaults to :attr:`cairo.FontSlant.NORMAL`.
       :param cairo.FontWeight weight: the font weight of the
@@ -1283,7 +1283,7 @@ safely be changed, without losing the current state. Use
    .. method:: show_text(text)
 
       :param text: text
-      :type text: text
+      :type text: str
 
       A drawing operator that generates the shape from a string of text,
       rendered according to the current font_face, font_size (font_matrix),
@@ -1377,7 +1377,7 @@ safely be changed, without losing the current state. Use
    .. method:: text_extents(text)
 
       :param text: text to get extents for
-      :type text: text
+      :type text: str
       :rtype: TextExtents
 
       Gets the extents for a string of text. The extents describe a user-space
@@ -1396,7 +1396,7 @@ safely be changed, without losing the current state. Use
    .. method:: text_path(text)
 
       :param text: text
-      :type text: text
+      :type text: str
 
       Adds closed paths for text to the current path. The generated path if
       filled, achieves an effect similar to that of :meth:`Context.show_text`.
@@ -1488,7 +1488,7 @@ safely be changed, without losing the current state. Use
 
     .. method:: show_text_glyphs(utf8, glyphs, clusters, cluster_flags)
 
-      :param text utf8: a string of text
+      :param str utf8: a string of text
       :param list glyphs: list of glyphs to show
       :param list clusters: list of cluster mapping information
       :param TextClusterFlags cluster_flags: cluster mapping flags
@@ -1522,8 +1522,8 @@ safely be changed, without losing the current state. Use
 
     .. method:: tag_begin(tag_name, attributes)
 
-        :param text tag_name: tag name
-        :param text attributes: tag attributes
+        :param str tag_name: tag name
+        :param str attributes: tag attributes
 
         Marks the beginning of the tag_name structure. Call :meth:`tag_end`
         with the same tag_name to mark the end of the structure.
@@ -1555,7 +1555,7 @@ safely be changed, without losing the current state. Use
 
     .. method:: tag_end(tag_name)
 
-        :param text tag_name: tag name
+        :param str tag_name: tag name
 
         Marks the end of the tag_name structure.
 

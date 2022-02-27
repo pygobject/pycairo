@@ -106,12 +106,6 @@ Other Constants
 Other Classes and Functions
 ===========================
 
-.. class:: text()
-
-    This type only exists for documentation purposes. It represents
-    :obj:`python3:str` under Python 3.
-
-
 .. class:: pathlike()
 
     This type only exists for documentation purposes.

@@ -117,7 +117,7 @@ class ScriptDevice(:class:`Device`)
 
     .. method:: write_comment(comment)
 
-        :param text comment: the string to emit
+        :param str comment: the string to emit
 
         Emit a string verbatim into the script.
 
