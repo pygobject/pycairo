@@ -761,24 +761,30 @@ class Glyph(Tuple[int, float, float]):
 
 class TextCluster(Tuple[int, int]):
     """
-    New in version 1.15.
+    .. versionadded:: 1.15
 
-    The `TextCluster` structure holds information about a single text cluster. A text cluster is a minimal mapping of some glyphs corresponding to some UTF-8 text.
+    The :class:`TextCluster` structure holds information about a single text
+    cluster. A text cluster is a minimal mapping of some glyphs corresponding
+    to some UTF-8 text.
 
-    For a cluster to be valid, both `num_bytes` and `num_glyphs` should be non-negative, and at least one should be non-zero. Note that clusters with zero glyphs are not as well supported as normal clusters. For example, PDF rendering applications typically ignore those clusters when PDF text is being selected.
+    For a cluster to be valid, both ``num_bytes`` and ``num_glyphs`` should be
+    non-negative, and at least one should be non-zero. Note that clusters with
+    zero glyphs are not as well supported as normal clusters. For example, PDF
+    rendering applications typically ignore those clusters when PDF text is
+    being selected.
 
-    See `Context.show_text_glyphs()` for how clusters are used in advanced text operations.
-
-    Parameters
-    ----------
-    >>> num_bytes (int)\n
-    The number of bytes of UTF-8 text covered by cluster.
-    >>> num_glyphs (int)\n
-    The number of glyphs covered by cluster.
+    See :meth:`Context.show_text_glyphs` for how clusters are used in advanced
+    text operations.
     """
     num_bytes: int = ...
     num_glyphs: int = ...
-    def __init__(self, num_bytes: int, num_glyphs: int) -> None: ...
+    def __init__(self, num_bytes: int, num_glyphs: int) -> None:
+        """
+        :param num_bytes:
+            the number of bytes of UTF-8 text covered by cluster
+        :param num_glyphs:
+            the number of glyphs covered by cluster
+        """
 
 class TextClusterFlags(_IntEnum):
     """
@@ -790,29 +796,18 @@ class TextClusterFlags(_IntEnum):
 
 class TextExtents(Tuple[float, float, float, float, float, float]):
     """
-    New in version 1.15: In prior versions a (float, float, float, float, float, float) tuple was used instead of `TextExtents`.
+    .. versionadded:: 1.15
+        In prior versions a (float, float, float, float, float, float) tuple
+        was used instead of :class:`TextExtents`.
 
-    The `TextExtents` class stores the extents of a single glyph or a string of glyphs in user-space coordinates. Because text extents are in user-space coordinates, they are mostly, but not entirely, independent of the current transformation matrix. If you call `context.scale(2.0, 2.0)`, text will be drawn twice as big, but the reported text extents will not be doubled. They will change slightly due to hinting (so you can’t assume that metrics are independent of the transformation matrix), but otherwise will remain unchanged.
-
-    Parameters
-    ----------
-    >>> x_bearing (float)\n
-    The horizontal distance from the origin to the leftmost part of the glyphs as drawn. Positive if the glyphs lie entirely to the right of the origin.
-    >>> y_bearing (float)\n
-    The vertical distance from the origin to the topmost part of the glyphs as drawn. Positive only if the glyphs lie completely below the origin; will usually be negative.
-    >>> width (float)\n
-    Width of the glyphs as drawn.
-    >>> height (float)\n
-    Height of the glyphs as drawn.
-    >>> x_advance (float)\n
-    Distance to advance in the X direction after drawing these glyphs.
-    >>> y_advance (float)\n
-    Distance to advance in the Y direction after drawing these glyphs. Will typically be zero except for vertical text layout as found in East-Asian languages.
-
-    Returns
-    -------
-    >>> cairo.TextExtents\n
-    A newly created `TextExtents` instance.
+    The :class:`TextExtents` class stores the extents of a single glyph or a
+    string of glyphs in user-space coordinates. Because text extents are in
+    user-space coordinates, they are mostly, but not entirely, independent of
+    the current transformation matrix. If you call ``context.scale(2.0,
+    2.0)``, text will be drawn twice as big, but the reported text extents
+    will not be doubled. They will change slightly due to hinting (so you
+    can't assume that metrics are independent of the transformation matrix),
+    but otherwise will remain unchanged.
     """
     x_bearing: float = ...
     y_bearing: float = ...
@@ -820,7 +815,27 @@ class TextExtents(Tuple[float, float, float, float, float, float]):
     height: float = ...
     x_advance: float = ...
     y_advance: float = ...
-    def __init__(self, x_bearing: float, y_bearing: float, width: float, height: float, x_advance: float, y_advance: float) -> None: ...
+    def __init__(self, x_bearing: float, y_bearing: float, width: float, height: float, x_advance: float, y_advance: float) -> None:
+        """
+        :param x_bearing:
+            the horizontal distance from the origin to the leftmost part of the
+            glyphs as drawn. Positive if the glyphs lie entirely to the right of
+            the origin.
+        :param y_bearing:
+            the vertical distance from the origin to the topmost part of the
+            glyphs as drawn. Positive only if the glyphs lie completely below the
+            origin; will usually be negative.
+        :param width:
+            width of the glyphs as drawn
+        :param height:
+            height of the glyphs as drawn
+        :param x_advance:
+            distance to advance in the X direction after drawing these glyphs
+        :param y_advance:
+            distance to advance in the Y direction after drawing these glyphs.
+            Will typically be zero except for vertical text layout as found in
+            East-Asian languages.
+        """
 
 class RectangleInt:
     """
