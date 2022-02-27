@@ -866,13 +866,8 @@ class RectangleInt:
 
 class FontFace:
     """
-    A `cairo.FontFace` specifies all aspects of a font other than the size or font matrix (a font matrix is used to distort a font by sheering it or scaling it unequally in the two directions). A FontFace can be set on a `Context` by using `Context.set_font_face()` the size and font matrix are set with `Context.set_font_size()` and `Context.set_font_matrix()`.
-
-    There are various types of FontFace, depending on the font backend they use.
-
-    Note
-    ----
-    This class cannot be instantiated directly, it is returned by `Context.get_font_face()`.
+    .. note:: This class cannot be instantiated directly, it is returned by
+        :meth:`Context.get_font_face`.
     """
 
 class FontOptions:
@@ -1018,145 +1013,137 @@ class FontOptions:
     def set_subpixel_order(self, subpixel_order: SubpixelOrder) -> None: ...
 
 class ScaledFont:
-    """
-    Creates a ScaledFont object from a FontFace and matrices that describe the size of the font and the environment in which it will be used.
 
-    A ScaledFont is a font scaled to a particular size and device resolution. A ScaledFont is most useful for low-level font usage where a library or application wants to cache a reference to a scaled font to speed up the computation of metrics.
+    def __init__(self, font_face: FontFace, font_matrix: Matrix, ctm: Matrix, options: FontOptions) -> None:
+        """
+            :param font_face: a :class:`FontFace` instance
+            :param font_matrix: font space to user space transformation :class:`Matrix`
+                for the font. In the simplest case of a N point font, this matrix is just
+                a scale by N, but it can also be used to shear the font or stretch it
+                unequally along the two axes. See :meth:`Context.set_font_matrix`.
+            :param ctm: user to device transformation :class:`Matrix` with which the
+                font will be used.
+            :param options: a :class:`FontOptions` instance to use when getting metrics
+                for the font and rendering with it.
 
-    There are various types of scaled fonts, depending on the font backend they use.
+            Creates a *ScaledFont* object from a *FontFace* and matrices that describe
+            the size of the font and the environment in which it will be used.
+        """
 
-    Parameters
-    ----------
-    >>> font_face (cairo.FontFace)\n
-    A `FontFace` instance.
-    >>> font_matrix (cairo.Matrix)\n
-    Font space to user space transformation `Matrix` for the font. In the simplest case of a N point font, this matrix is just a scale by N, but it can also be used to shear the font or stretch it unequally along the two axes. See `Context.set_font_matrix()`.
-    >>> ctm (cairo.Matrix)\n
-    User to device transformation `Matrix` with which the font will be used.
-    >>> options (cairo.FontOptions)\n
-    A `FontOptions` instance to use when getting metrics for the font and rendering with it.
-    """
-    def __init__(self, font_face: FontFace, font_matrix: Matrix, ctm: Matrix, options: FontOptions) -> None: ...
     def extents(self) -> Tuple[float, float, float, float, float]:
         """
-        Gets the metrics for a ScaledFont.
-
-        Returns
-        -------
-        >>> (ascent: float, descent: float, height: float, max_x_advance: float, max_y_advance: float)
+        Gets the metrics for a *ScaledFont*.
         """
+
     def get_ctm(self) -> Matrix:
         """
-        Returns the CTM with which scaled_font was created into ctm. Note that the translation offsets (x0, y0) of the CTM are ignored by `ScaledFont()`. So, the matrix this function returns always has 0, 0 as x0, y0.
+            :returns: the CTM
 
-        New in version 1.12.0.
+            Returns the CTM with which scaled_font was created into ctm. Note that
+            the translation offsets (x0, y0) of the CTM are ignored by
+            :func:`ScaledFont`. So, the matrix this function returns always has 0,
+            0 as x0, y0.
 
-        Returns
-        -------
-        >>> cairo.Matrix\n
-        The CTM.
+            .. versionadded:: 1.12.0
         """
+
     def get_font_face(self) -> FontFace:
         """
-        New in version 1.2.
+            :returns: the :class:`FontFace` that this *ScaledFont* was created for.
 
-        Returns
-        -------
-        >>> cairo.FontFace\n
-        The `FontFace` that this `ScaledFont` was created for.
+            .. versionadded:: 1.2
         """
+
     def get_font_matrix(self) -> Matrix:
         """
-        Returns the font matrix with which scaled_font was created.
+            :returns: the matrix
 
-        New in version 1.12.0.
-
-        Returns
-        -------
-        >>> cairo.Matrix\n
-        The Matrix.
+            Returns the font matrix with which scaled_font was created.
         """
+
     def get_font_options(self) -> FontOptions:
         """
-        Returns the font options with which scaled_font was created.
+            :returns: font options
 
-        New in version 1.12.0.
+            Returns the font options with which scaled_font was created.
 
-        Returns
-        -------
-        >>> cairo.FontOptions\n
-        Font options.
+            .. versionadded:: 1.12.0
         """
+
     def get_scale_matrix(self) -> Matrix:
         """
-        The scale matrix is product of the font matrix and the ctm associated with the scaled font, and hence is the matrix mapping from font space to device space.
+            :returns: the scale :class:`Matrix`
 
-        New in version 1.8.
+            The scale matrix is product of the font matrix and the ctm associated
+            with the scaled font, and hence is the matrix mapping from font space to
+            device space.
 
-        Returns
-        -------
-        >>> cairo.Matrix\n
-        The scale `Matrix`.
+            .. versionadded:: 1.8
         """
+
     def glyph_extents(self, glyphs: Sequence[Glyph]) -> TextExtents:
         """
-        New in version 1.15.
+            :param glyphs: glyphs, a sequence of :class:`Glyph`
 
-        Gets the extents for a list of glyphs. The extents describe a user-space rectangle that encloses the “inked” portion of the glyphs, (as they would be drawn by `Context.show_glyphs()` if the cairo graphics state were set to the same font_face, font_matrix, ctm, and font_options as scaled_font ). Additionally, the x_advance and y_advance values indicate the amount by which the current point would be advanced by `cairo_show_glyphs()`.
+            .. versionadded:: 1.15
 
-        Note that whitespace glyphs do not contribute to the size of the rectangle (extents.width and extents.height).
+            Gets the extents for a list of glyphs. The extents describe a user-space
+            rectangle that encloses the "inked" portion of the glyphs, (as they
+            would be drawn by :meth:`Context.show_glyphs` if the cairo graphics
+            state were set to the same font_face, font_matrix, ctm, and font_options
+            as scaled_font ). Additionally, the x_advance and y_advance values
+            indicate the amount by which the current point would be advanced by
+            cairo_show_glyphs().
 
-        Parameters
-        ----------
-        >>> glyphs list(cairo.Glyph)\n
-        A sequence of `Glyph`.
-
-        Returns
-        -------
-        >>> cairo.TextExtents\n
+            Note that whitespace glyphs do not contribute to the size of the
+            rectangle (extents.width and extents.height).
         """
+
     def text_extents(self, text: str) -> TextExtents:
         """
-        Gets the extents for a string of text. The extents describe a user-space rectangle that encloses the “inked” portion of the text drawn at the origin (0,0) (as it would be drawn by `Context.show_text()` if the cairo graphics state were set to the same font_face, font_matrix, ctm, and font_options as `ScaledFont`). Additionally, the x_advance and y_advance values indicate the amount by which the current point would be advanced by `Context.show_text()`.
+            :param text: text
 
-        Note that whitespace characters do not directly contribute to the size of the rectangle (width and height). They do contribute indirectly by changing the position of non-whitespace characters. In particular, trailing whitespace characters are likely to not affect the size of the rectangle, though they will affect the x_advance and y_advance values.
+            Gets the extents for a string of text. The extents describe a user-space
+            rectangle that encloses the "inked" portion of the text drawn at the
+            origin (0,0) (as it would be drawn by :meth:`Context.show_text` if the
+            cairo graphics state were set to the same font_face, font_matrix, ctm,
+            and font_options as *ScaledFont*).  Additionally, the x_advance and
+            y_advance values indicate the amount by which the current point would be
+            advanced by :meth:`Context.show_text`.
 
-        Parameters
-        ----------
-        >>> text (str)
+            Note that whitespace characters do not directly contribute to the size
+            of the rectangle (width and height). They do contribute indirectly by
+            changing the position of non-whitespace characters. In particular,
+            trailing whitespace characters are likely to not affect the size of the
+            rectangle, though they will affect the x_advance and y_advance values.
 
-        Returns
-        -------
-        >>> cairo.TextExtents
+            .. versionadded:: 1.2
         """
+
     def text_to_glyphs(self, x: float, y: float, utf8: str, with_clusters: bool = True) -> Union[Tuple[List[Glyph], List["TextCluster"], TextClusterFlags], List[Glyph]]:
         """
-        New in version 1.15.
+            :param x: X position to place first glyph
+            :param y: Y position to place first glyph
+            :param utf8: a string of text
+            :param with_clusters:
+                If :obj:`False` only the glyph list will computed and returned
+            :returns:
+                a tuple of ([:class:`Glyph`], [:class:`TextCluster`],
+                :class:`TextClusterFlags`)
+            :raises Error:
 
-        Converts UTF-8 text to a list of glyphs, with cluster mapping, that can be used to render later.
+            .. versionadded:: 1.15
 
-        For details of how clusters, and cluster_flags map input UTF-8 text to the output glyphs see `Context.show_text_glyphs()`.
+            Converts UTF-8 text to a list of glyphs, with cluster mapping, that can
+            be used to render later.
 
-        The output values can be readily passed to `Context.show_text_glyphs()` `Context.show_glyphs()`, or related functions, assuming that the exact same scaled font is used for the operation.
+            For details of how clusters, and cluster_flags map input UTF-8 text to
+            the output glyphs see :meth:`Context.show_text_glyphs`.
 
-        Parameters
-        ----------
-        >>> x (float)\n
-        X position to place first glyph.
-        >>> y (float)\n
-        Y position to place first glyph.
-        >>> utf8 (str)\n
-        A string of text.
-        >>> with_clusters (bool)\n
-        If `False` only the glyph list will be computed and returned.
-
-        Returns
-        -------
-        >>> ([Glyph], [TextCluster], TextClusterFlags) or [Glyph]
-
-        Raises
-        ------
-        >>> cairo.Error\n
+            The output values can be readily passed to
+            :meth:`Context.show_text_glyphs` :meth:`Context.show_glyphs`, or related
+            functions, assuming that the exact same scaled font is used for the
+            operation.
         """
 
 _SomeDevice = TypeVar("_SomeDevice", bound="Device")
@@ -4299,55 +4286,47 @@ class TeeSurface(Surface):
 
 class ToyFontFace(FontFace):
     """
-    The cairo.ToyFontFace class can be used instead of Context.select_font_face() to create a toy font independently of a context.
+    .. versionadded:: 1.8.4
 
-    Creates a ToyFontFace from a triplet of family, slant, and weight. These font faces are used in implementation of the the “toy” font API.
+    Creates a *ToyFontFace* from a triplet of family, slant, and weight. These
+    font faces are used in implementation of the the "toy" font API.
 
-    If family is the zero-length string “”, the platform-specific default family is assumed. The default family then can be queried using `get_family()`.
+    If family is the zero-length string "", the platform-specific default
+    family is assumed. The default family then can be queried using
+    :meth:`.get_family`.
 
-    The `Context.select_font_face()` method uses this to create font faces. See that function for limitations of toy font faces.
-
-    New in version 1.8.4.
-
-    Parameters
-    ----------
-    >>> family (str)\n
-    A font family name.
-    >>> slant (cairo.FontSlant)\n
-    The font slant of the font, defaults to `cairo.FontSlant.NORMAL`.
-    >>> weight (cairo.FontWeight)\n
-    The font weight of the font, defaults to `cairo.FontWeight.NORMAL`.
-
-    Returns
-    -------
-    >>> cairo.ToyFontFace\n
-    A newly created `ToyFontFace` instance.
+    The :meth:`Context.select_font_face` method uses this to create font
+    faces. See that function for limitations of toy font faces.
     """
-    def __init__(self, family: str, slant: FontSlant=..., weight: FontWeight=...) -> None: ...
+
+    def __init__(self, family: str, slant: FontSlant=..., weight: FontWeight=...) -> None:
+        """
+        :param family: a font family name
+        :param slant: the font slant of the font,
+            defaults to :attr:`cairo.FontSlant.NORMAL`.
+        :param weight: the font weight of the font,
+            defaults to :attr:`cairo.FontWeight.NORMAL`.
+        """
+
     def get_family(self) -> str:
         """
-        Returns
-        -------
-        >>> str\n
-        The family name of a toy font.
+            :returns: the family name of a toy font
+
+            .. versionadded:: 1.8.4
         """
+
     def get_slant(self) -> FontSlant:
         """
-        New in version 1.8.4
+            :returns: the font slant value
 
-        Returns
-        -------
-        >>> cairo.FontSlant\n
-        The font slant value.
+            .. versionadded:: 1.8.4
         """
+
     def get_weight(self) -> FontWeight:
         """
-        New in version 1.8.4
+            :returns: the font weight value
 
-        Returns
-        -------
-        >>> cairo.FontWeight\n
-        The font weight value.
+            .. versionadded:: 1.8.4
         """
 
 class XCBSurface(Surface):

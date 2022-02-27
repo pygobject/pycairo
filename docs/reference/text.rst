@@ -39,11 +39,7 @@ matrix are set with :meth:`Context.set_font_size` and
 There are various types of *FontFace*, depending on the font backend they
 use.
 
-.. class:: FontFace()
-
-   .. note:: This class cannot be instantiated directly, it is returned by
-     :meth:`Context.get_font_face`.
-
+.. autoclass:: FontFace
 
 
 class FreeTypeFontFace(:class:`FontFace`)
@@ -62,48 +58,9 @@ class ToyFontFace(:class:`FontFace`)
 
 The *cairo.ToyFontFace* class can be used instead of :meth:`Context.select_font_face` to create a toy font independently of a context.
 
-.. class:: ToyFontFace(family[, slant[, weight]])
-
-   :param family: a font family name
-   :type family: text
-   :param cairo.FontSlant slant: the font slant of the font,
-     defaults to :attr:`cairo.FontSlant.NORMAL`.
-   :param cairo.FontWeight weight: the font weight of the font,
-     defaults to :attr:`cairo.FontWeight.NORMAL`.
-   :returns: a new *ToyFontFace*
-
-   Creates a *ToyFontFace* from a triplet of family, slant, and weight. These
-   font faces are used in implementation of the the "toy" font API.
-
-   If family is the zero-length string "", the platform-specific default
-   family is assumed. The default family then can be queried using
-   :meth:`.get_family`.
-
-   The :meth:`Context.select_font_face` method uses this to create font
-   faces. See that function for limitations of toy font faces.
-
-   .. versionadded:: 1.8.4
-
-   .. method:: get_family()
-
-      :returns: the family name of a toy font
-      :rtype: str
-
-      .. versionadded:: 1.8.4
-
-   .. method:: get_slant()
-
-      :returns: the font slant value
-      :rtype: cairo.FontSlant
-
-      .. versionadded:: 1.8.4
-
-   .. method:: get_weight()
-
-      :returns: the font weight value
-      :rtype: cairo.FontWeight
-
-      .. versionadded:: 1.8.4
+.. autoclass:: ToyFontFace
+    :members:
+    :undoc-members:
 
 
 class UserFontFace(:class:`FontFace`)
@@ -130,139 +87,9 @@ computation of metrics.
 There are various types of scaled fonts, depending on the font backend they
 use.
 
-.. class:: ScaledFont(font_face, font_matrix, ctm, options)
-
-   :param font_face: a :class:`FontFace` instance
-   :param font_matrix: font space to user space transformation :class:`Matrix`
-     for the font. In the simplest case of a N point font, this matrix is just
-     a scale by N, but it can also be used to shear the font or stretch it
-     unequally along the two axes. See :meth:`Context.set_font_matrix`.
-   :param ctm: user to device transformation :class:`Matrix` with which the
-     font will be used.
-   :param options: a :class:`FontOptions` instance to use when getting metrics
-     for the font and rendering with it.
-
-   Creates a *ScaledFont* object from a *FontFace* and matrices that describe
-   the size of the font and the environment in which it will be used.
-
-   .. method:: extents()
-
-      :returns: (ascent, descent, height, max_x_advance, max_y_advance), a tuple of float values.
-
-      Gets the metrics for a *ScaledFont*.
-
-   .. method:: get_ctm()
-
-      :returns: the CTM
-      :rtype: cairo.Matrix
-
-      Returns the CTM with which scaled_font was created into ctm. Note that
-      the translation offsets (x0, y0) of the CTM are ignored by
-      :func:`ScaledFont`. So, the matrix this function returns always has 0,
-      0 as x0, y0.
-
-      .. versionadded:: 1.12.0
-
-   .. method:: get_font_face()
-
-      :returns: the :class:`FontFace` that this *ScaledFont* was created for.
-
-      .. versionadded:: 1.2
-
-   .. method:: get_font_matrix()
-
-      :returns: the matrix
-      :rtype: cairo.Matrix
-
-      Returns the font matrix with which scaled_font was created.
-
-      .. versionadded:: 1.12.0
-
-   .. method:: get_font_options()
-
-      :returns: font options
-      :rtype: cairo.FontOptions
-
-      Returns the font options with which scaled_font was created.
-
-      .. versionadded:: 1.12.0
-
-   .. method:: get_scale_matrix()
-
-      :returns: the scale :class:`Matrix`
-
-      The scale matrix is product of the font matrix and the ctm associated
-      with the scaled font, and hence is the matrix mapping from font space to
-      device space.
-
-      .. versionadded:: 1.8
-
-
-   .. method:: glyph_extents(glyphs)
-
-      :param glyphs: glyphs, a sequence of :class:`Glyph`
-      :rtype: TextExtents
-
-      .. versionadded:: 1.15
-
-      Gets the extents for a list of glyphs. The extents describe a user-space
-      rectangle that encloses the "inked" portion of the glyphs, (as they
-      would be drawn by :meth:`Context.show_glyphs` if the cairo graphics
-      state were set to the same font_face, font_matrix, ctm, and font_options
-      as scaled_font ). Additionally, the x_advance and y_advance values
-      indicate the amount by which the current point would be advanced by
-      cairo_show_glyphs().
-
-      Note that whitespace glyphs do not contribute to the size of the
-      rectangle (extents.width and extents.height).
-
-   .. method:: text_extents(text)
-
-      :param text: text
-      :type text: text
-      :rtype: TextExtents
-
-      Gets the extents for a string of text. The extents describe a user-space
-      rectangle that encloses the "inked" portion of the text drawn at the
-      origin (0,0) (as it would be drawn by :meth:`Context.show_text` if the
-      cairo graphics state were set to the same font_face, font_matrix, ctm,
-      and font_options as *ScaledFont*).  Additionally, the x_advance and
-      y_advance values indicate the amount by which the current point would be
-      advanced by :meth:`Context.show_text`.
-
-      Note that whitespace characters do not directly contribute to the size
-      of the rectangle (width and height). They do contribute indirectly by
-      changing the position of non-whitespace characters. In particular,
-      trailing whitespace characters are likely to not affect the size of the
-      rectangle, though they will affect the x_advance and y_advance values.
-
-      .. versionadded:: 1.2
-
-   .. method:: text_to_glyphs(x, y, utf8, [with_clusters=True])
-
-      :param float x: X position to place first glyph
-      :param float y: Y position to place first glyph
-      :param text utf8: a string of text
-      :param bool with_clusters:
-         If :obj:`False` only the glyph list will computed and returned
-      :returns:
-         a tuple of ([:class:`Glyph`], [:class:`TextCluster`],
-         :class:`TextClusterFlags`)
-      :rtype: tuple
-      :raises Error:
-
-      .. versionadded:: 1.15
-
-      Converts UTF-8 text to a list of glyphs, with cluster mapping, that can
-      be used to render later.
-
-      For details of how clusters, and cluster_flags map input UTF-8 text to
-      the output glyphs see :meth:`Context.show_text_glyphs`.
-
-      The output values can be readily passed to
-      :meth:`Context.show_text_glyphs` :meth:`Context.show_glyphs`, or related
-      functions, assuming that the exact same scaled font is used for the
-      operation.
+.. autoclass:: ScaledFont
+    :members:
+    :undoc-members:
 
 
 class FontOptions()
