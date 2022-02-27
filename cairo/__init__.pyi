@@ -1221,24 +1221,31 @@ _SomeSurface = TypeVar("_SomeSurface", bound="Surface")
 
 class Surface:
     """
-   *Surface* is the abstract base class from which all the other surface
-   classes derive. It cannot be instantiated directly.
+    cairo.Surface is the abstract type representing all different drawing targets
+    that cairo can render to. The actual drawings are performed using a
+    :class:`Context`.
 
-   .. note::
+    A cairo.Surface is created by using backend-specific constructors
+    of the form cairo.<XXX>Surface().
 
-      .. versionadded:: 1.17.0
+    *Surface* is the abstract base class from which all the other surface
+    classes derive. It cannot be instantiated directly.
 
-         :class:`cairo.Surface` can be used as a context manager:
+    .. note::
 
-      .. code:: python
+        .. versionadded:: 1.17.0
 
-         # surface.finish() will be called on __exit__
-         with cairo.SVGSurface("example.svg", 200, 200) as surface:
-             pass
+            :class:`cairo.Surface` can be used as a context manager:
 
-         # surface.unmap_image(image_surface) will be called on __exit__
-         with surface.map_to_image(None) as image_surface:
-             pass
+        .. code:: python
+
+            # surface.finish() will be called on __exit__
+            with cairo.SVGSurface("example.svg", 200, 200) as surface:
+                pass
+
+            # surface.unmap_image(image_surface) will be called on __exit__
+            with surface.map_to_image(None) as image_surface:
+                pass
     """
 
     def copy_page(self) -> None:
@@ -3415,332 +3422,356 @@ class MeshPattern(Pattern):
 
 class PDFSurface(Surface):
     """
-    The PDFSurface is used to render cairo graphics to Adobe PDF files and is a multi-page vector surface backend.
+    The PDFSurface is used to render cairo graphics to Adobe PDF files and is a
+    multi-page vector surface backend.
 
-    New in version 1.2.
-
-    Parameters
-    ----------
-    >>> fobj (str or None)\n
-    (None, `pathlike`, file or file-like object) - A filename or writable file object. `None` may be used to specify no output. This will generate a PDFSurface that may be queried and used as a source, without generating a temporary file.
-    >>> width_in_points (float)\n
-    Width of the surface, in points (1 point == 1/72.0 inch).
-    >>> height_in_points (float)\n
-    Height of the surface, in points (1 point == 1/72.0 inch).
-
-    Returns
-    -------
-    >>> cairo.PDFSurface\n
-    A new PDFSurface of the specified size in points to be written to fobj.
-
-    Raises
-    ------
-    >>> cairo.MemoryError\n
-    In case of no memory.
+    .. versionadded:: 1.2
     """
-    def __init__(self, fobj: Union[_PathLike, _FileLike], width_in_points: float, height_in_points: float) -> None: ...
+
+    def __init__(self, fobj: Union[_PathLike, _FileLike], width_in_points: float, height_in_points: float) -> None:
+        """
+        :param fobj: a filename or writable file object. None may be used to
+            specify no output. This will generate a *PDFSurface* that may be
+            queried and used as a source, without generating a temporary file.
+        :param width_in_points: width of the surface, in points (1 point ==
+            1/72.0 inch)
+        :param height_in_points: height of the surface, in points (1 point ==
+            1/72.0 inch)
+        :returns: a new *PDFSurface* of the specified size in points to be
+            written to *fobj*.
+
+        .. versionadded:: 1.2
+        """
+
     def set_size(self, width_in_points: float, height_in_points: float) -> None:
         """
-        Changes the size of a PDFSurface for the current (and subsequent) pages.
+        :param width_in_points: new surface width, in points
+            (1 point == 1/72.0 inch)
+        :param height_in_points: new surface height, in points
+            (1 point == 1/72.0 inch)
 
-        This function should only be called before any drawing operations have been performed on the current page. The simplest way to do this is to call this function immediately after creating the surface or immediately after completing a page with either `Context.show_page()` or `Context.copy_page()`.
+        Changes the size of a *PDFSurface* for the current (and subsequent) pages.
 
-        New in version 1.2.
+        This function should only be called before any drawing operations have
+        been performed on the current page. The simplest way to do this is to
+        call this function immediately after creating the surface or immediately
+        after completing a page with either :meth:`Context.show_page` or
+        :meth:`Context.copy_page`.
 
-        Parameters
-        ----------
-        >>> width_in_ponts (float)\n
-        New surface width, in points (1 point == 1/72.0 inch).
-        >>> height_in_points (float)\n
-        New surface height, in points (1 point == 1/72.0 inch).
+        .. versionadded:: 1.2
         """
+
     def restrict_to_version(self, version: PDFVersion) -> None:
         """
-        Restricts the generated PDF file to version . See `get_versions()` for a list of available version values that can be used here.
+        :param version: PDF version
 
-        This function should only be called before any drawing operations have been performed on the given surface. The simplest way to do this is to call this function immediately after creating the surface.
+        Restricts the generated PDF file to version . See :meth:`get_versions`
+        for a list of available version values that can be used here.
 
-        New in version 1.12.0.
+        This function should only be called before any drawing operations have
+        been performed on the given surface. The simplest way to do this is to
+        call this function immediately after creating the surface.
 
-        Parameters
-        ----------
-        >>> version (cairo.PDFVersion)\n
+        .. versionadded:: 1.12.0
         """
+
     @staticmethod
     def get_versions() -> List[PDFVersion]:
         """
-        Retrieve the list of supported versions. See `restrict_to_version()`.
+        :returns: supported version list
 
-        New in version 1.12.0.
+        Retrieve the list of supported versions. See
+        :meth:`restrict_to_version`.
 
-        Returns
-        -------
-        >>> list(cairo.PDFVersion)\n
-        Supported version list.
+        .. versionadded:: 1.12.0
         """
+
     @staticmethod
     def version_to_string(version: PDFVersion) -> str:
         """
-        Get the string representation of the given version id. See `get_versions()` for a way to get the list of valid version ids.
+        :param version: PDF version
+        :returns: the string associated to the given version
+        :raises ValueError: if version isn't valid
 
-        New in version 1.12.0.
+        Get the string representation of the given version id. See
+        :meth:`get_versions` for a way to get the list of valid version ids.
 
-        Parameters
-        ----------
-        >>> version (cairo.PDFVersion)\n
-
-        Returns
-        -------
-        >>> str\n
-        The string associated to the given version.
-
-        Raises
-        ------
-        >>> ValueError\n
-        If the version isn't valid.
+        .. versionadded:: 1.12.0
         """
+
     def add_outline(self, parent_id: int, utf8: str, link_attribs: str, flags: PDFOutlineFlags) -> int:
         """
-        New in version 1.18.0: Only available with cairo 1.15.10+.
+        :param parent_id:
+            the id of the parent item or :data:`PDF_OUTLINE_ROOT` if this is a top
+            level item.
+        :param utf8:
+            the name of the outline
+        :param link_attribs:
+            the link attributes specifying where this outline links to
+        :param flags:
+            outline item flags
+        :returns: the id for the added item.
 
-        Parameters
-        ----------
-        >>> parent_id (int)\n
-        The id of the parent item or `PDF_OUTLINE_ROOT` if this is a top level item.
-        >>> utf8 (str)\n
-        The name of the outline.
-        >>> link_attribs (str)\n
-        The link attributes specifying where this outline links to.
-        >>> flags (cairo.PDFOutlineFlags)\n
-        Outline item flags.
-
-        Returns
-        -------
-        >>> int\n
-        The ID for the added item.
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
         """
+
     def set_metadata(self, metadata: PDFMetadata, utf8: str) -> None:
         """
-        Set document metadata. The `PDFMetadata.CREATE_DATE` and `PDFMetadata.MOD_DATE` values must be in ISO-8601 format: YYYY-MM-DDThh:mm:ss. An optional timezone of the form “[+/-]hh:mm” or “Z” for UTC time can be appended. All other metadata values can be any UTF-8 string.
+        :param metadata: The metadata item to set.
+        :param utf8: metadata value
 
-        New in version 1.18.0: Only available with cairo 1.15.10+.
+        Set document metadata. The :attr:`PDFMetadata.CREATE_DATE` and
+        :attr:`PDFMetadata.MOD_DATE` values must be in ISO-8601 format:
+        YYYY-MM-DDThh:mm:ss. An optional timezone of the form "[+/-]hh:mm" or
+        "Z" for UTC time can be appended. All other metadata values can be any
+        UTF-8 string.
 
-        Parameters
-        ----------
-        >>> metadata (cairo.PDFMetadata)\n
-        The metadata item to set.
-        >>> utf8 (str)\n
-        Metadata value.
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
         """
+
     def set_page_label(self, utf8: str) -> None:
         """
+        :param utf8: metadata value
+
         Set page label for the current page.
 
-        New in version 1.18.0: Only available with cairo 1.15.10+.
-
-        Parameters
-        ----------
-        >>> utf8 (str)\n
-        Metadata value.
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
         """
+
     def set_thumbnail_size(self, width: int, height: int) -> None:
         """
-        Set the thumbnail image size for the current and all subsequent pages. Setting a width or height of 0 disables thumbnails for the current and subsequent pages.
+        :param width: Thumbnail width.
+        :param height: Thumbnail height
 
-        New in version 1.18.0: Only available with cairo 1.15.10+.
+        Set the thumbnail image size for the current and all subsequent pages.
+        Setting a width or height of 0 disables thumbnails for the current and
+        subsequent pages.
 
-        Parameters
-        ----------
-        >>> width (int)\n
-        Thumbnail width.
-        >>> height (int)\n
-        Thumbnail height.
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
         """
 
 class PSSurface(Surface):
     """
-    The PSSurface is used to render cairo graphics to Adobe PostScript files and is a multi-page vector surface backend.
-
-    Note that the size of individual pages of the PostScript output can vary. See `set_size()`.
-
-    Parameters
-    ----------
-    >>> fobj (str or None)\n
-    (`None`, `pathlike`, file or file-like object) – A filename or writable file object. `None` may be used to specify no output. This will generate a PSSurface that may be queried and used as a source, without generating a temporary file.
-    >>> width_in_points (float)\n
-    Width of the surface, in points (1 point == 1/72.0 inch).
-    >>> height_in_points (float)\n
-    Height of the surface, in points (1 point == 1/72.0 inch).
-
-    Returns
-    -------
-    >>> cairo.PSSurface\n
-    A new PSSurface of the specified size in points to be written to fobj.
-
-    Raises
-    ------
-    >>> cairo.MemoryError\n
-    In case of no memory.
+    The *PSSurface* is used to render cairo graphics to Adobe PostScript files and
+    is a multi-page vector surface backend.
     """
-    def __init__(self, fobj: Union[_FileLike, _PathLike], width_in_points: float, height_in_points: float) -> None: ...
+
+    def __init__(self, fobj: Union[_FileLike, _PathLike], width_in_points: float, height_in_points: float) -> None:
+        """
+        :param fobj: a filename or writable file object. None may be used to specify no output. This will generate a *PSSurface* that may be queried and used as a source, without generating a temporary file.
+        :param width_in_points: width of the surface, in points
+            (1 point == 1/72.0 inch)
+        :param height_in_points: height of the surface, in points
+            (1 point == 1/72.0 inch)
+        :returns: a new *PDFSurface* of the specified size in points to be written
+            to *fobj*.
+        :raises: :exc:`MemoryError` in case of no memory
+
+        Note that the size of individual pages of the PostScript output can
+        vary. See :meth:`.set_size`.
+        """
+
     def dsc_begin_page_setup(self) -> None:
         """
-        This method indicates that subsequent calls to `dsc_comment()` should direct comments to the PageSetup section of the PostScript output.
+        This method indicates that subsequent calls to
+        :meth:`.dsc_comment` should direct comments to the PageSetup
+        section of the PostScript output.
 
-        This method call is only needed for the first page of a surface. It should be called after any call to `dsc_begin_setup()` and before any drawing is performed to the surface.
+        This method call is only needed for the first page of a surface. It
+        should be called after any call to :meth:`.dsc_begin_setup` and
+        before any drawing is performed to the surface.
 
-        See `dsc_comment()` for more details.
+        See :meth:`.dsc_comment` for more details.
 
-        New in version 1.2.
+        .. versionadded:: 1.2
         """
+
     def dsc_begin_setup(self) -> None:
         """
-        This function indicates that subsequent calls to `dsc_comment()` should direct comments to the Setup section of the PostScript output.
+        This function indicates that subsequent calls to :meth:`.dsc_comment`
+        should direct comments to the Setup section of the PostScript output.
 
-        This function should be called at most once per surface, and must be called before any call to `dsc_begin_page_setup()` and before any drawing is performed to the surface.
+        This function should be called at most once per surface, and must be
+        called before any call to :meth:`.dsc_begin_page_setup` and before any
+        drawing is performed to the surface.
 
-        See `dsc_comment()` for more details.
+        See :meth:`.dsc_comment` for more details.
 
-        New in version 1.2.
+        .. versionadded:: 1.2
         """
+
     def dsc_comment(self, comment: str) -> None:
         """
+        :param comment: a comment string to be emitted into the PostScript output
+
         Emit a comment into the PostScript output for the given surface.
 
-        The comment is expected to conform to the PostScript Language Document Structuring Conventions (DSC). Please see that manual for details on the available comments and their meanings. In particular, the %%IncludeFeature comment allows a device-independent means of controlling printer device features. So the PostScript Printer Description Files Specification will also be a useful reference.
+        The comment is expected to conform to the PostScript Language
+        Document Structuring Conventions (DSC). Please see that manual for
+        details on the available comments and their meanings. In
+        particular, the %%IncludeFeature comment allows a
+        device-independent means of controlling printer device features. So
+        the PostScript Printer Description Files Specification will also be
+        a useful reference.
 
-        The comment string must begin with a percent character (%) and the total length of the string (including any initial percent characters) must not exceed 255 characters. Violating either of these conditions will place PSSurface into an error state. But beyond these two conditions, this function will not enforce conformance of the comment with any particular specification.
+        The comment string must begin with a percent character (%) and the
+        total length of the string (including any initial percent
+        characters) must not exceed 255 characters. Violating either of
+        these conditions will place *PSSurface* into an error state. But
+        beyond these two conditions, this function will not enforce
+        conformance of the comment with any particular specification.
 
         The comment string should not have a trailing newline.
 
-        The DSC specifies different sections in which particular comments can appear. This function provides for comments to be emitted within three sections: the header, the Setup section, and the PageSetup section. Comments appearing in the first two sections apply to the entire document while comments in the BeginPageSetup section apply only to a single page.
+        The DSC specifies different sections in which particular comments
+        can appear. This function provides for comments to be emitted
+        within three sections: the header, the Setup section, and the
+        PageSetup section.  Comments appearing in the first two sections
+        apply to the entire document while comments in the BeginPageSetup
+        section apply only to a single page.
 
-        For comments to appear in the header section, this function should be called after the surface is created, but before a call to `dsc_begin_setup()`.
+        For comments to appear in the header section, this function should
+        be called after the surface is created, but before a call to
+        :meth:`.dsc_begin_setup`.
 
-        For comments to appear in the Setup section, this function should be called after a call to `dsc_begin_setup()` but before a call to `dsc_begin_page_setup()`.
+        For comments to appear in the Setup section, this function should be
+        called after a call to :meth:`.dsc_begin_setup` but before a call to
+        :meth:`.dsc_begin_page_setup`.
 
-        For comments to appear in the PageSetup section, this function should be called after a call to `dsc_begin_page_setup()`.
+        For comments to appear in the PageSetup section, this function should be
+        called after a call to :meth:`.dsc_begin_page_setup`.
 
-        Note that it is only necessary to call `dsc_begin_page_setup()` for the first page of any surface. After a call to `Context.show_page()` or `Context.copy_page()` comments are unambiguously directed to the PageSetup section of the current page. But it doesn’t hurt to call this function at the beginning of every page as that consistency may make the calling code simpler.
+        Note that it is only necessary to call :meth:`.dsc_begin_page_setup` for
+        the first page of any surface. After a call to :meth:`Context.show_page`
+        or :meth:`Context.copy_page` comments are unambiguously directed to the
+        PageSetup section of the current page. But it doesn't hurt to call this
+        function at the beginning of every page as that consistency may make the
+        calling code simpler.
 
-        As a final note, cairo automatically generates several comments on its own. As such, applications must not manually generate any of the following comments:
+        As a final note, cairo automatically generates several comments on
+        its own. As such, applications must not manually generate any of
+        the following comments:
 
-        Header section: %!PS-Adobe-3.0, %Creator, %CreationDate, %Pages, %BoundingBox, %DocumentData, %LanguageLevel, %EndComments.
+        Header section: %!PS-Adobe-3.0, %Creator, %CreationDate, %Pages,
+        %BoundingBox, %DocumentData, %LanguageLevel, %EndComments.
 
         Setup section: %BeginSetup, %EndSetup
 
-        PageSetup section: %BeginPageSetup, %PageBoundingBox, %EndPageSetup.
+        PageSetup section: %BeginPageSetup, %PageBoundingBox,
+        %EndPageSetup.
 
         Other sections: %BeginProlog, %EndProlog, %Page, %Trailer, %EOF
 
-        Here is an example sequence showing how this function might be used:
-        >>> surface = PSSurface (filename, width, height)
-        >>> ...
-        >>> surface.dsc_comment (surface, "%%Title: My excellent document")
-        >>> surface.dsc_comment (surface, "%%Copyright: Copyright (C) 2006 Cairo Lover")
-        >>> ...
-        >>> surface.dsc_begin_setup (surface)
-        >>> surface.dsc_comment (surface, "%%IncludeFeature: *MediaColor White")
-        >>> ...
-        >>> surface.dsc_begin_page_setup (surface)
-        >>> surface.dsc_comment (surface, "%%IncludeFeature: *PageSize A3")
-        >>> surface.dsc_comment (surface, "%%IncludeFeature: *InputSlot LargeCapacity")
-        >>> surface.dsc_comment (surface, "%%IncludeFeature: *MediaType Glossy")
-        >>> surface.dsc_comment (surface, "%%IncludeFeature: *MediaColor Blue")
-        >>> ... draw to first page here ..
-        >>> ctx.show_page (cr)
-        >>> ...
-        >>> surface.dsc_comment (surface, "%%IncludeFeature:  PageSize A5");
-        >>> ...\n
+        Here is an example sequence showing how this function might be used::
 
-        New in version 1.2.
+            surface = PSSurface (filename, width, height)
+            ...
+            surface.dsc_comment (surface, "%%Title: My excellent document")
+            surface.dsc_comment (surface, "%%Copyright: Copyright (C) 2006 Cairo Lover")
+            ...
+            surface.dsc_begin_setup (surface)
+            surface.dsc_comment (surface, "%%IncludeFeature: *MediaColor White")
+            ...
+            surface.dsc_begin_page_setup (surface)
+            surface.dsc_comment (surface, "%%IncludeFeature: *PageSize A3")
+            surface.dsc_comment (surface, "%%IncludeFeature: *InputSlot LargeCapacity")
+            surface.dsc_comment (surface, "%%IncludeFeature: *MediaType Glossy")
+            surface.dsc_comment (surface, "%%IncludeFeature: *MediaColor Blue")
+            ... draw to first page here ..
+            ctx.show_page (cr)
+            ...
+            surface.dsc_comment (surface, "%%IncludeFeature:  PageSize A5");
+            ...
 
-        Parameters
-        ----------
-        >>> comment (str)\n
-        A comment string to be emitted into the PostScript output.
+        .. versionadded:: 1.2
         """
+
     def get_eps(self) -> bool:
         """
-        New in version 1.6.
+        :returns: True iff the *PSSurface* will output Encapsulated PostScript.
 
-        Returns
-        -------
-        >>> bool\n
-        Returns `True` if the `PSSurface` will output Encapsulated PostScript.
+        .. versionadded:: 1.6
         """
+
     @staticmethod
     def level_to_string(level: PSLevel) -> str:
         """
-        Get the string representation of the given level. See `get_levels()` for a way to get the list of valid level ids.
+        :param level: a PS level
+        :returns: the string associated to given level.
 
-        Note
-        ----
-        Prior to 1.12 this was available under `ps_level_to_string()`.
+        Get the string representation of the given *level*.  See
+        :meth:`get_levels` for a way to get the list of valid level
+        ids.
 
-        Parameters
-        ----------
-        >>> level (cairo.PSLevel)\n
-        A `PSLevel`.
+        .. note:: Prior to 1.12 this was available under
+            :meth:`ps_level_to_string`
 
-        Returns
-        -------
-        >>> str\n
-        The string associated to given level.
+        .. versionadded:: 1.12.0
         """
+
     ps_level_to_string = level_to_string
+    """
+    Alias for :meth:`level_to_string`
+
+    .. versionadded:: 1.6
+    """
+
     def restrict_to_level(self, level: PSLevel) -> None:
         """
-        Restricts the generated PostSript file to level. See `get_levels()` for a list of available level values that can be used here.
+        :param level: a PS level
 
-        This function should only be called before any drawing operations have been performed on the given surface. The simplest way to do this is to call this function immediately after creating the surface.
+        Restricts the generated PostSript file to *level*. See
+        :meth:`get_levels` for a list of available level values that
+        can be used here.
 
-        New in version 1.6.
+        This function should only be called before any drawing operations have
+        been performed on the given surface. The simplest way to do this is to
+        call this function immediately after creating the surface.
 
-        Parameters
-        ----------
-        >>> level (cairo.PSLevel)\n
-        A `PSLevel`.
+        .. versionadded:: 1.6
         """
+
     def set_eps(self, eps: bool) -> None:
         """
-        If `eps` is `True`, the PostScript surface will output Encapsulated PostScript.
+        :param eps: True to output EPS format PostScript
 
-        This function should only be called before any drawing operations have been performed on the current page. The simplest way to do this is to call this function immediately after creating the surface. An Encapsulated PostScript file should never contain more than one page.
+        If *eps* is True, the PostScript surface will output Encapsulated
+        PostScript.
 
-        New in version 1.6.
+        This function should only be called before any drawing operations have
+        been performed on the current page. The simplest way to do this is to
+        call this function immediately after creating the surface. An
+        Encapsulated PostScript file should never contain more than one page.
 
-        Parameters
-        ----------
-        >>> eps (bool)\n
-        `True` to output EPS format PostScript.
+        .. versionadded:: 1.6
         """
+
     def set_size(self, width_in_points: float, height_in_points: float) -> None:
         """
-        Changes the size of a PostScript surface for the current (and subsequent) pages.
+        :param width_in_points: new surface width, in points (1 point == 1/72.0 inch)
+        :param height_in_points: new surface height, in points (1 point == 1/72.0 inch)
 
-        This function should only be called before any drawing operations have been performed on the current page. The simplest way to do this is to call this function immediately after creating the surface or immediately after completing a page with either `Context.show_page()` or `Context.copy_page()`.
+        Changes the size of a PostScript surface for the current (and
+        subsequent) pages.
 
-        New in version 1.2.
+        This function should only be called before any drawing operations
+        have been performed on the current page. The simplest way to do
+        this is to call this function immediately after creating the
+        surface or immediately after completing a page with either
+        :meth:`Context.show_page` or :meth:`Context.copy_page`.
 
-        Parameters
-        ----------
-        >>> width_in_points (float)\n
-        New surface width, in points (1 point == 1/72.0 inch).
-        >>> height_in_points (float)\n
-        New surface height, in points (1 point == 1/72.0 inch).
+        .. versionadded:: 1.2
         """
+
     @staticmethod
     def get_levels() -> List[PSLevel]:
         """
-        Retrieve the list of supported levels. See `restrict_to_level()`.
+        :returns: supported level list
 
-        New in version 1.12.0.
+        Retrieve the list of supported levels. See
+        :meth:`restrict_to_level`.
 
-        Returns
-        -------
-        >>> list(cairo.PSLevel)\n
-        Supported level list.
+        .. versionadded:: 1.12.0
         """
 
 class SVGSurface(Surface):
