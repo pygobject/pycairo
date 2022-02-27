@@ -106,7 +106,7 @@ Other Constants
 Other Classes and Functions
 ===========================
 
-.. class:: pathlike()
+.. class:: _PathLike
 
     This type only exists for documentation purposes.
 
@@ -121,6 +121,8 @@ Other Classes and Functions
     .. versionadded:: 1.15.1
         Older versions only supported a subset of :obj:`str` paths
 
-.. class:: _PathLike
-
 .. class:: _FileLike
+
+    This type only exists for documentation purposes.
+
+    This represents a file object opened in binary mode: :obj:`typing.BinaryIO`

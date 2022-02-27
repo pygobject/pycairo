@@ -1686,7 +1686,7 @@ class ImageSurface(Surface):
     def create_from_png(cls, fobj: Union[_PathLike, _FileLike]) -> "ImageSurface":
         """
         :param fobj:
-            a :obj:`pathlike`, file, or file-like object of the PNG to load.
+            a :obj:`_PathLike`, file, or file-like object of the PNG to load.
         :returns: a new *ImageSurface* initialized the contents to the given
             PNG file.
         """
@@ -4133,7 +4133,7 @@ class ScriptDevice(Device):
     Parameters
     ----------
     >>> fobj (str)\n
-    (pathlike, file or file-like object) – A filename or writable file object.
+    (_PathLike, file or file-like object) – A filename or writable file object.
     """
     def __init__(self, fobj: Union[_FileLike, _PathLike]) -> None: ...
     def set_mode(self, mode: ScriptMode) -> None:

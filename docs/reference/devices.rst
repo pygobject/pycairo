@@ -95,7 +95,7 @@ class ScriptDevice(:class:`Device`)
 .. class:: ScriptDevice(fobj)
 
     :param fobj: a filename or writable file object.
-    :type fobj: :obj:`pathlike`, file or file-like object
+    :type fobj: :obj:`_PathLike`, file or file-like object
 
     Creates a output device for emitting the script, used when creating the
     individual surfaces.
