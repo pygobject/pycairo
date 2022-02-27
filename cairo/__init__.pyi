@@ -507,160 +507,206 @@ class ScriptMode(_IntEnum):
 
 class Matrix:
     """
-    Matrix is used throughout cairo to convert between different coordinate spaces. A Matrix holds an affine transformation, such as a scale, rotation, shear, or a combination of these. The transformation of a point (x,y) is given by:
+    *Matrix* is used throughout cairo to convert between different coordinate
+    spaces.  A *Matrix* holds an affine transformation, such as a scale,
+    rotation, shear, or a combination of these.  The transformation of a point
+    (x,y) is given by::
 
-    >>> x_new = xx * x + xy * y + x0
-    >>> y_new = yx * x + yy * y + y0
+        x_new = xx * x + xy * y + x0
+        y_new = yx * x + yy * y + y0
 
-    The current transformation matrix of a `Context`, represented as a Matrix, defines the transformation from user-space coordinates to device-space coordinates.
+    The current transformation matrix of a :class:`Context`, represented as a
+    *Matrix*, defines the transformation from user-space coordinates to
+    device-space coordinates.
 
     Some standard Python operators can be used with matrices:
 
-    To read the values from a Matrix:
-    >>> xx, yx, xy, yy, x0, y0 = matrix\n
+    To read the values from a *Matrix*::
 
-    To multiply two matrices:
-    >>> matrix3 = matrix1.multiply(matrix2)
-    >>> # or equivalently
-    >>> matrix3 = matrix1 * matrix2\n
+        xx, yx, xy, yy, x0, y0 = matrix
 
-    To compare two matrices:
-    >>> matrix1 == matrix2
-    >>> matrix1 != matrix2\n
+    To multiply two matrices::
 
-    For more information on matrix transformation see https://www.cairographics.org/cookbook/matrix_transform/
+        matrix3 = matrix1.multiply(matrix2)
+        # or equivalently
+        matrix3 = matrix1 * matrix2
+
+    To compare two matrices::
+
+        matrix1 == matrix2
+        matrix1 != matrix2
+
+    For more information on matrix transformation see
+    https://www.cairographics.org/cookbook/matrix_transform/
     """
+
     def __init__(self, xx: float = 1.0, yx: float = 0.0, yy: float = 1.0, x0: float = 0.0, y0: float = 0.0) -> None:
         """
-        Create a new Matrix with the affine transformation given by xx, yx, xy, yy, x0, y0. The transformation is given by:
-        >>> x_new = xx * x + xy * y + x0
-        >>> y_new = yx * x + yy * y + y0
+        :param xx: xx component of the affine transformation
+        :param yx: yx component of the affine transformation
+        :param xy: xy component of the affine transformation
+        :param yy: yy component of the affine transformation
+        :param x0: X translation component of the affine transformation
+        :param y0: Y translation component of the affine transformation
 
-        To create a new identity matrix:
-        >>> matrix = cairo.Matrix()
+        Create a new *Matrix* with the affine transformation given by *xx, yx,
+        xy, yy, x0, y0*. The transformation is given by::
 
-        To create a matrix with a transformation which translates by tx and ty in the X and Y dimensions, respectively:
-        >>> matrix = cairo.Matrix(x0=tx, y0=ty)
+            x_new = xx * x + xy * y + x0
+            y_new = yx * x + yy * y + y0
 
-        To create a matrix with a transformation that scales by sx and sy in the X and Y dimensions, respectively:
-        >>> matrix = cairo.Matrix(xx=sy, yy=sy)
+        To create a new identity matrix::
+
+            matrix = cairo.Matrix()
+
+        To create a matrix with a transformation which translates by tx and ty
+        in the X and Y dimensions, respectively::
+
+            matrix = cairo.Matrix(x0=tx, y0=ty)
+
+        To create a matrix with a transformation that scales by sx and sy in the
+        X and Y dimensions, respectively::
+
+            matrix = cairo.Matrix(xx=sy, yy=sy)
         """
+
     @classmethod
     def init_rotate(cls, radians: float) -> "Matrix":
         """
-        Parameters
-        ----------
-        >>> radians (float)\n
-        Angle of rotation, in radians. The direction of rotation is defined such that positive angles rotate in the direction from the positive X axis toward the positive Y axis. With the default axis orientation of cairo, positive angles rotate in a clockwise direction.
-
-        Returns
-        -------
-        >>> cairo.Matrix\n
-        A new `Matrix` set to a transformation that rotates by radians.
+        :param radians: angle of rotation, in radians. The direction of rotation
+            is defined such that positive angles rotate in the direction from the
+            positive X axis toward the positive Y axis. With the default axis
+            orientation of cairo, positive angles rotate in a clockwise direction.
+        :returns: a new *Matrix* set to a transformation that rotates by *radians*.
         """
+
     def invert(self) -> Optional["Matrix"]:
         """
-        Changes `Matrix` to be the inverse of it’s original value. Not all transformation matrices have inverses; if the matrix collapses points together (it is degenerate), then it has no inverse and this function will fail.
+        :returns: If *Matrix* has an inverse, modifies *Matrix* to be the
+            inverse matrix and returns *None*
+        :raises: :exc:`cairo.Error` if the *Matrix* as no inverse
 
-        Returns
-        -------
-        >>> cairo.Matrix\n
-        If `Matrix` has an inverse, modifies `Matrix` to be the inverse matrix and returns `None`
-
-        Raises
-        ------
-        >>> cairo.Error\n
-        If the `Matrix` has no inverse.
+        Changes *Matrix* to be the inverse of it's original value. Not all
+        transformation matrices have inverses; if the matrix collapses points
+        together (it is *degenerate*), then it has no inverse and this function
+        will fail.
         """
+
     def multiply(self, matrix2: "Matrix") -> "Matrix":
         """
-        Multiplies the affine transformations in Matrix and matrix2 together. The effect of the resulting transformation is to first apply the transformation in Matrix to the coordinates and then apply the transformation in matrix2 to the coordinates.
+        :param matrix2: a second matrix
+        :returns: a new *Matrix*
 
-        It is allowable for result to be identical to either Matrix or matrix2.
+        Multiplies the affine transformations in *Matrix* and *matrix2*
+        together. The effect of the resulting transformation is to first apply
+        the transformation in *Matrix* to the coordinates and then apply the
+        transformation in *matrix2* to the coordinates.
 
-        Parameters
-        ----------
-        >>> matrix2 (cairo.Matrix)\n
-        A second `Matrix`
-
-        Returns
-        -------
-        >>> cairo.Matrix\n
-        A new `Matrix`
+        It is allowable for result to be identical to either *Matrix* or *matrix2*.
         """
+
     def rotate(self, radians: float) -> None:
         """
-        Initialize `Matrix` to a transformation that rotates by radians.
+        :param radians: angle of rotation, in radians. The direction of rotation
+            is defined such that positive angles rotate in the direction from the
+            positive X axis toward the positive Y axis. With the default axis
+            orientation of cairo, positive angles rotate in a clockwise direction.
 
-        Parameters
-        ----------
-        >>> radians (float)\n
-        Angle of rotation, in radians. The direction of rotation is defined such that positive angles rotate in the direction from the positive X axis toward the positive Y axis. With the default axis orientation of cairo, positive angles rotate in a clockwise direction.
+        Initialize *Matrix* to a transformation that rotates by *radians*.
         """
+
     def scale(self, sx: float, sy: float) -> None:
         """
-        Applies scaling by sx, sy to the transformation in `Matrix`. The effect of the new transformation is to first scale the coordinates by sx and sy, then apply the original transformation to the coordinates.
+        :param sx: scale factor in the X direction
+        :param sy: scale factor in the Y direction
 
-        Parameters
-        ----------
-        >>> sx (float)\n
-        Scale factor in the X direction.
-        >>> sy (float)\n
-        Scale factor in the Y direction.
+        Applies scaling by *sx, sy* to the transformation in *Matrix*. The
+        effect of the new transformation is to first scale the coordinates by
+        *sx* and *sy*, then apply the original transformation to the
+        coordinates.
         """
+
     def transform_distance(self, dx: float, dy: float) -> Tuple[float, float]:
         """
-        Transforms the distance vector (dx,dy) by `Matrix`. This is similar to  `transform_point()` except that the translation components of the transformation are ignored. The calculation of the returned vector is as follows:
-        >>> dx2 = dx1 * a + dy1 * c
-        >>> dy2 = dx1 * b + dy1 * d
+        :param dx: X component of a distance vector.
+        :param dy: Y component of a distance vector.
+        :returns: the transformed distance vector (dx,dy), both float
 
-        Affine transformations are position invariant, so the same vector always transforms to the same vector. If (x1,y1) transforms to (x2,y2) then (x1+dx1,y1+dy1) will transform to (x1+dx2,y1+dy2) for all values of x1 and x2.
+        Transforms the distance vector *(dx,dy)* by *Matrix*. This is similar to
+        :meth:`.transform_point` except that the translation components of
+        the transformation are ignored. The calculation of the returned vector
+        is as follows::
 
-        Parameters
-        ----------
-        >>> dx (float)\n
-        X component of a distance vector.
-        >>> dy (float)\n
-        Y component of a distance vector.
+            dx2 = dx1 * a + dy1 * c
+            dy2 = dx1 * b + dy1 * d
 
-        Returns
-        -------
-        >>> (dx: float, dy: float)\n
-        The transformed distance vector.
+        Affine transformations are position invariant, so the same vector always
+        transforms to the same vector. If *(x1,y1)* transforms to *(x2,y2)* then
+        *(x1+dx1,y1+dy1)* will transform to *(x1+dx2,y1+dy2)* for all values
+        of *x1* and *x2*.
         """
+
     def transform_point(self, x: float, y: float) -> Tuple[float, float]:
         """
-        Transforms the point (x, y) by Matrix.
+        :param x: X position.
+        :param y: Y position.
+        :returns: the transformed point (x,y), both float
 
-        Parameters
-        ----------
-        >>> x (float)\n
-        X position.
-        >>> y (float)\n
-        Y position.
-
-        Returns
-        -------
-        >>> (x: float, y: float)\n
-        The transformed point.
+        Transforms the point *(x, y)* by *Matrix*.
         """
+
     def translate(self, tx: float, ty: float) -> None:
         """
-        Applies a transformation by tx, ty to the transformation in Matrix. The effect of the new transformation is to first translate the coordinates by tx and ty, then apply the original transformation to the coordinates.
+        :param tx: amount to translate in the X direction
+        :param ty: amount to translate in the Y direction
 
-        Parameters
-        ----------
-        >>> tx (float)\n
-        Amount to translate in the X direction.
-        >>> ty (float)\n
-        Amount to translate in the Y direction.
+        Applies a transformation by *tx, ty* to the transformation in
+        *Matrix*. The effect of the new transformation is to first translate the
+        coordinates by *tx* and *ty*, then apply the original transformation to the
+        coordinates.
         """
+
     xx: float = ...
+    """
+    xx component of the affine transformation
+
+    .. versionadded:: 1.12.0
+    """
+
     yx: float = ...
+    """
+    yx component of the affine transformation
+
+    .. versionadded:: 1.12.0
+    """
+
     xy: float = ...
+    """
+    xy component of the affine transformation
+
+    .. versionadded:: 1.12.0
+    """
+
     yy: float = ...
+    """
+    yy component of the affine transformation
+
+    .. versionadded:: 1.12.0
+    """
+
     x0: float = ...
+    """
+    X translation component of the affine transformation
+
+    .. versionadded:: 1.12.0
+    """
+
     y0: float = ...
+    """
+    Y translation component of the affine transformation
+
+    .. versionadded:: 1.12.0
+    """
 
 class Pattern:
     """
@@ -845,8 +891,6 @@ class RectangleInt:
     """
     RectangleInt is a data structure for holding a rectangle with integer coordinates.
 
-    Allocates a new RectangleInt object.
-
     .. versionadded:: 1.11.0
     """
 
@@ -865,33 +909,50 @@ class RectangleInt:
             Width of the rectangle.
         :param height:
             Height of the rectangle.
+
+        Allocates a new RectangleInt object.
         """
 
 
 class FontFace:
     """
+    A *cairo.FontFace* specifies all aspects of a font other than the size or font
+    matrix (a font matrix is used to distort a font by sheering it or scaling it
+    unequally in the two directions). A *FontFace* can be set on a
+    :class:`Context` by using :meth:`Context.set_font_face` the size and font
+    matrix are set with :meth:`Context.set_font_size` and
+    :meth:`Context.set_font_matrix`.
+
+    There are various types of *FontFace*, depending on the font backend they
+    use.
+
     .. note:: This class cannot be instantiated directly, it is returned by
         :meth:`Context.get_font_face`.
     """
 
 class FontOptions:
     """
-    Allocates a new FontOptions object with all options initialized to default
-    values.
-
-    Implements `__eq__` and `__ne__` using `equal()` since 1.12.0.
-
     An opaque structure holding all options that are used when rendering fonts.
 
-    Individual features of a FontOptions can be set or accessed using functions
-    named FontOptions.set_<feature_name> and FontOptions.get_<feature_name>,
-    like `FontOptions.set_antialias()` and `FontOptions.get_antialias()`.
+    Individual features of a *FontOptions* can be set or accessed using functions
+    named *FontOptions.set_<feature_name>* and
+    *FontOptions.get_<feature_name>*,  like :meth:`FontOptions.set_antialias`
+    and :meth:`FontOptions.get_antialias`.
 
-    New features may be added to a `FontOptions` in the future. For this reason,
-    `FontOptions.copy()`, `FontOptions.equal()`, `FontOptions.merge()`, and
-    `FontOptions.hash()` should be used to copy, check for equality, merge, or
-    compute a hash value of `FontOptions` objects.
+    New features may be added to a *FontOptions* in the future. For this reason,
+    :meth:`FontOptions.copy()`, :meth:`FontOptions.equal()`,
+    :meth:`FontOptions.merge()`, and :meth:`FontOptions.hash()` should be used to
+    copy, check for equality, merge, or compute a hash value of FontOptions
+    objects.
+
+    Implements `__eq__` and `__ne__` using `equal()` since 1.12.0.
     """
+
+    def __init__(self) -> None:
+        """
+        Allocates a new FontOptions object with all options initialized to default
+        values.
+        """
 
     def get_antialias(self) -> Antialias:
         """
@@ -1025,6 +1086,15 @@ class FontOptions:
         """
 
 class ScaledFont:
+    """
+    A *ScaledFont* is a font scaled to a particular size and device resolution. A
+    *ScaledFont* is most useful for low-level font usage where a library or
+    application wants to cache a reference to a scaled font to speed up the
+    computation of metrics.
+
+    There are various types of scaled fonts, depending on the font backend they
+    use.
+    """
 
     def __init__(self, font_face: FontFace, font_matrix: Matrix, ctm: Matrix, options: FontOptions) -> None:
         """
@@ -4058,9 +4128,9 @@ class RecordingSurface(Surface):
 
 class Region:
     """
-    Allocates a new empty region object or a region object with the containing rectangle(s).
-
-    Region is a simple graphical data type representing an area of integer-aligned rectangles. They are often used on raster surfaces to track areas of interest, such as change or clip areas.
+    Region is a simple graphical data type representing an area of
+    integer-aligned rectangles. They are often used on raster surfaces to track
+    areas of interest, such as change or clip areas.
 
     .. versionadded:: 1.11.0
     """
@@ -4068,6 +4138,9 @@ class Region:
     def __init__(self, rectangle: Union[RectangleInt, List[RectangleInt]]) -> None:
         """
         :param rectangle_int: a rectangle or a list of rectangle
+
+        Allocates a new empty region object or a region object with the
+        containing rectangle(s).
         """
 
     def copy(self) -> "Region":
@@ -4355,17 +4428,9 @@ class TeeSurface(Surface):
 
 class ToyFontFace(FontFace):
     """
+    The *cairo.ToyFontFace* class can be used instead of :meth:`Context.select_font_face` to create a toy font independently of a context.
+
     .. versionadded:: 1.8.4
-
-    Creates a *ToyFontFace* from a triplet of family, slant, and weight. These
-    font faces are used in implementation of the the "toy" font API.
-
-    If family is the zero-length string "", the platform-specific default
-    family is assumed. The default family then can be queried using
-    :meth:`.get_family`.
-
-    The :meth:`Context.select_font_face` method uses this to create font
-    faces. See that function for limitations of toy font faces.
     """
 
     def __init__(self, family: str, slant: FontSlant=..., weight: FontWeight=...) -> None:
@@ -4375,6 +4440,16 @@ class ToyFontFace(FontFace):
             defaults to :attr:`cairo.FontSlant.NORMAL`.
         :param weight: the font weight of the font,
             defaults to :attr:`cairo.FontWeight.NORMAL`.
+
+        Creates a *ToyFontFace* from a triplet of family, slant, and weight. These
+        font faces are used in implementation of the the "toy" font API.
+
+        If family is the zero-length string "", the platform-specific default
+        family is assumed. The default family then can be queried using
+        :meth:`.get_family`.
+
+        The :meth:`Context.select_font_face` method uses this to create font
+        faces. See that function for limitations of toy font faces.
         """
 
     def get_family(self) -> str:

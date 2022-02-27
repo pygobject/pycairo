@@ -10,10 +10,6 @@ Region — Representing a pixel-aligned area
 class Region()
 ==============
 
-*Region* is a simple graphical data type representing an area of
-integer-aligned rectangles. They are often used on raster surfaces to track
-areas of interest, such as change or clip areas. 
-
 .. autoclass:: Region
     :members:
     :undoc-members:
@@ -22,9 +18,6 @@ areas of interest, such as change or clip areas.
 
 class RectangleInt()
 ====================
-
-*RectangleInt* is a data structure for holding a rectangle with integer
-coordinates.
 
 .. autoclass:: cairo.RectangleInt
     :members:

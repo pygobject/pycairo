@@ -28,16 +28,6 @@ Cairo has two sets of text rendering capabilities:
 class FontFace()
 ================
 
-A *cairo.FontFace* specifies all aspects of a font other than the size or font
-matrix (a font matrix is used to distort a font by sheering it or scaling it
-unequally in the two directions). A *FontFace* can be set on a
-:class:`Context` by using :meth:`Context.set_font_face` the size and font
-matrix are set with :meth:`Context.set_font_size` and
-:meth:`Context.set_font_matrix`.
-
-There are various types of *FontFace*, depending on the font backend they
-use.
-
 .. autoclass:: FontFace
     :members:
     :undoc-members:
@@ -56,8 +46,6 @@ systems, but can be used on other platforms too.
 
 class ToyFontFace(:class:`FontFace`)
 ====================================
-
-The *cairo.ToyFontFace* class can be used instead of :meth:`Context.select_font_face` to create a toy font independently of a context.
 
 .. autoclass:: ToyFontFace
     :members:
@@ -81,14 +69,6 @@ application to draw "funky" fonts.
 class ScaledFont()
 ==================
 
-A *ScaledFont* is a font scaled to a particular size and device resolution. A
-*ScaledFont* is most useful for low-level font usage where a library or
-application wants to cache a reference to a scaled font to speed up the
-computation of metrics.
-
-There are various types of scaled fonts, depending on the font backend they
-use.
-
 .. autoclass:: ScaledFont
     :members:
     :undoc-members:
@@ -98,19 +78,6 @@ use.
 
 class FontOptions()
 ===================
-
-An opaque structure holding all options that are used when rendering fonts.
-
-Individual features of a *FontOptions* can be set or accessed using functions
-named *FontOptions.set_<feature_name>* and
-*FontOptions.get_<feature_name>*,  like :meth:`FontOptions.set_antialias`
-and :meth:`FontOptions.get_antialias`.
-
-New features may be added to a *FontOptions* in the future. For this reason,
-:meth:`FontOptions.copy()`, :meth:`FontOptions.equal()`,
-:meth:`FontOptions.merge()`, and :meth:`FontOptions.hash()` should be used to
-copy, check for equality, merge, or compute a hash value of FontOptions
-objects.
 
 .. autoclass:: FontOptions
     :members:
