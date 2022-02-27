@@ -6,14 +6,23 @@ HAS_FT_FONT: bool = ...
 HAS_GLITZ_SURFACE: bool = ...
 HAS_IMAGE_SURFACE: bool = ...
 HAS_MIME_SURFACE: bool = ...
+"""
+.. versionadded:: 1.12.0
+"""
 HAS_PDF_SURFACE: bool = ...
 HAS_PNG_FUNCTIONS: bool = ...
 HAS_PS_SURFACE: bool = ...
 HAS_QUARTZ_SURFACE: bool = ...
 HAS_RECORDING_SURFACE: bool = ...
 HAS_SCRIPT_SURFACE: bool = ...
+"""
+.. versionadded:: 1.12.0
+"""
 HAS_SVG_SURFACE: bool = ...
 HAS_TEE_SURFACE: bool = ...
+"""
+.. versionadded:: 1.15.3
+"""
 HAS_USER_FONT: bool = ...
 HAS_WIN32_FONT: bool = ...
 HAS_WIN32_SURFACE: bool = ...
@@ -21,23 +30,69 @@ HAS_XCB_SURFACE: bool = ...
 HAS_XLIB_SURFACE: bool = ...
 
 PDF_OUTLINE_ROOT: int = ...
+"""
+The root outline item in :meth:`PDFSurface.add_outline`
+
+.. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+"""
 
 version: str = ...
+"""the pycairo version, as a string"""
+
 version_info: Tuple[int, int, int] = ...
+"""the pycairo version, as a tuple"""
 
 CAIRO_VERSION: int = ...
+"""
+The version of cairo available at compile-time in the same format as
+returned by :func:`cairo_version`
+
+.. versionadded:: 1.18.0
+"""
+
 CAIRO_VERSION_STRING: str = ...
+"""
+A human-readable string literal containing the version of cairo available
+at compile-time, in the form of "X.Y.Z".
+
+.. versionadded:: 1.18.0
+"""
+
 CAIRO_VERSION_MAJOR: int = ...
+"""
+The major component of the version of cairo available at compile-time.
+
+.. versionadded:: 1.18.0
+"""
+
 CAIRO_VERSION_MINOR: int = ...
+"""
+The minor component of the version of cairo available at compile-time.
+
+.. versionadded:: 1.18.0
+"""
+
 CAIRO_VERSION_MICRO: int = ...
+"""
+The micro component of the version of cairo available at compile-time.
+
+.. versionadded:: 1.18.0
+"""
 
 def cairo_version() -> int:
     """
-    Returns the version of the underlying C cairo library, encoded in a single integer.
+    :returns: the encoded version
+
+    Returns the version of the underlying C cairo library, encoded in a single
+    integer.
     """
+
 def cairo_version_string() -> str:
     """
-    Returns the version of the underlying C cairo library as a human-readable string of the form “X.Y.Z”.
+    :returns: the encoded version
+
+    Returns the version of the underlying C cairo library as a human-readable
+    string of the form "X.Y.Z".
     """
 
 class Path:
@@ -131,9 +186,9 @@ class Format(_IntEnum):
         This method provides a stride value that will respect all alignment requirements of the accelerated image-rendering code within cairo. Typical usage will be of the form:
 
         >>> format = cairo.Format.RGB24
-        >>> 
+        >>>
         >>>     stride = format.stride_for_width(width)
-        >>> 
+        >>>
         >>>     surface = cairo.ImageSurface.create_for_data(
         >>>         data, format, width, height, stride)
 
@@ -493,7 +548,7 @@ class Matrix:
         ----------
         >>> radians (float)\n
         Angle of rotation, in radians. The direction of rotation is defined such that positive angles rotate in the direction from the positive X axis toward the positive Y axis. With the default axis orientation of cairo, positive angles rotate in a clockwise direction.
-        
+
         Returns
         -------
         >>> cairo.Matrix\n
@@ -507,7 +562,7 @@ class Matrix:
         -------
         >>> cairo.Matrix\n
         If `Matrix` has an inverse, modifies `Matrix` to be the inverse matrix and returns `None`
-        
+
         Raises
         ------
         >>> cairo.Error\n
@@ -523,7 +578,7 @@ class Matrix:
         ----------
         >>> matrix2 (cairo.Matrix)\n
         A second `Matrix`
-        
+
         Returns
         -------
         >>> cairo.Matrix\n
@@ -1162,7 +1217,7 @@ class Surface:
     >>> # surface.finish() will be called on __exit__
     >>> with cairo.SVGSurface("example.svg", 200, 200) as surface:
     >>>     pass
-    >>> 
+    >>>
     >>> # surface.unmap_image(image_surface) will be called on __exit__
     >>> with surface.map_to_image(None) as image_surface:
     >>>     pass
@@ -1283,7 +1338,7 @@ class Surface:
         This function returns the previous device offset set by `Surface.set_device_scale()`.
 
         New in version 1.14.0.
-        
+
         Returns
         -------
         >>> (x_scale: float, y_scale: float)\n
@@ -1653,12 +1708,12 @@ class Context:
     ----------
     >>> target (cairo.Surface)\n
     Target `Surface` for the context.
-    
+
     Returns
     -------
     >>> cairo.Context\n
     A newly allocated `Context`.
-    
+
     Raises
     ------
     >>> cairo.MemoryError\n
@@ -1706,7 +1761,7 @@ class Context:
         Adds a circular arc of the given radius to the current path. The arc is centered at (xc, yc), begins at angle1 and proceeds in the direction of decreasing angles to end at angle2. If angle2 is greater than angle1 it will be progressively decreased by 2*PI until it is less than angle1.
 
         See `Context.arc()` for more details. This function differs only in the direction of the arc between the two angles.
-        
+
         Parameters
         ----------
         >>> xc (float)\n
@@ -1786,7 +1841,7 @@ class Context:
         Returns
         -------
         >>> cairo.Path\n
-        
+
         Raises
         ------
         >>> cairo.MemoryError\n
@@ -1801,7 +1856,7 @@ class Context:
         Returns
         -------
         >>> cairo.Path\n
-        
+
         Raises
         ------
         >>> cairo.MemoryError\n
@@ -1815,17 +1870,17 @@ class Context:
 
         Parameters
         ----------
-        >>> x1 (float)\n 
+        >>> x1 (float)\n
         The X coordinate of the first control point
-        >>> y1 (float)\n 
+        >>> y1 (float)\n
         The Y coordinate of the first control point
-        >>> x2 (float)\n 
+        >>> x2 (float)\n
         The X coordinate of the second control point
-        >>> y2 (float)\n 
+        >>> y2 (float)\n
         The Y coordinate of the second control point
-        >>> x3 (float)\n 
+        >>> x3 (float)\n
         The X coordinate of the end of the curve
-        >>> y3 (float)\n 
+        >>> y3 (float)\n
         The Y coordinate of the end of the curve
         """
     def device_to_user(self, x: float, y: float) -> Tuple[float, float]:
@@ -1838,7 +1893,7 @@ class Context:
         X value of coordinate
         >>> y (float)\n
         Y value of coordinate
-        
+
         Returns
         -------
         >>> (x: float, y: float)\n
@@ -1853,7 +1908,7 @@ class Context:
         X component of a distance vector
         >>> dy (float)\n
         Y component of a distance vector
-        
+
         Returns
         -------
         >>> (dx: float, dy: float)\n
@@ -2937,7 +2992,7 @@ class Gradient(Pattern):
         The color is specified in the same way as in `Context.set_source_rgb()`.
 
         If two (or more) stops are specified with identical offset values, they will be sorted according to the order in which the stops are added, (stops added earlier will compare less than stops added later). This can be useful for reliably making sharp color transitions instead of the typical blend.
-        
+
         Parameters
         ----------
         >>> offset (float)\n
@@ -3061,7 +3116,7 @@ class MeshPattern(Pattern):
     >>> pattern.set_corner_color_rgb(2, 0, 0, 1)
     >>> pattern.set_corner_color_rgb(3, 1, 1, 0)
     >>> pattern.end_patch()
-    >>> 
+    >>>
     >>> # Add a Gouraud-shaded triangle
     >>> pattern = cairo.MeshPattern()
     >>> pattern.begin_patch()
@@ -4207,7 +4262,7 @@ class TeeSurface(Surface):
         Parameters
         ----------
         >>> target (cairo.Surface)\n
-        
+
         Raises
         ------
         >>> cairo.Error\n
@@ -4358,32 +4413,122 @@ class XlibSurface(Surface):
         The width of the X Drawable underlying the surface in pixels.
         """
 
-def get_include() -> _PathLike:
+def get_include() -> str:
     """
+    :returns: a path to the directory containing the C header files
+
     Gives the include path which should be passed to the compiler.
 
-    New in version 1.16.0.
-
-    Returns
-    -------
-    >>> str\n
-    A path to the directory containing the C header files.
+    .. versionadded:: 1.16.0
     """
 
 MIME_TYPE_JP2: str = ...
+"""
+The Joint Photographic Experts Group (JPEG) 2000 image coding standard
+(ISO/IEC 15444-1).
+
+.. versionadded:: 1.12.0
+"""
+
 MIME_TYPE_JPEG: str = ...
+"""
+The Joint Photographic Experts Group (JPEG) image coding standard (ISO/IEC
+10918-1).
+
+.. versionadded:: 1.12.0
+"""
+
 MIME_TYPE_PNG: str = ...
+"""
+The Portable Network Graphics image file format (ISO/IEC 15948).
+
+.. versionadded:: 1.12.0
+"""
+
 MIME_TYPE_URI: str = ...
+"""
+URI for an image file (unofficial MIME type).
+
+.. versionadded:: 1.12.0
+"""
+
 MIME_TYPE_UNIQUE_ID: str = ...
+"""
+Unique identifier for a surface (cairo specific MIME type). All surfaces
+with the same unique identifier will only be embedded once.
+
+.. versionadded:: 1.12.0
+"""
+
 MIME_TYPE_CCITT_FAX: str = ...
+"""
+Group 3 or Group 4 CCITT facsimile encoding (International
+Telecommunication Union, Recommendations T.4 and T.6.)
+
+.. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+"""
+
 MIME_TYPE_CCITT_FAX_PARAMS: str = ...
+"""
+Decode parameters for Group 3 or Group 4 CCITT facsimile encoding. See
+`CCITT Fax Images
+<https://cairographics.org/manual/cairo-PDF-Surfaces.html#ccitt>`__.
+
+.. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+"""
+
 MIME_TYPE_EPS: str = ...
+"""
+Encapsulated PostScript file. Encapsulated PostScript File Format
+Specification
+
+.. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+"""
+
 MIME_TYPE_EPS_PARAMS: str = ...
+"""
+Embedding parameters Encapsulated PostScript data. See Embedding EPS files.
+
+.. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+"""
+
 MIME_TYPE_JBIG2: str = ...
+"""
+Joint Bi-level Image Experts Group image coding standard (ISO/IEC 11544).
+
+.. versionadded:: 1.18.0
+"""
+
 MIME_TYPE_JBIG2_GLOBAL: str = ...
+"""
+Joint Bi-level Image Experts Group image coding standard (ISO/IEC 11544)
+global segment.
+
+.. versionadded:: 1.18.0
+"""
+
 MIME_TYPE_JBIG2_GLOBAL_ID: str = ...
+"""
+An unique identifier shared by a JBIG2 global segment and all JBIG2 images
+that depend on the global segment.
+
+.. versionadded:: 1.18.0
+"""
+
 TAG_DEST: str = ...
+"""
+Create a destination for a hyperlink. Destination tag attributes are
+detailed at Destinations.
+
+.. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+"""
+
 TAG_LINK: str = ...
+"""
+Create hyperlink. Link tag attributes are detailed at Links.
+
+.. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+"""
 
 CAPI: Any = ...
 
