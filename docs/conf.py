@@ -60,3 +60,8 @@ autoclass_content = 'class'
 autodoc_default_options = {
     'member-order': 'bysource',
 }
+
+autodoc_type_aliases = {
+    '_PathLike': 'cairo._PathLike',
+    '_FileLike': 'cairo._FileLike',
+}

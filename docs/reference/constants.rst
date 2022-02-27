@@ -126,3 +126,7 @@ Other Classes and Functions
 
     .. versionadded:: 1.15.1
         Older versions only supported a subset of :obj:`str` paths
+
+.. class:: _PathLike
+
+.. class:: _FileLike

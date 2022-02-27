@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import (Any, BinaryIO, ByteString, Callable, List, Optional,
                     Sequence, Text, Tuple, TypeVar, Union)
 
@@ -1219,467 +1221,508 @@ _SomeSurface = TypeVar("_SomeSurface", bound="Surface")
 
 class Surface:
     """
-    Surface is the abstract base class from which all the other surface classes derive. It cannot be instantiated directly.
+   *Surface* is the abstract base class from which all the other surface
+   classes derive. It cannot be instantiated directly.
 
-    Note
-    ----
-    New in version 1.17.0: `cairo.Surface` can be used as a context manager:
-    >>> # surface.finish() will be called on __exit__
-    >>> with cairo.SVGSurface("example.svg", 200, 200) as surface:
-    >>>     pass
-    >>>
-    >>> # surface.unmap_image(image_surface) will be called on __exit__
-    >>> with surface.map_to_image(None) as image_surface:
-    >>>     pass
+   .. note::
+
+      .. versionadded:: 1.17.0
+
+         :class:`cairo.Surface` can be used as a context manager:
+
+      .. code:: python
+
+         # surface.finish() will be called on __exit__
+         with cairo.SVGSurface("example.svg", 200, 200) as surface:
+             pass
+
+         # surface.unmap_image(image_surface) will be called on __exit__
+         with surface.map_to_image(None) as image_surface:
+             pass
     """
+
     def copy_page(self) -> None:
         """
-        Emits the current page for backends that support multiple pages, but doesn’t clear it, so that the contents of the current page will be retained for the next page. Use `show_page()` if you want to get an empty page after the emission.
+        Emits the current page for backends that support multiple pages, but
+        doesn't clear it, so that the contents of the current page will be
+        retained for the next page.  Use :meth:`.show_page` if you want to get an
+        empty page after the emission.
 
-        `Context.copy_page()` is a convenience function for this.
+        :meth:`Context.copy_page` is a convenience function for this.
 
-        New in version 1.6.
+        .. versionadded:: 1.6
         """
+
     def create_for_rectangle(self, x: float, y: float, width: float, height: float) -> "Surface":
         """
-        Create a new surface that is a rectangle within the target surface. All operations drawn to this surface are then clipped and translated onto the target surface. Nothing drawn via this sub-surface outside of its bounds is drawn onto the target surface, making this a useful method for passing constrained child surfaces to library routines that draw directly onto the parent surface, i.e. with no further backend allocations, double buffering or copies.
+        :param x: the x-origin of the sub-surface from the top-left of the
+            target surface (in device-space units)
+        :param y: the y-origin of the sub-surface from the top-left of the
+            target surface (in device-space units)
+        :param width: width of the sub-surface (in device-space units)
+        :param height: height of the sub-surface (in device-space units)
+        :returns: a new surface
 
-        New in version 1.12.0.
+        Create a new surface that is a rectangle within the target surface. All
+        operations drawn to this surface are then clipped and translated onto
+        the target surface. Nothing drawn via this sub-surface outside of its
+        bounds is drawn onto the target surface, making this a useful method for
+        passing constrained child surfaces to library routines that draw
+        directly onto the parent surface, i.e. with no further backend
+        allocations, double buffering or copies.
 
-        Note
-        ----
-        The semantics of subsurfaces have not been finalized yet unless the rectangle is in full device units, is contained within the extents of the target surface, and the target or subsurface’s device transforms are not changed.
+        .. note::
 
-        Parameters
-        ----------
-        >>> x (float)\n
-        The x-origin of the sub-surface from the top-left of the target surface (in device-space units).
-        >>> y (float)\n
-        The y-origin of the sub-surface from the topleft of the target surface (in device-space units).
-        >>> width (float)\n
-        Width of the sub-surface (in device-space units).
-        >>> height (float)\n
-        Height of the sub-surface (in device-space units).
+            The semantics of subsurfaces have not been finalized yet unless the
+            rectangle is in full device units, is contained within the extents of
+            the target surface, and the target or subsurface's device transforms
+            are not changed.
 
-        Returns
-        -------
-        >>> cairo.Surface\n
-        A new surface.
+        .. versionadded:: 1.12.0
         """
+
     def create_similar(self, content: Content, width: int, height: int) -> "Surface":
         """
-        Create a `Surface` that is as compatible as possible with the existing surface. For example the new surface will have the same fallback resolution and `FontOptions`. Generally, the new surface will also use the same backend, unless that is not possible for some reason.
+        :param content: the content for the new
+            surface
+        :param width: width of the new surface, (in device-space units)
+        :param height: height of the new surface (in device-space units)
 
-        Initially the surface contents are all 0 (transparent if contents have transparency, black otherwise.)
+        :returns: a newly allocated *Surface*.
 
-        Parameters
-        ----------
-        >>> content (cairo.Content)\n
-        The content for the new surface.
-        >>> width (int)\n
-        Width of the new surface, in device-space units.
-        >>> height (int)\n
-        Height of the new surface, in device-space units.
+        Create a *Surface* that is as compatible as possible with the existing
+        surface. For example the new surface will have the same fallback
+        resolution and :class:`FontOptions`. Generally, the new surface will
+        also use the same backend, unless that is not possible for some
+        reason.
 
-        Returns
-        -------
-        >>> cairo.Surface\n
-        A newly allocated `Surface`.
+        Initially the surface contents are all 0 (transparent if contents have
+        transparency, black otherwise.)
         """
+
     def create_similar_image(self, format: Format, width: int, height: int) -> "ImageSurface":
         """
-        Create a new image surface that is as compatible as possible for uploading to and the use in conjunction with an existing surface. However, this surface can still be used like any normal image surface.
+        :param cairo.Format format: the format for the new surface
+        :param width: width of the new surface, (in device-space units)
+        :param height: height of the new surface, (in device-space units)
+        :returns: a new image surface
 
-        Initially the surface contents are all 0 (transparent if contents have transparency, black otherwise.)
+        Create a new image surface that is as compatible as possible for
+        uploading to and the use in conjunction with an existing surface.
+        However, this surface can still be used like any normal image surface.
 
-        New in version 1.12.0.
+        Initially the surface contents are all 0 (transparent if contents have
+        transparency, black otherwise.)
 
-        Parameters
-        ----------
-        >>> format (cairo.Format)\n
-        The format for the new surface.
-        >>> width (int)\n
-        Width of the new surface, in device-space units.
-        >>> height (int)\n
-        Height of the new surface, in device-space units.
+        .. versionadded:: 1.12.0
         """
+
     def finish(self) -> None:
         """
-        This method finishes the Surface and drops all references to external resources. For example, for the Xlib backend it means that cairo will no longer access the drawable, which can be freed. After calling finish() the only valid operations on a Surface are flushing and finishing it. Further drawing to the surface will not affect the surface but will instead trigger a `cairo.Error` exception.
+        This method finishes the Surface and drops all references to external
+        resources. For example, for the Xlib backend it means that cairo will no
+        longer access the drawable, which can be freed. After calling finish()
+        the only valid operations on a Surface are flushing and finishing it.
+        Further drawing to the surface will not affect the surface but will
+        instead trigger a `cairo.Error` exception.
         """
+
     def flush(self) -> None:
         """
-        Do any pending drawing for the Surface and also restore any temporary modification’s cairo has made to the Surface’s state. This method must be called before switching from drawing on the Surface with cairo to drawing on it directly with native APIs. If the Surface doesn’t support direct access, then this function does nothing.
+        Do any pending drawing for the *Surface* and also restore any temporary
+        modification's cairo has made to the *Surface's* state. This method
+        must be called before switching from drawing on the *Surface* with cairo
+        to drawing on it directly with native APIs. If the *Surface* doesn't
+        support direct access, then this function does nothing.
         """
+
     def get_content(self) -> Content:
         """
-        New in version 1.2.
+        :returns: The content type of *Surface*,
+            which indicates whether the *Surface* contains color and/or alpha
+            information.
 
-        Returns
-        -------
-        >>> cairo.Content\n
-        The content type of `Surface`, which indicates whether the `Surface` contains color and/or alpha information.
+        .. versionadded:: 1.2
         """
+
     def get_device(self) -> Optional["Device"]:
         """
+        :returns: the device or :obj:`None` if the surface does not have an
+            associated device
+
         This function returns the device for a surface.
 
-        New in version 1.14.0.
-
-        Returns
-        -------
-        >>> cairo.Device or None\n
-        The device or `None` if the surface does not have an associated device.
+        .. versionadded:: 1.14.0
         """
+
     def get_device_offset(self) -> Tuple[float, float]:
         """
-        This method returns the previous device offset set by `set_device_offset()`.
+        :returns: (x_offset, y_offset) a tuple of float
 
-        New in version 1.2.
+            * x_offset: the offset in the X direction, in device units
+            * y_offset: the offset in the Y direction, in device units
 
-        Returns
-        -------
-        >>> (x_offset: float, y_offset: float)\n
-        - `x_offset (float)` -- The offset in the X direction, in device units.
-        - `y_offset (float)` -- The offset in the Y direction, in device units.
+        This method returns the previous device offset set by
+        :meth:`.set_device_offset`.
+
+        .. versionadded:: 1.2
         """
+
     def get_device_scale(self) -> Tuple[float, float]:
         """
-        This function returns the previous device offset set by `Surface.set_device_scale()`.
+        :returns: (x_scale,y_scale) a 2-tuple of float
 
-        New in version 1.14.0.
+        This function returns the previous device offset set by
+        :meth:`Surface.set_device_scale`.
 
-        Returns
-        -------
-        >>> (x_scale: float, y_scale: float)\n
+        .. versionadded:: 1.14.0
         """
+
     def get_fallback_resolution(self) -> Tuple[float, float]:
         """
-        This method returns the previous fallback resolution set by `set_fallback_resolution()`, or default fallback resolution if never set.
+        :returns: (x_pixels_per_inch, y_pixels_per_inch) a tuple of float
 
-        New in version 1.8.
+            * x_pixels_per_inch: horizontal pixels per inch
+            * y_pixels_per_inch: vertical pixels per inch
 
-        Returns
-        -------
-        >>> (x_pixels_per_inch: float, y_pixels_per_inch: float)\n
-        - `x_pixels_per_inch (float)` -- Horizontal pixels per inch.
-        - `y_pixels_per_inch (float)` -- Vertical pixels per inch.
+        This method returns the previous fallback resolution set by
+        :meth:`.set_fallback_resolution`, or default fallback resolution if
+        never set.
+
+        .. versionadded:: 1.8
         """
+
     def get_font_options(self) -> FontOptions:
         """
-        Retrieves the default font rendering options for the Surface. This allows display surfaces to report the correct subpixel order for rendering on them, print surfaces to disable hinting of metrics and so forth. The result can then be used with `ScaledFont`.
+        :returns: a :class:`FontOptions`
 
-        Returns
-        -------
-        >>> cairo.FontOptions\n
+        Retrieves the default font rendering options for the *Surface*. This
+        allows display surfaces to report the correct subpixel order for
+        rendering on them, print surfaces to disable hinting of metrics and so
+        forth. The result can then be used with :class:`ScaledFont`.
         """
+
     def get_mime_data(self, mime_type: str) -> Optional[bytes]:
         """
-        Return mime data previously attached to surface with `set_mime_data()` using the specified mime type. If no data has been attached with the given mime type, `None` is returned.
+        :param mime_type: the MIME type of the image data
+            (:ref:`constants_MIME_TYPE`)
+        :returns: :class:`bytes` or :obj:`None`
 
-        New in version 1.12.0.
+        Return mime data previously attached to surface
+        with :meth:`set_mime_data` using the specified mime type.
+        If no data has been attached with the given mime type,
+        :obj:`None` is returned.
 
-        Parameters
-        ----------
-        >>> mime_type (str)\n
-        The MIME type of the image data (`cairo.MIME_TYPE`).
-
-        Returns
-        -------
-        >>> bytes or None\n
+        .. versionadded:: 1.12.0
         """
+
     def has_show_text_glyphs(self) -> bool:
         """
-        Returns whether the surface supports sophisticated `Context.show_text_glyphs()` operations. That is, whether it actually uses the provided text and cluster data to a `Context.show_text_glyphs()` call.
+        :returns: :obj:`True` if surface supports
+            :meth:`Context.show_text_glyphs`, :obj:`False` otherwise
 
-        Note: Even if this function returns `False`, a `Context.show_text_glyphs()` operation targeted at surface will still succeed. It just will act like a `Context.show_glyphs()` operation. Users can use this function to avoid computing UTF-8 text and cluster mapping if the target surface does not use it.
+        Returns whether the surface supports sophisticated
+        :meth:`Context.show_text_glyphs` operations. That is, whether it
+        actually uses the provided text and cluster data to a
+        :meth:`Context.show_text_glyphs` call.
 
-        New in version 1.12.0.
+        Note: Even if this function returns :obj:`False`, a
+        :meth:`Context.show_text_glyphs` operation targeted at surface will
+        still succeed. It just will act like a :meth:`Context.show_glyphs`
+        operation. Users can use this function to avoid computing UTF-8 text and
+        cluster mapping if the target surface does not use it.
 
-        Returns
-        -------
-        >>> bool\n
-        `True` if surface supports `Context.show_text_glyphs()`, `False` otherwise.
+        .. versionadded:: 1.12.0
         """
+
     def map_to_image(self, extents: Optional[RectangleInt]) -> "ImageSurface":
         """
-        Returns an image surface that is the most efficient mechanism for modifying the backing store of the target surface.
+        :param extents: limit the extraction to an rectangular
+            region or :obj:`None` for the whole surface
 
-        Note, the use of the original surface as a target or source whilst it is mapped is undefined. The result of mapping the surface multiple times is undefined. Calling `Surface.finish()` on the resulting image surface results in undefined behavior. Changing the device transform of the image surface or of surface before the image surface is unmapped results in undefined behavior.
+        :returns: newly allocated image surface
+        :raises Error:
 
-        The caller must use `Surface.unmap_image()` to destroy this image surface.
+        Returns an image surface that is the most efficient mechanism for
+        modifying the backing store of the target surface.
 
-        New in version 1.15.0.
+        Note, the use of the original surface as a target or source whilst it is
+        mapped is undefined. The result of mapping the surface multiple times is
+        undefined. Calling :meth:`Surface.finish` on the resulting image surface
+        results in undefined behavior. Changing the device transform of the
+        image surface or of surface before the image surface is unmapped results
+        in undefined behavior.
 
-        Parameters
-        ----------
-        >>> extents (cairo.RectangleInt or None)\n
-        Limit the extraction to an rectangular region, or `None` for the whole surface.
+        The caller must use :meth:`Surface.unmap_image` to destroy this image
+        surface.
 
-        Returns
-        -------
-        >>> cairo.ImageSurface\n
-        Newly allocated image surface.
-
-        Raises
-        ------
-        >>> cairo.Error\n
+        .. versionadded:: 1.15.0
         """
+
     def mark_dirty(self) -> None:
         """
-        Tells cairo that drawing has been done to Surface using means other than cairo, and that cairo should reread any cached areas. Note that you must call `flush()` before doing such drawing.
+        Tells cairo that drawing has been done to *Surface* using means other
+        than cairo, and that cairo should reread any cached areas. Note that you
+        must call :meth:`.flush` before doing such drawing.
         """
+
     def mark_dirty_rectangle(self, x: int, y: int, width: int, height: int) -> None:
         """
-        Like `mark_dirty()`, but drawing has been done only to the specified rectangle, so that cairo can retain cached contents for other parts of the surface.
+        :param x: X coordinate of dirty rectangle
+        :param y: Y coordinate of dirty rectangle
+        :param width: width of dirty rectangle
+        :param height: height of dirty rectangle
 
-        Any cached clip set on the Surface will be reset by this function, to make sure that future cairo calls have the clip set that they expect.
+        Like :meth:`.mark_dirty`, but drawing has been done only to the
+        specified rectangle, so that cairo can retain cached contents for other
+        parts of the surface.
 
-        Parameters
-        ----------
-        >>> x (int)\n
-        X coordinate of dirty rectangle.
-        >>> y (int)\n
-        Y coordinate of dirty rectangle.
-        >>> width (int)\n
-        Width of dirty rectangle.
-        >>> height (int)\n
-        Height of dirty rectangle.
+        Any cached clip set on the *Surface* will be reset by this function, to
+        make sure that future cairo calls have the clip set that they expect.
         """
+
     def set_device_offset(self, x_offset: float, y_offset: float) -> None:
         """
-        Sets an offset that is added to the device coordinates determined by the CTM when drawing to Surface. One use case for this function is when we want to create a Surface that redirects drawing for a portion of an onscreen surface to an offscreen surface in a way that is completely invisible to the user of the cairo API. Setting a transformation via `Context.translate()` isn’t sufficient to do this, since functions like `Context.device_to_user()` will expose the hidden offset.
+        :param x_offset: the offset in the X direction, in device units
+        :param y_offset: the offset in the Y direction, in device units
 
-        Note that the offset affects drawing to the surface as well as using the surface in a source pattern.
+        Sets an offset that is added to the device coordinates determined by the
+        CTM when drawing to *Surface*. One use case for this function is when we
+        want to create a *Surface* that redirects drawing for a portion of an
+        onscreen surface to an offscreen surface in a way that is completely
+        invisible to the user of the cairo API. Setting a transformation via
+        :meth:`Context.translate` isn't sufficient to do this, since functions
+        like :meth:`Context.device_to_user` will expose the hidden offset.
 
-        Parameters
-        ----------
-        >>> x_offset (float)\n
-        The offset in the X direction, in device units.
-        >>> y_offset (float)\n
-        The offset in the Y direction, in device units.
+        Note that the offset affects drawing to the surface as well as using the
+        surface in a source pattern.
         """
+
     def set_device_scale(self, x_scale: float, y_scale: float) -> None:
         """
-        Sets a scale that is multiplied to the device coordinates determined by the CTM when drawing to surface . One common use for this is to render to very high resolution display devices at a scale factor, so that code that assumes 1 pixel will be a certain size will still work. Setting a transformation via `Context.translate()` isn’t sufficient to do this, since functions like `Context.device_to_user()` will expose the hidden scale.
+        :param x_scale: a scale factor in the X direction
+        :param y_scale: a scale factor in the Y direction
 
-        New in version 1.14.0.
+        Sets a scale that is multiplied to the device coordinates determined by
+        the CTM when drawing to surface . One common use for this is to render
+        to very high resolution display devices at a scale factor, so that code
+        that assumes 1 pixel will be a certain size will still work. Setting a
+        transformation via :meth:`Context.translate` isn't sufficient to do
+        this, since functions like :meth:`Context.device_to_user` will expose
+        the hidden scale.
 
-        Parameters
-        ----------
-        >>> x_scale (float)\n
-        A scale factor in the X direction.
-        >>> y_scale (float)\n
-        A scale factor in the Y direction.
+        .. versionadded:: 1.14.0
         """
+
     def set_fallback_resolution(self, x_pixels_per_inch: float, y_pixels_per_inch: float) -> None:
         """
+        :param x_pixels_per_inch: horizontal setting for pixels per inch
+        :param y_pixels_per_inch: vertical setting for pixels per inch
+
         Set the horizontal and vertical resolution for image fallbacks.
 
-        When certain operations aren’t supported natively by a backend, cairo will fallback by rendering operations to an image and then overlaying that image onto the output. For backends that are natively vector-oriented, this function can be used to set the resolution used for these image fallbacks, (larger values will result in more detailed images, but also larger file sizes).
+        When certain operations aren't supported natively by a backend, cairo
+        will fallback by rendering operations to an image and then overlaying
+        that image onto the output. For backends that are natively
+        vector-oriented, this function can be used to set the resolution used
+        for these image fallbacks, (larger values will result in more detailed
+        images, but also larger file sizes).
 
-        Some examples of natively vector-oriented backends are the ps, pdf, and svg backends.
+        Some examples of natively vector-oriented backends are the ps, pdf, and
+        svg backends.
 
-        For backends that are natively raster-oriented, image fallbacks are still possible, but they are always performed at the native device resolution. So this function has no effect on those backends.
+        For backends that are natively raster-oriented, image fallbacks are
+        still possible, but they are always performed at the native device
+        resolution. So this function has no effect on those backends.
 
-        Note: The fallback resolution only takes effect at the time of completing a page (with `Context.show_page()` or `Context.copy_page()`) so there is currently no way to have more than one fallback resolution in effect on a single page.
+        Note: The fallback resolution only takes effect at the time of
+        completing a page (with :meth:`Context.show_page` or
+        :meth:`Context.copy_page`) so there is currently no way to have more
+        than one fallback resolution in effect on a single page.
 
-        The default fallback resoultion is 300 pixels per inch in both dimensions.
+        The default fallback resoultion is 300 pixels per inch in both
+        dimensions.
 
-        New in version 1.2.
-
-        Parameters
-        ----------
-        >>> x_pixels_per_inch (float)\n
-        Horizontal setting for pixels per inch.
-        >>> y_pixels_per_inch (float)\n
-        Vertical setting for pixels per inch.
+        .. versionadded:: 1.2
         """
+
     def set_mime_data(self, mime_type: str, data: bytes) -> None:
         """
-        Attach an image in the format `mime_type` to Surface. To remove the data from a surface, call this function with same mime type and `None` for data.
+        :param mime_type: the MIME type of the image data
+            (:ref:`constants_MIME_TYPE`)
+        :param data: the image data to attach to the surface
 
-        The attached image (or filename) data can later be used by backends which support it (currently: PDF, PS, SVG and Win32 Printing surfaces) to emit this data instead of making a snapshot of the surface. This approach tends to be faster and requires less memory and disk space.
+        Attach an image in the format ``mime_type`` to *Surface*.
+        To remove the data from a surface,
+        call this function with same mime type and :obj:`None` for data.
 
-        The recognized MIME types are listed under `cairo.MIME_TYPE`.
+        The attached image (or filename) data can later be used
+        by backends which support it
+        (currently: PDF, PS, SVG and Win32 Printing surfaces)
+        to emit this data instead of making a snapshot of the surface.
+        This approach tends to be faster and requires less memory and disk space.
 
-        See corresponding backend surface docs for details about which MIME types it can handle. Caution: the associated MIME data will be discarded if you draw on the surface afterwards. Use this function with care.
+        The recognized MIME types are listed under :ref:`constants_MIME_TYPE`.
 
-        New in version 1.12.0.
+        See corresponding backend surface docs for details
+        about which MIME types it can handle.
+        Caution: the associated MIME data will be discarded
+        if you draw on the surface afterwards.
+        Use this function with care.
 
-        Parameters
-        ----------
-        >>> mime_type (str)\n
-        The MIME type of the image data (`cairo.MIME_TYPE`).
-        >>> data (bytes)\n
-        The image data to attach to the surface.
+        .. versionadded:: 1.12.0
         """
+
     def show_page(self) -> None:
         """
-        Emits and clears the current page for backends that support multiple pages. Use `copy_page()` if you don’t want to clear the page.
+        Emits and clears the current page for backends that support multiple
+        pages. Use :meth:`.copy_page` if you don't want to clear the page.
 
-        There is a convenience function for this that takes a `Context.show_page()`.
+        There is a convenience function for this that takes a
+        :meth:`Context.show_page`.
 
-        New in version 1.6.
+        .. versionadded:: 1.6
         """
+
     def supports_mime_type(self, mime_type: str) -> bool:
         """
-        Returns whether surface supports `mime_type`.
+        :param mime_type: the mime type (:ref:`constants_MIME_TYPE`)
+        :returns: :obj:`True` if surface supports mime_type, :obj:`False`
+            otherwise
 
-        New in version 1.12.0.
+        Return whether surface supports ``mime_type``.
 
-        Parameters
-        ----------
-        >>> mime_type (str)\n
-        The mime type (`cairo.MIME_TYPE`).
-
-        Returns
-        -------
-        >>> bool\n
-        `True` if surface supports mime_type, `False` otherwise.
+        .. versionadded:: 1.12.0
         """
+
     def write_to_png(self, fobj: Union[_FileLike, _PathLike]) -> None:
         """
-        Writes the contents of `Surface` to fobj as a PNG image.
+        :param fobj: the file to write to
+        :raises: :exc:`MemoryError` if memory could not be allocated for the operation
 
-        Parameters
-        ----------
-        >>> fobj (str)\n
-        (filename (`pathlike`), file or file-like object) - The file to write to.
+                :exc:`IOError` if an I/O error occurs while attempting to write
+                the file
 
-        Raises
-        ------
-        >>> cairo.MemoryError\n
-        If memory could not be allocated for the operation.
-        >>> cairo.IOError\n
-        If an I/O error occurs while attempting to write the file.
+        Writes the contents of *Surface* to *fobj* as a PNG image.
         """
+
     def unmap_image(self, image: "ImageSurface") -> None:
         """
-        Unmaps the image surface as returned from `Surface.map_to_image()`.
+        :param image: the currently mapped image
 
-        The content of the image will be uploaded to the target surface. Afterwards, the image is destroyed.
+        Unmaps the image surface as returned from :meth:`Surface.map_to_image`.
 
-        Using an image surface which wasn’t returned by `Surface.map_to_image()` results in undefined behavior.
+        The content of the image will be uploaded to the target surface.
+        Afterwards, the image is destroyed.
 
-        New in version 1.15.0.
+        Using an image surface which wasn't returned by
+        :meth:`Surface.map_to_image` results in undefined behavior.
 
-        Parameters
-        ----------
-        >>> image (cairo.ImageSurface)\n
-        The currently mapped image.
+        .. versionadded:: 1.15.0
         """
+
     def __enter__(self: _SomeSurface) -> _SomeSurface: ...
     __exit__: Any = ...
 
 class ImageSurface(Surface):
     """
-    Creates an ImageSurface of the specified format and dimensions. Initially the surface contents are all 0. (Specifically, within each pixel, each color or alpha channel belonging to format will be 0. The contents of bits within a pixel, but not belonging to the given format are undefined).
-
-    Parameters
-    ----------
-    >>> format (cairo.Format)\n
-    Format of pixels in the surface to create.
-    >>> width (int)\n
-    Width of the surface, in pixels.
-    >>> height (int)\n
-    Height of the surface, in pixels.
-
-    Returns
-    -------
-    >>> cairo.ImageSurface\n
-    A newly allocated `ImageSurface`.
-
-    Raises
-    ------
-    >>> cairo.MemoryError\n
-    In case of no memory.
+    A *cairo.ImageSurface* provides the ability to render to memory buffers
+    either allocated by cairo or by the calling code. The supported image
+    formats are those defined in :class:`cairo.Format`.
     """
-    def __init__(self, format: Format, width: int, height: int) -> None: ...
+
+    def __init__(self, format: Format, width: int, height: int) -> None:
+        """
+        :param format: format of pixels in the surface to create
+        :param width: width of the surface, in pixels
+        :param height: height of the surface, in pixels
+        :returns: a new *ImageSurface*
+
+        Creates an *ImageSurface* of the specified format and dimensions. Initially
+        the surface contents are all 0. (Specifically, within each pixel, each
+        color or alpha channel belonging to format will be 0. The contents of bits
+        within a pixel, but not belonging to the given format are undefined).
+        """
+
     @classmethod
     def create_for_data(cls, data: memoryview, format: Format, width: int, height: int, stride: int = ...) -> "ImageSurface":
         """
-        Creates an ImageSurface for the provided pixel data. The initial contents of buffer will be used as the initial image contents; you must explicitly clear the buffer, using, for example, `cairo_rectangle()` and `cairo_fill()` if you want it cleared.
+        :param data: a writable Python buffer/memoryview object
+        :param format: the format of pixels in the
+            buffer
+        :param width: the width of the image to be stored in the buffer
+        :param height: the height of the image to be stored in the buffer
+        :param stride: the number of bytes between the start of rows in the
+            buffer as allocated. If not given the value from
+            :meth:`cairo.Format.stride_for_width` is used.
+        :returns: a new *ImageSurface*
+        :raises: :exc:`MemoryError` in case of no memory.
 
-        Note that the stride may be larger than width*bytes_per_pixel to provide proper alignment for each pixel and row. This alignment is required to allow high-performance rendering within cairo. The correct way to obtain a legal stride value is to call `cairo.Format.stride_for_width()` with the desired format and maximum image width value, and use the resulting stride value to allocate the data and to create the ImageSurface. See `cairo.Format.stride_for_width()` for example code.
+                :exc:`cairo.Error` in case of invalid *stride* value.
 
-        Parameters
-        ----------
-        >>> data (buffer/memoryview)\n
-        A writable Python buffer/memoryview object.
-        >>> format (cairo.Format)\n
-        The format of pixels in the buffer.
-        >>> width (int)\n
-        The width of the image to be stored in the buffer.
-        >>> height (int)\n
-        The height of the image to be stored in the buffer.
-        >>> stride (int or None)\n
-        The number of bytes between the start of rows in the buffer as allocated. If not given, the value from `cairo.Format.stride_for_width()` is used.
+        Creates an *ImageSurface* for the provided pixel data. The initial
+        contents of buffer will be used as the initial image contents; you must
+        explicitly clear the buffer, using, for example, cairo_rectangle() and
+        cairo_fill() if you want it cleared.
 
-        Returns
-        -------
-        >>> cairo.ImageSurface\n
-        A new `ImageSurface`.
-
-        Raises
-        ------
-        >>> cairo.MemoryError\n
-        In case of no memory.
-        >>> cairo.Error\n
-        In case of invalid stride value.
+        Note that the *stride* may be larger than width*bytes_per_pixel to
+        provide proper alignment for each pixel and row. This alignment is
+        required to allow high-performance rendering within cairo. The correct
+        way to obtain a legal stride value is to call
+        :meth:`cairo.Format.stride_for_width` with the desired format and
+        maximum image width value, and use the resulting stride value to
+        allocate the data and to create the :class:`ImageSurface`. See
+        :meth:`cairo.Format.stride_for_width` for example code.
         """
+
     @classmethod
     def create_from_png(cls, fobj: Union[_PathLike, _FileLike]) -> "ImageSurface":
         """
-        Parameters
-        ----------
-        >>> fobj (str)\n
-        A `pathlike`, file or file-like object of the PNG to load.
-
-        Returns
-        -------
-        >>> cairo.ImageSurface\n
-        A new `ImageSurface` initialized from the contents of the given PNG file.
+        :param fobj:
+            a :obj:`pathlike`, file, or file-like object of the PNG to load.
+        :returns: a new *ImageSurface* initialized the contents to the given
+            PNG file.
         """
+
     format_stride_for_width = Format.stride_for_width
+    """
+    See :meth:`cairo.Format.stride_for_width`.
+
+    .. versionadded:: 1.6
+    """
+
     def get_data(self) -> memoryview:
         """
-        New in version 1.2.
+        :returns: a Python buffer object for the data of the *ImageSurface*, for
+            direct inspection or modification. On Python 3 a memoryview object is
+            returned.
 
-        Returns
-        -------
-        >>> memoryview\n
-        A Python buffer object for the data of the `ImageSurface`, for direct inspection or modification. In Python 3 a memoryview object is returned.
+        .. versionadded:: 1.2
         """
+
     def get_format(self) -> Format:
         """
-        New in version 1.2.
+        :returns: the format of the *ImageSurface*.
+        :rtype: cairo.Format
 
-        Returns
-        -------
-        >>> cairo.Format\n
-        The format of the `ImageSurface`.
+        .. versionadded:: 1.2
         """
+
     def get_height(self) -> int:
         """
-        Returns
-        -------
-        >>> int\n
-        The height of the `ImageSurface` in pixels.
+        :returns: the height of the *ImageSurface* in pixels.
         """
+
     def get_stride(self) -> bytes:
         """
-        Returns
-        -------
-        >>> bytes\n
-        The stride of the `ImageSurface` in bytes. The stride is the distance in bytes from the beginnning of one row of the image data to the beginning of the next row.
+        :returns: the stride of the *ImageSurface* in bytes. The stride is the
+            distance in bytes from the beginning of one row of the image data to
+            the beginning of the next row.
         """
+
     def get_width(self) -> int:
         """
-        Returns
-        -------
-        >>> int\n
-        The width of the `ImageSurface` in pixels.
+        :returns: the width of the *ImageSurface* in pixels.
         """
 
 class SurfacePattern(Pattern):
@@ -3702,101 +3745,87 @@ class PSSurface(Surface):
 
 class SVGSurface(Surface):
     """
-    The SVGSurface is used to render cairo graphics to SVG files and is a multi-page vector surface backend.
-
-    Parameters
-    ----------
-    >>> fobj (str or None)\n
-    (`None`, `pathlike`, file or file-like object) – A filename or writable file object. `None` may be used to specify no output. This will generate a `SVGSurface` that may be queried and used as a source, without generating a temporary file.
-    >>> width_in_points (float)\n
-    Width of the surface, in points (1 point == 1/72.0 inch).
-    >>> height_in_points (float)\n
-    Height of the surface, in points (1 point == 1/72.0 inch).
-
-    Returns
-    -------
-    >>> cairo.SVGSurface\n
-    A new `SVGSurface` of the specified size in points to be written to `fobj`.
-
-    Raises
-    ------
-    >>> cairo.MemoryError\n
-    In case of no memory.
+    The *SVGSurface* is used to render cairo graphics to SVG files and is a
+    multi-page vector surface backend
     """
-    def __init__(self, fobj: Union[_PathLike, _FileLike], width_in_points: float, height_in_points: float) -> None: ...
+
+    def __init__(self, fobj: "Union[_PathLike, _FileLike]", width_in_points: float, height_in_points: float) -> None:
+        """
+        :param fobj: a filename or writable file object. None may be used to specify no output. This will generate a *SVGSurface* that may be queried and used as a source, without generating a temporary file.
+        :param width_in_points: width of the surface, in points (1 point == 1/72.0 inch)
+        :param height_in_points: height of the surface, in points (1 point == 1/72.0 inch)
+        """
+
     def restrict_to_version(self, version: SVGVersion) -> None:
         """
-        Restricts the generated SVG file to version . See `get_versions()` for a list of available version values that can be used here.
+        :param version: SVG version
 
-        This function should only be called before any drawing operations have been performed on the given surface. The simplest way to do this is to call this function immediately after creating the surface.
+        Restricts the generated SVG file to version . See :meth:`get_versions`
+        for a list of available version values that can be used here.
 
-        New in version 1.12.0.
+        This function should only be called before any drawing operations have
+        been performed on the given surface. The simplest way to do this is to
+        call this function immediately after creating the surface.
 
-        Parameters
-        ----------
-        >>> version (cairo.SVGVersion)\n
+        .. versionadded:: 1.12.0
         """
+
     @staticmethod
     def get_versions() -> List[SVGVersion]:
         """
-        Retrieve the list of supported versions. See `restrict_to_version()`.
+        :returns: supported version list
 
-        New in version 1.12.0.
+        Retrieve the list of supported versions. See
+        :meth:`restrict_to_version`.
 
-        Returns
-        -------
-        >>> list(cairo.SVGVersion)\n
-        Supported version list.
+        .. versionadded:: 1.12.0
         """
+
     @staticmethod
     def version_to_string(version: SVGVersion) -> str:
         """
-        Get the string representation of the given version ID. See `get_versions()` for a way to get the list of valid version IDs.
+        :param version: SVG version
+        :returns: the string associated to the given version
+        :raises ValueError: if version isn't valid
 
-        New in version 1.12.0.
+        Get the string representation of the given version id. See
+        :meth:`get_versions` for a way to get the list of valid version ids.
 
-        Parameters
-        ----------
-        >>> version (cairo.SVGVersion)\n
-
-        Returns
-        -------
-        >>> str\n
-        The string associated to the given version.
-
-        Raises
-        ------
-        >>> ValueError\n
-        If the version isn't valid.
+        .. versionadded:: 1.12.0
         """
+
     def get_document_unit(self) -> SVGUnit:
         """
-        Get the unit of the `SVGSurface`.
+        :returns: the SVG unit of the SVG surface.
+        :rtype: SVGUnit
 
-        New in version 1.18.0: Only available with cairo 1.15.10+.
+        Get the unit of the SVG surface.
 
-        Returns
-        -------
-        >>> cairo.SVGUnit\n
-        The SVG unit of the `SVGSurface`.
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
         """
+
     def set_document_unit(self, unit: SVGUnit) -> None:
         """
-        Use the specified unit for the width and height of the generated SVG file. See `SVGUnit` for a list of available unit values that can be used here.
+        :param SVGUnit unit: SVG unit
+
+        Use the specified unit for the width and height of the generated SVG
+        file. See :class:`SVGUnit` for a list of available unit values that can
+        be used here.
 
         This function can be called at any time before generating the SVG file.
 
-        However to minimize the risk of ambiguities it’s recommended to call it before any drawing operations have been performed on the given surface, to make it clearer what the unit used in the drawing operations is.
+        However to minimize the risk of ambiguities it's recommended to call it
+        before any drawing operations have been performed on the given surface,
+        to make it clearer what the unit used in the drawing operations is.
 
-        The simplest way to do this is to call this function immediately after creating the SVG surface.
+        The simplest way to do this is to call this function immediately after
+        creating the SVG surface.
 
-        Note if this function is never called, the default unit for SVG documents generated by cairo will be “pt”. This is for historical reasons.
+        Note if this function is never called, the default unit for SVG
+        documents generated by cairo will be "pt". This is for historical
+        reasons.
 
-        New in version 1.18.0: Only available with cairo 1.15.10+.
-
-        Parameters
-        ----------
-        >>> unit (cairo.SVGUnit)\n
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
         """
 
 class RadialGradient(Gradient):
@@ -3897,58 +3926,72 @@ class RasterSourcePattern(Pattern):
 
 class RecordingSurface(Surface):
     """
-    Creates a RecordingSurface which can be used to record all drawing operations at the highest level (that is, the level of paint, mask, stroke, fill and show_text_glyphs). The RecordingSurface can then be “replayed” against any target surface by using it as a source to drawing operations.
+    A *RecordingSurface* is a surface that records all drawing operations at the
+    highest level of the surface backend interface, (that is, the level of paint,
+    mask, stroke, fill, and show_text_glyphs). The recording surface can then be
+    "replayed" against any target surface by using it as a source surface.
 
-    The recording phase of the RecordingSurface is careful to snapshot all necessary objects (paths, patterns, etc.), in order to achieve accurate replay.
+    If you want to replay a surface so that the results in target will be
+    identical to the results that would have been obtained if the original
+    operations applied to the recording surface had instead been applied to the
+    target surface, you can use code like this::
 
-    New in version 1.11.0.
+        cr = cairo.Context(target)
+        cr.set_source_surface(recording_surface, 0.0, 0.0)
+        cr.paint()
 
-    A RecordingSurface is a surface that records all drawing operations at the highest level of the surface backend interface, (that is, the level of paint, mask, stroke, fill, and show_text_glyphs). The recording surface can then be “replayed” against any target surface by using it as a source surface.
+    A *RecordingSurface* is logically unbounded, i.e. it has no implicit
+    constraint on the size of the drawing surface. However, in practice this is
+    rarely useful as you wish to replay against a particular target surface with
+    known bounds. For this case, it is more efficient to specify the target
+    extents to the recording surface upon creation.
 
-    If you want to replay a surface so that the results in target will be identical to the results that would have been obtained if the original operations applied to the recording surface had instead been applied to the target surface, you can use code like this:
-    >>> cr = cairo.Context(target)
-    >>> cr.set_source_surface(recording_surface, 0.0, 0.0)
-    >>> cr.paint()\n
+    The recording phase of the recording surface is careful to snapshot all
+    necessary objects (paths, patterns, etc.), in order to achieve accurate
+    replay.
 
-    A RecordingSurface is logically unbounded, i.e. it has no implicit constraint on the size of the drawing surface. However, in practice this is rarely useful as you wish to replay against a particular target surface with known bounds. For this case, it is more efficient to specify the target extents to the recording surface upon creation.
-
-    The recording phase of the recording surface is careful to snapshot all necessary objects (paths, patterns, etc.), in order to achieve accurate replay.
-
-    Parameters
-    ----------
-    >>> content (cairo.Content)\n
-    The content for the new surface.
-    >>> rectangle (cairo.Rectangle or None)\n
-    `Rectangle` that bound the recorded operations, or `None` to record unbounded operations.
+    .. versionadded:: 1.11.0
     """
-    def __init__(self, content: Content, rectangle: Rectangle) -> None: ...
+
+    def __init__(self, content: Content, rectangle: Rectangle) -> None:
+        """
+        :param content: the content for the new  surface
+        :param rectangle: or None to record unbounded operations.
+
+        Creates a *RecordingSurface* which can be used to record all drawing
+        operations at the highest level (that is, the level of paint, mask, stroke,
+        fill and show_text_glyphs). The *RecordingSurface* can then be "replayed"
+        against any target surface by using it as a source to drawing operations.
+
+        The recording phase of the *RecordingSurface* is careful to snapshot all
+        necessary objects (paths, patterns, etc.), in order to achieve accurate
+        replay.
+
+        .. versionadded:: 1.11.0
+        """
+
     def ink_extents(self) -> Tuple[float, float, float, float]:
         """
-        Measures the extents of the operations stored within the `RecordingSurface`. This is useful to compute the required size of an `ImageSurface` (or equivalent) into which to replay the full sequence of drawing operations.
+        * x0: the x-coordinate of the top-left of the ink bounding box
+        * y0: the y-coordinate of the top-left of the ink bounding box
+        * width: the width of the ink bounding box
+        * height: the height of the ink bounding box
 
-        New in version 1.11.0.
+        Measures the extents of the operations stored within the
+        *RecordingSurface*. This is useful to compute the required size of an
+        *ImageSurface* (or equivalent) into which to replay the full sequence of
+        drawing operations.
 
-        Returns
-        -------
-        >>> x0 (float)\n
-        The X coordinate of the top-left of the ink bounding box.
-        >>> y0 (float)\n
-        The Y coordinate of the top-left of the ink bounding box.
-        >>> width (float)\n
-        The width of the ink bounding box.
-        >>> height (float)\n
-        The height of the ink bounding box.
+        .. versionadded:: 1.11.0
         """
+
     def get_extents(self) -> Optional[Rectangle]:
         """
+        :returns: a rectangle or :obj:`None` if the surface is unbounded.
+
         Get the extents of the recording-surface.
 
-        New in version 1.12.0.
-
-        Returns
-        -------
-        >>> cairo.Rectangle or None\n
-        A `Rectangle` or `None` if the surface is unbounded.
+        .. versionadded:: 1.12.0
         """
 
 class Region:
@@ -4138,41 +4181,40 @@ class ScriptSurface(Surface):
 
 class Win32Surface(Surface):
     """
-    Creates a cairo surface that targets the given DC. The DC will be queried for its initial clip extents, and this will be used as the size of the cairo surface. The resulting surface will always be of format `cairo.FORMAT_RGB24`, see `cairo.Format`.
-
-    The Microsoft Windows surface is used to render cairo graphics to Microsoft Windows windows, bitmaps, and printing device contexts.
-
-    Parameters
-    ----------
-    >>> hdc (int)\n
-    The DC to create a surface for.
-
-    Returns
-    -------
-    >>> cairo.Win32Surface\n
-    A newly created surface.
+    The Microsoft Windows surface is used to render cairo graphics to Microsoft
+    Windows windows, bitmaps, and printing device contexts.
     """
-    def __init__(self, hdc: int) -> None: ...
+
+    def __init__(self, hdc: int) -> None:
+        """
+        :param hdc: the DC to create a surface for
+        :type hdc: int
+
+        Creates a cairo surface that targets the given DC. The DC will be
+        queried for its initial clip extents, and this will be used as the size
+        of the cairo surface. The resulting surface will always be of format
+        cairo.FORMAT_RGB24, see :class:`cairo.Format`.
+        """
 
 class Win32PrintingSurface(Surface):
     """
-    Creates a cairo surface that targets the given DC. The DC will be queried for its initial clip extents, and this will be used as the size of the cairo surface. The DC should be a printing DC; antialiasing will be ignored, and GDI will be used as much as possible to draw to the surface.
-
-    The returned surface will be wrapped using the paginated surface to provide correct complex rendering behaviour; `cairo.Surface.show_page()` and associated methods must be used for correct output.
-
     The Win32PrintingSurface is a multi-page vector surface type.
-
-    Parameters
-    ----------
-    >>> hdc (int)\n
-    The DC to create a surface for.
-
-    Returns
-    -------
-    >>> cairo.Win32PrintingSurface\n
-    A newly created surface.
     """
-    def __init__(self, hdc: int) -> None: ...
+
+    def __init__(self, hdc: int) -> None:
+        """
+        :param hdc: the DC to create a surface for
+        :returns: the newly created surface
+
+        Creates a cairo surface that targets the given DC. The DC will be queried
+        for its initial clip extents, and this will be used as the size of the
+        cairo surface. The DC should be a printing DC; antialiasing will be
+        ignored, and GDI will be used as much as possible to draw to the surface.
+
+        The returned surface will be wrapped using the paginated surface to provide
+        correct complex rendering behaviour; :meth:`cairo.Surface.show_page` and
+        associated methods must be used for correct output.
+        """
 
 class SolidPattern(Pattern):
     """
@@ -4306,80 +4348,75 @@ class ToyFontFace(FontFace):
 
 class XCBSurface(Surface):
     """
-    Creates a cairo surface that targets the given drawable (pixmap or window).
+    The XCB surface is used to render cairo graphics to X Window System windows
+    and pixmaps using the XCB library.
 
-    The XCB surface is used to render cairo graphics to X Window System windows and pixmaps using the XCB library.
-
-    Note that the XCB surface automatically takes advantage of the X render extension if it is available.
-
-    Note
-    ----
-    This type isn't implemented. Please file a bug if you need it.
-
-    Parameters
-    ----------
-    >>> connection (cairo.XCBConnection) #type not implemented\n
-    A `XCBConnection`.
-    >>> drawable (cairo.XDrawable) #type not implemented\n
-    A `XDrawable`.
-    >>> visualtype (cairo.XVisualType) #type not implemented\n
-    A `XVisualType`.
-    >>> width (int)\n
-    The surface width.
-    >>> height (int)\n
-    The surface height.
+    Note that the XCB surface automatically takes advantage of the X render
+    extension if it is available.
     """
-    def __init__(self, connection: Any, drawable: Any, visualtype: Any, width: int, height: int) -> None: ...
+
+    def __init__(self, connection: Any, drawable: Any, visualtype: Any, width: int, height: int) -> None:
+        """
+        :param connection: an XCB connection
+        :param drawable: a X drawable
+        :param visualtype: a X visualtype
+        :param width: The surface width
+        :param height: The surface height
+
+        Creates a cairo surface that targets the given drawable (pixmap or window).
+
+        .. note:: This type isn't implemented. Please file a bug if you need it.
+        """
+
     def set_size(self, width: int, height: int) -> None:
         """
-        Informs cairo of the new size of the X Drawable underlying the surface. For a surface created for a Window (rather than a Pixmap), this function must be called each time the size of the window changes. (For a subwindow, you are normally resizing the window yourself, but for a toplevel window, it is necessary to listen for ConfigureNotify events.)
+        :param width: The width of the surface
+        :param height: The height of the surface
 
-        A Pixmap can never change size, so it is never necessary to call this function on a surface created for a Pixmap.
+        Informs cairo of the new size of the X Drawable underlying the surface.
+        For a surface created for a Window (rather than a Pixmap), this function
+        must be called each time the size of the window changes. (For a
+        subwindow, you are normally resizing the window yourself, but for a
+        toplevel window, it is necessary to listen for ConfigureNotify events.)
 
-        Parameters
-        ----------
-        >>> width (int)\n
-        The width of the surface.
-        >>> height (int)\n
-        The height of the surface.
+        A Pixmap can never change size, so it is never necessary to call this
+        function on a surface created for a Pixmap.
         """
 
 class XlibSurface(Surface):
     """
-    The XLib surface is used to render cairo graphics to X Window System windows and pixmaps using the XLib library.
+    The XLib surface is used to render cairo graphics to X Window System windows
+    and pixmaps using the XLib library.
 
-    Note that the XLib surface automatically takes advantage of X render extension if it is available.
+    Note that the XLib surface automatically takes advantage of X render
+    extension if it is available.
 
-    Note
-    ----
-    `XlibSurface` cannot be instantiated directly because Python interaction with Xlib would require open source Python bindings to Xlib which provided a C API. However, a `XlibSurface` instance can be returned from a function call when using pygtk http://www.pygtk.org/.
+    .. note:: *XlibSurface* cannot be instantiated directly because Python
+      interaction with Xlib would require open source Python bindings to Xlib
+      which provided a C API.
+      However, an *XlibSurface* instance can be returned from a function call
+      when using pygtk http://www.pygtk.org/.
     """
+
     def get_depth(self) -> int:
         """
-        New in version 1.2.
+        :returns: the number of bits used to represent each pixel value.
 
-        Returns
-        -------
-        >>> int\n
-        The number of bits used to represent each pixel value.
+        .. versionadded:: 1.2
         """
+
     def get_height(self) -> int:
         """
-        New in version 1.2.
+        :returns: the height of the X Drawable underlying the surface in pixels.
 
-        Returns
-        -------
-        >>> int\n
-        The height of the X Drawable underlying the surface in pixels.
+        .. versionadded:: 1.2
         """
+
     def get_width(self) -> int:
         """
-        New in version 1.2.
+        :returns: the width of the X Drawable underlying the surface in pixels.
 
-        Returns
-        -------
-        >>> int\n
-        The width of the X Drawable underlying the surface in pixels.
+        .. versionadded:: 1.2
         """
 
 def get_include() -> str:
