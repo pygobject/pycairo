@@ -48,9 +48,3 @@ test(
   workdir: meson.build_root(),
   args: ['-m', 'pytest'],
 )
-
-test(
-  'quality', python,
-  workdir: meson.build_root(),
-  args: ['-m', 'flake8'],
-)
