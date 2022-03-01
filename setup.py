@@ -535,6 +535,9 @@ def main():
         name="pycairo",
         version=PYCAIRO_VERSION,
         url="https://pycairo.readthedocs.io",
+        project_urls={
+            'Source': 'https://github.com/pygobject/pycairo',
+        },
         description="Python interface for cairo",
         long_description=long_description,
         maintainer="Christoph Reiter",
