@@ -6,11 +6,7 @@ import sys
 import os
 import errno
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
-
+from setuptools import setup
 from distutils.core import Extension, Command, Distribution
 from distutils.ccompiler import new_compiler
 from distutils.sysconfig import customize_compiler

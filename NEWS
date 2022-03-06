@@ -6,6 +6,7 @@
 * Require Python 3.7+ :pr:`201`
 * Using `setup.py` directly to build/install pycairo is deprecated.
   Use meson instead.
+* `setup.py` now requires setuptools.
 
 
 .. _v1.20.1:
