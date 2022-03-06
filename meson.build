@@ -1,7 +1,7 @@
 project(
   'pycairo', 'c',
   version: '1.20.2',
-  meson_version: '>= 0.47.0',
+  meson_version: '>= 0.53.0',
   default_options: [
     'warning_level=1',
     'buildtype=debugoptimized',
