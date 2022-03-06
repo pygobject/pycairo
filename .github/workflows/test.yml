@@ -5,6 +5,7 @@ on:
   pull_request:
 
 jobs:
+
   msys2:
     runs-on: windows-latest
     strategy:
@@ -25,17 +26,21 @@ jobs:
           msystem: ${{ matrix.msystem }}
           update: true
           install: >-
+            git
             mingw-w64-${{ matrix.arch }}-cairo
             mingw-w64-${{ matrix.arch }}-python
             mingw-w64-${{ matrix.arch }}-python-pip
-            mingw-w64-${{ matrix.arch }}-toolchain
+            mingw-w64-${{ matrix.arch }}-cc
+            mingw-w64-${{ matrix.arch }}-meson
+            mingw-w64-${{ matrix.arch }}-ninja
+            mingw-w64-${{ matrix.arch }}-pkg-config
 
       - name: Install dependencies
         shell: msys2 {0}
         run: |
-          python -m pip install pytest coverage hypothesis
+          python -m pip install pytest coverage hypothesis setuptools wheel
 
-      - name: Run tests
+      - name: Build & Test with setuptools
         shell: msys2 {0}
         run: |
           export SETUPTOOLS_USE_DISTUTILS=stdlib
@@ -43,33 +48,26 @@ jobs:
           python -m coverage run --branch setup.py test
           python -m coverage xml -i
           python setup.py sdist
+          python setup.py bdist_wheel
           python setup.py install --root="$(pwd)"/_root_abs
-          python -m pip install dist/*
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
 
-  poetry:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
+      - name: Build & Install with pip
+        shell: msys2 {0}
+        run: |
+          git clean -xfdf
+          export SETUPTOOLS_USE_DISTUTILS=stdlib
+          python -m pip install .
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
-
-    - name: Install dependencies
-      run: |
-        sudo apt-get update -q
-        sudo apt-get install -y libcairo2-dev
-        python -m pip install --user poetry
-        poetry install
-
-    - name: Run tests
-      run: |
-        poetry run python setup.py test
-        poetry run mypy .
+      - name: Build & Test with meson
+        shell: msys2 {0}
+        run: |
+          git clean -xfdf
+          meson --werror _build
+          meson compile -C _build
+          meson test -v -C _build
 
   ubuntu:
     runs-on: ubuntu-latest
@@ -88,31 +86,52 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update -q
-        sudo apt-get install -y libcairo2-dev
+        sudo apt-get install -y libcairo2-dev ninja-build
         python -m pip install --upgrade setuptools
-        python -m pip install --upgrade pytest flake8 sphinx sphinx_rtd_theme coverage hypothesis attrs wheel
+        python -m pip install --upgrade pytest flake8 coverage hypothesis wheel poetry meson
         python -m pip install --upgrade pygame || true
 
-    - name: Run tests
+    - name: Build & Test with setuptools
       run: |
         export CFLAGS="-Werror -coverage"
         python -m coverage run --branch setup.py test
         python -m coverage xml -i
-        python -m flake8 .
         python setup.py sdist
-        python setup.py bdist
-        python setup.py install --root=_root
-        python setup.py install --root="$(pwd)"/_root_abs
-        python setup.py bdist_egg
         python setup.py bdist_wheel
-        python setup.py install --root=_root_setup
-        if [[ "${{ matrix.python-version }}" != "pypy-3.7" ]]; then
-          python -m pip install .
-        fi
-        python -m sphinx -W -a -E -b html -n docs docs/_build
+        python setup.py install --root="$(pwd)"/_root_abs
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
+
+    - name: Build & Install with pip
+      run: |
+        git clean -xfdf
+        python -m pip install .
+
+    - name: Build & Test with meson
+      run: |
+        git clean -xfdf
+        meson --werror _build
+        meson compile -C _build
+        meson test -v -C _build
+
+    - name: Build & Test with poetry
+      if: ${{ matrix.python-version != 'pypy-3.7' }}
+      run: |
+        git clean -xfdf
+        poetry install
+        poetry run python setup.py test
+
+    - name: Run linters
+      if: ${{ matrix.python-version != 'pypy-3.7' }}
+      run: |
+        poetry run flake8
+        poetry run mypy .
+
+    - name: Build docs
+      if: ${{ matrix.python-version != 'pypy-3.7' }}
+      run: |
+        poetry run python -m sphinx -W -a -E -b html -n docs docs/_build
 
   msvc:
     runs-on: windows-latest
@@ -144,7 +163,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade wheel
           python -m pip install --upgrade setuptools
-          python -m pip install --upgrade pytest flake8 sphinx sphinx_rtd_theme coverage hypothesis attrs
+          python -m pip install --upgrade pytest flake8 coverage hypothesis
           python -m pip install --upgrade pygame
           python -m coverage run --branch setup.py test
           python -m coverage xml -i
@@ -156,7 +175,6 @@ jobs:
           python setup.py bdist_wheel
           python setup.py install --root=_root_setup
           python -m pip install .
-          python -m sphinx -W -a -E -b html -n docs docs/_build
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
@@ -175,7 +193,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade wheel
           python -m pip install --upgrade setuptools
-          python -m pip install --upgrade pytest flake8 sphinx sphinx_rtd_theme coverage hypothesis attrs
+          python -m pip install --upgrade pytest flake8 coverage hypothesis
           python -m pip install --upgrade pygame
           python -m coverage run --branch setup.py test
           python -m coverage xml -i
@@ -187,7 +205,6 @@ jobs:
           python setup.py bdist_wheel
           python setup.py install --root=_root_setup
           python -m pip install .
-          python -m sphinx -W -a -E -b html -n docs docs/_build
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
@@ -204,30 +221,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install dependencies & run tests
+      - name: Install dependencies
         run: |
-          brew install pkg-config || true
-          brew install cairo || true
-          export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig"
-          brew unlink python@2 || true
-          brew install python || true
-          python3 -m venv ../venv
-          source ../venv/bin/activate
-          python -m pip install --upgrade setuptools
-          python -m pip install --upgrade pytest flake8 sphinx sphinx_rtd_theme coverage hypothesis attrs wheel
-          # run tests
-          python -m coverage run --branch setup.py test
-          python -m coverage xml -i
-          python -m flake8 .
-          python setup.py sdist
-          python setup.py bdist
-          python setup.py install --root=_root
-          python setup.py install --root="$(pwd)"/_root_abs
-          python setup.py bdist_egg
-          python setup.py bdist_wheel
-          python setup.py install --root=_root_setup
-          python -m pip install .
-          python -m sphinx -W -a -E -b html -n docs docs/_build
+          brew install pkg-config cairo python meson
+          python3 -m pip install --upgrade setuptools
+          python3 -m pip install --upgrade pytest coverage hypothesis wheel
+
+      - name: Build & Test with setuptools
+        run: |
+          python3 -m coverage run --branch setup.py test
+          python3 -m coverage xml -i
+          python3 setup.py sdist
+          python3 setup.py install --root="$(pwd)"/_root_abs
+          python3 setup.py bdist_wheel
+          python3 -m pip install .
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
+
+      - name: Build & Install with pip
+        run: |
+          git clean -xfdf
+          python3 -m pip install .
+
+      - name: Build & Test with meson
+        run: |
+          git clean -xfdf
+          meson --werror _build
+          meson compile -C _build
+          meson test -v -C _build
