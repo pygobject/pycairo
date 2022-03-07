@@ -1,13 +1,14 @@
-.. _v1.22.0:
+.. _v1.21.0:
 
-1.22.0 - 2022-??-??
+1.21.0 - 2022-03-07
 -------------------
 
-* Require Python 3.7+ :pr:`201`
+* Require Python 3.7+ :pr:`250`
+* Require meson 0.53+
 * Using `setup.py` directly to build/install pycairo is deprecated.
   Use meson instead.
-* `setup.py` now requires setuptools.
-
+* `setup.py` now requires setuptools. Previously it was optional.
+* The complete API reference is now included in the typing stubs, so it can be consumed/shown by IDEs. :pr:`236` :pr:`252`
 
 .. _v1.20.1:
 
