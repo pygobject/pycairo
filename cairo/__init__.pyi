@@ -2156,13 +2156,14 @@ class Surface:
 
     def write_to_png(self, fobj: Union[_FileLike, _PathLike]) -> None:
         """
-        :param fobj: the file to write to
+        :param fobj: a filename or writable file object
         :raises: :exc:`MemoryError` if memory could not be allocated for the operation
 
                 :exc:`IOError` if an I/O error occurs while attempting to write
                 the file
 
-        Writes the contents of *Surface* to *fobj* as a PNG image.
+        Writes the contents of *Surface* to *fobj* as a PNG image. *fobj* can either be
+        a filename or a file object opened in binary mode.
         """
 
     def unmap_image(self, image: "ImageSurface") -> None:
@@ -2239,8 +2240,12 @@ class ImageSurface(Surface):
         """
         :param fobj:
             a :obj:`_PathLike`, file, or file-like object of the PNG to load.
-        :returns: a new *ImageSurface* initialized the contents to the given
-            PNG file.
+        :returns: a new *ImageSurface* initialized the contents to the given PNG
+            file.
+
+        Creates a new image surface and initializes the contents to the given
+        PNG file. *fobj* can either be a filename or a file object opened in
+        binary mode.
         """
 
     format_stride_for_width = Format.stride_for_width
