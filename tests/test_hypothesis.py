@@ -17,6 +17,16 @@ from hypothesis.strategies import floats, integers
 from .hypothesis_fspaths import fspaths
 
 
+if "CI" in os.environ:
+    # CI can be slow, so be patient
+    # Also we can run more tests there
+    settings.register_profile(
+        "ci",
+        deadline=settings.default.deadline * 5,
+        max_examples=settings.default.max_examples * 5)
+    settings.load_profile("ci")
+
+
 @pytest.fixture(scope='module')
 def tempdir_path():
     dir_ = tempfile.mkdtemp()
@@ -44,7 +54,6 @@ def cairo_ver():
     platform.python_implementation() == "PyPy" and sys.pypy_version_info < (7, 3, 0),
     reason="PyPy bugs")
 @given(path=fspaths())
-@settings(max_examples=500)
 def test_fspaths(tempdir_path, path):
     p = _to_temp_path(tempdir_path, path)
 
