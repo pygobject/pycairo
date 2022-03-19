@@ -204,6 +204,10 @@ def test_toy_font_face():
 def test_toy_font_get_family():
     font_face = cairo.ToyFontFace("")
     assert isinstance(font_face.get_family(), str)
+    font_face = cairo.ToyFontFace("serif")
+    assert isinstance(font_face.get_family(), str)
+    font_face = cairo.ToyFontFace("sans-serif")
+    assert isinstance(font_face.get_family(), str)
 
 
 def test_toy_font_get_slant():
