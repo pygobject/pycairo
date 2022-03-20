@@ -267,7 +267,10 @@ def test_svg_version_to_string():
                     reason="too old cairo")
 def test_svg_surface_get_document_unit():
     with cairo.SVGSurface(None, 10, 10) as surface:
-        assert surface.get_document_unit() == cairo.SVGUnit.PT
+        # https://gitlab.freedesktop.org/cairo/cairo/-/issues/545
+        assert surface.get_document_unit() in [cairo.SVGUnit.PT, cairo.SVGUnit.USER]
+
+    with cairo.SVGSurface(None, 10, 10) as surface:
         surface.set_document_unit(cairo.SVGUnit.PX)
         assert surface.get_document_unit() == cairo.SVGUnit.PX
     with pytest.raises(cairo.Error):
