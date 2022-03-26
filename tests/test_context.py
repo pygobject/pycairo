@@ -57,7 +57,7 @@ def test_get_set_operator_limits(context):
         assert context.get_operator() == val
 
 
-# https://bitbucket.org/pypy/pypy/issues/2741
+# https://foss.heptapod.net/pypy/pypy/-/issues/2741
 @pytest.mark.skipif(platform.python_implementation() == "PyPy", reason="PyPy")
 def test_show_text_glyphs():
     surface = cairo.PDFSurface(None, 300, 300)
@@ -319,7 +319,7 @@ def test_scale(context):
         context.scale(object(), 0)
 
 
-# https://bitbucket.org/pypy/pypy/issues/2741
+# https://foss.heptapod.net/pypy/pypy/-/issues/2741
 @pytest.mark.skipif(platform.python_implementation() == "PyPy", reason="PyPy")
 def test_select_font_face(context):
     context.select_font_face("")
@@ -473,7 +473,7 @@ def test_text_extents(context):
         context.text_extents()
 
 
-# https://bitbucket.org/pypy/pypy/issues/2741
+# https://foss.heptapod.net/pypy/pypy/-/issues/2741
 @pytest.mark.skipif(platform.python_implementation() == "PyPy", reason="PyPy")
 def test_text_path(context):
     context.text_path("foo")

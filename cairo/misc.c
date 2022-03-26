@@ -34,7 +34,7 @@
 #include "private.h"
 
 /* PyOS_FSPath() was missing in PyPy for some time:
- * https://bitbucket.org/pypy/pypy/issues/2961 */
+ * https://foss.heptapod.net/pypy/pypy/-/issues/2961 */
 #if PY_MAJOR_VERSION >= 3 && PY_MINOR_VERSION >= 6 && (!defined(PYPY_VERSION) || PYPY_VERSION_NUM >= 0x07030000)
 #define HAS_FSPATH_SUPPORT
 #endif
@@ -59,7 +59,7 @@ Pycairo_is_fspath (PyObject *obj) {
 }
 
 #if !defined(MS_WINDOWS)
-/* Broken in PyPy: https://bitbucket.org/pypy/pypy/issues/3168 */
+/* Broken in PyPy: https://foss.heptapod.net/pypy/pypy/-/issues/3168 */
 static int
 Pycairo_PyUnicode_FSConverter(PyObject* obj, void* result) {
     int res;
@@ -79,7 +79,7 @@ Pycairo_PyUnicode_FSConverter(PyObject* obj, void* result) {
 #endif
 
 #if defined(MS_WINDOWS)
-/* Broken in PyPy: https://bitbucket.org/pypy/pypy/issues/3168 */
+/* Broken in PyPy: https://foss.heptapod.net/pypy/pypy/-/issues/3168 */
 static int
 Pycairo_PyUnicode_FSDecoder(PyObject* obj, void* result) {
     int res;
