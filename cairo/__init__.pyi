@@ -958,7 +958,7 @@ class Matrix:
     https://www.cairographics.org/cookbook/matrix_transform/
     """
 
-    def __init__(self, xx: float = 1.0, yx: float = 0.0, yy: float = 1.0, x0: float = 0.0, y0: float = 0.0) -> None:
+    def __init__(self, xx: float = 1.0, yx: float = 0.0, xy: float = 0.0, yy: float = 1.0, x0: float = 0.0, y0: float = 0.0) -> None:
         """
         :param xx: xx component of the affine transformation
         :param yx: yx component of the affine transformation
