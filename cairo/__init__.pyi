@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import (Any, BinaryIO, ByteString, Callable, List, Optional,
+from typing import (Any, BinaryIO, ByteString, Callable, Generic, List, Optional,
                     Sequence, Text, Tuple, TypeVar, Union)
 
 del annotations
@@ -2303,7 +2303,7 @@ class SurfacePattern(Pattern):
         .. versionadded:: 1.4
         """
 
-class Context:
+class Context(Generic[_SomeSurface]):
     """
     *Context* is the main object used when drawing with cairo. To draw with cairo,
     you create a *Context*, set the target surface, and drawing options for the
@@ -2316,7 +2316,7 @@ class Context:
     :meth:`Context.restore` to restore to the saved state.
     """
 
-    def __init__(self, target: Surface) -> None:
+    def __init__(self, target: _SomeSurface) -> None:
         """
         :param target: target :class:`Surface` for the context
         :raises: :exc:`MemoryError` in case of no memory
@@ -2710,7 +2710,7 @@ class Context:
         literally the options passed to :meth:`Context.set_font_options`.
         """
 
-    def get_group_target(self) -> Surface:
+    def get_group_target(self) -> _SomeSurface:
         """
         :returns: the target :class:`Surface`.
 
@@ -2774,7 +2774,7 @@ class Context:
         :returns: the current source :class:`Pattern` for  a :class:`Context`.
         """
 
-    def get_target(self) -> Surface:
+    def get_target(self) -> _SomeSurface:
         """
         :returns: the target :class:`Surface` for the :class:`Context`
         """
