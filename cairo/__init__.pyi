@@ -2651,7 +2651,7 @@ class Context:
         :meth:`Context.rel_line_to`, :meth:`Context.rel_curve_to`,
         :meth:`Context.arc`, :meth:`Context.arc_negative`,
         :meth:`Context.rectangle`, :meth:`Context.text_path`,
-        :meth:`Context.glyph_path`, `Context.stroke_to_path`.
+        :meth:`Context.glyph_path`.
 
         Some functions use and alter the current point but do not otherwise
         change current path:
@@ -3340,9 +3340,8 @@ class Context:
         Sets the current line cap style within the :class:`Context`.
 
         As with the other stroke parameters, the current line cap style is
-        examined by :meth:`.stroke`, :meth:`.stroke_extents`, and
-        `Context.stroke_to_path`, but does not have any effect during path
-        construction.
+        examined by :meth:`.stroke` and :meth:`.stroke_extents`, but does not
+        have any effect during path construction.
 
         The default line cap style is :attr:`cairo.LineCap.BUTT`.
         """
@@ -3354,9 +3353,8 @@ class Context:
         Sets the current line join style within the :class:`Context`.
 
         As with the other stroke parameters, the current line join style is
-        examined by :meth:`.stroke`, :meth:`.stroke_extents`, and
-        `Context.stroke_to_path`, but does not have any effect during path
-        construction.
+        examined by :meth:`.stroke` and :meth:`.stroke_extents`, but does not
+        have any effect during path construction.
 
         The default line join style is :attr:`cairo.LineJoin.MITER`.
         """
@@ -3380,9 +3378,8 @@ class Context:
         note.
 
         As with the other stroke parameters, the current line width is examined
-        by :meth:`.stroke`, :meth:`.stroke_extents`, and
-        `Context.stroke_to_path`, but does not have any effect during path
-        construction.
+        by :meth:`.stroke` and :meth:`.stroke_extents`, but does not have any
+        effect during path construction.
 
         The default line width value is 2.0.
         """
@@ -3409,9 +3406,8 @@ class Context:
         is greater than the miter limit, the style is converted to a bevel.
 
         As with the other stroke parameters, the current line miter limit is
-        examined by :meth:`.stroke`, :meth:`.stroke_extents`, and
-        `Context.stroke_to_path`, but does not have any effect during path
-        construction.
+        examined by :meth:`.stroke` and :meth:`.stroke_extents`, but does not
+        have any effect during path construction.
 
         The default miter limit value is 10.0, which will convert joins with
         interior angles less than 11 degrees to bevels instead of miters. For
