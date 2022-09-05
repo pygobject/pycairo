@@ -2824,6 +2824,21 @@ class Context:
         device-space unit.
         """
 
+    def in_clip(self, x: float, y: float) -> bool:
+        """
+        :param x: X coordinate of the point to test
+        :param y: Y coordinate of the point to test
+        :returns: :obj:`True` if the point is inside, or :obj:`False` if outside.
+
+        Tests whether the given point is inside the area that would be visible
+        through the current clip, i.e. the area that would be filled by a
+        :meth:`paint` operation.
+
+        See :meth:`clip`, and :meth:`clip_preserve`.
+
+        .. versionadded:: 1.12.0
+        """
+
     def in_fill(self, x: float, y: float) -> bool:
         """
         :param x: X coordinate of the point to test
@@ -3578,6 +3593,36 @@ class Context:
         "real" text display API in cairo.
         """
 
+    def show_text_glyphs(self, utf8: str, glyphs: List["Glyph"], clusters: List[TextCluster], cluster_flags: TextClusterFlags) -> None:
+        """
+        :param utf8: a string of text
+        :param glyphs: list of glyphs to show
+        :param clusters: list of cluster mapping information
+        :param cluster_flags: cluster mapping flags
+        :raises Error:
+
+        .. versionadded:: 1.15
+
+        This operation has rendering effects similar to
+        :meth:`Context.show_glyphs` but, if the target surface supports it, uses
+        the provided text and cluster mapping to embed the text for the glyphs
+        shown in the output. If the target does not support the extended
+        attributes, this function acts like the basic
+        :meth:`Context.show_glyphs` as if it had been passed ``glyphs`` .
+
+        The mapping between utf8 and glyphs is provided by a list of clusters.
+        Each cluster covers a number of text bytes and glyphs, and neighboring
+        clusters cover neighboring areas of utf8 and glyphs . The clusters
+        should collectively cover utf8 and glyphs in entirety.
+
+        The first cluster always covers bytes from the beginning of utf8 . If
+        ``cluster_flags`` do not have the :attr:`TextClusterFlags.BACKWARD` set,
+        the first cluster also covers the beginning of glyphs , otherwise it
+        covers the end of the glyphs array and following clusters move backward.
+
+        See :class:`TextCluster` for constraints on valid clusters.
+        """
+
     def stroke(self) -> None:
         """
         A drawing operator that strokes the current path according to the
@@ -3646,6 +3691,54 @@ class Context:
 
         See :meth:`.set_line_width`, :meth:`.set_line_join`,
         :meth:`.set_line_cap`, :meth:`.set_dash`, and :meth:`.stroke_preserve`.
+        """
+
+    def tag_begin(self, tag_name: str, attributes: str) -> None:
+        """
+        :param tag_name: tag name
+        :param attributes: tag attributes
+
+        Marks the beginning of the tag_name structure. Call :meth:`tag_end`
+        with the same tag_name to mark the end of the structure.
+
+        The attributes string is of the form "key1=value2 key2=value2 ...".
+        Values may be boolean (true/false or 1/0), integer, float, string, or
+        an array.
+
+        String values are enclosed in single quotes ('). Single quotes and
+        backslashes inside the string should be escaped with a backslash.
+
+        Boolean values may be set to true by only specifying the key. eg the
+        attribute string "key" is the equivalent to "key=true".
+
+        Arrays are enclosed in '[]'. eg "rect=[1.2 4.3 2.0 3.0]".
+
+        If no attributes are required, attributes can be an empty string.
+
+        See `Tags and Links Description
+        <https://www.cairographics.org/manual/cairo-Tags-and-Links.html#cairo-Tags-and-Links.description>`__
+        for the list of tags and attributes.
+
+        Invalid nesting of tags or invalid attributes will cause the context
+        to shutdown with a status of :attr:`Status.TAG_ERROR`.
+
+        See :meth:`tag_end`.
+
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
+        """
+
+    def tag_end(self, tag_name: str) -> None:
+        """
+        :param tag_name: tag name
+
+        Marks the end of the tag_name structure.
+
+        Invalid nesting of tags will cause the context to shutdown with a
+        status of :attr:`Status.TAG_ERROR`.
+
+        See :meth:`tag_begin`.
+
+        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
         """
 
     def text_extents(self, text: str) -> TextExtents:
@@ -3738,99 +3831,6 @@ class Context:
         function is similar to :meth:`Context.user_to_device` except that the
         translation components of the CTM will be ignored when transforming
         *(dx,dy)*.
-        """
-
-    def in_clip(self, x: float, y: float) -> bool:
-        """
-        :param x: X coordinate of the point to test
-        :param y: Y coordinate of the point to test
-        :returns: :obj:`True` if the point is inside, or :obj:`False` if outside.
-
-        Tests whether the given point is inside the area that would be visible
-        through the current clip, i.e. the area that would be filled by a
-        :meth:`paint` operation.
-
-        See :meth:`clip`, and :meth:`clip_preserve`.
-
-        .. versionadded:: 1.12.0
-        """
-
-    def show_text_glyphs(self, utf8: str, glyphs: List["Glyph"], clusters: List[TextCluster], cluster_flags: TextClusterFlags) -> None:
-        """
-        :param utf8: a string of text
-        :param glyphs: list of glyphs to show
-        :param clusters: list of cluster mapping information
-        :param cluster_flags: cluster mapping flags
-        :raises Error:
-
-        .. versionadded:: 1.15
-
-        This operation has rendering effects similar to
-        :meth:`Context.show_glyphs` but, if the target surface supports it, uses
-        the provided text and cluster mapping to embed the text for the glyphs
-        shown in the output. If the target does not support the extended
-        attributes, this function acts like the basic
-        :meth:`Context.show_glyphs` as if it had been passed ``glyphs`` .
-
-        The mapping between utf8 and glyphs is provided by a list of clusters.
-        Each cluster covers a number of text bytes and glyphs, and neighboring
-        clusters cover neighboring areas of utf8 and glyphs . The clusters
-        should collectively cover utf8 and glyphs in entirety.
-
-        The first cluster always covers bytes from the beginning of utf8 . If
-        ``cluster_flags`` do not have the :attr:`TextClusterFlags.BACKWARD` set,
-        the first cluster also covers the beginning of glyphs , otherwise it
-        covers the end of the glyphs array and following clusters move backward.
-
-        See :class:`TextCluster` for constraints on valid clusters.
-        """
-
-    def tag_begin(self, tag_name: str, attributes: str) -> None:
-        """
-        :param tag_name: tag name
-        :param attributes: tag attributes
-
-        Marks the beginning of the tag_name structure. Call :meth:`tag_end`
-        with the same tag_name to mark the end of the structure.
-
-        The attributes string is of the form "key1=value2 key2=value2 ...".
-        Values may be boolean (true/false or 1/0), integer, float, string, or
-        an array.
-
-        String values are enclosed in single quotes ('). Single quotes and
-        backslashes inside the string should be escaped with a backslash.
-
-        Boolean values may be set to true by only specifying the key. eg the
-        attribute string "key" is the equivalent to "key=true".
-
-        Arrays are enclosed in '[]'. eg "rect=[1.2 4.3 2.0 3.0]".
-
-        If no attributes are required, attributes can be an empty string.
-
-        See `Tags and Links Description
-        <https://www.cairographics.org/manual/cairo-Tags-and-Links.html#cairo-Tags-and-Links.description>`__
-        for the list of tags and attributes.
-
-        Invalid nesting of tags or invalid attributes will cause the context
-        to shutdown with a status of :attr:`Status.TAG_ERROR`.
-
-        See :meth:`tag_end`.
-
-        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
-        """
-
-    def tag_end(self, tag_name: str) -> None:
-        """
-        :param tag_name: tag name
-
-        Marks the end of the tag_name structure.
-
-        Invalid nesting of tags will cause the context to shutdown with a
-        status of :attr:`Status.TAG_ERROR`.
-
-        See :meth:`tag_begin`.
-
-        .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
         """
 
 class Error(Exception):
