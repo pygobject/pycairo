@@ -1,4 +1,24 @@
-from ._cairo import *  # noqa: F401,F403
+from pathlib import Path
+
+import os
+import sys
+
+if sys.platform == "win32" and sys.version_info >= (3, 8):
+    env_path = os.environ.get("PATH", "").split(os.pathsep)
+    first_gtk_dll_path = next(
+            filter(
+                lambda path: path is not None
+                and Path.is_file(Path(path) / "cairo.dll"),
+                env_path,
+            ),
+            None,
+    )
+    if first_gtk_dll_path:
+        with os.add_dll_directory(first_gtk_dll_path):
+            from ._cairo import *  # noqa: F401,F403
+
+else:
+    from ._cairo import *  # noqa: F401,F403
 
 
 def get_include():
