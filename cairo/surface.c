@@ -1291,9 +1291,19 @@ pdf_version_to_string (PyObject *self,  PyObject *args) {
 
   version = (cairo_pdf_version_t)version_arg;
 
-  Py_BEGIN_ALLOW_THREADS;
-  version_string = cairo_pdf_version_to_string (version);
-  Py_END_ALLOW_THREADS;
+  /* See https://gitlab.freedesktop.org/cairo/cairo/-/issues/590
+   * if version < 0, cairo_pdf_version_to_string will return out-of-bound
+   * memory address and could cause problems. We avoid those by checking
+   * whether the version is greater than 0 and only then calling
+   * that function.
+  */
+  if (version >= 0) {
+    Py_BEGIN_ALLOW_THREADS;
+    version_string = cairo_pdf_version_to_string (version);
+    Py_END_ALLOW_THREADS;
+  } else {
+    version_string = NULL;
+  }
 
   if (version_string == NULL) {
     PyErr_SetString (PyExc_ValueError, "invalid version");
