@@ -470,6 +470,7 @@ class build_ext(du_build_ext):
             ext.include_dirs += pkg_config_parse('--cflags-only-I', 'cairo')
             ext.library_dirs += pkg_config_parse('--libs-only-L', 'cairo')
             ext.libraries += pkg_config_parse('--libs-only-l', 'cairo')
+            ext.libraries += ['jpeg']
 
             compiler = new_compiler(compiler=self.compiler)
             customize_compiler(compiler)
@@ -489,6 +490,7 @@ def main():
             'cairo/device.c',
             'cairo/bufferproxy.c',
             'cairo/error.c',
+            'cairo/cairo_jpg.c',
             'cairo/cairomodule.c',
             'cairo/context.c',
             'cairo/font.c',
@@ -507,6 +509,7 @@ def main():
         depends=[
             'cairo/private.h',
             'cairo/pycairo.h',
+            'cairo/cairo_jpg.h',
         ],
         define_macros=[
             ("PYCAIRO_VERSION_MAJOR", PYCAIRO_VERSION.split('.')[0]),

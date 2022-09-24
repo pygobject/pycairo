@@ -33,6 +33,7 @@
 #include <Python.h>
 
 #include "private.h"
+#include "cairo_jpg.h"
 
 
 /* Class Surface ---------------------------------------------------------- */
@@ -428,6 +429,45 @@ surface_write_to_png (PycairoSurface *o, PyObject *args) {
 }
 #endif  /* CAIRO_HAS_PNG_FUNCTIONS */
 
+static PyObject *
+surface_write_to_jpg (PycairoSurface *o, PyObject *args) {
+  cairo_status_t status;
+  char *name = NULL;
+  PyObject *file;
+  int quality;
+
+  if (!PyArg_ParseTuple (args, "Oi:Surface.write_to_jpg", &file, &quality))
+    return NULL;
+
+  if (Pycairo_is_fspath (file)) {
+    if (!PyArg_ParseTuple (args, "O&i:Surface.write_to_jpg",
+                           Pycairo_fspath_converter, &name, &quality))
+      return NULL;
+    Py_BEGIN_ALLOW_THREADS;
+    status = cairo_image_surface_write_to_jpeg (o->surface, name, quality);
+    Py_END_ALLOW_THREADS;
+    PyMem_Free (name);
+  } else {
+    if (PyArg_ParseTuple (args, "O&i:Surface.write_to_jpg",
+                          Pycairo_writer_converter, &file, &quality)) {
+      Py_BEGIN_ALLOW_THREADS;
+    
+      status = cairo_image_surface_write_to_jpeg_stream (o->surface, _write_func, file, quality);
+      Py_END_ALLOW_THREADS;
+    } else {
+      PyErr_Clear ();
+      PyErr_SetString (PyExc_TypeError,
+                       "Surface.write_to_jpg takes one argument which must be "
+                       "a filename, file object, or a file-like object "
+                       "which has a \"write\" method (like BytesIO) taking bytes");
+      return NULL;
+    }
+  }
+
+  RETURN_NULL_IF_CAIRO_ERROR (status);
+  Py_RETURN_NONE;
+}
+
 static void
 _destroy_mime_user_data_func (PyObject *user_data) {
   PyGILState_STATE gstate = PyGILState_Ensure();
@@ -728,6 +768,7 @@ static PyMethodDef surface_methods[] = {
 #ifdef CAIRO_HAS_PNG_FUNCTIONS
   {"write_to_png",   (PyCFunction)surface_write_to_png,       METH_VARARGS},
 #endif
+  {"write_to_jpg",   (PyCFunction)surface_write_to_jpg,       METH_VARARGS},
   {"set_mime_data",  (PyCFunction)surface_set_mime_data,      METH_VARARGS},
   {"get_mime_data",  (PyCFunction)surface_get_mime_data,      METH_VARARGS},
   {"supports_mime_type", (PyCFunction)surface_supports_mime_type,

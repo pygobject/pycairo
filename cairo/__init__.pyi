@@ -2166,6 +2166,19 @@ class Surface:
         a filename or a file object opened in binary mode.
         """
 
+    def write_to_jpg(self, fobj: Union[_FileLike, _PathLike], quality: int) -> None:
+        """
+        :param fobj: a filename or writable file object
+        :raises: :exc:`MemoryError` if memory could not be allocated for the operation
+
+                :exc:`IOError` if an I/O error occurs while attempting to write
+                the file
+
+        Writes the contents of *Surface* to *fobj* as a PNG image. *fobj* can either be
+        a filename or a file object opened in binary mode.
+        """
+
+
     def unmap_image(self, image: "ImageSurface") -> None:
         """
         :param image: the currently mapped image

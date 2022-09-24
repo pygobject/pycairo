@@ -8,6 +8,7 @@ sources = [
   'bufferproxy.c',
   'cairomodule.c',
   'context.c',
+  'cairo_jpg.c',
   'device.c',
   'enums.c',
   'error.c',
@@ -42,6 +43,8 @@ if cc.get_id() == 'msvc' and not cairo_dep.found()
   endif
 endif
 
+jpeg_dep = dependency('jpeg', version>=8.0.0)
+
 python.install_sources(python_sources,
   pure : false,
   subdir : 'cairo'
@@ -73,7 +76,7 @@ else
 endif
 
 pyext = python.extension_module('_cairo', sources,
-  dependencies : [python_ext_dep, cairo_dep],
+  dependencies : [python_ext_dep, cairo_dep, jpeg_dep],
   install: true,
   subdir : 'cairo',
   c_args: pyext_c_args + main_c_args,
