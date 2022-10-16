@@ -140,7 +140,7 @@ Converting an ImageSurface to a PIL Image:
         import cairo
         import PIL.Image as Image
 
-        def to_pill(surface: cairo.ImageSurface) -> Image:
+        def to_pil(surface: cairo.ImageSurface) -> Image:
             format = surface.get_format()
             size = (surface.get_width(), surface.get_height())
             stride = surface.get_stride()
@@ -161,7 +161,7 @@ Converting an ImageSurface to a PIL Image:
         surface = cairo.ImageSurface.create_from_png("test.png")
 
         # Convert to a PIL Image
-        im = to_pill(surface)
+        im = to_pil(surface)
 
         # Use Pillow to store it as a JPEG
         im.save("result.jpg")
