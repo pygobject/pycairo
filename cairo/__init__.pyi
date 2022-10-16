@@ -2277,7 +2277,7 @@ class ImageSurface(Surface):
         :returns: the height of the *ImageSurface* in pixels.
         """
 
-    def get_stride(self) -> bytes:
+    def get_stride(self) -> int:
         """
         :returns: the stride of the *ImageSurface* in bytes. The stride is the
             distance in bytes from the beginning of one row of the image data to
