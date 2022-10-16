@@ -35,7 +35,7 @@ def do_snippet(snippet):
 
 
 if __name__ == '__main__':
-    if not(cairo.HAS_IMAGE_SURFACE and cairo.HAS_PNG_FUNCTIONS):
+    if not (cairo.HAS_IMAGE_SURFACE and cairo.HAS_PNG_FUNCTIONS):
         raise SystemExit(
             'cairo was not compiled with ImageSurface and PNG support')
 

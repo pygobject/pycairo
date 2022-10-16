@@ -10,8 +10,8 @@ python = "^3.7"
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.1"
 hypothesis = "^6.0.0"
-mypy = {version = "^0.931", markers = "platform_python_implementation != 'PyPy'"}
-flake8 = "^3.9.2"
+mypy = {version = "^0.982", markers = "platform_python_implementation != 'PyPy'"}
+flake8 = "^5.0.4"
 Sphinx = "^4.3.2"
 sphinx-rtd-theme = "^1.0.0"
 coverage = "^6.3.2"

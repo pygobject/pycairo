@@ -33,7 +33,7 @@ def fill_checks(ctx, x, y, width, height):
     # Only works for CHECK_SIZE a power of 2
     for j in range(x & -CHECK_SIZE, height, CHECK_SIZE):
         for i in range(y & -CHECK_SIZE, width, CHECK_SIZE):
-            if((i / CHECK_SIZE + j / CHECK_SIZE) % 2 == 0):
+            if ((i / CHECK_SIZE + j / CHECK_SIZE) % 2 == 0):
                 ctx.rectangle(i, j, CHECK_SIZE, CHECK_SIZE)
 
     ctx.set_source_rgb(0.7, 0.7, 0.7)
