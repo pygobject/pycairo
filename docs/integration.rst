@@ -135,7 +135,6 @@ Creating an ImageSurface from a PIL Image:
         surface3 = from_pil(im, alpha=0.5, format=cairo.FORMAT_ARGB32)
 
 Converting an ImageSurface to a PIL Image:
-
     .. code:: python
 
         import cairo
