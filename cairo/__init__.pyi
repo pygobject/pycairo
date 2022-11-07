@@ -298,8 +298,10 @@ class Format(_IntEnum):
 
     RGB24: "Format" = ...
     """
-    each pixel is a 32-bit quantity, with the upper 8 bits unused. Red,
+    each pixel is a 32-bit quantity, with the upper 8 bits unused. [#]_  Red,
     Green, and Blue are stored in the remaining 24 bits in that order.
+
+    .. [#] Cairo operators (for example CLEAR and SRC) may overwrite unused bytes as an implementation side-effect, their values should be considered undefined.
     """
 
     RGB30: "Format" = ...
