@@ -126,3 +126,9 @@ Other Classes and Functions
     This type only exists for documentation purposes.
 
     This represents a file object opened in binary mode: :obj:`typing.BinaryIO`
+
+.. class:: _SomeSurface
+
+    This type only exists for documentation purposes.
+
+    This represents a :class:`Surface` subclass.
