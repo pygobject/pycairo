@@ -2710,7 +2710,7 @@ class Context(Generic[_SomeSurface]):
         literally the options passed to :meth:`Context.set_font_options`.
         """
 
-    def get_group_target(self) -> _SomeSurface:
+    def get_group_target(self) -> Surface:
         """
         :returns: the target :class:`Surface`.
 
