@@ -139,11 +139,11 @@ def test_tee_surface():
 @pytest.mark.skipif(not hasattr(sys, "getrefcount"), reason="PyPy")
 def test_image_surface_get_data_refcount():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
-    assert sys.getrefcount(surface) == 2
+    refcount = sys.getrefcount(surface)
     d = surface.get_data()
-    assert sys.getrefcount(surface) == 3
+    assert sys.getrefcount(surface) != refcount
     del d
-    assert sys.getrefcount(surface) == 2
+    assert sys.getrefcount(surface) == refcount
 
 
 def test_image_surface_get_data_crasher():

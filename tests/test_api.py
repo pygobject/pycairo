@@ -281,8 +281,9 @@ def test_surface_get_set_mime_data_references():
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
     v = memoryview(b"bla")
     x = v[:1]
-    assert sys.getrefcount(v) == 2
-    assert sys.getrefcount(x) == 2
+    recfcount_v = sys.getrefcount(v)
+    recfcount_x = sys.getrefcount(x)
+    assert recfcount_v == recfcount_x
     surface.set_mime_data("foo", v)
     surface.set_mime_data("foo2", v)
     surface.set_mime_data("foo3", x)
@@ -293,8 +294,8 @@ def test_surface_get_set_mime_data_references():
     surface.set_mime_data("foo2", None)
     surface.set_mime_data("foo3", None)
     surface.finish()
-    assert sys.getrefcount(v) == 2
-    assert sys.getrefcount(x) == 2
+    assert sys.getrefcount(v) == recfcount_v
+    assert sys.getrefcount(x) == recfcount_x
 
 
 @pytest.mark.skipif(
