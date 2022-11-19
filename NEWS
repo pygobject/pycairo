@@ -1,5 +1,22 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning <http://semver.org/>`__
 
+.. _v1.22.0:
+
+1.22.0 - 2022-11-19
+-------------------
+
+* Officially support Python 3.11 :pr:`285`
+* PDFSurface.version_to_string(): Fix crash with negative versions :pr:`279`
+* typing: ImageSurface.get_stride() returns an int :pr:`282`
+* typing: Fix incorrect interface for Matrix constructor :pr:`271`
+* typing: Use Generic for Context :pr:`274`
+* docs: some cairo.Context fixes :pr:`276`
+* docs: try to make create_from_png/write_to_png more clear :pr:`261`
+* docs: add an example for how to convert a surface to pillow :pr:`281`
+* docs: cairo.Format.RGB24: document that unused bytes may be overwritten :pr:`289`
+* tests: don't depend on specific ref counts :pr:`291`
+* tests: compatibility fixes for cairo 1.17.6 :pr:`264`
+
 .. _v1.21.0:
 
 1.21.0 - 2022-03-07
