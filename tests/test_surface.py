@@ -739,3 +739,11 @@ def test_recording_surface():
 
     surface = cairo.RecordingSurface(cairo.CONTENT_COLOR, None)
     assert surface.ink_extents() == (0.0, 0.0, 0.0, 0.0)
+
+
+@pytest.mark.skipif(not hasattr(cairo.Format, "RGB96F"), reason="too old cairo")
+def test_format_rgbf():
+    surface = cairo.ImageSurface(cairo.Format.RGB96F, 3, 3)
+    assert surface.get_format() == cairo.Format.RGB96F
+    surface = cairo.ImageSurface(cairo.Format.RGBA128F, 3, 3)
+    assert surface.get_format() == cairo.Format.RGBA128F

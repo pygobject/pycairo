@@ -309,6 +309,20 @@ class Format(_IntEnum):
     like :data:`RGB24` but with 10bpc.
     """
 
+    RGB96F: "Format" = ...
+    """
+    3 floats, R, G, B.
+
+    .. versionadded:: 1.23 Only available with cairo 1.17.2+
+    """
+
+    RGBA128F: "Format" = ...
+    """
+    4 floats, R, G, B, A.
+
+    .. versionadded:: 1.23 Only available with cairo 1.17.2+
+    """
+
 class HintMetrics(_IntEnum):
     """
     These constants specify whether to hint font metrics; hinting font metrics
@@ -5467,6 +5481,8 @@ FORMAT_INVALID = Format.INVALID
 FORMAT_RGB16_565 = Format.RGB16_565
 FORMAT_RGB24 = Format.RGB24
 FORMAT_RGB30 = Format.RGB30
+FORMAT_RGB96F = Format.RGB96F
+FORMAT_RGBA128F = Format.RGBA128F
 HINT_METRICS_DEFAULT = HintMetrics.DEFAULT
 HINT_METRICS_OFF = HintMetrics.OFF
 HINT_METRICS_ON = HintMetrics.ON
