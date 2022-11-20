@@ -513,6 +513,11 @@ PYCAIRO_MODINIT_FUNC PyInit__cairo(void)
 #else
   PyModule_AddIntConstant(m, "HAS_TEE_SURFACE", 0);
 #endif
+#ifdef CAIRO_HAS_DWRITE_FONT
+  PyModule_AddIntConstant(m, "HAS_DWRITE_FONT", 1);
+#else
+  PyModule_AddIntConstant(m, "HAS_DWRITE_FONT", 0);
+#endif
 
   PyModule_AddIntConstant(m, "CAIRO_VERSION", CAIRO_VERSION);
   PyModule_AddIntConstant(m, "CAIRO_VERSION_MAJOR", CAIRO_VERSION_MAJOR);
