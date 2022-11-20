@@ -533,3 +533,12 @@ def test_simple(context):
     assert isinstance(context.get_tolerance(), float)
     assert isinstance(context.get_miter_limit(), float)
     assert isinstance(context.get_matrix(), cairo.Matrix)
+
+
+@pytest.mark.skipif(not hasattr(cairo.Context, "set_hairline"),
+                    reason="too old cairo")
+def test_hairline(context: cairo.Context):
+    assert not context.get_hairline()
+    context.set_hairline(True)
+    assert isinstance(context.get_hairline(), bool)
+    assert context.get_hairline()
