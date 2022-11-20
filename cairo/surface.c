@@ -1254,6 +1254,25 @@ pdf_surface_set_size (PycairoPDFSurface *o, PyObject *args) {
   Py_RETURN_NONE;
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 6)
+static PyObject *
+pdf_surface_set_custom_metadata (PycairoPDFSurface *o, PyObject *args) {
+  const char *name;
+  const char *value;
+
+  if (!PyArg_ParseTuple (args, "sz:PDFSurface.set_custom_metadata",
+                         &name, &value))
+    return NULL;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_pdf_surface_set_custom_metadata (o->surface, name, value);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_NULL_IF_CAIRO_SURFACE_ERROR (o->surface);
+  Py_RETURN_NONE;
+}
+#endif
+
 static PyObject *
 pdf_get_versions (PyObject *self, PyObject *ignored) {
   PyObject *list, *num;
@@ -1418,6 +1437,9 @@ pdf_surface_add_outline (PycairoPDFSurface *o, PyObject *args) {
 #endif
 
 static PyMethodDef pdf_surface_methods[] = {
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 6)
+  {"set_custom_metadata", (PyCFunction)pdf_surface_set_custom_metadata, METH_VARARGS},
+#endif
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
   {"set_page_label", (PyCFunction)pdf_surface_set_page_label, METH_VARARGS},
   {"set_metadata", (PyCFunction)pdf_surface_set_metadata, METH_VARARGS},
