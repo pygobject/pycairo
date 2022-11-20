@@ -482,6 +482,10 @@ init_enums (PyObject *module) {
     ENUM(PDFVersion);
     CONSTANT(PDFVersion, PDF, VERSION_1_4);
     CONSTANT(PDFVersion, PDF, VERSION_1_5);
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 6)
+    CONSTANT(PDFVersion, PDF, VERSION_1_6);
+    CONSTANT(PDFVersion, PDF, VERSION_1_7);
+#endif
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
     ENUM(PDFMetadata);
     CONSTANT(PDFMetadata, PDF_METADATA, TITLE);
