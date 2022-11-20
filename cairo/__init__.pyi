@@ -2761,6 +2761,16 @@ class Context(Generic[_SomeSurface]):
         .. versionadded:: 1.2
         """
 
+    def get_hairline(self) -> bool:
+        """
+        :returns: whether hairline mode is set.
+
+        Returns whether or not hairline mode is set, as set by
+        :meth:`Context.set_hairline`.
+
+        .. versionadded:: 1.23 Only available with cairo 1.17.6+
+        """
+
     def get_line_cap(self) -> LineCap:
         """
         :returns: the current line cap style, as
@@ -3384,6 +3394,33 @@ class Context(Generic[_SomeSurface]):
         If text is drawn without a call to :meth:`.set_font_size`, (nor
         :meth:`.set_font_matrix` nor :meth:`.set_scaled_font`), the default font
         size is 10.0.
+        """
+
+    def set_hairline(self, set_hairline: bool) -> None:
+        """
+        :param set_hairline: whether or not to set hairline mode
+
+        Sets lines within the cairo context to be hairlines. Hairlines are
+        logically zero-width lines that are drawn at the thinnest renderable
+        width possible in the current context. On surfaces with native hairline
+        support, the native hairline functionality will be used. Surfaces that
+        support hairlines include:
+
+        - pdf/ps: Encoded as 0-width line.
+        - win32_printing: Rendered with PS_COSMETIC pen.
+        - svg: Encoded as 1px non-scaling-stroke.
+        - script: Encoded with set-hairline function.
+
+        Cairo will always render hairlines at 1 device unit wide, even if an
+        anisotropic scaling was applied to the stroke width. In the wild,
+        handling of this situation is not well-defined. Some PDF, PS, and SVG
+        renderers match Cairo's output, but some very popular implementations
+        (Acrobat, Chrome, rsvg) will scale the hairline unevenly. As such, best
+        practice is to reset any anisotropic scaling before calling
+        :meth:`.stroke`. See https://cairographics.org/cookbook/ellipses/ for an
+        example.
+
+        .. versionadded:: 1.23 Only available with cairo 1.17.6+
         """
 
     def set_line_cap(self, line_cap: LineCap) -> None:

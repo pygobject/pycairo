@@ -74,6 +74,27 @@ pycairo_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
   return PycairoContext_FromContext (cairo_create (s->surface), type, NULL);
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 6)
+static PyObject *
+pycairo_set_hairline (PycairoContext *o, PyObject *args) {
+    PyObject *py_hairline;
+    if (!PyArg_ParseTuple(args, "O!:Context.set_hairline",
+                &PyBool_Type, &py_hairline))
+        return NULL;
+    cairo_set_hairline (o->ctx, (py_hairline == Py_True));
+    RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
+    Py_RETURN_NONE;
+}
+
+static PyObject *
+pycairo_get_hairline (PycairoContext *o, PyObject *ignored) {
+  PyObject *set_hairline = cairo_get_hairline (o->ctx) ? Py_True : Py_False;
+  RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
+  Py_INCREF(set_hairline);
+  return set_hairline;
+}
+#endif
+
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
 static PyObject *
 pycairo_tag_begin (PycairoContext *o, PyObject *args) {
@@ -1351,6 +1372,10 @@ static PyMethodDef pycairo_methods[] = {
    * - not needed since Pycairo calls Pycairo_Check_Status() to check
    *   for errors and raise exceptions
    */
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 6)
+  {"set_hairline",    (PyCFunction)pycairo_set_hairline,     METH_VARARGS},
+  {"get_hairline",    (PyCFunction)pycairo_get_hairline,     METH_NOARGS},
+#endif
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
   {"tag_begin",       (PyCFunction)pycairo_tag_begin,        METH_VARARGS},
   {"tag_end",         (PyCFunction)pycairo_tag_end,          METH_VARARGS},
