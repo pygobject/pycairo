@@ -325,6 +325,10 @@ init_enums (PyObject *module) {
     CONSTANT(Format, FORMAT, A1);
     CONSTANT(Format, FORMAT, RGB16_565);
     CONSTANT(Format, FORMAT, RGB30);
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 2)
+    CONSTANT(Format, FORMAT, RGB96F);
+    CONSTANT(Format, FORMAT, RGBA128F);
+#endif
 
     ENUM(HintMetrics);
     CONSTANT(HintMetrics, HINT_METRICS, DEFAULT);
