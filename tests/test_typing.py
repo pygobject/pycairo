@@ -36,10 +36,4 @@ def test_typing():
                 names.add(key)
         return names
 
-    # We expose all potential API in the typing stubs, so only check
-    # if it exactly matches the Python module with a new enough cairo
-    cairo_version = tuple(map(int, cairo.cairo_version_string().split(".")))
-    if cairo_version >= (1, 16, 0):
-        assert collect_names(cairo) == collect_names(mod)
-    else:
-        assert collect_names(cairo) <= collect_names(mod)
+    assert collect_names(cairo) <= collect_names(mod)
