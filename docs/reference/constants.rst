@@ -59,6 +59,7 @@ cairo.HAS
 .. autodata:: HAS_MIME_SURFACE
 .. autodata:: HAS_SCRIPT_SURFACE
 .. autodata:: HAS_TEE_SURFACE
+.. autodata:: HAS_DWRITE_FONT
 
 .. _constants_TAG:
 
