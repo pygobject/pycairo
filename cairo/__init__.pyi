@@ -757,6 +757,20 @@ class PDFVersion(_IntEnum):
     VERSION_1_5: "PDFVersion" = ...
     """The version 1.5 of the PDF specification."""
 
+    VERSION_1_6: "PDFVersion" = ...
+    """
+    The version 1.6 of the PDF specification.
+
+    .. versionadded:: 1.23.0 Only available with cairo 1.17.6+
+    """
+
+    VERSION_1_7: "PDFVersion" = ...
+    """
+    The version 1.7 of the PDF specification.
+
+    .. versionadded:: 1.23.0 Only available with cairo 1.17.6+
+    """
+
 class PSLevel(_IntEnum):
     """
     These constants are used to describe the language level of the PostScript
@@ -5520,6 +5534,8 @@ PATH_LINE_TO = PathDataType.LINE_TO
 PATH_MOVE_TO = PathDataType.MOVE_TO
 PDF_VERSION_1_4 = PDFVersion.VERSION_1_4
 PDF_VERSION_1_5 = PDFVersion.VERSION_1_5
+PDF_VERSION_1_6 = PDFVersion.VERSION_1_6
+PDF_VERSION_1_7 = PDFVersion.VERSION_1_7
 PS_LEVEL_2 = PSLevel.LEVEL_2
 PS_LEVEL_3 = PSLevel.LEVEL_3
 REGION_OVERLAP_IN = RegionOverlap.IN
