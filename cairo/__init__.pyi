@@ -738,6 +738,10 @@ class Status(_IntEnum):
     """
     .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
     """
+    DWRITE_ERROR: "Status" = ...
+    """
+    .. versionadded:: 1.23.0 Only available with cairo 1.17.6+
+    """
 
 class PDFVersion(_IntEnum):
     """
@@ -5594,6 +5598,7 @@ STATUS_TAG_ERROR = Status.TAG_ERROR
 STATUS_FREETYPE_ERROR = Status.FREETYPE_ERROR
 STATUS_WIN32_GDI_ERROR = Status.WIN32_GDI_ERROR
 STATUS_PNG_ERROR = Status.PNG_ERROR
+STATUS_DWRITE_ERROR = Status.DWRITE_ERROR
 PDF_OUTLINE_FLAG_OPEN = PDFOutlineFlags.OPEN
 PDF_OUTLINE_FLAG_BOLD = PDFOutlineFlags.BOLD
 PDF_OUTLINE_FLAG_ITALIC = PDFOutlineFlags.ITALIC

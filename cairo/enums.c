@@ -425,6 +425,9 @@ init_enums (PyObject *module) {
     CONSTANT(Status, STATUS, WIN32_GDI_ERROR);
     CONSTANT(Status, STATUS, TAG_ERROR);
 #endif
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 6)
+    CONSTANT(Status, STATUS, DWRITE_ERROR);
+#endif
     CONSTANT(Status, STATUS, LAST_STATUS);
 
     ENUM(PathDataType);
