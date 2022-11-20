@@ -4346,6 +4346,25 @@ class PDFSurface(Surface):
         .. versionadded:: 1.2
         """
 
+    def set_custom_metadata(self, name: str, value: Optional[str]) -> None:
+        """
+        :param name: The name of the custom metadata item to set.
+        :param value: The value of the metadata.
+
+        Set custom document metadata. *name* may be any string except for the
+        following names reserved by PDF: "Title", "Author", "Subject",
+        "Keywords", "Creator", "Producer", "CreationDate", "ModDate", "Trapped".
+
+        If *value* is :obj:`None` or an empty string, the *name* metadata will
+        not be set.
+
+        For example::
+
+            surface.set_custom_metadata("ISBN", "978-0123456789")
+
+        .. versionadded:: 1.23.0 Only available with cairo 1.17.6+
+        """
+
     def set_size(self, width_in_points: float, height_in_points: float) -> None:
         """
         :param width_in_points: new surface width, in points

@@ -211,6 +211,16 @@ def test_pdf_set_metadata():
         surface.set_metadata(cairo.PDFMetadata.AUTHOR, "author")
 
 
+@pytest.mark.skipif(not hasattr(cairo.PDFSurface, "set_custom_metadata"),
+                    reason="too old cairo")
+def test_pdf_set_custom_metadata():
+    fileobj = io.BytesIO()
+    with cairo.PDFSurface(fileobj, 128, 128) as surface:
+        surface.set_custom_metadata("ISBN", "978-0123456789")
+        with pytest.raises(cairo.Error):
+            surface.set_custom_metadata("Author", "Author isn't allowed")
+
+
 @pytest.mark.skipif(not hasattr(cairo.PDFSurface, "add_outline"),
                     reason="too old cairo")
 def test_pdf_add_outline():
