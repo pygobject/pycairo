@@ -8,13 +8,13 @@ authors = ["Christoph Reiter"]
 python = "^3.7"
 
 [tool.poetry.dev-dependencies]
-pytest = "^7.0.1"
-hypothesis = "^6.0.0"
+pytest = "^7.2.0"
+hypothesis = "^6.58.0"
 mypy = {version = "^0.991", markers = "platform_python_implementation != 'PyPy'"}
 flake8 = "^5.0.4"
 Sphinx = "^4.3.2"
-sphinx-rtd-theme = "^1.0.0"
-coverage = "^6.3.2"
+sphinx-rtd-theme = "^1.1.1"
+coverage = "^6.5.0"
 sphinx-autobuild = "^2021.3.14"
 
 [build-system]
