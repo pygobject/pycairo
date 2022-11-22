@@ -55,6 +55,7 @@ Features of the Pycairo bindings:
 * Provides an object oriented interface to cairo.
 * Queries the error status of objects and translates them to exceptions.
 * Provides a C API that can be used by other Python extensions.
+* Fully typed and documented API.
 
 If Pycairo is not what you need, have a look at `cairocffi
 <https://cairocffi.readthedocs.io>`__, which is an API compatible package
