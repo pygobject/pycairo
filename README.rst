@@ -58,6 +58,3 @@ Features of the Pycairo bindings:
 * Fully typed and documented API.
 
 For more information visit https://pycairo.readthedocs.io
-
-.. image:: https://codecov.io/gh/pygobject/pycairo/branch/master/graph/badge.svg
-  :target: https://codecov.io/gh/pygobject/pycairo
