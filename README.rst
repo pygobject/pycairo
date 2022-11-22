@@ -57,13 +57,6 @@ Features of the Pycairo bindings:
 * Provides a C API that can be used by other Python extensions.
 * Fully typed and documented API.
 
-If Pycairo is not what you need, have a look at `cairocffi
-<https://cairocffi.readthedocs.io>`__, which is an API compatible package
-using `cffi <https://cffi.readthedocs.io/>`__ or `Qahirah
-<https://github.com/ldo/qahirah>`__, which is using `ctypes
-<https://docs.python.org/3/library/ctypes.html>`__ and provides a more
-"pythonic" API with less focus on matching the cairo C API.
-
 For more information visit https://pycairo.readthedocs.io
 
 .. image:: https://codecov.io/gh/pygobject/pycairo/branch/master/graph/badge.svg
