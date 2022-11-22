@@ -18,5 +18,5 @@ coverage = "^6.5.0"
 sphinx-autobuild = "^2021.3.14"
 
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
