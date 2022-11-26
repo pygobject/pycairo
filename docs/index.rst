@@ -18,7 +18,7 @@
    changelog
    Tutorial <tutorial>
    reference/index
-   pycairo_c_api
+   c_api/index
    resources
    faq
 
