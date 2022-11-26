@@ -5,51 +5,7 @@
 C API Reference
 ***************
 
-.. currentmodule:: cairo
-
-This manual documents the API used by C and C++ programmers who want to write
-extension modules that use pycairo.
-
-
-Pycairo Compiler Flags
-======================
-
-To compile a Python extension using Pycairo you need to know where Pycairo and
-cairo are located and what flags to pass to the compiler and linker.
-
-1. Variant:
-
-    Only available since version 1.16.0.
-
-    While Pycairo installs a pkg-config file, in case of virtualenvs,
-    installation to the user directory or when using wheels/eggs, pkg-config
-    will not be able to locate the .pc file. The :func:`get_include` function
-    should work in all cases, as long as Pycairo is in your Python search path.
-
-    Compiler Flags:
-        * ``python -c "import cairo; print(cairo.get_include())"``
-        * ``pkg-config --cflags cairo``
-
-    Linker Flags:
-        * ``pkg-config --libs cairo``
-
-2. Variant:
-
-    This works with older versions, but with the limitations mentioned above.
-    Use it as a fallback if you want to support older versions or if your
-    module does not require virtualenv/pip support.
-
-    Compiler Flags:
-        * ``pkg-config --cflags pycairo`` or ``pkg-config --cflags py3cairo``
-
-    Linker Flags:
-        * ``pkg-config --libs pycairo`` or ``pkg-config --libs py3cairo``
-
-
 .. _api-includes:
-
-To access the Pycairo C API under Python 3
-==========================================
 
 Example showing how to import the pycairo API::
 
