@@ -141,23 +141,21 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Download and extract Cairo Binary
-        run: |
-          python tools/download-cairo-win32.py
-
       - name: Set up Python ${{ matrix.python-version }} for x64
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
           architecture: 'x64'
 
+      - name: Download and extract Cairo Binary
+        run: |
+          python tools/download-cairo-win32.py
+
       - name: Build x64 Build
-        shell: cmd
         env:
           PKG_CONFIG: ${{ github.workspace }}/cairo-prebuild/bin/pkgconf.exe
           PKG_CONFIG_PATH: ${{ github.workspace }}/cairo-prebuild/lib/pkgconfig
         run: |
-          python download-cairo-win32.py
           python -m pip install --upgrade pip wheel
           python -m pip install --upgrade setuptools
           python -m pip install --upgrade pytest flake8 coverage hypothesis
@@ -181,13 +179,15 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: 'x86'
 
+      - name: Download and extract Cairo Binary
+        run: |
+          python tools/download-cairo-win32.py
+
       - name: Build x86 Build
-        shell: cmd
         env:
           PKG_CONFIG: ${{ github.workspace }}/cairo-prebuild/bin/pkgconf.exe
           PKG_CONFIG_PATH: ${{ github.workspace }}/cairo-prebuild/lib/pkgconfig
         run: |
-          python tools/download-cairo-win32.py
           python -m pip install --upgrade pip
           python -m pip install --upgrade wheel
           python -m pip install --upgrade setuptools
