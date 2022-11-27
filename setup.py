@@ -21,6 +21,7 @@ CAIRO_VERSION_REQUIRED = '1.15.10'
 PYCAIRO_BUILD_NO_PKGCONFIG = os.environ.get("PYCAIRO_BUILD_NO_PKGCONFIG", False)
 PYCAIRO_BUILD_MSVC_STATIC = os.environ.get("PYCAIRO_BUILD_MSVC_STATIC", True)
 
+
 def get_command_class(name):
     # in case pip loads with setuptools this returns the extended commands
     return Distribution({}).get_command_class(name)
