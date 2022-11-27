@@ -6,6 +6,17 @@ Since version 1.11.0 Pycairo uses `Semantic Versioning <http://semver.org/>`__
 -------------------
 
 * git: changed default branch from "master" to "main"
+* Windows: Update the cairo version included in the wheels from 1.17.2 to 1.17.6 :pr:`243`
+* docs: Document how to look up pycairo headers without loading the module :pr:`300`
+* tests: don't error out if cairo wasn't built with all features :pr:`293`
+* New APIs:
+
+  * :attr:`Status.DWRITE_ERROR` :pr:`294`
+  * :attr:`Format.RGB96F`, :attr:`Format.RGBA128F` :pr:`295`
+  * :attr:`PDFVersion.VERSION_1_6`, :attr:`PDFVersion.VERSION_1_7` :pr:`296`
+  * :attr:`HAS_DWRITE_FONT` :pr:`297`
+  * :meth:`Context.set_hairline`, :meth:`Context.get_hairline` :pr:`298`
+  * :meth:`PDFSurface.set_custom_metadata` :pr:`299`
 
 .. _v1.22.0:
 
