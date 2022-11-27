@@ -149,7 +149,7 @@ jobs:
 
       - name: Download and extract Cairo Binary
         run: |
-          python tools/download-cairo-win32.py
+          python .ci/download-cairo-win32.py
 
       - name: Build x64 Build
         env:
@@ -181,7 +181,7 @@ jobs:
 
       - name: Download and extract Cairo Binary
         run: |
-          python tools/download-cairo-win32.py
+          python .ci/download-cairo-win32.py
 
       - name: Build x86 Build
         env:
