@@ -1,6 +1,6 @@
 project(
   'pycairo', 'c',
-  version: '1.22.1',
+  version: '1.23.0',
   meson_version: '>= 0.53.0',
   license: 'LGPL-2.1-only OR MPL-1.1',
   default_options: [

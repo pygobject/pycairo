@@ -2,7 +2,7 @@ Since version 1.11.0 Pycairo uses `Semantic Versioning <http://semver.org/>`__
 
 .. _v1.23.0:
 
-1.23.0 - Unreleased
+1.23.0 - 2022-11-28
 -------------------
 
 * git: changed default branch from "master" to "main"
