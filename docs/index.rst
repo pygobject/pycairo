@@ -16,7 +16,7 @@
 
    getting_started
    changelog
-   Tutorial <tutorial>
+   tutorial/index
    reference/index
    c_api/index
    resources
