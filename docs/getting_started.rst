@@ -20,3 +20,17 @@ To verify that the installation works run the following Python code:
 .. code:: python
 
     import cairo
+
+FAQ
+---
+
+**My cairo import is failing after installing it with pip**
+
+pip caches Python wheels from earlier installs by default and if the cairo
+version the wheel was built against ist different from the one you run against
+then this might lead to errors. You can force pip to re-build and re-install
+pycairo in this case:
+
+::
+
+    pip3 install --force-reinstall --no-cache-dir pycairo
