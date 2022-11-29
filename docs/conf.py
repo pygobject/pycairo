@@ -32,7 +32,7 @@ master_doc = 'index'
 project = u'Pycairo'
 html_show_copyright = False
 exclude_patterns = ['_build']
-pygments_style = 'sphinx'
+pygments_style = 'friendly'
 html_theme = "sphinx_rtd_theme"
 html_theme_options = {
     "display_version": False,
