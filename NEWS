@@ -5,6 +5,9 @@ Since version 1.11.0 Pycairo uses `Semantic Versioning <http://semver.org/>`__
 1.23.0 - 2022-11-28
 -------------------
 
+Reminder to distro packagers: Building/installing pycairo using setup.py is
+deprecated, please use meson instead.
+
 * git: changed default branch from "master" to "main"
 * Windows: Update the cairo version included in the wheels from 1.17.2 to 1.17.6 :pr:`243`
 * docs: Document how to look up pycairo headers without loading the module :pr:`300`
