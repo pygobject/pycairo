@@ -45,6 +45,6 @@ endforeach
 
 test(
   'tests', python,
-  workdir: meson.build_root(),
+  workdir: meson.project_build_root(),
   args: ['-m', 'pytest'],
 )
