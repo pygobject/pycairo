@@ -31,7 +31,7 @@ def test_image_surface_create_for_data_numpy_array():
 
 
 def test_image_surface_get_data_to_numpy_array():
-    w, h = 128, 128
+    w, h = 300, 128
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
     ctx = cairo.Context(surface)
 
@@ -51,7 +51,7 @@ def test_image_surface_get_data_to_numpy_array():
 
     buf = surface.get_data()
 
-    a = numpy.ndarray(shape=(w, h), dtype=numpy.uint32, buffer=buf)
+    a = numpy.ndarray(shape=(h, w), dtype=numpy.uint32, buffer=buf)
 
     # draw a vertical blue line
     a[:, 40] = 0xff | 0xff << 24
