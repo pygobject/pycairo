@@ -9,7 +9,7 @@ import zipfile
 from pathlib import Path
 from urllib.request import urlretrieve as download
 
-CAIRO_VERSION = "1.17.6"
+CAIRO_VERSION = "1.17.6-v2"
 
 
 def get_platform() -> str:
@@ -74,14 +74,24 @@ for i in pc_files.glob("*.pc"):
 logging.info("Getting pkg-config")
 download(
     url="https://github.com/pygobject/cairo-win-build"
-    "/releases/download/1.17.6/pkgconf.zip",
+    f"/releases/download/{CAIRO_VERSION}/pkgconf.zip",
     filename=download_file,
 )
 with zipfile.ZipFile(
     download_file, mode="r", compression=zipfile.ZIP_DEFLATED
 ) as file:  # noqa: E501
     file.extractall(download_location)
+
+os.makedirs(str(final_location / "bin"))
 shutil.move(
     str(download_location / "pkgconf" / "bin" / "pkgconf.exe"),
     str(final_location / "bin"),
 )
+
+# On MSVC, meson would create static libraries as
+# libcairo.a but setuptools doens't know about it.
+libreg = re.compile(r"lib(?P<name>\S*)\.a")
+libdir = final_location / "lib"
+for lib in libdir.glob("lib*.a"):
+    name = libreg.match(lib.name).group("name") + ".lib"
+    shutil.move(lib, libdir / name)
