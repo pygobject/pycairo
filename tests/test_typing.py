@@ -16,7 +16,7 @@ def test_typing():
         names = set()
         for key, value in vars(t).items():
             if key in ["XlibSurface", "XCBSurface", "Win32PrintingSurface",
-                       "Win32Surface"]:
+                       "Win32Surface", "os", "windows_init"]:
                 continue
             if key.startswith("_"):
                 continue
