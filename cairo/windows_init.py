@@ -1,7 +1,7 @@
 import os
 
 
-def _search_for_dlls_on_path():
+def _search_for_dlls_on_path() -> str:
     """Search for Cairo DLLs in the Path.
 
     Returns:

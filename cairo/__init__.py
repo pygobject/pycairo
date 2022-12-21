@@ -5,7 +5,7 @@ if os.name == "nt" and hasattr(os, "add_dll_directory"):
     # In Windows, Python 3.8+ no longer searches the Path for DLLs for consistency and security
 
     # Try to search for DLLs in the PY_DLL_DIR if the environmental variable exists
-    _dll_env = os.environ.get("PY_DLL_DIR", "")
+    _dll_env: str = os.environ.get("PY_DLL_DIR", "")
     if os.path.isdir(_dll_env):
         with os.add_dll_directory(_dll_env):
             from ._cairo import *  # noqa: F401,F403
@@ -17,7 +17,7 @@ if os.name == "nt" and hasattr(os, "add_dll_directory"):
             # ImportError: DLL load failed while importing _cairo
             from cairo.windows_init import _search_for_dlls_on_path
 
-            _cairo_dll_dir = _search_for_dlls_on_path()
+            _cairo_dll_dir: str = _search_for_dlls_on_path()
             if _cairo_dll_dir:
                 with os.add_dll_directory(_cairo_dll_dir):
                     from ._cairo import *  # noqa: F401,F403
