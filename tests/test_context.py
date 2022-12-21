@@ -509,7 +509,7 @@ def test_context(context):
     with pytest.raises(TypeError):
         cairo.Context(None)
 
-    assert not context == object()
+    assert context != object()
 
 
 def test_simple(context):

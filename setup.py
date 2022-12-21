@@ -450,11 +450,11 @@ class build_ext(du_build_ext):
             ext.include_dirs += pkg_config_parse('--cflags-only-I', 'cairo')
             ext.library_dirs += pkg_config_parse('--libs-only-L', 'cairo')
             ext.libraries += pkg_config_parse('--libs-only-l', 'cairo')
-        if not self.compiler_type == "msvc":
+        if self.compiler_type != "msvc":
             compiler = new_compiler(compiler=self.compiler)
             customize_compiler(compiler)
             add_ext_cflags(ext, compiler)
-        elif self.compiler_type == "msvc" and PYCAIRO_BUILD_MSVC_STATIC:
+        elif PYCAIRO_BUILD_MSVC_STATIC:
             # these extra libs are needed since we are linking statically
             ext.libraries += ['user32', 'advapi32', 'ole32']
             ext.define_macros += [('CAIRO_WIN32_STATIC_BUILD', 1)]

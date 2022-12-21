@@ -23,7 +23,6 @@ def test_cmp_hash():
     surface = cairo.ScriptSurface(dev, cairo.Content.COLOR_ALPHA, 42, 10)
     other = surface.get_device()
     assert dev == other
-    assert not dev != other
     assert hash(dev) == hash(other)
     assert dev != object()
 

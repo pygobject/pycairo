@@ -86,12 +86,10 @@ def test_font_options_hashable_protocol():
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
     font_options = surface.get_font_options()
     assert font_options == font_options.copy()
-    assert not font_options != font_options.copy()
     font_options.set_hint_metrics(cairo.HINT_METRICS_DEFAULT)
     different = font_options.copy()
     different.set_hint_metrics(cairo.HINT_METRICS_ON)
     assert font_options != different
-    assert not font_options == different
     assert font_options != object()
 
     # make sure the other operators are undefined
@@ -142,13 +140,11 @@ def test_font_face_cmp_hash():
     ff = context.get_font_face()
     other = context.get_font_face()
     assert ff == other
-    assert not ff != other
     assert hash(ff) == hash(other)
 
     sf = context.get_scaled_font()
     other = context.get_scaled_font()
     assert sf == other
-    assert not sf != other
     assert hash(sf) == hash(other)
 
     fo = context.get_font_options()
