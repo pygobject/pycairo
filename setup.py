@@ -36,7 +36,7 @@ def _check_output(command):
                 "%r not found.\nCommand %r" % (command[0], command))
         raise SystemExit(e)
     except subprocess.CalledProcessError as e:
-        raise SystemExit(e)
+        raise SystemExit(e) from e
 
 
 def pkg_config_version_check(pkg, version):
