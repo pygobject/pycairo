@@ -9,23 +9,17 @@ if os.name == "nt" and hasattr(os, "add_dll_directory"):
     if os.path.isdir(dll_env):
         with os.add_dll_directory(dll_env):
             from ._cairo import *  # noqa: F401,F403
+
     else:
         try:
             from ._cairo import *  # noqa: F401,F403
         except ImportError:
             # ImportError: DLL load failed while importing _cairo
-            # Try to search for Cairo DLLs in the Path
-            env_paths = os.environ.get("PATH", "").split(os.pathsep)
-            cairo_dlls = ("cairo-2.dll", "libcairo-2.dll", "cairo.dll", "libcairo.dll")
-            dirs_with_cairo_dll = (
-                path_dir
-                for path_dir in env_paths
-                for dll in cairo_dlls
-                if os.path.isfile(os.path.join(path_dir, dll))
-            )
-            if dirs_with_cairo_dll:
-                first_dir = next(dirs_with_cairo_dll)
-                with os.add_dll_directory(first_dir):
+            from cairo.windows_init import search_for_dlls_on_path
+
+            cairo_dll_dir = search_for_dlls_on_path()
+            if cairo_dll_dir:
+                with os.add_dll_directory(cairo_dll_dir):
                     from ._cairo import *  # noqa: F401,F403
 
 else:
