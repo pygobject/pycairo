@@ -16,5 +16,4 @@ def _search_for_dlls_on_path() -> str:
         for dll in cairo_dlls
         if os.path.isfile(os.path.join(path_dir, dll))
     )
-    if dirs_with_cairo_dll:
-        return next(dirs_with_cairo_dll) or ""
+    return next(dirs_with_cairo_dll) if dirs_with_cairo_dll else ""
