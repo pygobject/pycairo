@@ -6,11 +6,10 @@ import subprocess
 import sys
 from distutils import log, sysconfig
 from distutils.ccompiler import new_compiler
-from distutils.core import Command, Distribution, Extension
 from distutils.sysconfig import customize_compiler
 from distutils.util import change_root
 
-from setuptools import setup
+from setuptools import setup, Command, Distribution, Extension
 
 PYCAIRO_VERSION = '1.23.1'
 CAIRO_VERSION_REQUIRED = '1.15.10'
