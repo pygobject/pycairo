@@ -93,5 +93,5 @@ shutil.move(
 libreg = re.compile(r"lib(?P<name>\S*)\.a")
 libdir = final_location / "lib"
 for lib in libdir.glob("lib*.a"):
-    name = libreg.match(lib.name).group("name") + ".lib"
+    name = libreg.match(lib.name)["name"] + ".lib"
     shutil.move(lib, libdir / name)
