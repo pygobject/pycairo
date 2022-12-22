@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 import errno
+import logging
 import os
 import subprocess
 import sys
-from distutils import log, sysconfig
+from distutils import sysconfig
 from distutils.ccompiler import new_compiler
 from distutils.sysconfig import customize_compiler
 from distutils.util import change_root
@@ -294,19 +295,19 @@ class install_pkgconfig(Command):
         # wrong paths. So in case bdist_wheel is used, just skip this command.
         cmd = self.distribution.get_command_obj("bdist_wheel", create=False)
         if cmd is not None:
-            log.info(
+            logging.info(
                 "Skipping install_pkgconfig, not supported with bdist_wheel")
             return
 
         # same for bdist_egg
         cmd = self.distribution.get_command_obj("bdist_egg", create=False)
         if cmd is not None:
-            log.info(
+            logging.info(
                 "Skipping install_pkgconfig, not supported with bdist_egg")
             return
 
         if self.compiler_type == "msvc":
-            log.info(
+            logging.info(
                 "Skipping install_pkgconfig, not supported with MSVC")
             return
 
@@ -322,8 +323,8 @@ class install_pkgconfig(Command):
         pcname = "py3cairo.pc"
         target = os.path.join(pkgconfig_dir, pcname)
 
-        log.info(f"Writing {target}")
-        log.info(f"pkg-config prefix: {self.install_base}")
+        logging.info(f"Writing {target}")
+        logging.info(f"pkg-config prefix: {self.install_base}")
         with open(target, "wb") as h:
             h.write(("""\
 prefix=%(prefix)s
