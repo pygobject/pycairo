@@ -17,7 +17,7 @@ def draw(ctx, width, height):
     ctx.translate(width / 2, height / 2)
     ctx.rotate(MAX_THETA)
 
-    for i in range(LINES):
+    for _ in range(LINES):
         ctx.move_to(-2 * width, 0)
         ctx.line_to(2 * width, 0)
         ctx.stroke()

@@ -580,7 +580,7 @@ def test_image_surface_write_to_png_error():
 
 
 def test_surface_from_stream_closed_before_finished():
-    for Kind in [cairo.PDFSurface, cairo.PSSurface, cairo.SVGSurface]:
+    for _ in [cairo.PDFSurface, cairo.PSSurface, cairo.SVGSurface]:
         fileobj = io.BytesIO()
         surface = cairo.PDFSurface(fileobj, 128, 128)
         fileobj.close()
@@ -606,7 +606,7 @@ def test_script_device_device_ref():
     dev = cairo.ScriptDevice(f)
     surface = cairo.ScriptSurface(dev, cairo.Content.COLOR_ALPHA, 42, 10)
     del dev
-    for i in range(10):
+    for _ in range(10):
         surface.get_device()
 
 
