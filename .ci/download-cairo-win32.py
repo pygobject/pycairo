@@ -13,10 +13,7 @@ CAIRO_VERSION = "1.17.6-v2"
 
 
 def get_platform() -> str:
-    if (struct.calcsize("P") * 8) == 32:
-        return "32"
-    else:
-        return "64"
+    return "32" if struct.calcsize("P") == 4 else "64"
 
 
 logging.basicConfig(format="%(levelname)s - %(message)s", level=logging.DEBUG)
