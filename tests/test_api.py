@@ -140,14 +140,14 @@ def test_image_surface_get_data():
     assert buf
     assert len(buf) == 4 * 3 * 3
     assert len(bytes(buf)) == len(buf)
-    buf[0:1] = b"\x42"
+    buf[:1] = b"\x42"
 
     newbuf = surface.get_data()
-    assert newbuf[0:1] == b"\x42"
+    assert newbuf[:1] == b"\x42"
     ctx.set_source_rgba(1, 1, 1, 1)
     ctx.paint()
     surface.flush()
-    assert newbuf[0:1] == b"\xff"
+    assert newbuf[:1] == b"\xff"
 
 
 def test_surface_file_obj_error():
