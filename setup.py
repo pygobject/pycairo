@@ -464,9 +464,6 @@ class build_ext(du_build_ext):
 
 def main():
 
-    if sys.version_info[0] < 3:
-        raise Exception("Python 2 no longer supported")
-
     cairo_ext = Extension(
         name='cairo._cairo',
         sources=[
