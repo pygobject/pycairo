@@ -1,6 +1,24 @@
 import os
 
 
+def _search_for_dlls_on_path() -> str:
+    """Search for Cairo DLLs in the Path.
+
+    Returns:
+        str: The first directory found.
+
+    """
+    env_paths = os.environ.get("PATH", "").split(os.pathsep)
+    cairo_dlls = ("cairo-2.dll", "libcairo-2.dll", "cairo.dll", "libcairo.dll")
+    dirs_with_cairo_dll = (
+        path_dir
+        for path_dir in env_paths
+        for dll in cairo_dlls
+        if os.path.isfile(os.path.join(path_dir, dll))
+    )
+    return next(dirs_with_cairo_dll) if dirs_with_cairo_dll else ""
+
+
 if os.name == "nt" and hasattr(os, "add_dll_directory"):
     # In Windows, Python 3.8+ no longer searches the Path for DLLs for consistency and security
 
@@ -15,8 +33,6 @@ if os.name == "nt" and hasattr(os, "add_dll_directory"):
             from ._cairo import *  # noqa: F401,F403
         except ImportError:
             # ImportError: DLL load failed while importing _cairo
-            from cairo.windows_init import _search_for_dlls_on_path
-
             _cairo_dll_dir: str = _search_for_dlls_on_path()
             if _cairo_dll_dir:
                 with os.add_dll_directory(_cairo_dll_dir):
