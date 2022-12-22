@@ -1,9 +1,10 @@
-import os
 import io
+import os
 import tempfile
 
-import cairo
 import pytest
+
+import cairo
 
 
 def test_context_manager():

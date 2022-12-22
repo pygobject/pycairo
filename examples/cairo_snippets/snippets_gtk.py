@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
 import gi
+from snippets import get_snippets
+
 gi.require_version("Gtk", "3.0")
 gi.require_foreign("cairo")
 from gi.repository import Gtk, Pango
-
-
-from snippets import get_snippets
 
 
 class Window(Gtk.Window):

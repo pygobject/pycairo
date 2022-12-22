@@ -1,5 +1,6 @@
-import cairo
 import pytest
+
+import cairo
 
 pygame = pytest.importorskip("pygame")
 

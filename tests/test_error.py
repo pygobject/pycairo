@@ -1,5 +1,6 @@
-import cairo
 import pytest
+
+import cairo
 
 
 def test_error_check_status():

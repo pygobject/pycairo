@@ -1,7 +1,9 @@
-import cairo
-import pytest
 import ctypes
 import platform
+
+import pytest
+
+import cairo
 
 
 @pytest.fixture

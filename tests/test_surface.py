@@ -1,15 +1,16 @@
+import array
 import contextlib
 import io
 import os
-import sys
-import array
-import tempfile
-import struct
-import sysconfig
 import platform
+import struct
+import sys
+import sysconfig
+import tempfile
+
+import pytest
 
 import cairo
-import pytest
 
 
 def test_context_manager():

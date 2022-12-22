@@ -5,8 +5,9 @@
 import math
 import sys
 
-import cairo
 import pygame
+
+import cairo
 
 
 def draw(surface):

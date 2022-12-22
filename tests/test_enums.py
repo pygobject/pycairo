@@ -1,8 +1,9 @@
 import pickle
-import re
 import platform
+import re
 
 import pytest
+
 import cairo
 
 

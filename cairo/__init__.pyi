@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from typing import (Any, BinaryIO, ByteString, Callable, Generic, List, Optional,
-                    Sequence, Text, Tuple, TypeVar, Union)
+from typing import (Any, BinaryIO, ByteString, Callable, Generic, List,
+                    Optional, Sequence, Text, Tuple, TypeVar, Union)
 
 del annotations
 

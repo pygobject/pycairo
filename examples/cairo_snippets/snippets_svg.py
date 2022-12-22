@@ -2,13 +2,13 @@
 
 """Create a SVG file for each example"""
 
-
 import contextlib
 import os
 import sys
-import cairo
 
 from snippets import get_snippets
+
+import cairo
 
 
 def do_snippet(snippet):

@@ -22,8 +22,8 @@
 import os
 import sys
 
-from hypothesis.strategies import composite, sampled_from, lists, \
-    integers, binary, randoms
+from hypothesis.strategies import (binary, composite, integers, lists, randoms,
+                                   sampled_from)
 
 
 class _PathLike:

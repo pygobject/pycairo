@@ -1,8 +1,9 @@
 import os
 import tempfile
 
-import cairo
 import pytest
+
+import cairo
 
 numpy = pytest.importorskip("numpy")
 

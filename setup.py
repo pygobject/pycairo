@@ -1,18 +1,16 @@
 #!/usr/bin/env python
 
+import errno
+import os
 import subprocess
 import sys
-import os
-import errno
-
-from setuptools import setup
-from distutils.core import Extension, Command, Distribution
+from distutils import log, sysconfig
 from distutils.ccompiler import new_compiler
+from distutils.core import Command, Distribution, Extension
 from distutils.sysconfig import customize_compiler
 from distutils.util import change_root
-from distutils import log
-from distutils import sysconfig
 
+from setuptools import setup
 
 PYCAIRO_VERSION = '1.23.1'
 CAIRO_VERSION_REQUIRED = '1.15.10'

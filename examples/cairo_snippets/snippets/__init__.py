@@ -1,6 +1,6 @@
-import os
-import inspect
 import importlib
+import inspect
+import os
 
 
 class Snippet:

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import cairo
 import math
 
+import cairo
 
 all_width = all_height = text_width = 0
 

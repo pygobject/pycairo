@@ -1,14 +1,15 @@
-import os
-import io
-import sys
-import tempfile as tfi
 import base64
-import zlib
+import io
+import os
 import shutil
+import sys
 import sysconfig
+import tempfile as tfi
+import zlib
+
+import pytest
 
 import cairo
-import pytest
 
 
 def test_get_include():
