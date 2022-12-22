@@ -12,10 +12,10 @@ def test_image_surface_create_for_data_numpy_array():
     data = numpy.ndarray(shape=(height, width), dtype=numpy.uint32)
 
     for y in range(height):
+        alpha = y
+        g = int(y * alpha / 255.0)
         for x in range(width):
-            alpha = y
             b = int(x * alpha / 255.0)
-            g = int(y * alpha / 255.0)
             data[y][x] = (b | g << 8 | alpha << 24)
 
     surface = cairo.ImageSurface.create_for_data(
