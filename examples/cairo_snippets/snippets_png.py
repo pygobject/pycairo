@@ -27,7 +27,7 @@ def do_snippet(snippet):
         os.makedirs(os.path.join("_build", "png"))
     except EnvironmentError:
         pass
-    filename = os.path.join("_build", "png", "%s.png" % snippet.name)
+    filename = os.path.join("_build", "png", f"{snippet.name}.png")
 
     surface.write_to_png(filename)
 
