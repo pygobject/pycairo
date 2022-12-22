@@ -1,3 +1,4 @@
+import contextlib
 import io
 import os
 import sys
@@ -145,10 +146,8 @@ def test_image_surface_get_data_refcount():
 
 def test_image_surface_get_data_crasher():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
-    try:
+    with contextlib.suppress(Exception):
         assert 0, surface.get_data()
-    except Exception:
-        pass
 
 
 def test_surface_get_content():

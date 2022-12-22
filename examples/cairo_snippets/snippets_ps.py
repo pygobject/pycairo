@@ -2,6 +2,7 @@
 
 """Create a PS file for each example"""
 
+import contextlib
 import os
 import sys
 import cairo
@@ -18,10 +19,8 @@ def do_snippet(snippet):
         width_in_inches * 72, height_in_inches * 72
     width, height = width_in_points, height_in_points
 
-    try:
+    with contextlib.suppress(EnvironmentError):
         os.makedirs(os.path.join("_build", "ps"))
-    except EnvironmentError:
-        pass
     filename = os.path.join("_build", "ps", f"{snippet.name}.ps")
 
     surface = cairo.PSSurface(filename, width_in_points, height_in_points)

@@ -2,6 +2,7 @@
 
 """Create a PNG file for each example"""
 
+import contextlib
 import os
 import sys
 import cairo
@@ -23,10 +24,8 @@ def do_snippet(snippet):
 
     cr.restore()
 
-    try:
+    with contextlib.suppress(EnvironmentError):
         os.makedirs(os.path.join("_build", "png"))
-    except EnvironmentError:
-        pass
     filename = os.path.join("_build", "png", f"{snippet.name}.png")
 
     surface.write_to_png(filename)

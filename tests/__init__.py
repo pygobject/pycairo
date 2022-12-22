@@ -1,3 +1,4 @@
+import contextlib
 import os
 
 
@@ -9,10 +10,8 @@ def set_dll_search_path():
     if os.name != "nt" or not hasattr(os, "add_dll_directory"):
         return
     for p in os.environ.get("PATH", "").split(os.pathsep):
-        try:
+        with contextlib.suppress(OSError):
             os.add_dll_directory(p)
-        except OSError:
-            pass
 
 
 set_dll_search_path()
