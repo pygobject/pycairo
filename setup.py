@@ -376,12 +376,12 @@ class install_pycairo_header(Command):
     def run(self):
         # https://github.com/pygobject/pycairo/issues/92
         # https://github.com/pygobject/pycairo/issues/98
-        hname = "py3cairo.h"
         source = self.get_inputs()[0]
 
         # for things using get_include()
         lib_hdir = os.path.join(self.install_lib, "cairo", "include")
         self.mkpath(lib_hdir)
+        hname = "py3cairo.h"
         lib_header_path = os.path.join(lib_hdir, hname)
         (out, _) = self.copy_file(source, lib_header_path)
         self.outfiles.append(out)
