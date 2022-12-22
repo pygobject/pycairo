@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import io
 import subprocess
 import sys
 import os
@@ -33,7 +32,7 @@ def _check_output(command):
     except OSError as e:
         if e.errno == errno.ENOENT:
             raise SystemExit(
-                "%r not found.\nCommand %r" % (command[0], command))
+                "{!r} not found.\nCommand {!r}".format(command[0], command))
         raise SystemExit(e)
     except subprocess.CalledProcessError as e:
         raise SystemExit(e) from e
@@ -328,7 +327,7 @@ class install_pkgconfig(Command):
         log.info(f"Writing {target}")
         log.info(f"pkg-config prefix: {self.install_base}")
         with open(target, "wb") as h:
-            h.write((u"""\
+            h.write(("""\
 prefix=%(prefix)s
 
 Name: Pycairo
@@ -514,7 +513,7 @@ def main():
         ],
     )
 
-    with io.open('README.rst', encoding="utf-8") as h:
+    with open('README.rst', encoding="utf-8") as h:
         long_description = h.read()
 
     cmdclass = {

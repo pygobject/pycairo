@@ -1,5 +1,4 @@
 import os
-import io
 import types
 
 import cairo
@@ -8,7 +7,7 @@ import cairo
 def test_typing():
     mod = types.ModuleType("cairo")
     stub = os.path.join(cairo.__path__[0], "__init__.pyi")
-    with io.open(stub, "r", encoding="utf-8") as h:
+    with open(stub, encoding="utf-8") as h:
         code = compile(h.read(), stub, "exec")
         exec(code, mod.__dict__)
 

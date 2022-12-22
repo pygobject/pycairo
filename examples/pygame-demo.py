@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 """demonstrate pycairo and pygame"""
 
-from __future__ import print_function
 
 import math
 import sys

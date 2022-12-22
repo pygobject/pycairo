@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import math
 import os
 import sys
@@ -41,7 +39,7 @@ def _to_temp_path(tempdir_path, p):
     if isinstance(basename, bytes):
         tempdir_path = os.fsencode(tempdir_path)
     res = os.path.join(tempdir_path, basename)
-    if not isinstance(p, (type(u""), type(b""))):
+    if not isinstance(p, (str, bytes)):
         res = type(p)(res)
     return res
 
@@ -77,9 +75,9 @@ def test_fspaths(tempdir_path, path):
     is_valid = True
     if os.name == "nt":
         temp = os.path.join(p)
-        if isinstance(temp, type(b"")):
+        if isinstance(temp, bytes):
             temp = os.fsdecode(temp)
-        if isinstance(temp, type(u"")):
+        if isinstance(temp, str):
             try:
                 path_encode(temp)
             except ValueError:

@@ -1,4 +1,3 @@
-
 def draw(cr, width, height):
     cr.scale(width, height)
     cr.set_line_width(0.04)

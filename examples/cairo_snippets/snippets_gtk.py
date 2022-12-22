@@ -15,7 +15,7 @@ class Window(Gtk.Window):
     WIDTH, HEIGHT = 400, 400
 
     def __init__(self, title=None):
-        super(Window, self).__init__()
+        super().__init__()
         self.set_default_size(self.WIDTH, self.HEIGHT)
 
         self.da = Gtk.DrawingArea()

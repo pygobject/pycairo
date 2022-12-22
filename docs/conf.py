@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import os
 import sys
 
@@ -29,7 +27,7 @@ intersphinx_mapping = {
 }
 source_suffix = '.rst'
 master_doc = 'index'
-project = u'Pycairo'
+project = 'Pycairo'
 html_show_copyright = False
 exclude_patterns = ['_build']
 pygments_style = 'friendly'

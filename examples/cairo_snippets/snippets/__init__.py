@@ -3,7 +3,7 @@ import inspect
 import importlib
 
 
-class Snippet(object):
+class Snippet:
 
     name = ""
     """name of the snippet"""
@@ -11,7 +11,7 @@ class Snippet(object):
     code = ""
     """Snippet code as text"""
 
-    def draw_func(cr, width, height):
+    def draw_func(self, width, height):
         """Snippet entry point"""
 
         raise NotImplementedError

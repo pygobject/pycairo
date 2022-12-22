@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import os
 import io
 import tempfile
@@ -82,7 +80,7 @@ def test_script_device_write_comment():
     f = io.BytesIO()
     dev = cairo.ScriptDevice(f)
     dev.write_comment("pycairo foo")
-    dev.write_comment(u"pycairo bar")
+    dev.write_comment("pycairo bar")
     dev.flush()
     assert b"pycairo foo" in f.getvalue()
     assert b"pycairo bar" in f.getvalue()
