@@ -18,7 +18,7 @@ def test_path():
 def test_path_str(context):
     p = context.copy_path()
     assert isinstance(p, cairo.Path)
-    assert str(p) == ""
+    assert not str(p)
 
     context.line_to(1, 2)
     p = context.copy_path()
