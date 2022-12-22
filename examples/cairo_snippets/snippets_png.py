@@ -13,7 +13,7 @@ from snippets import get_snippets
 
 def do_snippet(snippet):
     if verbose_mode:
-        print('processing %s' % snippet.name)
+        print(f'processing {snippet.name}')
 
     width, height = 256, 256
 

@@ -88,12 +88,12 @@ def test_aliases():
             value = getattr(t, name)
             assert isinstance(value, t)
             prefix = get_prefix(t)
-            assert getattr(cairo, prefix + "_" + name) == value
+            assert getattr(cairo, f"{prefix}_{name}") == value
 
     for name in dir(cairo):
         for t in types_:
             prefix = get_prefix(t)
-            if name.startswith(prefix + "_"):
+            if name.startswith(f"{prefix}_"):
                 postfix = name[len(prefix) + 1:]
                 value = getattr(cairo, name)
                 assert getattr(t, postfix) == value

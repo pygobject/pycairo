@@ -28,7 +28,7 @@ def test_typing():
                 names.add(key)
 
                 for k, v in vars(value).items():
-                    name = key + "." + k
+                    name = f"{key}.{k}"
                     if k.startswith("_"):
                         continue
                     names.add(name)

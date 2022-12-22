@@ -16,7 +16,10 @@ Creating an ImageSurface from a PIL Image:
         :param alpha: 0..1 alpha to add to non-alpha images
         :param format: Pixel format for output surface
         """
-        assert format in (cairo.FORMAT_RGB24, cairo.FORMAT_ARGB32), "Unsupported pixel format: %s" % format
+        assert format in (
+            cairo.FORMAT_RGB24,
+            cairo.FORMAT_ARGB32,
+        ), f"Unsupported pixel format: {format}"
         if 'A' not in im.getbands():
             im.putalpha(int(alpha * 256.))
         arr = bytearray(im.tobytes('raw', 'BGRa'))

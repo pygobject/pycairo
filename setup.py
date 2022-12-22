@@ -41,12 +41,7 @@ def _check_output(command):
 
 def pkg_config_version_check(pkg, version):
     pkg_config = os.environ.get('PKG_CONFIG', 'pkg-config')
-    command = [
-        pkg_config,
-        "--print-errors",
-        "--exists",
-        '%s >= %s' % (pkg, version),
-    ]
+    command = [pkg_config, "--print-errors", "--exists", f'{pkg} >= {version}']
 
     _check_output(command)
 
@@ -330,8 +325,8 @@ class install_pkgconfig(Command):
         pcname = "py3cairo.pc"
         target = os.path.join(pkgconfig_dir, pcname)
 
-        log.info("Writing %s" % target)
-        log.info("pkg-config prefix: %s" % self.install_base)
+        log.info(f"Writing {target}")
+        log.info(f"pkg-config prefix: {self.install_base}")
         with open(target, "wb") as h:
             h.write((u"""\
 prefix=%(prefix)s

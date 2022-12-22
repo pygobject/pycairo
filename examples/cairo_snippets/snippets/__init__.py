@@ -29,7 +29,7 @@ def get_snippets():
     for name in snip_list:
         s = Snippet()
         s.name = name
-        mod = importlib.import_module("." + name, __package__)
+        mod = importlib.import_module(f".{name}", __package__)
         s.draw_func = getattr(mod, "draw")
         code = inspect.getsource(mod)
         if isinstance(code, bytes):
