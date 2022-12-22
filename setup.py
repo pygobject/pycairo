@@ -32,8 +32,9 @@ def _check_output(command):
     except OSError as e:
         if e.errno == errno.ENOENT:
             raise SystemExit(
-                "{!r} not found.\nCommand {!r}".format(command[0], command))
-        raise SystemExit(e)
+                "{!r} not found.\nCommand {!r}".format(command[0], command)
+            ) from e
+        raise SystemExit(e) from e
     except subprocess.CalledProcessError as e:
         raise SystemExit(e) from e
 
