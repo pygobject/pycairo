@@ -23,8 +23,7 @@ Creating an ImageSurface from a PIL Image:
         if 'A' not in im.getbands():
             im.putalpha(int(alpha * 256.))
         arr = bytearray(im.tobytes('raw', 'BGRa'))
-        surface = cairo.ImageSurface.create_for_data(arr, format, im.width, im.height)
-        return surface
+        return cairo.ImageSurface.create_for_data(arr, format, im.width, im.height)
 
 
     filename = 'test.jpeg'
