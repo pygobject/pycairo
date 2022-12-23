@@ -1,11 +1,12 @@
-#!/usr/bin/env python
 """Based on cairo-demo/X11/cairo-demo.c"""
 
-import cairo
 import gi
-gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk
 
+import cairo
+
+gi.require_version("Gtk", "4.0")
+gi.require_version("Adw", "1")
+from gi.repository import Adw, Gtk
 
 SIZE = 30
 
@@ -88,7 +89,7 @@ def stroke_shapes(ctx, x, y):
     draw_shapes(ctx, x, y, False)
 
 
-def draw(da, ctx):
+def draw(da, ctx, w, h, data):
     ctx.set_source_rgb(0, 0, 0)
 
     ctx.set_line_width(SIZE / 4)
@@ -115,18 +116,21 @@ def draw(da, ctx):
     stroke_shapes(ctx, 0, 15 * SIZE)
 
 
-def main():
-    win = Gtk.Window()
-    win.connect('destroy', Gtk.main_quit)
+def on_activate(app):
+    win = Gtk.ApplicationWindow(application=app, title="Cairo Demo")
     win.set_default_size(450, 550)
 
     drawingarea = Gtk.DrawingArea()
-    win.add(drawingarea)
-    drawingarea.connect('draw', draw)
-
-    win.show_all()
-    Gtk.main()
+    drawingarea.set_draw_func(draw, None)
+    win.set_child(drawingarea)
+    win.present()
 
 
-if __name__ == '__main__':
+def main():
+    app = Adw.Application()
+    app.connect("activate", on_activate)
+    return app.run(None)
+
+
+if __name__ == "__main__":
     main()

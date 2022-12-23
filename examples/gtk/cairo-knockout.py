@@ -1,14 +1,15 @@
-#!/usr/bin/env python
-"""Based on gtk+/test/testcairo.c
-"""
+"""Based on gtk+/test/testcairo.c"""
 
-from __future__ import division
+
 import math
 
-import cairo
 import gi
-gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk
+
+import cairo
+
+gi.require_version("Gtk", "4.0")
+gi.require_version("Adw", "1")
+from gi.repository import Adw, Gtk
 
 
 def oval_path(ctx, xc, yc, xr, yr):
@@ -33,7 +34,7 @@ def fill_checks(ctx, x, y, width, height):
     # Only works for CHECK_SIZE a power of 2
     for j in range(x & -CHECK_SIZE, height, CHECK_SIZE):
         for i in range(y & -CHECK_SIZE, width, CHECK_SIZE):
-            if ((i / CHECK_SIZE + j / CHECK_SIZE) % 2 == 0):
+            if (i / CHECK_SIZE + j / CHECK_SIZE) % 2 == 0:
                 ctx.rectangle(i, j, CHECK_SIZE, CHECK_SIZE)
 
     ctx.set_source_rgb(0.7, 0.7, 0.7)
@@ -41,34 +42,43 @@ def fill_checks(ctx, x, y, width, height):
 
 
 def draw_3circles(ctx, xc, yc, radius, alpha):
-    subradius = radius * (2 / 3. - 0.1)
+    subradius = radius * (2 / 3.0 - 0.1)
 
     ctx.set_source_rgba(1, 0, 0, alpha)
-    oval_path(ctx,
-              xc + radius / 3. * math.cos(math.pi * 0.5),
-              yc - radius / 3. * math.sin(math.pi * 0.5),
-              subradius, subradius)
+    oval_path(
+        ctx,
+        xc + radius / 3.0 * math.cos(math.pi * 0.5),
+        yc - radius / 3.0 * math.sin(math.pi * 0.5),
+        subradius,
+        subradius,
+    )
     ctx.fill()
 
     ctx.set_source_rgba(0, 1, 0, alpha)
-    oval_path(ctx,
-              xc + radius / 3. * math.cos(math.pi * (0.5 + 2 / .3)),
-              yc - radius / 3. * math.sin(math.pi * (0.5 + 2 / .3)),
-              subradius, subradius)
+    oval_path(
+        ctx,
+        xc + radius / 3.0 * math.cos(math.pi * (0.5 + 2 / 0.3)),
+        yc - radius / 3.0 * math.sin(math.pi * (0.5 + 2 / 0.3)),
+        subradius,
+        subradius,
+    )
     ctx.fill()
 
     ctx.set_source_rgba(0, 0, 1, alpha)
-    oval_path(ctx,
-              xc + radius / 3. * math.cos(math.pi * (0.5 + 4 / .3)),
-              yc - radius / 3. * math.sin(math.pi * (0.5 + 4 / .3)),
-              subradius, subradius)
+    oval_path(
+        ctx,
+        xc + radius / 3.0 * math.cos(math.pi * (0.5 + 4 / 0.3)),
+        yc - radius / 3.0 * math.sin(math.pi * (0.5 + 4 / 0.3)),
+        subradius,
+        subradius,
+    )
     ctx.fill()
 
 
-def draw(ctx, width, height):
+def draw(da, ctx, width, height, data):
     radius = 0.5 * min(width, height) - 10
-    xc = width / 2.
-    yc = height / 2.
+    xc = width / 2.0
+    yc = height / 2.0
 
     target = ctx.get_target()
     overlay = target.create_similar(cairo.CONTENT_COLOR_ALPHA, width, height)
@@ -114,19 +124,21 @@ def draw_event(drawingarea, ctx):
     return False
 
 
-def main():
-    win = Gtk.Window()
-    win.connect('destroy', Gtk.main_quit)
-    win.set_title('Knockout Groups')
+def on_activate(app):
+    win = Gtk.ApplicationWindow(application=app, title="Knockout Groups")
     win.set_default_size(400, 400)
 
     drawingarea = Gtk.DrawingArea()
-    win.add(drawingarea)
-    drawingarea.connect('draw', draw_event)
-
-    win.show_all()
-    Gtk.main()
+    drawingarea.set_draw_func(draw, None)
+    win.set_child(drawingarea)
+    win.present()
 
 
-if __name__ == '__main__':
+def main():
+    app = Adw.Application()
+    app.connect("activate", on_activate)
+    return app.run(None)
+
+
+if __name__ == "__main__":
     main()
