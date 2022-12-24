@@ -61,6 +61,7 @@ def test_cmp_hash():
     pattern = context.get_source()
     other = context.get_source()
     assert pattern == other
+    assert not pattern != other
 
 
 def test_get_extend():
@@ -290,7 +291,7 @@ def test_pattern():
     p = cairo.SolidPattern(r, g, b, a)
     assert p.get_rgba() == (r, g, b, a)
 
-    assert p != object()
+    assert not p == object()
     hash(p)
 
     with pytest.raises(TypeError):

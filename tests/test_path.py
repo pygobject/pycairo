@@ -50,6 +50,7 @@ def test_path_compare_hash(context):
     p = context.copy_path()
     assert p == p
     hash(p)
+    assert not p != p
     assert p != object()
     assert not p < p
     assert p <= p
