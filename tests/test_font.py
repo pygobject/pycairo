@@ -86,8 +86,11 @@ def test_font_options_hashable_protocol():
     # make sure __eq__ and __ne__ work
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
     font_options = surface.get_font_options()
+
+    # Test equals and not equals
     assert font_options == font_options.copy()
     assert not font_options != font_options.copy()
+
     font_options.set_hint_metrics(cairo.HINT_METRICS_DEFAULT)
     different = font_options.copy()
     different.set_hint_metrics(cairo.HINT_METRICS_ON)

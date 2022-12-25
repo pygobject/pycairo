@@ -24,8 +24,11 @@ def test_context_manager():
 def test_surface_cmp_hash():
     main = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
     ctx = cairo.Context(main)
+
+    # Test equals and not equals
     assert ctx.get_target() == main
     assert not ctx.get_target() != main
+
     assert main != object()
     assert hash(ctx.get_target()) == hash(main)
 

@@ -60,6 +60,8 @@ def test_cmp_hash():
     context = cairo.Context(surface)
     pattern = context.get_source()
     other = context.get_source()
+
+    # Test equals and not equals
     assert pattern == other
     assert not pattern != other
 

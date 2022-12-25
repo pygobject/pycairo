@@ -114,8 +114,11 @@ def test_region_cmp_hash():
     with pytest.raises(TypeError):
         hash(region)
     assert region == region
+
+    # Test equals and not equals
     assert region == other
     assert not region != other
+
     assert region != differ
 
     with pytest.raises(TypeError):
