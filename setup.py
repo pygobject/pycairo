@@ -5,12 +5,15 @@ import logging
 import os
 import subprocess
 import sys
+
+# setuptools needs to be imported first
+# isort: off
+from setuptools import setup, Command, Distribution, Extension
 from distutils import sysconfig
 from distutils.ccompiler import new_compiler
 from distutils.sysconfig import customize_compiler
 from distutils.util import change_root
 
-from setuptools import setup, Command, Distribution, Extension
 
 PYCAIRO_VERSION = '1.23.1'
 CAIRO_VERSION_REQUIRED = '1.15.10'
