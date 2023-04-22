@@ -5,7 +5,7 @@ description = "Python interface for cairo"
 authors = ["Christoph Reiter"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.2.0"
