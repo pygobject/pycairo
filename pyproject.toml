@@ -16,6 +16,7 @@ Sphinx = "^5.3.0"
 sphinx-rtd-theme = "^1.1.1"
 coverage = "^7.2.3"
 sphinx-autobuild = "^2021.3.14"
+setuptools = "^67.8.0"
 
 [build-system]
 requires = ["setuptools"]
