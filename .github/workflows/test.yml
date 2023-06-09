@@ -136,72 +136,56 @@ jobs:
   msvc:
     runs-on: windows-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ['3.8', '3.9', '3.10', '3.11']
+        architecture: ['x86', 'x64']
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Python ${{ matrix.python-version }} for x64
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-          architecture: 'x64'
+          architecture: ${{ matrix.architecture }}
+          allow-prereleases: true
 
       - name: Download and extract Cairo Binary
         run: |
           python .ci/download-cairo-win32.py
 
-      - name: Build x64 Build
-        env:
-          PKG_CONFIG: ${{ github.workspace }}/cairo-prebuild/bin/pkgconf.exe
-          PKG_CONFIG_PATH: ${{ github.workspace }}/cairo-prebuild/lib/pkgconfig
-        run: |
-          python -m pip install --upgrade pip wheel
-          python -m pip install --upgrade setuptools
-          python -m pip install --upgrade pytest flake8 coverage hypothesis
-          python -m pip install --upgrade pygame
-          python -m coverage run --branch setup.py test
-          python -m coverage xml -i
-          python -m flake8 .
-          python setup.py sdist
-          python setup.py bdist
-          python setup.py install --root=_root
-          python setup.py bdist_wheel
-          python setup.py install --root=_root_setup
-          python -m pip install .
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-
-      - name: Set up Python ${{ matrix.python-version }} for x86
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-          architecture: 'x86'
-
-      - name: Download and extract Cairo Binary
-        run: |
-          python .ci/download-cairo-win32.py
-
-      - name: Build x86 Build
+      - name: Build
         env:
           PKG_CONFIG: ${{ github.workspace }}/cairo-prebuild/bin/pkgconf.exe
           PKG_CONFIG_PATH: ${{ github.workspace }}/cairo-prebuild/lib/pkgconfig
         run: |
           python -m pip install --upgrade pip
+          if (-not $?) { exit 1 }
           python -m pip install --upgrade wheel
+          if (-not $?) { exit 1 }
           python -m pip install --upgrade setuptools
+          if (-not $?) { exit 1 }
           python -m pip install --upgrade pytest flake8 coverage hypothesis
+          if (-not $?) { exit 1 }
           python -m pip install --upgrade pygame
           python -m coverage run --branch setup.py test
+          if (-not $?) { exit 1 }
           python -m coverage xml -i
+          if (-not $?) { exit 1 }
           python -m flake8 .
+          if (-not $?) { exit 1 }
           python setup.py sdist
+          if (-not $?) { exit 1 }
           python setup.py bdist
+          if (-not $?) { exit 1 }
           python setup.py install --root=_root
+          if (-not $?) { exit 1 }
           python setup.py bdist_wheel
+          if (-not $?) { exit 1 }
           python setup.py install --root=_root_setup
+          if (-not $?) { exit 1 }
           python -m pip install .
+          if (-not $?) { exit 1 }
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
