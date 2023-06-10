@@ -24,13 +24,14 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.11.2
+        uses: pypa/cibuildwheel@v2.13
         env:
           CIBW_BEFORE_BUILD: "python {package}/.ci/download-cairo-win32.py"
-          CIBW_BUILD: cp38-${{ matrix.platform_id }} cp39-${{ matrix.platform_id }} cp310-${{ matrix.platform_id }} cp311-${{ matrix.platform_id }}
+          CIBW_BUILD: cp38-${{ matrix.platform_id }} cp39-${{ matrix.platform_id }} cp310-${{ matrix.platform_id }} cp311-${{ matrix.platform_id }} cp312-${{ matrix.platform_id }}
           CIBW_TEST_REQUIRES: pytest hypothesis attrs
           CIBW_TEST_COMMAND: bash {package}/.ci/test-wheels.sh {package}
           CIBW_ENVIRONMENT_WINDOWS: PKG_CONFIG_PATH='${{ github.workspace }}/cairo-prebuild/lib/pkgconfig' PKG_CONFIG='${{ github.workspace }}/cairo-prebuild/bin/pkgconf.exe'
+          CIBW_PRERELEASE_PYTHONS: 1
 
       - uses: actions/upload-artifact@v3
         with:
