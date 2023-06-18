@@ -20,7 +20,6 @@
    reference/index
    c_api/index
    resources
-   faq
 
 .. currentmodule:: cairo
 .. title:: Overview
