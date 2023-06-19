@@ -1,5 +1,19 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning <http://semver.org/>`__
 
+.. _v1.24.0:
+
+1.24.0 - 2023-06-19
+-------------------
+
+* Dropped Python 3.7 support
+* Bumped meson version requirement from 0.53.0 to 0.56.0
+* Various cairo dependency updates for the Windows wheel build
+* examples: update to GTK4 :pr:`307`
+* examples: add a clip_image example :pr:`316`
+* docs: fix the build with Sphinx 6 :pr:`318`
+* Various code cleanups :pr:`306`
+* Added Python 3.12 Windows wheels
+
 .. _v1.23.0:
 
 1.23.0 - 2022-11-28
