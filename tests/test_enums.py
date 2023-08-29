@@ -127,4 +127,4 @@ def test_pickle():
 
     value = cairo.Antialias(42)
     new_value = pickle.loads(pickle.dumps(value))
-    assert type(new_value) == int
+    assert type(new_value) is int
