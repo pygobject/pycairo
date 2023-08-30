@@ -1,6 +1,7 @@
 from __future__ import annotations
 import logging
 import os
+import sys
 import re
 import shutil
 import struct
@@ -13,6 +14,8 @@ CAIRO_VERSION = "1.17.6-v4"
 
 
 def get_platform() -> str:
+    if len(sys.argv) > 1:
+        return sys.argv[1]
     if (struct.calcsize("P") * 8) == 32:
         return "x86"
     else:
