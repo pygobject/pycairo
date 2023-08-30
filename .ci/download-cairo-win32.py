@@ -9,20 +9,20 @@ import zipfile
 from pathlib import Path
 from urllib.request import urlretrieve as download
 
-CAIRO_VERSION = "1.17.6-v3"
+CAIRO_VERSION = "1.17.6-v4"
 
 
 def get_platform() -> str:
     if (struct.calcsize("P") * 8) == 32:
-        return "32"
+        return "x86"
     else:
-        return "64"
+        return "x64"
 
 
 logging.basicConfig(format="%(levelname)s - %(message)s", level=logging.DEBUG)
 
 plat = get_platform()
-logging.debug(f"Found Platform as {plat} bit")
+logging.debug(f"Found Platform {plat}")
 
 download_url = (
     "https://github.com/pygobject/cairo-win-build/releases"
@@ -47,7 +47,7 @@ with zipfile.ZipFile(
 os.remove(download_file)
 logging.info("Completed Extracting.")
 logging.info("Moving Files accordingly.")
-plat_location = download_location / ("cairo-x64" if plat == "64" else "cairo-x86")
+plat_location = download_location / f"cairo-{plat}"
 for src_file in plat_location.glob("*"):
     logging.debug(f"Moving {src_file} to {final_location}...")
     shutil.move(str(src_file), str(final_location))
