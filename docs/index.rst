@@ -49,7 +49,7 @@ pycairo distribution.
 
 Alternatives:
 
-* `cairocffi <https://cairocffi.readthedocs.io>`__ provides a large subset of
+* `cairocffi <https://doc.courtbouillon.org/cairocffi/>`__ provides a large subset of
   the pycairo API but instead of being implemented in C it uses `cffi
   <https://cffi.readthedocs.io/>`__ to talk to cairo. In case you'd prefer not
   to use a C extension then give this a try. Or if you use PyPy and want to
