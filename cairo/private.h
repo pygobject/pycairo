@@ -309,6 +309,9 @@ DECL_ENUM(PSLevel)
 #ifdef CAIRO_HAS_SCRIPT_SURFACE
 DECL_ENUM(ScriptMode)
 #endif
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 8)
+DECL_ENUM(ColorMode)
+#endif
 
 /* Use to disable deprecation warnings temporarily */
 #ifdef _MSC_VER

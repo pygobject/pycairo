@@ -350,6 +350,32 @@ class HintMetrics(_IntEnum):
     ON: "HintMetrics" = ...
     """Hint font metrics"""
 
+class ColorMode(_IntEnum):
+    """
+    Specifies if color fonts are to be rendered using the color glyphs or
+    outline glyphs. Glyphs that do not have a color presentation, and non-color
+    fonts are not affected by this font option.
+
+    .. versionadded:: 1.25 Only available with cairo 1.17.8+
+    """
+
+    DEFAULT: "ColorMode" = ...
+    """
+    Use the default color mode for font backend and target device.
+    """
+
+    NO_COLOR: "ColorMode" = ...
+    """
+    Disable rendering color glyphs. Glyphs are always rendered as outline glyphs
+    """
+
+    COLOR: "ColorMode" = ...
+    """
+    Enable rendering color glyphs. If the font contains a color presentation for
+    a glyph, and when supported by the font backend, the glyph will be rendered
+    in color.
+    """
+
 class HintStyle(_IntEnum):
     """
     These constants specify the type of hinting to do on font outlines.
@@ -1572,6 +1598,27 @@ class FontOptions:
         The subpixel order specifies the order of color elements within each
         pixel on the display device when rendering with an antialiasing mode of
         :attr:`cairo.Antialias.SUBPIXEL`.
+        """
+
+    def set_color_mode(self, color_mode: ColorMode) -> None:
+        """
+        :param color_mode: the new color mode
+
+        Sets the color mode for the font options object. This controls whether
+        color fonts are to be rendered in color or as outlines. See the
+        documentation for :class:`ColorMode` for full details.
+
+        .. versionadded:: 1.25.0 Only available with cairo 1.17.8+
+        """
+
+    def get_color_mode(self) -> ColorMode:
+        """
+        :returns: the color mode for the font options object
+
+        Gets the color mode for the font options object. See the documentation
+        for :class:`ColorMode` for full details.
+
+        .. versionadded:: 1.25.0 Only available with cairo 1.17.8+
         """
 
 class ScaledFont:
@@ -5694,3 +5741,6 @@ STATUS_DWRITE_ERROR = Status.DWRITE_ERROR
 PDF_OUTLINE_FLAG_OPEN = PDFOutlineFlags.OPEN
 PDF_OUTLINE_FLAG_BOLD = PDFOutlineFlags.BOLD
 PDF_OUTLINE_FLAG_ITALIC = PDFOutlineFlags.ITALIC
+COLOR_MODE_DEFAULT = ColorMode.DEFAULT
+COLOR_MODE_NO_COLOR = ColorMode.NO_COLOR
+COLOR_MODE_COLOR = ColorMode.COLOR
