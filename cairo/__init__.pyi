@@ -760,6 +760,10 @@ class Status(_IntEnum):
     """
     .. versionadded:: 1.23.0 Only available with cairo 1.17.6+
     """
+    SVG_FONT_ERROR: "Status" = ...
+    """
+    .. versionadded:: 1.25.0 Only available with cairo 1.17.8+
+    """
 
 class PDFVersion(_IntEnum):
     """
@@ -5691,6 +5695,7 @@ STATUS_FREETYPE_ERROR = Status.FREETYPE_ERROR
 STATUS_WIN32_GDI_ERROR = Status.WIN32_GDI_ERROR
 STATUS_PNG_ERROR = Status.PNG_ERROR
 STATUS_DWRITE_ERROR = Status.DWRITE_ERROR
+STATUS_SVG_FONT_ERROR = Status.SVG_FONT_ERROR
 PDF_OUTLINE_FLAG_OPEN = PDFOutlineFlags.OPEN
 PDF_OUTLINE_FLAG_BOLD = PDFOutlineFlags.BOLD
 PDF_OUTLINE_FLAG_ITALIC = PDFOutlineFlags.ITALIC
