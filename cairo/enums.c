@@ -432,6 +432,9 @@ init_enums (PyObject *module) {
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 6)
     CONSTANT(Status, STATUS, DWRITE_ERROR);
 #endif
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 8)
+    CONSTANT(Status, STATUS, SVG_FONT_ERROR);
+#endif
     CONSTANT(Status, STATUS, LAST_STATUS);
 
     ENUM(PathDataType);
