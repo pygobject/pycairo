@@ -673,6 +673,28 @@ font_options_get_variations (PycairoFontOptions *o, PyObject *ignored) {
 }
 #endif
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 8)
+static PyObject *
+font_options_set_color_mode (PycairoFontOptions *o, PyObject *args) {
+  cairo_color_mode_t color_mode;
+  int color_mode_arg;
+
+  if (!PyArg_ParseTuple (args, "i:FontOptions.set_color_mode", &color_mode_arg))
+    return NULL;
+
+  color_mode = (cairo_color_mode_t)color_mode_arg;
+
+  cairo_font_options_set_color_mode (o->font_options, color_mode);
+  RETURN_NULL_IF_CAIRO_FONT_OPTIONS_ERROR(o->font_options);
+  Py_RETURN_NONE;
+}
+
+static PyObject *
+font_options_get_color_mode (PycairoFontOptions *o, PyObject *ignored) {
+  RETURN_INT_ENUM (ColorMode, cairo_font_options_get_color_mode (o->font_options));
+}
+#endif
+
 static PyObject *
 font_options_get_antialias (PycairoFontOptions *o, PyObject *ignored) {
   RETURN_INT_ENUM (Antialias, cairo_font_options_get_antialias (o->font_options));
@@ -820,6 +842,10 @@ static PyMethodDef font_options_methods[] = {
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 12)
   {"get_variations",    (PyCFunction)font_options_get_variations, METH_NOARGS},
   {"set_variations",    (PyCFunction)font_options_set_variations, METH_VARARGS},
+#endif
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 8)
+  {"get_color_mode",    (PyCFunction)font_options_get_color_mode, METH_NOARGS},
+  {"set_color_mode",    (PyCFunction)font_options_set_color_mode, METH_VARARGS},
 #endif
   {"get_antialias",     (PyCFunction)font_options_get_antialias,  METH_NOARGS},
   {"get_hint_metrics",  (PyCFunction)font_options_get_hint_metrics,

@@ -206,6 +206,9 @@ DEFINE_ENUM(PSLevel)
 #ifdef CAIRO_HAS_SCRIPT_SURFACE
 DEFINE_ENUM(ScriptMode)
 #endif
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 8)
+DEFINE_ENUM(ColorMode)
+#endif
 
 #undef DEFINE_ENUM
 
@@ -515,6 +518,13 @@ init_enums (PyObject *module) {
     ENUM(ScriptMode);
     CONSTANT(ScriptMode, SCRIPT_MODE, ASCII);
     CONSTANT(ScriptMode, SCRIPT_MODE, BINARY);
+#endif
+
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 8)
+    ENUM(ColorMode)
+    CONSTANT(ColorMode, COLOR_MODE, DEFAULT);
+    CONSTANT(ColorMode, COLOR_MODE, NO_COLOR);
+    CONSTANT(ColorMode, COLOR_MODE, COLOR);
 #endif
 
 #undef ENUM

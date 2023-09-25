@@ -74,6 +74,10 @@ def test_aliases():
         cairo.SubpixelOrder,
     ]
 
+    if hasattr(cairo, "ColorMode"):
+        # cairo 1.17.8+
+        types_.append(cairo.ColorMode)
+
     def get_prefix(t):
         name = t.__name__
         # special case..
