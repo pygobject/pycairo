@@ -379,6 +379,10 @@ PYCAIRO_MODINIT_FUNC PyInit__cairo(void)
 #endif
 #endif
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 8)
+  PyModule_AddIntConstant(m, "COLOR_PALETTE_DEFAULT", CAIRO_COLOR_PALETTE_DEFAULT);
+#endif
+
 #ifdef CAIRO_HAS_PS_SURFACE
   Py_INCREF(&PycairoPSSurface_Type);
   PyModule_AddObject(m, "PSSurface", (PyObject *)&PycairoPSSurface_Type);

@@ -39,6 +39,19 @@ def test_font_options_get_color_mode(font_options):
     assert isinstance(font_options.get_color_mode(), cairo.ColorMode)
 
 
+@pytest.mark.skipif(not hasattr(cairo.FontOptions, "set_color_palette"),
+                    reason="too old cairo")
+def test_font_options_set_color_palette(font_options):
+    font_options.set_color_palette(42)
+    assert font_options.get_color_palette() == 42
+
+
+@pytest.mark.skipif(not hasattr(cairo.FontOptions, "get_color_palette"),
+                    reason="too old cairo")
+def test_font_options_get_color_palette(font_options):
+    assert font_options.get_color_palette() == cairo.COLOR_PALETTE_DEFAULT
+
+
 @pytest.mark.skipif(not hasattr(cairo.FontOptions, "get_variations"),
                     reason="too old cairo")
 def test_font_options_variations(font_options):

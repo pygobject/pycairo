@@ -44,6 +44,13 @@ The root outline item in :meth:`PDFSurface.add_outline`
 .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
 """
 
+COLOR_PALETTE_DEFAULT: int = ...
+"""
+The default color palette index. See :meth:`FontOptions.set_color_palette`
+
+.. versionadded:: 1.25.0 Only available with cairo 1.17.8+
+"""
+
 version: str = ...
 """the pycairo version, as a string"""
 
@@ -1621,6 +1628,27 @@ class FontOptions:
 
         Gets the color mode for the font options object. See the documentation
         for :class:`ColorMode` for full details.
+
+        .. versionadded:: 1.25.0 Only available with cairo 1.17.8+
+        """
+
+    def set_color_palette(self, palette_index: int) -> None:
+        """
+        :param palette_index: the palette index in the CPAL table
+
+        Sets the OpenType font color palette for the font options object.
+        OpenType color fonts with a CPAL table may contain multiple palettes.
+        The default color palette index is :data:`COLOR_PALETTE_DEFAULT`. If
+        palette_index is invalid, the default palette is used.
+
+        .. versionadded:: 1.25.0 Only available with cairo 1.17.8+
+        """
+
+    def get_color_palette(self) -> int:
+        """
+        :returns: the palette index
+
+        Gets the OpenType color font palette for the font options object.
 
         .. versionadded:: 1.25.0 Only available with cairo 1.17.8+
         """
