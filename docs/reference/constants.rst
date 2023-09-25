@@ -104,6 +104,8 @@ Other Constants
 
 .. autodata:: PDF_OUTLINE_ROOT
 
+.. autodata:: COLOR_PALETTE_DEFAULT
+
 Other Classes and Functions
 ===========================
 
