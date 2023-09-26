@@ -70,6 +70,10 @@ cairo.TAG
 
 .. autodata:: TAG_LINK
 
+.. autodata:: TAG_CONTENT
+
+.. autodata:: TAG_CONTENT_REF
+
 .. _constants_MIME_TYPE:
 
 cairo.MIME_TYPE
