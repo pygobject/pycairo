@@ -1653,6 +1653,38 @@ class FontOptions:
         .. versionadded:: 1.25.0 Only available with cairo 1.17.8+
         """
 
+    def set_custom_palette_color(self, index: int, red: float, green: float, blue: float, alpha: float) -> None:
+        """
+        :param index: the index of the color to set
+        :param red: red component of color
+        :param green: green component of color
+        :param blue: blue component of color
+        :param alpha: alpha component of color
+
+        Sets a custom palette color for the font options object. This overrides
+        the palette color at the specified color index. This override is
+        independent of the selected palette index and will remain in place even
+        if :meth:`FontOptions.set_color_palette` is called to change the palette
+        index.
+
+        It is only possible to override color indexes already in the font
+        palette.
+
+        .. versionadded:: 1.25.0 Only available with cairo 1.17.8+
+        """
+
+    def get_custom_palette_color(self, index: int) -> Tuple[float, float, float, float]:
+        """
+        :param index: the index of the color to get
+        :returns: a (red, green, blue, alpha) tuple of float
+        :raises Error: if no custom color exists for the color index.
+
+        Gets the custom palette color for the color index for the font options
+        object.
+
+        .. versionadded:: 1.25.0 Only available with cairo 1.17.8+
+        """
+
 class ScaledFont:
     """
     A *ScaledFont* is a font scaled to a particular size and device resolution. A
