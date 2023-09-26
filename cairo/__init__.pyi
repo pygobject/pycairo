@@ -5634,6 +5634,20 @@ Create hyperlink. Link tag attributes are detailed at Links.
 .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
 """
 
+TAG_CONTENT: str = ...
+"""
+Create a content tag.
+
+.. versionadded:: 1.25.0 Only available with cairo 1.18.0+
+"""
+
+TAG_CONTENT_REF: str = ...
+"""
+Create a content reference tag.
+
+.. versionadded:: 1.25.0 Only available with cairo 1.18.0+
+"""
+
 CAPI: Any = ...
 
 ANTIALIAS_BEST = Antialias.BEST
