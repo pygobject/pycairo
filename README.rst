@@ -7,7 +7,7 @@
 Pycairo is a Python module providing bindings for the `cairo graphics library
 <https://cairographics.org/>`__. It depends on **cairo >= 1.15.10** and works
 with **Python 3.8+** and **PyPy3**. Pycairo, including this documentation, is
-licensed under the `LGPL-2.1-only OR MPL-1.1 <https://spdx.org/ids-how>`__.
+licensed under the `LGPL-2.1-only OR MPL-1.1 <https://spdx.dev/ids>`__.
 
 The Pycairo bindings are designed to match the cairo C API as closely as
 possible, and to deviate only in cases which are clearly better implemented in
@@ -22,10 +22,6 @@ Installing Pycairo requires cairo including its headers. For more info see
 <https://pycairo.readthedocs.io/en/latest/getting_started.html>`__".
 
 ----
-
-.. image:: https://raw.githubusercontent.com/pygobject/pycairo/main/docs/images/example.svg
-   :align: right
-   :width: 200px
 
 .. code:: python
 
@@ -47,6 +43,10 @@ Installing Pycairo requires cairo including its headers. For more info see
         context.move_to(x2, y2)
         context.line_to(x3, y3)
         context.stroke()
+
+.. image:: https://raw.githubusercontent.com/pygobject/pycairo/main/docs/images/example.svg
+    :width: 320px
+    :align: center
 
 ----
 

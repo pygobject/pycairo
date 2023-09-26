@@ -7,7 +7,6 @@
    :width: 370px
 
 |
-|
 
 .. toctree::
    :maxdepth: 1
