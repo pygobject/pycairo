@@ -14,7 +14,7 @@ from distutils import log
 from distutils import sysconfig
 
 
-PYCAIRO_VERSION = '1.25.0'
+PYCAIRO_VERSION = '1.25.1'
 CAIRO_VERSION_REQUIRED = '1.15.10'
 
 PYCAIRO_BUILD_NO_PKGCONFIG = os.environ.get("PYCAIRO_BUILD_NO_PKGCONFIG", False)
