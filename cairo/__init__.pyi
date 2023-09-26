@@ -383,6 +383,45 @@ class ColorMode(_IntEnum):
     in color.
     """
 
+class Dither(_IntEnum):
+    """
+    Dither is an intentionally applied form of noise used to randomize
+    quantization error, preventing large-scale patterns such as color banding in
+    images (e.g. for gradients). Ordered dithering applies a precomputed
+    threshold matrix to spread the errors smoothly.
+
+    :class:`Dither` is modeled on pixman dithering algorithm choice. As of
+    Pixman 0.40, FAST corresponds to a 8x8 ordered bayer noise and GOOD and BEST
+    use an ordered 64x64 precomputed blue noise.
+
+    .. versionadded:: 1.25 Only available with cairo 1.18.0+
+    """
+
+    NONE: "Dither" = ...
+    """
+    No dithering.
+    """
+
+    DEFAULT: "Dither" = ...
+    """
+    Default choice at cairo compile time. Currently NONE.
+    """
+
+    FAST: "Dither" = ...
+    """
+    Fastest dithering algorithm supported by the backend
+    """
+
+    GOOD: "Dither" = ...
+    """
+    An algorithm with smoother dithering than FAST
+    """
+
+    BEST: "Dither" = ...
+    """
+    Best algorithm available in the backend
+    """
+
 class HintStyle(_IntEnum):
     """
     These constants specify the type of hinting to do on font outlines.
@@ -1291,6 +1330,26 @@ class Pattern:
 
         Also, please note the discussion of the user-space locking semantics of
         :class:`Context.set_source`.
+        """
+
+    def get_dither(self) -> Dither:
+        """
+        :returns: the current dithering mode.
+
+        Gets the current dithering mode, as set by :meth:`Pattern.set_dither`.
+
+        .. versionadded:: 1.25.0 Only available with cairo 1.18.0+
+        """
+
+    def set_dither(self, dither: Dither) -> None:
+        """
+        :param dither: a :class:`Dither` describing the new dithering mode
+
+        Set the dithering mode of the rasterizer used for drawing shapes. This
+        value is a hint, and a particular backend may or may not support a
+        particular value.  At the current time, only pixman is supported.
+
+        .. versionadded:: 1.25.0 Only available with cairo 1.18.0+
         """
 
 class Glyph(Tuple[int, float, float]):
@@ -5809,3 +5868,8 @@ PDF_OUTLINE_FLAG_ITALIC = PDFOutlineFlags.ITALIC
 COLOR_MODE_DEFAULT = ColorMode.DEFAULT
 COLOR_MODE_NO_COLOR = ColorMode.NO_COLOR
 COLOR_MODE_COLOR = ColorMode.COLOR
+DITHER_NONE = Dither.NONE
+DITHER_DEFAULT = Dither.DEFAULT
+DITHER_FAST = Dither.FAST
+DITHER_GOOD = Dither.GOOD
+DITHER_BEST = Dither.BEST

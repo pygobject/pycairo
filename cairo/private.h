@@ -312,6 +312,9 @@ DECL_ENUM(ScriptMode)
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 8)
 DECL_ENUM(ColorMode)
 #endif
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 18, 0)
+DECL_ENUM(Dither)
+#endif
 
 /* Use to disable deprecation warnings temporarily */
 #ifdef _MSC_VER
