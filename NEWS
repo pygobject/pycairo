@@ -1,5 +1,21 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning <http://semver.org/>`__
 
+.. _v1.25.0:
+
+1.25.0 - 2023-09-26
+-------------------
+
+* Update to cairo 1.18.0 for the Windows wheel
+* Provide a Windows arm64 wheel
+* New APIs:
+
+  * :attr:`Status.SVG_FONT_ERROR` :pr:`334`
+  * :meth:`FontOptions.get_color_mode`, :meth:`FontOptions.set_color_mode`, :class:`ColorMode` :pr:`336`
+  * :meth:`FontOptions.set_color_palette`, :meth:`FontOptions.get_color_palette`, :attr:`COLOR_PALETTE_DEFAULT` :pr:`338`
+  * :meth:`FontOptions.set_custom_palette_color`, :meth:`FontOptions.get_custom_palette_color` :pr:`339`
+  * :attr:`TAG_CONTENT`, :attr:`TAG_CONTENT_REF` :pr:`340`
+  * :meth:`Pattern.get_dither`, :meth:`Pattern.set_dither`, :class:`Dither` :pr:`341`
+
 .. _v1.24.0:
 
 1.24.0 - 2023-06-19
