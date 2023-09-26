@@ -23,10 +23,6 @@ Installing Pycairo requires cairo including its headers. For more info see
 
 ----
 
-.. image:: https://raw.githubusercontent.com/pygobject/pycairo/main/docs/images/example.svg
-   :align: right
-   :width: 200px
-
 .. code:: python
 
     import cairo
@@ -47,6 +43,10 @@ Installing Pycairo requires cairo including its headers. For more info see
         context.move_to(x2, y2)
         context.line_to(x3, y3)
         context.stroke()
+
+.. image:: https://raw.githubusercontent.com/pygobject/pycairo/main/docs/images/example.svg
+    :width: 320px
+    :align: center
 
 ----
 
