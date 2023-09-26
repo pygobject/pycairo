@@ -23,6 +23,17 @@ def scaled_font(font_face, font_options):
         font_face, cairo.Matrix(), cairo.Matrix(), font_options)
 
 
+@pytest.mark.skipif(not hasattr(cairo.FontOptions, "set_custom_palette_color"),
+                    reason="too old cairo")
+def test_font_options_custom_palette_color(font_options):
+    font_options.set_custom_palette_color(42, 0.25, 0.5, 0.75, 1.0)
+    with pytest.raises(cairo.Error) as exc_info:
+        font_options.get_custom_palette_color(24)
+    assert exc_info.value.status == cairo.Status.INVALID_INDEX
+    assert font_options.get_custom_palette_color(42) == (0.25, 0.5, 0.75, 1.0)
+    assert isinstance(font_options.get_custom_palette_color(42), tuple)
+
+
 @pytest.mark.skipif(not hasattr(cairo.FontOptions, "set_color_mode"),
                     reason="too old cairo")
 def test_font_options_set_color_mode(font_options):

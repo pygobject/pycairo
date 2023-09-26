@@ -710,6 +710,34 @@ static PyObject *
 font_options_get_color_palette (PycairoFontOptions *o, PyObject *ignored) {
   return PyLong_FromUnsignedLong (cairo_font_options_get_color_palette (o->font_options));
 }
+
+static PyObject *
+font_options_set_custom_palette_color (PycairoFontOptions *o, PyObject *args) {
+  double red, green, blue, alpha;
+  unsigned int index;
+
+  if (!PyArg_ParseTuple (args, "Idddd:FontOptions.set_custom_palette_color",
+      &index, &red, &green, &blue, &alpha))
+    return NULL;
+
+  cairo_font_options_set_custom_palette_color (o->font_options, index, red, green, blue, alpha);
+  RETURN_NULL_IF_CAIRO_FONT_OPTIONS_ERROR(o->font_options);
+  Py_RETURN_NONE;
+}
+
+static PyObject *
+font_options_get_custom_palette_color (PycairoFontOptions *o, PyObject *args) {
+  double red, green, blue, alpha;
+  unsigned int index;
+  cairo_status_t status;
+
+  if (!PyArg_ParseTuple (args, "I:FontOptions.get_custom_palette_color", &index))
+    return NULL;
+
+  status = cairo_font_options_get_custom_palette_color (o->font_options, index, &red, &green, &blue, &alpha);
+  RETURN_NULL_IF_CAIRO_ERROR (status);
+  return Py_BuildValue("(dddd)", red, green, blue, alpha);
+}
 #endif
 
 static PyObject *
@@ -865,6 +893,8 @@ static PyMethodDef font_options_methods[] = {
   {"set_color_mode",    (PyCFunction)font_options_set_color_mode, METH_VARARGS},
   {"get_color_palette", (PyCFunction)font_options_get_color_palette, METH_NOARGS},
   {"set_color_palette", (PyCFunction)font_options_set_color_palette, METH_VARARGS},
+  {"get_custom_palette_color", (PyCFunction)font_options_get_custom_palette_color, METH_VARARGS},
+  {"set_custom_palette_color", (PyCFunction)font_options_set_custom_palette_color, METH_VARARGS},
 #endif
   {"get_antialias",     (PyCFunction)font_options_get_antialias,  METH_NOARGS},
   {"get_hint_metrics",  (PyCFunction)font_options_get_hint_metrics,
