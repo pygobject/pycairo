@@ -209,6 +209,9 @@ DEFINE_ENUM(ScriptMode)
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 8)
 DEFINE_ENUM(ColorMode)
 #endif
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 18, 0)
+DEFINE_ENUM(Dither)
+#endif
 
 #undef DEFINE_ENUM
 
@@ -525,6 +528,15 @@ init_enums (PyObject *module) {
     CONSTANT(ColorMode, COLOR_MODE, DEFAULT);
     CONSTANT(ColorMode, COLOR_MODE, NO_COLOR);
     CONSTANT(ColorMode, COLOR_MODE, COLOR);
+#endif
+
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 18, 0)
+    ENUM(Dither)
+    CONSTANT(Dither, DITHER, NONE);
+    CONSTANT(Dither, DITHER, DEFAULT);
+    CONSTANT(Dither, DITHER, FAST);
+    CONSTANT(Dither, DITHER, GOOD);
+    CONSTANT(Dither, DITHER, BEST);
 #endif
 
 #undef ENUM

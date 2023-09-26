@@ -167,6 +167,36 @@ pattern_set_filter (PycairoPattern *o, PyObject *args) {
   Py_RETURN_NONE;
 }
 
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 18, 0)
+static PyObject *
+pattern_get_dither (PycairoPattern *o, PyObject *ignored) {
+  cairo_dither_t dither;
+
+  Py_BEGIN_ALLOW_THREADS;
+  dither = cairo_pattern_get_dither (o->pattern);
+  Py_END_ALLOW_THREADS;
+
+  RETURN_INT_ENUM (Dither, dither);
+}
+
+static PyObject *
+pattern_set_dither (PycairoPattern *o, PyObject *args) {
+  cairo_dither_t dither;
+  int dither_arg;
+
+  if (!PyArg_ParseTuple (args, "i:Pattern.set_dither", &dither_arg))
+    return NULL;
+
+  dither = (cairo_dither_t)dither_arg;
+
+  Py_BEGIN_ALLOW_THREADS;
+  cairo_pattern_set_dither (o->pattern, dither);
+  Py_END_ALLOW_THREADS;
+
+  Py_RETURN_NONE;
+}
+#endif
+
 static PyMethodDef pattern_methods[] = {
   /* methods never exposed in a language binding:
    * cairo_pattern_destroy()
@@ -182,6 +212,10 @@ static PyMethodDef pattern_methods[] = {
   {"set_matrix", (PyCFunction)pattern_set_matrix,          METH_VARARGS },
   {"get_filter", (PyCFunction)pattern_get_filter,          METH_NOARGS },
   {"set_filter", (PyCFunction)pattern_set_filter,          METH_VARARGS },
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 18, 0)
+  {"get_dither", (PyCFunction)pattern_get_dither,          METH_NOARGS },
+  {"set_dither", (PyCFunction)pattern_set_dither,          METH_VARARGS },
+#endif
   {NULL, NULL, 0, NULL},
 };
 

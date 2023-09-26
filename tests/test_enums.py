@@ -78,6 +78,10 @@ def test_aliases():
         # cairo 1.17.8+
         types_.append(cairo.ColorMode)
 
+    if hasattr(cairo, "Dither"):
+        # cairo 1.18.0+
+        types_.append(cairo.Dither)
+
     def get_prefix(t):
         name = t.__name__
         # special case..

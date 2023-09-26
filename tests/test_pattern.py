@@ -319,3 +319,12 @@ def test_pattern_filter():
 def test_surface_pattern():
     with pytest.raises(TypeError):
         cairo.SurfacePattern(object())
+
+
+@pytest.mark.skipif(not hasattr(cairo.Pattern, "set_dither"),
+                    reason="too old cairo")
+def test_pattern_dither():
+    pattern = cairo.SolidPattern(1, 2, 3)
+    pattern.get_dither() == cairo.Dither.DEFAULT
+    pattern.set_dither(cairo.Dither.BEST)
+    assert pattern.get_dither() == cairo.Dither.BEST

@@ -114,3 +114,7 @@ as constants on the module level. See :ref:`legacy_constants`.
 .. autoclass:: ColorMode
     :members:
     :undoc-members:
+
+.. autoclass:: Dither
+    :members:
+    :undoc-members:
