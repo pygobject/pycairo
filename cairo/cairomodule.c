@@ -210,6 +210,9 @@ PYCAIRO_MODINIT_FUNC PyInit__cairo(void)
   if (PyType_Ready(&PycairoTextExtents_Type) < 0)
     return NULL;
 
+  if (PyType_Ready(&PycairoSurface_Type) < 0)
+    return NULL;
+
 #ifdef CAIRO_HAS_SCRIPT_SURFACE
   if (PyType_Ready(&PycairoScriptDevice_Type) < 0)
     return NULL;
@@ -223,8 +226,6 @@ PYCAIRO_MODINIT_FUNC PyInit__cairo(void)
   if (PyType_Ready(&PycairoScaledFont_Type) < 0)
     return NULL;
 
-  if (PyType_Ready(&PycairoSurface_Type) < 0)
-    return NULL;
 #ifdef CAIRO_HAS_IMAGE_SURFACE
   if (PyType_Ready(&PycairoImageSurface_Type) < 0)
     return NULL;
