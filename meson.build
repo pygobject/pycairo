@@ -10,13 +10,14 @@ project(
 )
 
 cair_version_req = '>=1.15.10'
+python_version_req = '>=3.8'
 
 pymod = import('python')
 python = pymod.find_installation(get_option('python'))
 
 pyver = python.language_version()
-if pyver.version_compare('< 3.8')
-  error('Requires Python >= 3.8')
+if not pyver.version_compare(python_version_req)
+  error('Requires Python @0@'.format(python_version_req))
 endif
 
 configure_file(
