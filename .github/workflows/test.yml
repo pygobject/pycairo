@@ -45,7 +45,7 @@ jobs:
         run: |
           export SETUPTOOLS_USE_DISTUTILS=stdlib
           export CFLAGS="-std=c90 -Wall -Wno-long-long -Werror -coverage"
-          python -m coverage run --branch setup.py test
+          PYTHONDEVMODE=1 python -m coverage run --branch setup.py test
           python -m coverage xml -i
           python setup.py sdist
           python setup.py bdist_wheel
@@ -95,7 +95,7 @@ jobs:
     - name: Build & Test with setuptools
       run: |
         export CFLAGS="-Werror -coverage"
-        python -m coverage run --branch setup.py test
+        PYTHONDEVMODE=1 python -m coverage run --branch setup.py test
         python -m coverage xml -i
         python setup.py sdist
         python setup.py bdist_wheel
@@ -169,7 +169,7 @@ jobs:
           python -m pip install --upgrade pytest flake8 coverage hypothesis
           if (-not $?) { exit 1 }
           python -m pip install --upgrade pygame
-          python -m coverage run --branch setup.py test
+          python -X dev -m coverage run --branch setup.py test
           if (-not $?) { exit 1 }
           python -m coverage xml -i
           if (-not $?) { exit 1 }
@@ -211,7 +211,7 @@ jobs:
 
       - name: Build & Test with setuptools
         run: |
-          python3 -m coverage run --branch setup.py test
+          PYTHONDEVMODE=1 python3 -m coverage run --branch setup.py test
           python3 -m coverage xml -i
           python3 setup.py sdist
           python3 setup.py install --root="$(pwd)"/_root_abs
