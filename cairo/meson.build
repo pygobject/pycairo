@@ -45,17 +45,11 @@ python.install_sources(python_sources,
   subdir : 'cairo'
 )
 
-header_file = configure_file(
-  input: 'pycairo.h',
-  output: 'py3cairo.h',
-  copy: true,
-)
-
 install_headers(
-  [header_file],
+  'py3cairo.h',
   install_dir: join_paths(python.get_install_dir(), 'cairo', 'include'),
 )
-install_headers([header_file], subdir: 'pycairo')
+install_headers('py3cairo.h', subdir: 'pycairo')
 
 pyext = python.extension_module('_cairo', sources,
   dependencies : [cairo_dep],

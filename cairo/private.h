@@ -33,13 +33,13 @@
 #define _PYCAIRO_PRIVATE_H_
 
 #ifdef _PYCAIRO_H_
-#  error "don't include pycairo.h and pycairo-private.h together"
+#  error "don't include py3cairo.h and pycairo-private.h together"
 #endif
 
 #define _INSIDE_PYCAIRO_
 #include <Python.h>
 
-#include "pycairo.h"
+#include "py3cairo.h"
 
 #define PYCAIRO_STRINGIFY(s) PYCAIRO_STRINGIFY_ARG(s)
 #define PYCAIRO_STRINGIFY_ARG(s) #s

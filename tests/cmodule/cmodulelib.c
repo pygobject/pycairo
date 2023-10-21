@@ -1,6 +1,6 @@
 #include <Python.h>
 #define PYCAIRO_NO_IMPORT
-#include <pycairo.h>
+#include <py3cairo.h>
 #include "cmodulelib.h"
 
 PyObject *
