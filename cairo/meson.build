@@ -25,11 +25,7 @@ sources = [
 ]
 
 foreach python_file : python_sources
-  configure_file(
-    input: python_file,
-    output: python_file,
-    copy: true,
-  )
+  fs.copyfile(python_file, python_file)
 endforeach
 
 cairo_dep = dependency('cairo', version: cair_version_req, required: cc.get_id() != 'msvc')

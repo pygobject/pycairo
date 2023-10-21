@@ -36,11 +36,7 @@ python.extension_module('cmod', mod_sources,
 )
 
 foreach python_file : test_sources
-  configure_file(
-    input: python_file,
-    output: python_file,
-    copy: true,
-  )
+  fs.copyfile(python_file, python_file)
 endforeach
 
 test(
