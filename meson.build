@@ -1,7 +1,7 @@
 project(
   'pycairo', 'c',
   version: '1.25.1',
-  meson_version: '>= 0.56.0',
+  meson_version: '>= 0.64.0',
   license: 'LGPL-2.1-only OR MPL-1.1',
   default_options: [
     'warning_level=1',
@@ -10,20 +10,18 @@ project(
 )
 
 cair_version_req = '>=1.15.10'
+python_version_req = '>=3.8'
 
 pymod = import('python')
 python = pymod.find_installation(get_option('python'))
 
 pyver = python.language_version()
-if pyver.version_compare('< 3.8')
-  error('Requires Python >= 3.8')
+if not pyver.version_compare(python_version_req)
+  error('Requires Python @0@'.format(python_version_req))
 endif
 
-configure_file(
-  input: 'setup.cfg',
-  output: 'setup.cfg',
-  copy: true,
-)
+fs = import('fs')
+fs.copyfile('setup.cfg', 'setup.cfg')
 
 cc = meson.get_compiler('c')
 

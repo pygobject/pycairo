@@ -29,18 +29,14 @@ mod_sources = [
 ]
 
 python.extension_module('cmod', mod_sources,
-  dependencies : [python_dep, cairo_dep],
+  dependencies : [cairo_dep],
   install: false,
   include_directories: include_directories('../cairo'),
   c_args: pyext_c_args + main_c_args + ['-DPY_SSIZE_T_CLEAN'],
 )
 
 foreach python_file : test_sources
-  configure_file(
-    input: python_file,
-    output: python_file,
-    copy: true,
-  )
+  fs.copyfile(python_file, python_file)
 endforeach
 
 test(

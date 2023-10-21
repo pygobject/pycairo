@@ -1,6 +1,5 @@
 #include <Python.h>
-/* not pycairo3.h because we use the one from the source directory */
-#include <pycairo.h>
+#include <py3cairo.h>
 #include "cmodulelib.h"
 
 static PyMethodDef CModMethods[] = {

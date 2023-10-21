@@ -38,7 +38,7 @@
 #include <cairo-pdf.h>
 #endif
 
-/* C API.  Clients get at this via Pycairo_IMPORT or import_cairo(), defined in pycairo.h.
+/* C API.  Clients get at this via Pycairo_IMPORT or import_cairo(), defined in py3cairo.h.
  */
 static Pycairo_CAPI_t CAPI = {
   &PycairoContext_Type,
