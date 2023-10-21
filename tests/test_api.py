@@ -1,7 +1,7 @@
 import os
 import io
 import sys
-import tempfile as tfi
+import tempfile
 import base64
 import zlib
 import shutil
@@ -50,7 +50,7 @@ def test_unicode_filenames():
     # missing under Python 3
 
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
-    dirname = tfi.mkdtemp()
+    dirname = tempfile.mkdtemp()
     old_dir = os.getcwd()
     try:
         os.chdir(dirname)
@@ -90,17 +90,17 @@ def test_surface():
     assert s.get_width() == w
     assert s.get_height() == h
 
-    f, w, h = tfi.TemporaryFile(mode='w+b'), 100, 100
-    s = cairo.PDFSurface(f, w, h)
+    with tempfile.TemporaryFile(mode='w+b') as f:
+        cairo.PDFSurface(f, 100, 100)
 
-    f, w, h = tfi.TemporaryFile(mode='w+b'), 100, 100
-    s = cairo.PSSurface(f, w, h)
+    with tempfile.TemporaryFile(mode='w+b') as f:
+        cairo.PSSurface(f, 100, 100)
 
     s = cairo.RecordingSurface(cairo.CONTENT_COLOR, None)
     s = cairo.RecordingSurface(cairo.CONTENT_COLOR, (1, 1, 10, 10))
 
-    f, w, h = tfi.TemporaryFile(mode='w+b'), 100, 100
-    s = cairo.SVGSurface(f, w, h)
+    with tempfile.TemporaryFile(mode='w+b') as f:
+        cairo.SVGSurface(f, 100, 100)
 
 
 def test_surface_destroy_before_context():
