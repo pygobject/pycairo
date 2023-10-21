@@ -45,15 +45,9 @@ python.install_sources(python_sources,
   subdir : 'cairo'
 )
 
-if python.language_version().version_compare('>= 3.0')
-  pc_name = 'py3cairo'
-else
-  pc_name = 'pycairo'
-endif
-
 header_file = configure_file(
   input: 'pycairo.h',
-  output: pc_name + '.h',
+  output: 'py3cairo.h',
   copy: true,
 )
 
@@ -73,9 +67,8 @@ pyext = python.extension_module('_cairo', sources,
 pkg = import('pkgconfig')
 
 pkg.generate(
-  name: pc_name,
-  description: 'Python @0@ bindings for cairo'.format(
-    python.language_version().split('.')[0]),
+  name: 'py3cairo',
+  description: 'Python 3 bindings for cairo',
   subdirs: 'pycairo',
   requires: ['cairo'],
 )
