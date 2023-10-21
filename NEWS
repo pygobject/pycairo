@@ -1,5 +1,13 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning <http://semver.org/>`__
 
+.. _v1.25.1:
+
+1.25.1 - 2023-10-21
+-------------------
+
+* Fix a crash with pypy3.10 :pr:`344`
+* Fix the build with CPython 3.13.0a1 :pr:`343`
+
 .. _v1.25.0:
 
 1.25.0 - 2023-09-26
