@@ -32,8 +32,6 @@ foreach python_file : python_sources
   )
 endforeach
 
-python_dep = python.dependency()
-
 cairo_dep = dependency('cairo', version: cair_version_req, required: cc.get_id() != 'msvc')
 
 if cc.get_id() == 'msvc' and not cairo_dep.found()
@@ -65,15 +63,8 @@ install_headers(
 )
 install_headers([header_file], subdir: 'pycairo')
 
-# https://github.com/mesonbuild/meson/issues/4117
-if host_machine.system() == 'windows'
-  python_ext_dep = python_dep
-else
-  python_ext_dep = python_dep.partial_dependency(compile_args: true)
-endif
-
 pyext = python.extension_module('_cairo', sources,
-  dependencies : [python_ext_dep, cairo_dep],
+  dependencies : [cairo_dep],
   install: true,
   subdir : 'cairo',
   c_args: pyext_c_args + main_c_args,
