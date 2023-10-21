@@ -126,7 +126,7 @@ int_enum_get_name(PyObject *obj) {
         return NULL;
 
     return PyUnicode_FromFormat ("%s.%s", Py_TYPE(obj)->tp_name,
-                                 _PyUnicode_AsString(name_obj));
+                                 PyUnicode_AsUTF8(name_obj));
 }
 
 static PyObject *
