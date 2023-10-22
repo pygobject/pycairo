@@ -37,13 +37,12 @@ if cc.get_id() == 'msvc' and not cairo_dep.found()
 endif
 
 python.install_sources(python_sources,
-  pure : false,
   subdir : 'cairo'
 )
 
-install_headers(
+install_data(
   'py3cairo.h',
-  install_dir: join_paths(python.get_install_dir(), 'cairo', 'include'),
+  install_dir: python.get_install_dir(subdir: 'cairo/include')
 )
 if not for_wheel
   install_headers('py3cairo.h', subdir: 'pycairo')

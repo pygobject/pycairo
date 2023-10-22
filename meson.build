@@ -13,7 +13,7 @@ cair_version_req = '>=1.15.10'
 python_version_req = '>=3.8'
 
 pymod = import('python')
-python = pymod.find_installation(get_option('python'))
+python = pymod.find_installation(get_option('python'), pure: false)
 
 pyver = python.language_version()
 if not pyver.version_compare(python_version_req)
@@ -123,7 +123,7 @@ if not for_wheel
   configure_file(input : 'PKG-INFO.in',
     output : 'pycairo-@0@.egg-info'.format(pycairo_version),
     configuration : pkginfo_conf,
-    install_dir : python.get_install_dir(pure : false))
+    install_dir : python.get_install_dir())
 endif
 
 subdir('cairo')
