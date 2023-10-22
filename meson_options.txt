@@ -1,2 +1,3 @@
 option('python', type : 'string', value : 'python3')
 option('tests', type : 'boolean', value : true, description : 'build unit tests')
+option('wheel', type : 'boolean', value : false, description : 'build for a Python wheel')

@@ -37,15 +37,16 @@ if cc.get_id() == 'msvc' and not cairo_dep.found()
 endif
 
 python.install_sources(python_sources,
-  pure : false,
   subdir : 'cairo'
 )
 
-install_headers(
+install_data(
   'py3cairo.h',
-  install_dir: join_paths(python.get_install_dir(), 'cairo', 'include'),
+  install_dir: python.get_install_dir(subdir: 'cairo/include')
 )
-install_headers('py3cairo.h', subdir: 'pycairo')
+if not for_wheel
+  install_headers('py3cairo.h', subdir: 'pycairo')
+endif
 
 pyext = python.extension_module('_cairo', sources,
   dependencies : [cairo_dep],
@@ -54,14 +55,16 @@ pyext = python.extension_module('_cairo', sources,
   c_args: pyext_c_args + main_c_args,
 )
 
-pkg = import('pkgconfig')
+if not for_wheel
+  pkg = import('pkgconfig')
 
-pkg.generate(
-  name: 'py3cairo',
-  description: 'Python 3 bindings for cairo',
-  subdirs: 'pycairo',
-  requires: ['cairo'],
-)
+  pkg.generate(
+    name: 'py3cairo',
+    description: 'Python 3 bindings for cairo',
+    subdirs: 'pycairo',
+    requires: ['cairo'],
+  )
+endif
 
 pycairo_dep = declare_dependency(
   version: pycairo_version,

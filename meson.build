@@ -13,12 +13,14 @@ cair_version_req = '>=1.15.10'
 python_version_req = '>=3.8'
 
 pymod = import('python')
-python = pymod.find_installation(get_option('python'))
+python = pymod.find_installation(get_option('python'), pure: false)
 
 pyver = python.language_version()
 if not pyver.version_compare(python_version_req)
   error('Requires Python @0@'.format(python_version_req))
 endif
+
+for_wheel = get_option('wheel')
 
 fs = import('fs')
 fs.copyfile('setup.cfg', 'setup.cfg')
@@ -115,12 +117,14 @@ pyext_c_args = [
   '-DPYCAIRO_VERSION_MICRO=@0@'.format(pycairo_version_micro),
 ]
 
-pkginfo_conf = configuration_data()
-pkginfo_conf.set('VERSION', pycairo_version)
-configure_file(input : 'PKG-INFO.in',
-  output : 'pycairo-@0@.egg-info'.format(pycairo_version),
-  configuration : pkginfo_conf,
-  install_dir : python.get_install_dir(pure : false))
+if not for_wheel
+  pkginfo_conf = configuration_data()
+  pkginfo_conf.set('VERSION', pycairo_version)
+  configure_file(input : 'PKG-INFO.in',
+    output : 'pycairo-@0@.egg-info'.format(pycairo_version),
+    configuration : pkginfo_conf,
+    install_dir : python.get_install_dir())
+endif
 
 subdir('cairo')
 
