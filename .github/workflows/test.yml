@@ -18,7 +18,7 @@ jobs:
             arch: i686
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: setup-msys2
         uses: msys2/setup-msys2@v2
@@ -52,7 +52,7 @@ jobs:
           python setup.py install --root="$(pwd)"/_root_abs
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
 
       - name: Build & Install with pip
         shell: msys2 {0}
@@ -76,10 +76,10 @@ jobs:
       matrix:
         python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', 'pypy-3.10']
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
         allow-prereleases: true
@@ -102,7 +102,7 @@ jobs:
         python setup.py install --root="$(pwd)"/_root_abs
 
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
 
     - name: Build & Install with pip
       run: |
@@ -142,10 +142,10 @@ jobs:
         python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
         architecture: ['x86', 'x64']
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
@@ -189,11 +189,11 @@ jobs:
           if (-not $?) { exit 1 }
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
-         name: wheels-${{ matrix.python-version }}
+         name: wheels-${{ matrix.python-version }}-${{ matrix.architecture }}
          path: dist/pycairo*.whl
 
   macos:
@@ -201,7 +201,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
@@ -219,7 +219,7 @@ jobs:
           python3 -m pip install .
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
 
       - name: Build & Install with pip
         run: |
