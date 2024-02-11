@@ -1,5 +1,19 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning <http://semver.org/>`__
 
+.. _v1.26.0:
+
+1.26.0 - 2024-02-11
+-------------------
+
+This release only contains build related changes/fixes and no API changes.
+
+* Bump minimum required meson version from 0.56.0 to 0.64.0 :pr:`346`
+* Various meson related cleanups :pr:`350`
+* Fix header file being installed to the wrong location with meson on some systems :pr:`350`
+* Adds a new ``wheel`` meson build option as preparation for meson-python support :pr:`350` :pr:`345`
+* Update dependencies (libpng, pixman, zlib) of the Windows wheels :pr:`358`
+* Various maintenance related updates :pr:`360` :pr:`359` :pr:`361` :pr:`362`
+
 .. _v1.25.1:
 
 1.25.1 - 2023-10-21
