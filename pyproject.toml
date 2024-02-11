@@ -3,6 +3,9 @@ name = "pycairo"
 version = "1.25.1"
 description = "Python interface for cairo"
 authors = ["Christoph Reiter"]
+packages = [
+    { include = "cairo" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.8.1"
