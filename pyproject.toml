@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pycairo"
-version = "1.26.0"
+version = "1.26.1"
 description = "Python interface for cairo"
 authors = ["Christoph Reiter"]
 packages = [
