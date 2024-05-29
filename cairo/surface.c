@@ -484,7 +484,7 @@ surface_set_mime_data (PycairoSurface *o, PyObject *args) {
     return NULL;
   }
 
-  res = PyObject_GetBuffer (obj, view, PyBUF_READ);
+  res = PyObject_GetBuffer (obj, view, PyBUF_SIMPLE);
   if (res == -1) {
       PyMem_Free (view);
       return NULL;
