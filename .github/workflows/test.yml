@@ -206,11 +206,14 @@ jobs:
       - name: Install dependencies
         run: |
           brew install pkg-config cairo python meson
+          python3 -m venv _venv
+          source _venv/bin/activate
           python3 -m pip install --upgrade setuptools
           python3 -m pip install --upgrade pytest coverage hypothesis wheel
 
       - name: Build & Test with setuptools
         run: |
+          source _venv/bin/activate
           PYTHONDEVMODE=1 python3 -m coverage run --branch setup.py test
           python3 -m coverage xml -i
           python3 setup.py sdist
@@ -224,11 +227,16 @@ jobs:
       - name: Build & Install with pip
         run: |
           git clean -xfdf
+          python3 -m venv _venv
+          source _venv/bin/activate
           python3 -m pip install .
 
       - name: Build & Test with meson
         run: |
           git clean -xfdf
+          python3 -m venv _venv
+          source _venv/bin/activate
+          python3 -m pip install --upgrade pytest hypothesis
           meson --werror _build
           meson compile -C _build
           meson test -v -C _build
