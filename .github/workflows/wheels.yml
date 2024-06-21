@@ -17,10 +17,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade setuptools
+          python -m pip install --upgrade build
 
       - name: Build sdist
-        run: python setup.py sdist
+        run: python -m build --sdist
 
       - uses: actions/upload-artifact@v4
         with:
@@ -37,20 +37,33 @@ jobs:
           - os: windows-2019
             platform_id: win_amd64
             cairo_plat: x64
+            msvc_arch: x64
+            cibw_arch: AMD64
           - os: windows-2019
             platform_id: win32
             cairo_plat: x86
+            msvc_arch: x86
+            cibw_arch: x86
           - os: windows-2019
             platform_id: win_arm64
             cairo_plat: arm64
+            msvc_arch: amd64_arm64
+            cibw_arch: ARM64
 
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1.12.1
+        with:
+          arch : ${{ matrix.msvc_arch }}
+
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.16
         env:
-          CIBW_ARCHS_WINDOWS: "x86 ARM64 AMD64"
+          CFLAGS: "-DCAIRO_WIN32_STATIC_BUILD=1"
+          CIBW_CONFIG_SETTINGS: ${{ matrix.cibw_arch == 'ARM64' && format('setup-args="-Dpython=python --cross-file {0}/.ci/cross_amd64_arm64.txt"', github.workspace) || ''}}
+          CIBW_ARCHS_WINDOWS: "${{ matrix.cibw_arch }}"
           CIBW_BEFORE_BUILD: "python {package}/.ci/download-cairo-win32.py ${{ matrix.cairo_plat }}"
           CIBW_BUILD: cp38-${{ matrix.platform_id }} cp39-${{ matrix.platform_id }} cp310-${{ matrix.platform_id }} cp311-${{ matrix.platform_id }} cp312-${{ matrix.platform_id }}
           CIBW_TEST_REQUIRES: pytest==7.4.4 hypothesis==6.98.3 attrs==23.2.0

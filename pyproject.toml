@@ -21,6 +21,9 @@ coverage = "^7.2.3"
 sphinx-autobuild = "^2021.3.14"
 setuptools = "^69.0.3"
 
+[tool.meson-python.args]
+setup = ["-Dwheel=true", "-Dtests=false"]
+
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+build-backend = 'mesonpy'
+requires = ['meson-python >= 0.12.1']
