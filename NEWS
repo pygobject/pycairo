@@ -1,5 +1,14 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning <http://semver.org/>`__
 
+.. _v1.26.1:
+
+1.26.1 - 2024-06-21
+-------------------
+
+* Fix Surface.set_mime_data() with Python 3.13 :pr:`366`
+  This also fixes the test suite with Python 3.13b2.
+* Update vendored Windows wheel dependencies :pr:`370`
+
 .. _v1.26.0:
 
 1.26.0 - 2024-02-11
