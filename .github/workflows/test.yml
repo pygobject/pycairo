@@ -155,10 +155,16 @@ jobs:
         run: |
           python .ci/download-cairo-win32.py
 
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1.13.0
+        with:
+          arch : ${{ matrix.architecture }}
+
       - name: Build
         env:
           PKG_CONFIG: ${{ github.workspace }}/cairo-prebuild/bin/pkgconf.exe
           PKG_CONFIG_PATH: ${{ github.workspace }}/cairo-prebuild/lib/pkgconfig
+          CFLAGS: "-DCAIRO_WIN32_STATIC_BUILD=1"
         run: |
           python -m pip install --upgrade pip
           if (-not $?) { exit 1 }
