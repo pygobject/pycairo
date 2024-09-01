@@ -34,11 +34,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: windows-2019
+          - os: windows-2022
             platform_id: win_amd64
             cairo_plat: x64
             msvc_arch: x64
-          - os: windows-2019
+          - os: windows-2022
             platform_id: win32
             cairo_plat: x86
             msvc_arch: x86
@@ -52,7 +52,7 @@ jobs:
           arch : ${{ matrix.msvc_arch }}
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.16
+        uses: pypa/cibuildwheel@v2.20
         env:
           CFLAGS: "-DCAIRO_WIN32_STATIC_BUILD=1"
           CIBW_BEFORE_BUILD: "python {package}/.ci/download-cairo-win32.py ${{ matrix.cairo_plat }}"
