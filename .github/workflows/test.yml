@@ -13,9 +13,9 @@ jobs:
       matrix:
         include:
           - msystem: MINGW64
-            arch: x86_64
-          - msystem: MINGW32
-            arch: i686
+            pkgprefix: mingw-w64-x86_64
+          - msystem: CLANG64
+            pkgprefix: mingw-w64-clang-x86_64
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,48 +26,42 @@ jobs:
           msystem: ${{ matrix.msystem }}
           update: true
           install: >-
-            git
-            mingw-w64-${{ matrix.arch }}-cairo
-            mingw-w64-${{ matrix.arch }}-python
-            mingw-w64-${{ matrix.arch }}-python-pip
-            mingw-w64-${{ matrix.arch }}-cc
-            mingw-w64-${{ matrix.arch }}-meson
-            mingw-w64-${{ matrix.arch }}-ninja
-            mingw-w64-${{ matrix.arch }}-pkg-config
+            ${{ matrix.pkgprefix }}-cairo
+            ${{ matrix.pkgprefix }}-python
+            ${{ matrix.pkgprefix }}-python-pip
+            ${{ matrix.pkgprefix }}-python-poetry
+            ${{ matrix.pkgprefix }}-cc
+            ${{ matrix.pkgprefix }}-meson
+            ${{ matrix.pkgprefix }}-ninja
+            ${{ matrix.pkgprefix }}-pkgconf
 
       - name: Install dependencies
         shell: msys2 {0}
         run: |
-          python -m pip install pytest coverage hypothesis setuptools wheel
-
-      - name: Build & Test with setuptools
-        shell: msys2 {0}
-        run: |
-          export SETUPTOOLS_USE_DISTUTILS=stdlib
-          export CFLAGS="-std=c90 -Wall -Wno-long-long -Werror -coverage"
-          PYTHONDEVMODE=1 python -m coverage run --branch setup.py test
-          python -m coverage xml -i
-          python setup.py sdist
-          python setup.py bdist_wheel
-          python setup.py install --root="$(pwd)"/_root_abs
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-
-      - name: Build & Install with pip
-        shell: msys2 {0}
-        run: |
-          git clean -xfdf
-          export SETUPTOOLS_USE_DISTUTILS=stdlib
-          python -m pip install .
+          # XXX: set CC for setuptools so it finds clang
+          export CC=cc
+          poetry install
 
       - name: Build & Test with meson
         shell: msys2 {0}
         run: |
-          git clean -xfdf
-          meson --werror _build
-          meson compile -C _build
-          meson test -v -C _build
+          # XXX: pass python, so global python3 doesn't win
+          poetry run meson -Dpython=python --werror _build
+          poetry run meson compile -C _build
+          poetry run meson test -v -C _build
+          rm -Rf _build
+
+      - name: Build & Test with poetry
+        shell: msys2 {0}
+        run: |
+          export CFLAGS="-Werror -coverage"
+          export PYTHONDEVMODE=1
+          poetry run pip install -e .
+          poetry run coverage run --branch -m pytest
+          poetry run coverage xml -i
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
 
   ubuntu:
     runs-on: ubuntu-latest
