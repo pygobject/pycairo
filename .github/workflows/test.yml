@@ -46,7 +46,7 @@ jobs:
         shell: msys2 {0}
         run: |
           # XXX: pass python, so global python3 doesn't win
-          poetry run meson -Dpython=python --werror _build
+          poetry run meson setup -Dpython=python --werror _build
           poetry run meson compile -C _build
           poetry run meson test -v -C _build
           rm -Rf _build
@@ -90,7 +90,7 @@ jobs:
 
     - name: Build & Test with meson
       run: |
-        poetry run meson --werror _build
+        poetry run meson setup --werror _build
         poetry run meson compile -C _build
         poetry run meson test -v -C _build
         rm -Rf _build
@@ -163,7 +163,7 @@ jobs:
           CFLAGS: "-DCAIRO_WIN32_STATIC_BUILD=1"
         run: |
           # XXX: pass python, so global python3 doesn't win
-          poetry run meson -Dpython=python --werror _build
+          poetry run meson setup -Dpython=python --werror _build
           poetry run meson compile -C _build
           poetry run meson test -v -C _build
           if (-not $?) { exit 1 }
@@ -198,7 +198,7 @@ jobs:
 
       - name: Build & Test with meson
         run: |
-          poetry run meson --werror _build
+          poetry run meson setup --werror _build
           poetry run meson compile -C _build
           poetry run meson test -v -C _build
           rm -Rf _build
