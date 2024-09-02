@@ -134,62 +134,55 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
+        id: setup-python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
           allow-prereleases: true
 
-      - name: Download and extract Cairo Binary
-        run: |
-          python .ci/download-cairo-win32.py
-
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1.13.0
         with:
           arch : ${{ matrix.architecture }}
 
-      - name: Build
+      - name: Download and extract Cairo Binary
+        run: |
+          python .ci/download-cairo-win32.py
+
+      - name: Install dependencies
+        run: |
+          pipx install --python "${{ steps.setup-python.outputs.python-path }}" poetry
+          pipx install --python "${{ steps.setup-python.outputs.python-path }}" meson
+          poetry install
+
+      - name: Build & Test with meson
         env:
           PKG_CONFIG: ${{ github.workspace }}/cairo-prebuild/bin/pkgconf.exe
           PKG_CONFIG_PATH: ${{ github.workspace }}/cairo-prebuild/lib/pkgconfig
           CFLAGS: "-DCAIRO_WIN32_STATIC_BUILD=1"
         run: |
-          python -m pip install --upgrade pip
+          # XXX: pass python, so global python3 doesn't win
+          poetry run meson -Dpython=python --werror _build
+          poetry run meson compile -C _build
+          poetry run meson test -v -C _build
           if (-not $?) { exit 1 }
-          python -m pip install --upgrade wheel
+          rm -r _build
+
+      - name: Build & Test with poetry
+        env:
+          PKG_CONFIG: ${{ github.workspace }}/cairo-prebuild/bin/pkgconf.exe
+          PKG_CONFIG_PATH: ${{ github.workspace }}/cairo-prebuild/lib/pkgconfig
+          CFLAGS: "-DCAIRO_WIN32_STATIC_BUILD=1"
+          PYTHONDEVMODE: 1
+        run: |
+          poetry run pip install -e .
+          poetry run coverage run --branch -m pytest
           if (-not $?) { exit 1 }
-          python -m pip install --upgrade setuptools
-          if (-not $?) { exit 1 }
-          python -m pip install --upgrade pytest flake8 coverage hypothesis
-          if (-not $?) { exit 1 }
-          python -m pip install --upgrade pygame
-          python -X dev -m coverage run --branch setup.py test
-          if (-not $?) { exit 1 }
-          python -m coverage xml -i
-          if (-not $?) { exit 1 }
-          python -m flake8 .
-          if (-not $?) { exit 1 }
-          python setup.py sdist
-          if (-not $?) { exit 1 }
-          python setup.py bdist
-          if (-not $?) { exit 1 }
-          python setup.py install --root=_root
-          if (-not $?) { exit 1 }
-          python setup.py bdist_wheel
-          if (-not $?) { exit 1 }
-          python setup.py install --root=_root_setup
-          if (-not $?) { exit 1 }
-          python -m pip install .
-          if (-not $?) { exit 1 }
+          poetry run coverage xml -i
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
-
-      - uses: actions/upload-artifact@v4
-        with:
-         name: wheels-${{ matrix.python-version }}-${{ matrix.architecture }}
-         path: dist/pycairo*.whl
 
   macos:
     runs-on: macos-latest
