@@ -200,38 +200,23 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew install pkg-config cairo python meson
-          python3 -m venv _venv
-          source _venv/bin/activate
-          python3 -m pip install --upgrade setuptools
-          python3 -m pip install --upgrade pytest coverage hypothesis wheel
-
-      - name: Build & Test with setuptools
-        run: |
-          source _venv/bin/activate
-          PYTHONDEVMODE=1 python3 -m coverage run --branch setup.py test
-          python3 -m coverage xml -i
-          python3 setup.py sdist
-          python3 setup.py install --root="$(pwd)"/_root_abs
-          python3 setup.py bdist_wheel
-          python3 -m pip install .
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-
-      - name: Build & Install with pip
-        run: |
-          git clean -xfdf
-          python3 -m venv _venv
-          source _venv/bin/activate
-          python3 -m pip install .
+          brew install pkg-config cairo python meson poetry ninja
+          poetry install
 
       - name: Build & Test with meson
         run: |
-          git clean -xfdf
-          python3 -m venv _venv
-          source _venv/bin/activate
-          python3 -m pip install --upgrade pytest hypothesis
-          meson --werror _build
-          meson compile -C _build
-          meson test -v -C _build
+          poetry run meson --werror _build
+          poetry run meson compile -C _build
+          poetry run meson test -v -C _build
+          rm -Rf _build
+
+      - name: Build & Test with poetry
+        run: |
+          export CFLAGS="-Werror -coverage"
+          export PYTHONDEVMODE=1
+          poetry run pip install -e .
+          poetry run coverage run --branch -m pytest
+          poetry run coverage xml -i
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
