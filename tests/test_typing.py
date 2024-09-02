@@ -6,7 +6,7 @@ import cairo
 
 def test_typing():
     mod = types.ModuleType("cairo")
-    stub = os.path.join(cairo.__path__[0], "__init__.pyi")
+    stub = os.path.join(os.path.dirname(cairo.__file__), "__init__.pyi")
     with open(stub, encoding="utf-8") as h:
         code = compile(h.read(), stub, "exec")
         exec(code, mod.__dict__)
