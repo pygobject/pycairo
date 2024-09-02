@@ -23,7 +23,6 @@ endif
 for_wheel = get_option('wheel')
 
 fs = import('fs')
-fs.copyfile('setup.cfg', 'setup.cfg')
 
 cc = meson.get_compiler('c')
 
