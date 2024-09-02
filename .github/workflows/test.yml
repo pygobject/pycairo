@@ -88,40 +88,29 @@ jobs:
       run: |
         sudo apt-get update -q
         sudo apt-get install -y libcairo2-dev ninja-build
-        python -m pip install --upgrade setuptools
-        python -m pip install --upgrade pytest flake8 coverage hypothesis wheel poetry meson
-        python -m pip install --upgrade pygame || true
-
-    - name: Build & Test with setuptools
-      run: |
-        export CFLAGS="-Werror -coverage"
-        PYTHONDEVMODE=1 python -m coverage run --branch setup.py test
-        python -m coverage xml -i
-        python setup.py sdist
-        python setup.py bdist_wheel
-        python setup.py install --root="$(pwd)"/_root_abs
-
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4
-
-    - name: Build & Install with pip
-      run: |
-        git clean -xfdf
-        python -m pip install .
+        pipx install poetry
+        pipx install meson
+        poetry install
+        poetry run pip install --upgrade pygame || true
+        poetry run pip install --upgrade numpy || true
 
     - name: Build & Test with meson
       run: |
-        git clean -xfdf
-        meson --werror _build
-        meson compile -C _build
-        meson test -v -C _build
+        poetry run meson --werror _build
+        poetry run meson compile -C _build
+        poetry run meson test -v -C _build
+        rm -Rf _build
 
     - name: Build & Test with poetry
-      if: ${{ matrix.python-version != 'pypy-3.10' }}
       run: |
-        git clean -xfdf
-        poetry install
-        poetry run python setup.py test
+        export CFLAGS="-Werror -coverage"
+        export PYTHONDEVMODE=1
+        poetry run pip install -e .
+        poetry run coverage run --branch -m pytest
+        poetry run coverage xml -i
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
 
     - name: Run linters
       if: ${{ matrix.python-version != 'pypy-3.10' }}
