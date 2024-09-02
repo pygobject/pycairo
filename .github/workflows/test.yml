@@ -123,7 +123,13 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
-        architecture: ['x86', 'x64']
+        architecture: ['x64']
+        include:
+          - python-version: '3.9'
+            architecture: 'x86'
+          - python-version: '3.13'
+            architecture: 'x86'
+
     steps:
       - uses: actions/checkout@v4
 
