@@ -1,3 +1,13 @@
+[project]
+name = "pycairo"
+version = "1.26.2"
+description = "Python interface for cairo"
+readme = "README.rst"
+requires-python = ">=3.9"
+license = {text = "LGPL-2.1-only OR MPL-1.1"}
+maintainers = [{name = "Christoph Reiter", email = "reiter.christoph@gmail.com"}]
+urls = {Homepage = "https://pycairo.readthedocs.io", Source = "https://github.com/pygobject/pycairo"}
+
 [tool.poetry]
 name = "pycairo"
 version = "1.26.2"
