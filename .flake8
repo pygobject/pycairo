@@ -2,4 +2,4 @@
 ignore=E402,E741
 builtins=buffer,unichr
 max-line-length = 100
-exclude = build
+exclude = build,.git
