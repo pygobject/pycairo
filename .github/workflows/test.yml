@@ -56,7 +56,7 @@ jobs:
         run: |
           export CFLAGS="-Werror -coverage"
           export PYTHONDEVMODE=1
-          poetry run pip install -e .
+          poetry run pip install --no-build-isolation -e .
           poetry run coverage run --branch -m pytest
           poetry run coverage xml -i
 
@@ -99,7 +99,7 @@ jobs:
       run: |
         export CFLAGS="-Werror -coverage"
         export PYTHONDEVMODE=1
-        poetry run pip install -e .
+        poetry run pip install --no-build-isolation -e .
         poetry run coverage run --branch -m pytest
         poetry run coverage xml -i
 
@@ -176,7 +176,7 @@ jobs:
           CFLAGS: "-DCAIRO_WIN32_STATIC_BUILD=1"
           PYTHONDEVMODE: 1
         run: |
-          poetry run pip install -e .
+          poetry run pip install --no-build-isolation -e .
           poetry run coverage run --branch -m pytest
           if (-not $?) { exit 1 }
           poetry run coverage xml -i
@@ -207,7 +207,7 @@ jobs:
         run: |
           export CFLAGS="-Werror -coverage"
           export PYTHONDEVMODE=1
-          poetry run pip install -e .
+          poetry run pip install --no-build-isolation -e .
           poetry run coverage run --branch -m pytest
           poetry run coverage xml -i
 
