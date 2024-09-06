@@ -119,10 +119,10 @@ pyext_c_args = [
 if not for_wheel
   pkginfo_conf = configuration_data()
   pkginfo_conf.set('VERSION', pycairo_version)
-  configure_file(input : 'PKG-INFO.in',
-    output : 'pycairo-@0@.egg-info'.format(pycairo_version),
+  configure_file(input : 'METADATA.in',
+    output : 'METADATA',
     configuration : pkginfo_conf,
-    install_dir : python.get_install_dir())
+    install_dir : python.get_install_dir() / 'pycairo-@0@.dist-info'.format(pycairo_version))
 endif
 
 subdir('cairo')
