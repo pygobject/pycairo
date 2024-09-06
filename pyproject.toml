@@ -1,6 +1,6 @@
 [project]
 name = "pycairo"
-version = "1.26.2"
+version = "1.27.0"
 description = "Python interface for cairo"
 readme = "README.rst"
 requires-python = ">=3.9"

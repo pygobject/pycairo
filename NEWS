@@ -1,5 +1,23 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning <http://semver.org/>`__
 
+.. _v1.27.0:
+
+1.27.0 - 2024-09-06
+-------------------
+
+This release only contains build related changes/fixes and no API changes.
+
+* Drop support for Python 3.8
+* Add Windows wheels for Python 3.13
+* Updated cairo in Windows wheels from 1.18.0 to 1.18.2
+* Port PEP517/wheel build from setuptools to meson-python. This means setup.py
+  is gone. System packagers should not switch to wheel builds and continue using
+  meson directly.
+* meson: install the package metadata to .dist-info/METADATA instead of .egg-info
+* Drop arm64 Windows wheels again. pypa/cibuildwheel does not support cross
+  compiling with meson-python. They might be added back in the future if GitHub
+  Actions gains a native Windows runner with arm64 support.
+
 .. _v1.26.1:
 
 1.26.1 - 2024-06-21
