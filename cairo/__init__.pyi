@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import (Any, BinaryIO, ByteString, Callable, Generic, List, Optional,
+from typing import (Any, BinaryIO, Callable, Generic, List, Optional,
                     Sequence, Text, Tuple, TypeVar, Union)
 
 del annotations
@@ -1975,6 +1975,7 @@ class Device:
     def __enter__(self: _SomeDevice) -> _SomeDevice: ...
     __exit__: Any = ...
 
+ByteString = Union[bytes, bytearray, memoryview]
 _PathLike = Union[Text, ByteString]
 _FileLike = BinaryIO
 _SomeSurface = TypeVar("_SomeSurface", bound="Surface")
