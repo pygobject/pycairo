@@ -10,7 +10,7 @@ import zipfile
 from pathlib import Path
 from urllib.request import urlretrieve as download
 
-CAIRO_VERSION = "1.18.2"
+CAIRO_VERSION = "1.18.4"
 
 
 def get_platform() -> str:
