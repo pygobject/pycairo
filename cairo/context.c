@@ -95,7 +95,6 @@ pycairo_get_hairline (PycairoContext *o, PyObject *ignored) {
 }
 #endif
 
-#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
 static PyObject *
 pycairo_tag_begin (PycairoContext *o, PyObject *args) {
     const char *tag_name;
@@ -135,7 +134,6 @@ pycairo_tag_end (PycairoContext *o, PyObject *args) {
       RETURN_NULL_IF_CAIRO_CONTEXT_ERROR(o->ctx);
       Py_RETURN_NONE;
 }
-#endif
 
 static PyObject *
 pycairo_append_path (PycairoContext *o, PyObject *args) {
@@ -1376,10 +1374,8 @@ static PyMethodDef pycairo_methods[] = {
   {"set_hairline",    (PyCFunction)pycairo_set_hairline,     METH_VARARGS},
   {"get_hairline",    (PyCFunction)pycairo_get_hairline,     METH_NOARGS},
 #endif
-#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
   {"tag_begin",       (PyCFunction)pycairo_tag_begin,        METH_VARARGS},
   {"tag_end",         (PyCFunction)pycairo_tag_end,          METH_VARARGS},
-#endif
   {"append_path",     (PyCFunction)pycairo_append_path,      METH_VARARGS},
   {"arc",             (PyCFunction)pycairo_arc,              METH_VARARGS},
   {"arc_negative",    (PyCFunction)pycairo_arc_negative,     METH_VARARGS},

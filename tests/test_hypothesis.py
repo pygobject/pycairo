@@ -34,10 +34,6 @@ def _to_temp_path(tempdir_path, p):
     return res
 
 
-def cairo_ver():
-    return tuple(map(int, cairo.cairo_version_string().split(".")))
-
-
 @pytest.mark.skipif(
     platform.python_implementation() == "PyPy" and sys.pypy_version_info < (7, 3, 0),
     reason="PyPy bugs")
@@ -50,18 +46,8 @@ def test_fspaths(tempdir_path, path):
     if os.path.exists(p):
         return
 
-    if cairo_ver() >= (1, 15, 10):
-        def path_encode(p):
-            return p.encode("utf-8")
-    else:
-        def path_encode(p):
-            new = temp.encode("mbcs")
-            if new.decode("mbcs") != p:
-                raise ValueError
-            return new
-
-    # cairo up to 1.15.8 uses fopen, which only supports ANSI paths under
-    # Windows. 1.15.10+ uses utf-8 like glib.
+    # Since 1.15.10 cairo uses utf-8 for paths under Windows, but doesn't
+    # support lone surrogates.
     is_valid = True
     if os.name == "nt":
         temp = os.path.join(p)
@@ -69,7 +55,7 @@ def test_fspaths(tempdir_path, path):
             temp = os.fsdecode(temp)
         if isinstance(temp, str):
             try:
-                path_encode(temp)
+                temp.encode("utf-8")
             except ValueError:
                 is_valid = False
 
