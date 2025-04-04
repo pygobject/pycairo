@@ -29,6 +29,7 @@ exclude_patterns = ['_build']
 pygments_style = 'friendly'
 html_theme = "sphinx_rtd_theme"
 html_theme_options = {
+    'version_selector': False,
 }
 html_context = {
     'extra_css_files': [
