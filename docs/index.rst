@@ -19,6 +19,7 @@
    reference/index
    c_api/index
    resources
+   dev
 
 .. currentmodule:: cairo
 .. title:: Overview
