@@ -20,15 +20,15 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.9"
 
-[tool.poetry.dev-dependencies]
-pytest = "^7.2.0"
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.0"
 hypothesis = "^6.58.0"
-mypy = {version = "1.8.0", markers = "platform_python_implementation != 'PyPy'"}
+mypy = {version = "1.15.0", markers = "platform_python_implementation != 'PyPy'"}
 flake8 = "^7.0.0"
-Sphinx = "^6.2.1"
-sphinx-rtd-theme = "^2.0.0"
+Sphinx = "^7.4.0"
+sphinx-rtd-theme = "^3.0.0"
 coverage = {extras = ["toml"], version = "^7.2.3"}
-sphinx-autobuild = "^2021.3.14"
+sphinx-autobuild = "^2024.10.3"
 meson-python = ">= 0.16.0"
 
 [tool.coverage.run]
