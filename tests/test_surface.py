@@ -5,7 +5,6 @@ import array
 import tempfile
 import struct
 import sysconfig
-import platform
 
 import cairo
 import pytest
@@ -498,8 +497,6 @@ def test_supports_mime_type():
         surface.supports_mime_type(object())
 
 
-# https://github.com/pypy/pypy/issues/2751
-@pytest.mark.skipif(platform.python_implementation() == "PyPy", reason="PyPy")
 def test_image_surface_create_for_data_array():
     width, height = 255, 255
     data = array.array('B', [0] * width * height * 4)

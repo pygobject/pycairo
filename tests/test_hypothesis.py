@@ -1,9 +1,7 @@
 import math
 import os
-import sys
 import tempfile
 import shutil
-import platform
 
 import pytest
 import cairo
@@ -34,9 +32,6 @@ def _to_temp_path(tempdir_path, p):
     return res
 
 
-@pytest.mark.skipif(
-    platform.python_implementation() == "PyPy" and sys.pypy_version_info < (7, 3, 0),
-    reason="PyPy bugs")
 @given(path=fspaths())
 def test_fspaths(tempdir_path, path):
     p = _to_temp_path(tempdir_path, path)
