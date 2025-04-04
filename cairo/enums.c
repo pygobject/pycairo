@@ -189,16 +189,12 @@ DEFINE_ENUM(TextClusterFlags)
 DEFINE_ENUM(SurfaceObserverMode)
 #ifdef CAIRO_HAS_SVG_SURFACE
 DEFINE_ENUM(SVGVersion)
-#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
 DEFINE_ENUM(SVGUnit)
-#endif
 #endif
 #ifdef CAIRO_HAS_PDF_SURFACE
 DEFINE_ENUM(PDFVersion)
-#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
 DEFINE_ENUM(PDFMetadata);
 DEFINE_ENUM(PDFOutlineFlags);
-#endif
 #endif
 #ifdef CAIRO_HAS_PS_SURFACE
 DEFINE_ENUM(PSLevel)
@@ -429,12 +425,10 @@ init_enums (PyObject *module) {
     CONSTANT(Status, STATUS, INVALID_MESH_CONSTRUCTION);
     CONSTANT(Status, STATUS, DEVICE_FINISHED);
     CONSTANT(Status, STATUS, JBIG2_GLOBAL_MISSING);
-#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
     CONSTANT(Status, STATUS, PNG_ERROR);
     CONSTANT(Status, STATUS, FREETYPE_ERROR);
     CONSTANT(Status, STATUS, WIN32_GDI_ERROR);
     CONSTANT(Status, STATUS, TAG_ERROR);
-#endif
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 17, 6)
     CONSTANT(Status, STATUS, DWRITE_ERROR);
 #endif
@@ -472,7 +466,6 @@ init_enums (PyObject *module) {
     ENUM(SVGVersion);
     CONSTANT(SVGVersion, SVG, VERSION_1_1);
     CONSTANT(SVGVersion, SVG, VERSION_1_2);
-#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
     ENUM(SVGUnit);
     CONSTANT(SVGUnit, SVG_UNIT, USER);
     CONSTANT(SVGUnit, SVG_UNIT, EM);
@@ -485,7 +478,6 @@ init_enums (PyObject *module) {
     CONSTANT(SVGUnit, SVG_UNIT, PC);
     CONSTANT(SVGUnit, SVG_UNIT, PERCENT);
 #endif
-#endif
 
 #ifdef CAIRO_HAS_PDF_SURFACE
     ENUM(PDFVersion);
@@ -495,7 +487,6 @@ init_enums (PyObject *module) {
     CONSTANT(PDFVersion, PDF, VERSION_1_6);
     CONSTANT(PDFVersion, PDF, VERSION_1_7);
 #endif
-#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
     ENUM(PDFMetadata);
     CONSTANT(PDFMetadata, PDF_METADATA, TITLE);
     CONSTANT(PDFMetadata, PDF_METADATA, AUTHOR);
@@ -508,7 +499,6 @@ init_enums (PyObject *module) {
     CONSTANT(PDFOutlineFlags, PDF_OUTLINE_FLAG, OPEN);
     CONSTANT(PDFOutlineFlags, PDF_OUTLINE_FLAG, BOLD);
     CONSTANT(PDFOutlineFlags, PDF_OUTLINE_FLAG, ITALIC);
-#endif
 #endif
 
 #ifdef CAIRO_HAS_PS_SURFACE

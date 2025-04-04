@@ -296,9 +296,7 @@ DECL_ENUM(TextClusterFlags)
 DECL_ENUM(SurfaceObserverMode)
 #ifdef CAIRO_HAS_SVG_SURFACE
 DECL_ENUM(SVGVersion)
-#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 15, 10)
 DECL_ENUM(SVGUnit)
-#endif
 #endif
 #ifdef CAIRO_HAS_PDF_SURFACE
 DECL_ENUM(PDFVersion)

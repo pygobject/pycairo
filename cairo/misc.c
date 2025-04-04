@@ -99,11 +99,7 @@ Pycairo_fspath_converter (PyObject *obj, char** result) {
     if (Pycairo_PyUnicode_FSDecoder (obj, &uni) == 0)
         return 0;
 
-    if (cairo_version() >= CAIRO_VERSION_ENCODE(1, 15, 10)) {
-        bytes = PyUnicode_AsEncodedString (uni, "utf-8", "strict");
-    } else {
-        bytes = PyUnicode_AsMBCSString (uni);
-    }
+    bytes = PyUnicode_AsEncodedString (uni, "utf-8", "strict");
 
     Py_DECREF (uni);
     if (bytes == NULL)
