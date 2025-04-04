@@ -68,7 +68,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', 'pypy-3.10']
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', 'pypy-3.10', 'pypy-3.11']
     steps:
     - uses: actions/checkout@v4
 
@@ -107,13 +107,13 @@ jobs:
       uses: codecov/codecov-action@v4
 
     - name: Run linters
-      if: ${{ matrix.python-version != 'pypy-3.10' }}
+      if: ${{ !contains(matrix.python-version, 'pypy') }}
       run: |
         poetry run flake8
         poetry run mypy .
 
     - name: Build docs
-      if: ${{ matrix.python-version != 'pypy-3.10' }}
+      if: ${{ !contains(matrix.python-version, 'pypy') }}
       run: |
         poetry run python -m sphinx -W -a -E -b html -n docs docs/_build
 
