@@ -7,18 +7,11 @@ requires-python = ">=3.9"
 license = {text = "LGPL-2.1-only OR MPL-1.1"}
 maintainers = [{name = "Christoph Reiter", email = "reiter.christoph@gmail.com"}]
 urls = {Homepage = "https://pycairo.readthedocs.io", Source = "https://github.com/pygobject/pycairo"}
+dependencies = []
 
 [tool.poetry]
-name = "pycairo"
-version = "1.26.2"
-description = "Python interface for cairo"
-authors = ["Christoph Reiter"]
-packages = [
-    { include = "cairo" },
-]
-
-[tool.poetry.dependencies]
-python = "^3.9"
+requires-poetry = '>=2.0'
+package-mode = false
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.0"
