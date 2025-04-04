@@ -1,10 +1,6 @@
 import os
 import sys
 
-from sphinx.util import logging
-
-# https://github.com/sphinx-doc/sphinx/issues/10112
-logging.getLogger('sphinx.ext.extlinks').setLevel(40)
 
 dir_ = os.path.dirname(os.path.realpath(__file__))
 
