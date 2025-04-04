@@ -6,7 +6,7 @@ import pytest
 import cairo
 
 
-# https://foss.heptapod.net/pypy/pypy/-/issues/2742
+# https://github.com/pypy/pypy/issues/2742
 @pytest.mark.skipif(platform.python_implementation() == "PyPy", reason="PyPy")
 def test_type():
     t = cairo.Antialias

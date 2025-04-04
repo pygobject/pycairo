@@ -498,7 +498,7 @@ def test_supports_mime_type():
         surface.supports_mime_type(object())
 
 
-# https://foss.heptapod.net/pypy/pypy/-/issues/2751
+# https://github.com/pypy/pypy/issues/2751
 @pytest.mark.skipif(platform.python_implementation() == "PyPy", reason="PyPy")
 def test_image_surface_create_for_data_array():
     width, height = 255, 255
