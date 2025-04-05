@@ -1,3 +1,5 @@
+import sys
+
 import cairo
 import pytest
 
@@ -53,3 +55,14 @@ def test_recording_surface():
         cairo.CONTENT_COLOR, cairo.Rectangle(1, 1, 10, 10))
 
     assert isinstance(surface.get_extents(), cairo.Rectangle)
+
+
+def test_rectangle_limits():
+    max_val = sys.float_info.max
+    min_val = -sys.float_info.max
+
+    rect = cairo.Rectangle(max_val, min_val, max_val, min_val)
+    assert rect.x == max_val
+    assert rect.y == min_val
+    assert rect.width == max_val
+    assert rect.height == min_val

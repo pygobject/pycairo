@@ -1,3 +1,5 @@
+import sys
+
 import cairo
 import pytest
 
@@ -54,3 +56,17 @@ def test_methods():
 
     extents = sf.glyph_extents([cairo.Glyph(0, 0, 0)])
     assert isinstance(extents, cairo.TextExtents)
+
+
+def test_text_extents_limits():
+    max_val = sys.float_info.max
+    min_val = sys.float_info.min
+
+    te = cairo.TextExtents(max_val, min_val, max_val, min_val,
+                           max_val, min_val)
+    assert te.x_bearing == max_val
+    assert te.y_bearing == min_val
+    assert te.width == max_val
+    assert te.height == min_val
+    assert te.x_advance == max_val
+    assert te.y_advance == min_val

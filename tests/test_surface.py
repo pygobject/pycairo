@@ -441,6 +441,13 @@ def test_surface_set_device_scale():
     with pytest.raises(TypeError):
         surface.set_device_scale(1, object())
 
+    surface.set_device_scale(sys.float_info.max, -sys.float_info.max)
+    assert surface.get_device_scale() == (sys.float_info.max, -sys.float_info.max)
+
+    with pytest.raises(cairo.Error) as excinfo:
+        surface.set_device_scale(0, 0)
+    assert excinfo.value.status == cairo.Status.INVALID_MATRIX
+
 
 def test_surface_create_for_rectangle():
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
@@ -452,8 +459,20 @@ def test_surface_create_for_rectangle():
         surface.create_for_rectangle(0, 0, 10, -1)
     assert excinfo.value.status == cairo.STATUS_INVALID_SIZE
 
+    with pytest.raises(cairo.Error) as excinfo:
+        surface.create_for_rectangle(0, 0, -1, 10)
+    assert excinfo.value.status == cairo.STATUS_INVALID_SIZE
+
     with pytest.raises(TypeError):
         surface.create_for_rectangle(0, 0, 10, object())
+
+    surface.create_for_rectangle(
+        sys.float_info.max, sys.float_info.max,
+        sys.float_info.max, sys.float_info.max)
+
+    surface.create_for_rectangle(
+        -sys.float_info.max, -sys.float_info.max,
+        sys.float_info.min, sys.float_info.min)
 
 
 def test_surface_create_similar_image():
@@ -659,6 +678,9 @@ def test_get_device_offset(surface):
     assert surface.get_device_offset() == (1, 1)
     with pytest.raises(TypeError):
         surface.set_device_offset(1, object())
+
+    surface.set_device_offset(sys.float_info.max, -sys.float_info.max)
+    assert surface.get_device_offset() == (sys.float_info.max, -sys.float_info.max)
 
 
 def test_get_fallback_resolution(surface):

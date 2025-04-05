@@ -1,3 +1,5 @@
+import ctypes
+
 import cairo
 import pytest
 
@@ -23,6 +25,22 @@ def test_get_rectangle():
     assert r.get_rectangle(0) == rect
     with pytest.raises(TypeError):
         r.get_rectangle(object())
+
+
+def test_rectangles_limits():
+    max_int = 2 ** (ctypes.sizeof(ctypes.c_int()) * 8 - 1) - 1
+    min_int = -max_int - 1
+
+    rect = cairo.RectangleInt(max_int, min_int, max_int, min_int)
+    assert rect.x == max_int
+    assert rect.y == min_int
+    assert rect.width == max_int
+    assert rect.height == min_int
+
+    with pytest.raises(OverflowError):
+        cairo.RectangleInt(max_int + 1, min_int, max_int, min_int)
+    with pytest.raises(OverflowError):
+        cairo.RectangleInt(min_int, min_int, max_int, min_int - 1)
 
 
 def test_contains_point():

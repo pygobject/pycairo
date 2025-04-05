@@ -15,7 +15,6 @@ package-mode = false
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.0"
-hypothesis = "^6.58.0"
 mypy = {version = "1.15.0", markers = "platform_python_implementation != 'PyPy'"}
 flake8 = "^7.0.0"
 coverage = {extras = ["toml"], version = "^7.2.3"}
