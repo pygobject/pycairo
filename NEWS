@@ -196,7 +196,7 @@ deprecated, please use meson instead.
 
 * meson: install .egg-info to platlib
 * meson: fix configure error with meson 0.50 re absolute paths :pr:`145`
-* PyPy: don't use PyOS_FSPath() with PyPy3.6, it's missing: https://foss.heptapod.net/pypy/pypy/-/issues/2961
+* PyPy: don't use PyOS_FSPath() with PyPy3.6, it's missing: https://github.com/pypy/pypy/issues/2961
 * Docs fixes :pr:`134` (:user:`Matteo Italia <cvtsi2sd>`)
 
 
