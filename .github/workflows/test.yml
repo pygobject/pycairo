@@ -85,6 +85,10 @@ jobs:
         pipx install poetry
         pipx install meson
         poetry install --with docs
+
+    - name: Install optional test dependencies
+      if: ${{ !contains(matrix.python-version, 'pypy') }}
+      run: |
         poetry run pip install --upgrade pygame || true
         poetry run pip install --upgrade numpy || true
 
