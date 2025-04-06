@@ -48,43 +48,6 @@ Pycairo_is_fspath (PyObject *obj) {
     }
 }
 
-#if !defined(MS_WINDOWS)
-/* Broken in PyPy: https://github.com/pypy/pypy/issues/3168 */
-static int
-Pycairo_PyUnicode_FSConverter(PyObject* obj, void* result) {
-    int res;
-    PyObject *real = NULL;
-    real = PyOS_FSPath (obj);
-    if (real == NULL) {
-        PyErr_Clear ();
-        return PyUnicode_FSConverter (obj, result);
-    } else {
-        res = PyUnicode_FSConverter (real, result);
-        Py_DECREF (real);
-        return res;
-    }
-}
-#endif
-
-#if defined(MS_WINDOWS)
-/* Broken in PyPy: https://github.com/pypy/pypy/issues/3168 */
-static int
-Pycairo_PyUnicode_FSDecoder(PyObject* obj, void* result) {
-    int res;
-    PyObject *real = NULL;
-    real = PyOS_FSPath (obj);
-    if (real == NULL) {
-        PyErr_Clear ();
-        return PyUnicode_FSDecoder (obj, result);
-    } else {
-        res = PyUnicode_FSDecoder (real, result);
-        Py_DECREF (real);
-        return res;
-    }
-}
-#endif
-
-
 /* Converts a Python object to a cairo path. The result needs to be freed with
  * PyMem_Free().
  */
@@ -96,7 +59,7 @@ Pycairo_fspath_converter (PyObject *obj, char** result) {
 #if defined(MS_WINDOWS)
     PyObject *uni;
 
-    if (Pycairo_PyUnicode_FSDecoder (obj, &uni) == 0)
+    if (PyUnicode_FSDecoder (obj, &uni) == 0)
         return 0;
 
     bytes = PyUnicode_AsEncodedString (uni, "utf-8", "strict");
@@ -110,7 +73,7 @@ Pycairo_fspath_converter (PyObject *obj, char** result) {
         return 0;
     }
 #else
-    if (Pycairo_PyUnicode_FSConverter (obj, &bytes) == 0)
+    if (PyUnicode_FSConverter (obj, &bytes) == 0)
         return 0;
 
     if (PyBytes_AsStringAndSize (bytes, &internal, NULL) == -1) {
