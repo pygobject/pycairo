@@ -49,7 +49,7 @@ Pycairo_is_fspath (PyObject *obj) {
 }
 
 #if !defined(MS_WINDOWS)
-/* Broken in PyPy: https://foss.heptapod.net/pypy/pypy/-/issues/3168 */
+/* Broken in PyPy: https://github.com/pypy/pypy/issues/3168 */
 static int
 Pycairo_PyUnicode_FSConverter(PyObject* obj, void* result) {
     int res;
@@ -67,7 +67,7 @@ Pycairo_PyUnicode_FSConverter(PyObject* obj, void* result) {
 #endif
 
 #if defined(MS_WINDOWS)
-/* Broken in PyPy: https://foss.heptapod.net/pypy/pypy/-/issues/3168 */
+/* Broken in PyPy: https://github.com/pypy/pypy/issues/3168 */
 static int
 Pycairo_PyUnicode_FSDecoder(PyObject* obj, void* result) {
     int res;
