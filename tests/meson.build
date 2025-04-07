@@ -1,5 +1,4 @@
 test_sources = [
-  'hypothesis_fspaths.py',
   '__init__.py',
   'test_api.py',
   'test_cmod.py',
@@ -9,7 +8,7 @@ test_sources = [
   'test_error.py',
   'test_font.py',
   'test_glyph.py',
-  'test_hypothesis.py',
+  'test_fspaths.py',
   'test_matrix.py',
   'test_path.py',
   'test_pattern.py',

@@ -1,3 +1,6 @@
+import sys
+import ctypes
+
 import cairo
 import pytest
 
@@ -47,3 +50,18 @@ def test_context():
 
     with pytest.raises(TypeError):
         context.glyph_path([object()])
+
+
+def test_glyph_limits():
+    max_ulong = 2 ** (ctypes.sizeof(ctypes.c_ulong()) * 8) - 1
+
+    g = cairo.Glyph(max_ulong, sys.float_info.max, -sys.float_info.max)
+    assert g.index == max_ulong
+    assert g.x == sys.float_info.max
+    assert g.y == -sys.float_info.max
+
+    with pytest.raises(OverflowError):
+        cairo.Glyph(-1, 0, 0)
+
+    with pytest.raises(OverflowError):
+        g = cairo.Glyph(max_ulong + 1, 0, 0)

@@ -1,3 +1,5 @@
+import ctypes
+
 import cairo
 import pytest
 
@@ -27,3 +29,17 @@ def test_type():
 
     assert cairo.TextCluster.num_bytes
     assert cairo.TextCluster.num_glyphs
+
+
+def test_text_cluster_limits():
+    max_int = 2 ** (ctypes.sizeof(ctypes.c_int()) * 8 - 1) - 1
+    min_int = -max_int - 1
+
+    tc = cairo.TextCluster(max_int, min_int)
+    assert tc.num_bytes == max_int
+    assert tc.num_glyphs == min_int
+
+    with pytest.raises(OverflowError):
+        cairo.TextCluster(max_int + 1, min_int)
+    with pytest.raises(OverflowError):
+        cairo.RectangleInt(min_int, min_int - 1)

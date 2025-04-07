@@ -55,6 +55,12 @@ def test_get_set_operator_limits(context):
         context.set_operator(val)
         assert context.get_operator() == val
 
+    orig = context.get_operator()
+    for val in [max_int + 1, min_int - 1]:
+        with pytest.raises(OverflowError):
+            context.set_operator(val)
+        assert context.get_operator() == orig
+
 
 def test_show_text_glyphs():
     surface = cairo.PDFSurface(None, 300, 300)
