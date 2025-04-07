@@ -226,7 +226,7 @@ region_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
         PyErr_SetString (PyExc_ValueError, "sequence too large");
         return NULL;
     }
-    rect = PyMem_Malloc ((unsigned int)rect_size * sizeof(cairo_rectangle_int_t));
+    rect = PyMem_Calloc ((unsigned int)rect_size, sizeof(cairo_rectangle_int_t));
     if (rect == NULL) {
       Py_DECREF(seq);
       return PyErr_NoMemory();
