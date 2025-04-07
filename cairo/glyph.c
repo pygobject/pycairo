@@ -59,7 +59,7 @@ _PycairoGlyphs_AsGlyphs (PyObject *py_object, int *num_glyphs)
     if (*num_glyphs < 0 || *num_glyphs > length)
         *num_glyphs = (int)length;
 
-    glyphs = PyMem_Malloc ((unsigned int)*num_glyphs * sizeof(cairo_glyph_t));
+    glyphs = PyMem_Calloc ((unsigned int)*num_glyphs, sizeof(cairo_glyph_t));
     if (glyphs == NULL) {
         PyErr_NoMemory();
         goto error;

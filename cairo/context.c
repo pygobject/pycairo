@@ -387,7 +387,7 @@ pycairo_get_dash (PycairoContext *o, PyObject *ignored) {
     PyErr_SetString (PyExc_RuntimeError, "invalid dash return");
     return NULL;
   }
-  dashes = PyMem_Malloc ((unsigned int)count * sizeof(double));
+  dashes = PyMem_Calloc ((unsigned int)count, sizeof(double));
   if (dashes == NULL)
     return PyErr_NoMemory();
 
@@ -874,7 +874,7 @@ pycairo_set_dash (PycairoContext *o, PyObject *args) {
       PyErr_SetString (PyExc_ValueError, "dash sequence too large");
       return NULL;
   }
-  dashes = PyMem_Malloc ((unsigned int)num_dashes * sizeof(double));
+  dashes = PyMem_Calloc ((unsigned int)num_dashes, sizeof(double));
   if (dashes == NULL) {
     Py_DECREF(py_dashes);
     return PyErr_NoMemory();
