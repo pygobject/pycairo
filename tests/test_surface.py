@@ -808,3 +808,16 @@ def test_format_rgbf():
     assert surface.get_format() == cairo.Format.RGB96F
     surface = cairo.ImageSurface(cairo.Format.RGBA128F, 3, 3)
     assert surface.get_format() == cairo.Format.RGBA128F
+
+
+def test_image_surface_release_on_finish() -> None:
+    width, height = 6, 4
+    buffer = bytearray(width * height * 4)
+    mem = memoryview(buffer)
+    surface = cairo.ImageSurface.create_for_data(
+        mem, cairo.FORMAT_ARGB32, width, height, width * 4
+    )
+    surface.finish()
+    # after the surface is finished, there should be nothing exported from the
+    # memoryview anymore
+    mem.release()
