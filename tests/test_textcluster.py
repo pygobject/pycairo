@@ -4,12 +4,12 @@ import cairo
 import pytest
 
 
-def test_type():
-    assert cairo.TextCluster
+def test_type() -> None:
+    assert hasattr(cairo, "TextCluster")
     assert issubclass(cairo.TextCluster, tuple)
 
     with pytest.raises(TypeError):
-        cairo.TextCluster()
+        cairo.TextCluster()  # type: ignore
 
     r = cairo.TextCluster(2, 1)
     assert hash(r) == hash(cairo.TextCluster(2, 1))
@@ -21,7 +21,7 @@ def test_type():
     assert r.num_glyphs == 1
 
     with pytest.raises(AttributeError):
-        assert r.z
+        assert r.z  # type: ignore
 
     assert repr(r) == "cairo.TextCluster(num_bytes=2, num_glyphs=1)"
     assert str(r) == "cairo.TextCluster(num_bytes=2, num_glyphs=1)"
@@ -31,7 +31,7 @@ def test_type():
     assert cairo.TextCluster.num_glyphs
 
 
-def test_text_cluster_limits():
+def test_text_cluster_limits() -> None:
     max_int = 2 ** (ctypes.sizeof(ctypes.c_int()) * 8 - 1) - 1
     min_int = -max_int - 1
 

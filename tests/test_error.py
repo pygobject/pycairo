@@ -41,7 +41,7 @@ def test_error_check_status():
     str(cairo.Error())
 
 
-def test_error_context():
+def test_error_context() -> None:
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
     ctx = cairo.Context(surface)
     with pytest.raises(cairo.Error) as excinfo:
@@ -53,7 +53,7 @@ def test_error_context():
     assert str(error)
 
 
-def test_error():
+def test_error() -> None:
     with pytest.raises(cairo.Error) as excinfo:
         raise cairo.Error
     assert excinfo.value.status is None
@@ -73,5 +73,5 @@ def test_error():
     Foo("foo", 42)
 
 
-def test_error_alias():
+def test_error_alias() -> None:
     assert cairo.Error is cairo.CairoError

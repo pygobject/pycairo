@@ -2421,7 +2421,7 @@ class Surface:
         .. versionadded:: 1.2
         """
 
-    def set_mime_data(self, mime_type: str, data: bytes) -> None:
+    def set_mime_data(self, mime_type: str, data: Optional[bytes]) -> None:
         """
         :param mime_type: the MIME type of the image data
             (:ref:`constants_MIME_TYPE`)
@@ -4674,7 +4674,7 @@ class PDFSurface(Surface):
 
     def __init__(
         self,
-        fobj: Union[_PathLike, _FileLike],
+        fobj: Union[_PathLike, _FileLike, None],
         width_in_points: float,
         height_in_points: float,
     ) -> None:
@@ -4829,7 +4829,7 @@ class PSSurface(Surface):
 
     def __init__(
         self,
-        fobj: Union[_FileLike, _PathLike],
+        fobj: Union[_FileLike, _PathLike, None],
         width_in_points: float,
         height_in_points: float,
     ) -> None:
@@ -5061,7 +5061,7 @@ class SVGSurface(Surface):
 
     def __init__(
         self,
-        fobj: "Union[_PathLike, _FileLike]",
+        fobj: Union[_PathLike, _FileLike, None],
         width_in_points: float,
         height_in_points: float,
     ) -> None:
@@ -5333,7 +5333,7 @@ class RecordingSurface(Surface):
     .. versionadded:: 1.11.0
     """
 
-    def __init__(self, content: Content, rectangle: Rectangle) -> None:
+    def __init__(self, content: Content, rectangle: Optional[Rectangle]) -> None:
         """
         :param content: the content for the new  surface
         :param rectangle: or None to record unbounded operations.
@@ -5384,7 +5384,7 @@ class Region:
     .. versionadded:: 1.11.0
     """
 
-    def __init__(self, rectangle: Union[RectangleInt, List[RectangleInt]]) -> None:
+    def __init__(self, rectangle: Union[RectangleInt, Sequence[RectangleInt]] = []) -> None:
         """
         :param rectangle_int: a rectangle or a list of rectangle
 

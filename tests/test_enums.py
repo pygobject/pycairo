@@ -5,7 +5,7 @@ import pytest
 import cairo
 
 
-def test_type():
+def test_type() -> None:
     t = cairo.Antialias
     assert int in t.__mro__
     assert isinstance(t(42), int)
@@ -13,10 +13,10 @@ def test_type():
     assert issubclass(t, int)
 
     with pytest.raises(TypeError):
-        t()
+        t()  # type: ignore
 
     with pytest.raises(TypeError):
-        t(object())
+        t(object())  # type: ignore
 
     with pytest.raises(TypeError):
         type("foo", (t,), {})
@@ -34,24 +34,24 @@ def test_type():
     assert isinstance(cairo.ANTIALIAS_DEFAULT, t)
 
 
-def test_misc():
+def test_misc() -> None:
     cairo.Status.JBIG2_GLOBAL_MISSING
 
 
-def test_format_methods():
+def test_format_methods() -> None:
     assert cairo.Format.RGB24.stride_for_width(8) == 32
     assert cairo.Format.stride_for_width(cairo.Format.RGB24, 8) == 32
 
 
-def test_text_cluster_flags():
+def test_text_cluster_flags() -> None:
     assert cairo.TextClusterFlags.BACKWARD == 1
 
 
-def test_surface_observer_mode():
+def test_surface_observer_mode() -> None:
     assert cairo.SurfaceObserverMode.NORMAL == 0
 
 
-def test_aliases():
+def test_aliases() -> None:
     types_ = [
         cairo.Antialias,
         cairo.Content,
@@ -79,7 +79,7 @@ def test_aliases():
         # cairo 1.18.0+
         types_.append(cairo.Dither)
 
-    def get_prefix(t):
+    def get_prefix(t: type) -> str:
         name = t.__name__
         # special case..
         if name == "PathDataType":
@@ -126,7 +126,7 @@ def test_aliases():
     assert isinstance(cairo.PSLevel.LEVEL_3, cairo.PSLevel)
 
 
-def test_pickle():
+def test_pickle() -> None:
     # These constants used to be plain int. Try to pickle to int so that
     # there is no dependency on pycairo when unpickling.
 

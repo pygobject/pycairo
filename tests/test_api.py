@@ -11,14 +11,14 @@ import cairo
 import pytest
 
 
-def test_get_include():
+def test_get_include() -> None:
     include = cairo.get_include()
     assert isinstance(include, str)
     assert os.path.exists(include)
     assert os.path.isdir(include)
 
 
-def test_version():
+def test_version() -> None:
     cairo.cairo_version()
     cairo.cairo_version_string()
 
@@ -30,7 +30,7 @@ def test_version():
         ver_tuple
 
 
-def test_show_unicode_text():
+def test_show_unicode_text() -> None:
     width, height = 300, 300
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
     ctx = cairo.Context(surface)
@@ -45,7 +45,7 @@ def test_show_unicode_text():
     ctx.show_text("ēxāmple.")
 
 
-def test_unicode_filenames():
+def test_unicode_filenames() -> None:
     # FIXME: cairo does not support wchar on Windows and byte support is
     # missing under Python 3
 
@@ -62,7 +62,7 @@ def test_unicode_filenames():
         shutil.rmtree(dirname)
 
 
-def test_surface_has_show_text_glyphs():
+def test_surface_has_show_text_glyphs() -> None:
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 100, 100)
     assert not surface.has_show_text_glyphs()
     surface.finish()
@@ -70,7 +70,7 @@ def test_surface_has_show_text_glyphs():
         surface.has_show_text_glyphs()
 
 
-def test_context():
+def test_context() -> None:
     f, w, h = cairo.FORMAT_ARGB32, 100, 100
     s = cairo.ImageSurface(f, w, h)
     ctx = cairo.Context(s)
@@ -79,14 +79,14 @@ def test_context():
     ctx.paint()
 
 
-def test_surface():
+def test_surface() -> None:
     # TypeError: The Surface type cannot be instantiated
     with pytest.raises(TypeError):
         cairo.Surface()
 
-    f, w, h = cairo.FORMAT_ARGB32, 100, 100
-    s = cairo.ImageSurface(f, w, h)
-    assert s.get_format() == f
+    format, w, h = cairo.FORMAT_ARGB32, 100, 100
+    s = cairo.ImageSurface(format, w, h)
+    assert s.get_format() == format
     assert s.get_width() == w
     assert s.get_height() == h
 
@@ -96,14 +96,15 @@ def test_surface():
     with tempfile.TemporaryFile(mode='w+b') as f:
         cairo.PSSurface(f, 100, 100)
 
-    s = cairo.RecordingSurface(cairo.CONTENT_COLOR, None)
-    s = cairo.RecordingSurface(cairo.CONTENT_COLOR, (1, 1, 10, 10))
+    cairo.RecordingSurface(cairo.CONTENT_COLOR, None)
+    cairo.RecordingSurface(cairo.CONTENT_COLOR, cairo.Rectangle(1, 1, 10, 10))
+    cairo.RecordingSurface(cairo.CONTENT_COLOR, (1, 1, 10, 10))  # type: ignore
 
     with tempfile.TemporaryFile(mode='w+b') as f:
         cairo.SVGSurface(f, 100, 100)
 
 
-def test_surface_destroy_before_context():
+def test_surface_destroy_before_context() -> None:
     for kind in [cairo.PDFSurface, cairo.PSSurface]:
         surface = kind(io.BytesIO(), 1, 1)
         ctx = cairo.Context(surface)
@@ -111,7 +112,7 @@ def test_surface_destroy_before_context():
         ctx.paint()
 
 
-def test_surface_destroy_before_surface_pattern():
+def test_surface_destroy_before_surface_pattern() -> None:
     surface = cairo.PDFSurface(io.BytesIO(), 1, 1)
     pattern = cairo.SurfacePattern(surface)
     del surface
@@ -119,19 +120,19 @@ def test_surface_destroy_before_surface_pattern():
     ctx.paint()
 
 
-def test_recording_surface_get_extents():
+def test_recording_surface_get_extents() -> None:
     surface = cairo.RecordingSurface(cairo.CONTENT_COLOR, None)
     assert surface.get_extents() is None
 
-    surface = cairo.RecordingSurface(cairo.CONTENT_COLOR, (1, 2, 3, 4))
+    surface = cairo.RecordingSurface(cairo.CONTENT_COLOR, (1, 2, 3, 4))  # type: ignore
     assert surface.get_extents() == (1, 2, 3, 4)
 
-    surface = cairo.RecordingSurface(cairo.CONTENT_COLOR, (1, 2, 3, 4))
+    surface = cairo.RecordingSurface(cairo.CONTENT_COLOR, (1, 2, 3, 4))  # type: ignore
     surface.finish()
     assert surface.get_extents() == (1, 2, 3, 4)
 
 
-def test_image_surface_get_data():
+def test_image_surface_get_data() -> None:
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 3, 3)
     ctx = cairo.Context(surface)
     ctx.paint()
@@ -158,15 +159,13 @@ def test_surface_file_obj_error():
             if data:
                 raise OSError
 
-    cairo.PDFSurface(Fail(), 100, 100)
-    cairo.PSSurface(Fail(), 100, 100)
+    # We don't have these annotated to accept any object with write()
+    # method, so we need to ignore the type error.
+    cairo.PDFSurface(Fail(), 100, 100)  # type: ignore
+    cairo.PSSurface(Fail(), 100, 100)  # type: ignore
 
 
-def test_text():
-    pass
-
-
-def test_region():
+def test_region() -> None:
     a = cairo.Region()
     assert a.is_empty() is True
     assert a.num_rectangles() == 0
@@ -213,14 +212,14 @@ def test_region():
         cairo.RectangleInt(1, 14, 8, 1),
     ])
 
-    d = cairo.Region(d)
+    r = cairo.Region(d)
     c = cairo.Region((b, e))
-    c.subtract(d)
+    c.subtract(r)
     assert c.num_rectangles() == 2
     assert c.get_rectangle(0) == cairo.RectangleInt(1, 13, 10, 1)
 
     c = cairo.Region((b, e))
-    c.union(d)
+    c.union(r)
     assert c.num_rectangles() == 2
     assert c == cairo.Region([
         cairo.RectangleInt(1, 1, 10, 13),
@@ -228,7 +227,7 @@ def test_region():
     ])
 
     c = cairo.Region((b, e))
-    c.xor(d)
+    c.xor(r)
     assert c.num_rectangles() == 3
     assert c == cairo.Region([
         cairo.RectangleInt(1, 1, 10, 1),
@@ -237,7 +236,7 @@ def test_region():
     ])
 
 
-def test_constants():
+def test_constants() -> None:
     assert cairo.REGION_OVERLAP_IN == 0
     assert cairo.REGION_OVERLAP_OUT == 1
     assert cairo.REGION_OVERLAP_PART == 2
@@ -272,7 +271,7 @@ def test_constants():
 
 
 @pytest.mark.skipif(not hasattr(sys, "getrefcount"), reason="PyPy")
-def test_surface_get_set_mime_data_references():
+def test_surface_get_set_mime_data_references() -> None:
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
     v = memoryview(b"bla")
     x = v[:1]
@@ -295,7 +294,7 @@ def test_surface_get_set_mime_data_references():
 
 @pytest.mark.skipif(
     sysconfig.get_platform().startswith("win"), reason="msvc fixme")
-def test_surface_mime_data_for_pdf():
+def test_surface_mime_data_for_pdf() -> None:
     jpeg_bytes = zlib.decompress(base64.b64decode(
         b'eJz7f+P/AwYBLzdPNwZGRkYGDyBk+H+bwRnEowj8P8TAzcHACDJHkOH/EQYRIBsV'
         b'cP6/xcDBCBJlrLcHqRBAV8EAVcHIylSPVwGbPQEFjPaK9XDrBAipBSq4CQB9jiS0'

@@ -2,13 +2,13 @@ import cairo
 import pytest
 
 
-def test_raster_source():
+def test_raster_source() -> None:
     pattern = cairo.RasterSourcePattern(cairo.Content.COLOR, 2, 2)
     assert isinstance(pattern, cairo.RasterSourcePattern)
     assert issubclass(cairo.RasterSourcePattern, cairo.Pattern)
 
     with pytest.raises(TypeError):
-        cairo.RasterSourcePattern(object())
+        cairo.RasterSourcePattern(object())  # type: ignore
 
     was_called = []
 
@@ -27,7 +27,7 @@ def test_raster_source():
         return None
 
     with pytest.raises(TypeError):
-        pattern.set_acquire()
+        pattern.set_acquire()  # type: ignore
 
     pattern.set_acquire(None, release_callback)
     assert pattern.get_acquire() == (None, release_callback)
@@ -48,13 +48,13 @@ def test_raster_source():
     assert was_called == ["acquire", "release"]
 
     with pytest.raises(TypeError):
-        pattern.set_acquire(None, object())
+        pattern.set_acquire(None, object())  # type: ignore
 
     with pytest.raises(TypeError):
-        pattern.set_acquire(object(), None)
+        pattern.set_acquire(object(), None)  # type: ignore
 
 
-def test_cmp_hash():
+def test_cmp_hash() -> None:
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
     context = cairo.Context(surface)
     pattern = context.get_source()
@@ -63,28 +63,28 @@ def test_cmp_hash():
     assert not pattern != other
 
 
-def test_get_extend():
+def test_get_extend() -> None:
     pattern = cairo.SolidPattern(1, 2, 4)
     assert pattern.get_extend() == cairo.Extend.PAD
     assert isinstance(pattern.get_extend(), cairo.Extend)
 
 
-def test_get_filter():
+def test_get_filter() -> None:
     pattern = cairo.SolidPattern(1, 2, 4)
     assert pattern.get_filter() == cairo.Filter.GOOD
 
 
-def test_linear_gradient():
+def test_linear_gradient() -> None:
     with pytest.raises(TypeError):
-        cairo.LinearGradient()
+        cairo.LinearGradient()  # type: ignore
 
 
-def test_radial_gradient():
+def test_radial_gradient() -> None:
     with pytest.raises(TypeError):
-        cairo.RadialGradient()
+        cairo.RadialGradient()  # type: ignore
 
 
-def test_gradient_get_color_stops():
+def test_gradient_get_color_stops() -> None:
     pattern = cairo.LinearGradient(1, 2, 4, 5)
     assert pattern.get_color_stops_rgba() == []
     pattern.add_color_stop_rgb(0.125, 0.25, 0.5, 0.75)
@@ -94,32 +94,32 @@ def test_gradient_get_color_stops():
         [(0.125, 0.25, 0.5, 0.75, 1.0), (1.0, 0.75, 0.5, 0.25, 0.125)]
 
 
-def test_gradient_add_color_stop_rgb():
+def test_gradient_add_color_stop_rgb() -> None:
     pattern = cairo.LinearGradient(1, 2, 4, 5)
     with pytest.raises(TypeError):
-        pattern.add_color_stop_rgb()
+        pattern.add_color_stop_rgb()  # type: ignore
 
 
-def test_gradient_add_color_stop_rgba():
+def test_gradient_add_color_stop_rgba() -> None:
     pattern = cairo.LinearGradient(1, 2, 4, 5)
     with pytest.raises(TypeError):
-        pattern.add_color_stop_rgba()
+        pattern.add_color_stop_rgba()  # type: ignore
 
 
-def test_solid_pattern():
+def test_solid_pattern() -> None:
     with pytest.raises(TypeError):
-        cairo.SolidPattern()
+        cairo.SolidPattern()  # type: ignore
 
 
-def test_mesh_pattern():
+def test_mesh_pattern() -> None:
     mesh = cairo.MeshPattern()
     assert isinstance(mesh, cairo.MeshPattern)
     assert issubclass(cairo.MeshPattern, cairo.Pattern)
     with pytest.raises(TypeError):
-        cairo.MeshPattern(object())
+        cairo.MeshPattern(object())  # type: ignore
 
 
-def test_mesh_pattern_example1():
+def test_mesh_pattern_example1() -> None:
     pattern = cairo.MeshPattern()
     assert pattern.get_patch_count() == 0
 
@@ -149,61 +149,61 @@ def test_mesh_pattern_example1():
         pattern.get_path(9)
 
 
-def test_mesh_pattern_curve_to():
+def test_mesh_pattern_curve_to() -> None:
     pattern = cairo.MeshPattern()
     with pytest.raises(TypeError):
-        pattern.curve_to(object())
+        pattern.curve_to(object())  # type: ignore
 
 
-def test_mesh_pattern_get_control_point():
+def test_mesh_pattern_get_control_point() -> None:
     pattern = cairo.MeshPattern()
     with pytest.raises(TypeError):
-        pattern.get_control_point(object())
+        pattern.get_control_point(object())  # type: ignore
 
 
-def test_mesh_pattern_get_corner_color_rgba():
+def test_mesh_pattern_get_corner_color_rgba() -> None:
     pattern = cairo.MeshPattern()
     with pytest.raises(TypeError):
-        pattern.get_corner_color_rgba(object())
+        pattern.get_corner_color_rgba(object())  # type: ignore
 
 
-def test_mesh_pattern_get_path():
+def test_mesh_pattern_get_path() -> None:
     pattern = cairo.MeshPattern()
     with pytest.raises(TypeError):
-        pattern.get_path(object())
+        pattern.get_path(object())  # type: ignore
 
 
-def test_mesh_pattern_line_to():
+def test_mesh_pattern_line_to() -> None:
     pattern = cairo.MeshPattern()
     with pytest.raises(TypeError):
-        pattern.line_to(object())
+        pattern.line_to(object())  # type: ignore
 
 
-def test_mesh_pattern_move_to():
+def test_mesh_pattern_move_to() -> None:
     pattern = cairo.MeshPattern()
     with pytest.raises(TypeError):
-        pattern.move_to(object())
+        pattern.move_to(object())  # type: ignore
 
 
-def test_mesh_pattern_set_control_point():
+def test_mesh_pattern_set_control_point() -> None:
     pattern = cairo.MeshPattern()
     with pytest.raises(TypeError):
-        pattern.set_control_point(object())
+        pattern.set_control_point(object())  # type: ignore
 
 
-def test_mesh_pattern_set_corner_color_rgb():
+def test_mesh_pattern_set_corner_color_rgb() -> None:
     pattern = cairo.MeshPattern()
     with pytest.raises(TypeError):
-        pattern.set_corner_color_rgb(object())
+        pattern.set_corner_color_rgb(object())  # type: ignore
 
 
-def test_mesh_pattern_set_corner_color_rgba():
+def test_mesh_pattern_set_corner_color_rgba() -> None:
     pattern = cairo.MeshPattern()
     with pytest.raises(TypeError):
-        pattern.set_corner_color_rgba(object())
+        pattern.set_corner_color_rgba(object())  # type: ignore
 
 
-def test_mesh_pattern_example2():
+def test_mesh_pattern_example2() -> None:
     pattern = cairo.MeshPattern()
     pattern.begin_patch()
     pattern.move_to(100, 100)
@@ -215,7 +215,7 @@ def test_mesh_pattern_example2():
     pattern.end_patch()
 
 
-def test_mesh_pattern_rest():
+def test_mesh_pattern_rest() -> None:
     pattern = cairo.MeshPattern()
     pattern.begin_patch()
     pattern.curve_to(0, 1, 2, 3, 4, 5)
@@ -235,7 +235,7 @@ def test_mesh_pattern_rest():
         pattern.get_control_point(0, 9)
 
 
-def test_mesh_pattern_error_states():
+def test_mesh_pattern_error_states() -> None:
     pattern = cairo.MeshPattern()
     pattern.begin_patch()
     with pytest.raises(cairo.Error):
@@ -260,70 +260,70 @@ def test_mesh_pattern_error_states():
         cairo.MeshPattern().set_corner_color_rgb(0, 0.125, 0.25, 0.5)
 
 
-def test_get_matrix():
+def test_get_matrix() -> None:
     pattern = cairo.SolidPattern(1, 2, 4)
     assert isinstance(pattern.get_matrix(), cairo.Matrix)
     pattern.set_matrix(cairo.Matrix())
     with pytest.raises(TypeError):
-        pattern.set_matrix(object())
+        pattern.set_matrix(object())  # type: ignore
 
 
-def test_set_extend():
+def test_set_extend() -> None:
     pattern = cairo.SolidPattern(1, 2, 4)
-    pattern.set_extend(42)
+    pattern.set_extend(42)  # type: ignore
     assert pattern.get_extend() == 42
     with pytest.raises(TypeError):
-        pattern.set_extend(object())
+        pattern.set_extend(object())  # type: ignore
 
 
-def test_set_filter():
+def test_set_filter() -> None:
     pattern = cairo.SolidPattern(1, 2, 4)
     with pytest.raises(TypeError):
-        pattern.set_filter(object())
+        pattern.set_filter(object())  # type: ignore
 
 
-def test_pattern():
+def test_pattern() -> None:
     with pytest.raises(TypeError):
-        cairo.Pattern()
+        cairo.Pattern()  # type: ignore
 
     r, g, b, a = 0.1, 0.2, 0.3, 0.4
-    p = cairo.SolidPattern(r, g, b, a)
-    assert p.get_rgba() == (r, g, b, a)
+    solid = cairo.SolidPattern(r, g, b, a)
+    assert solid.get_rgba() == (r, g, b, a)
 
-    assert not p == object()
-    hash(p)
+    assert not solid == object()
+    hash(solid)
 
     with pytest.raises(TypeError):
-        cairo.Gradient()
+        cairo.Gradient()  # type: ignore
 
     x0, y0, x1, y1 = 0.0, 0.0, 0.0, 1.0
-    p = cairo.LinearGradient(x0, y0, x1, y1)
-    assert p.get_linear_points() == (x0, y0, x1, y1)
-    p.add_color_stop_rgba(1, 0, 0, 0, 1)
-    p.add_color_stop_rgba(0, 1, 1, 1, 1)
+    linear = cairo.LinearGradient(x0, y0, x1, y1)
+    assert linear.get_linear_points() == (x0, y0, x1, y1)
+    linear.add_color_stop_rgba(1, 0, 0, 0, 1)
+    linear.add_color_stop_rgba(0, 1, 1, 1, 1)
 
     cx0, cy0, radius0, cx1, cy1, radius1 = 1.0, 1.0, 1.0, 2.0, 2.0, 1.0
-    p = cairo.RadialGradient(cx0, cy0, radius0, cx1, cy1, radius1)
-    assert p.get_radial_circles() == (cx0, cy0, radius0, cx1, cy1, radius1)
-    p.add_color_stop_rgba(0, 1, 1, 1, 1)
-    p.add_color_stop_rgba(1, 0, 0, 0, 1)
+    radial = cairo.RadialGradient(cx0, cy0, radius0, cx1, cy1, radius1)
+    assert radial.get_radial_circles() == (cx0, cy0, radius0, cx1, cy1, radius1)
+    radial.add_color_stop_rgba(0, 1, 1, 1, 1)
+    radial.add_color_stop_rgba(1, 0, 0, 0, 1)
 
 
-def test_pattern_filter():
+def test_pattern_filter() -> None:
     pattern = cairo.SolidPattern(1, 2, 3)
     assert pattern.get_filter() == cairo.FILTER_GOOD
     pattern.set_filter(cairo.FILTER_NEAREST)
     assert pattern.get_filter() == cairo.FILTER_NEAREST
 
 
-def test_surface_pattern():
+def test_surface_pattern() -> None:
     with pytest.raises(TypeError):
-        cairo.SurfacePattern(object())
+        cairo.SurfacePattern(object())  # type: ignore
 
 
 @pytest.mark.skipif(not hasattr(cairo.Pattern, "set_dither"),
                     reason="too old cairo")
-def test_pattern_dither():
+def test_pattern_dither() -> None:
     pattern = cairo.SolidPattern(1, 2, 3)
     pattern.get_dither() == cairo.Dither.DEFAULT
     pattern.set_dither(cairo.Dither.BEST)

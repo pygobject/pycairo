@@ -26,7 +26,7 @@ class _PathLike:
         return self._value
 
 
-def test_fspaths(tempdir_path):
+def test_fspaths(tempdir_path) -> None:
     def write(path):
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
         surface.write_to_png(path)

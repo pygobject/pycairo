@@ -1,5 +1,6 @@
 test_sources = [
   '__init__.py',
+  'cmod.pyi',
   'test_api.py',
   'test_cmod.py',
   'test_context.py',
