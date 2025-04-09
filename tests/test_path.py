@@ -3,19 +3,19 @@ import pytest
 
 
 @pytest.fixture
-def context():
+def context() -> cairo.Context:
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 42, 42)
     return cairo.Context(surface)
 
 
-def test_path():
-    assert cairo.Path
+def test_path() -> None:
+    assert hasattr(cairo, "Path")
 
     with pytest.raises(TypeError):
         cairo.Path()
 
 
-def test_path_str(context):
+def test_path_str(context: cairo.Context) -> None:
     p = context.copy_path()
     assert isinstance(p, cairo.Path)
     assert str(p) == ""

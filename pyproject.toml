@@ -56,11 +56,12 @@ ignore_errors = true
 
 [[tool.mypy.overrides]]
 module = "tests.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "tests.test_stubs"
-ignore_errors = false
+disallow_untyped_defs = false
+check_untyped_defs = false
+disallow_any_expr = false
+disallow_any_generics = false
+disallow_any_decorated = false
+disallow_untyped_calls = false
 
 [tool.meson-python.args]
 setup = ["-Dwheel=true", "-Dtests=false"]

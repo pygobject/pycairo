@@ -5,12 +5,12 @@ import cairo
 import pytest
 
 
-def test_type():
-    assert cairo.Glyph
+def test_type() -> None:
+    assert hasattr(cairo, "Glyph")
     assert issubclass(cairo.Glyph, tuple)
 
     with pytest.raises(TypeError):
-        cairo.Glyph()
+        cairo.Glyph()  # type: ignore
 
     g = cairo.Glyph(0, 0.5, 0.25)
     assert hash(g) == hash(cairo.Glyph(0, 0.5, 0.25))
@@ -23,7 +23,7 @@ def test_type():
     assert g.y == 0.25
 
     with pytest.raises(AttributeError):
-        assert g.z
+        assert g.z  # type: ignore
 
     assert repr(cairo.Glyph(0, 0, 0)) == \
         "cairo.Glyph(index=0, x=0.0, y=0.0)"
@@ -52,7 +52,7 @@ def test_context():
         context.glyph_path([object()])
 
 
-def test_glyph_limits():
+def test_glyph_limits() -> None:
     max_ulong = 2 ** (ctypes.sizeof(ctypes.c_ulong()) * 8) - 1
 
     g = cairo.Glyph(max_ulong, sys.float_info.max, -sys.float_info.max)

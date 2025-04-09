@@ -6,7 +6,7 @@ import cairo
 import pytest
 
 
-def test_context_manager():
+def test_context_manager() -> None:
     f = io.BytesIO()
     with cairo.ScriptDevice(f) as dev:
         dev.acquire()
@@ -17,7 +17,7 @@ def test_context_manager():
     assert excinfo.value.status == cairo.Status.DEVICE_FINISHED
 
 
-def test_cmp_hash():
+def test_cmp_hash() -> None:
     f = io.BytesIO()
     dev = cairo.ScriptDevice(f)
     surface = cairo.ScriptSurface(dev, cairo.Content.COLOR_ALPHA, 42, 10)
@@ -28,41 +28,41 @@ def test_cmp_hash():
     assert dev != object()
 
 
-def test_get_device():
+def test_get_device() -> None:
     surface = cairo.ImageSurface(cairo.Format.ARGB32, 10, 10)
     assert surface.get_device() is None
 
 
-def test_type():
-    assert cairo.Device
+def test_type() -> None:
+    assert hasattr(cairo, "Device")
     with pytest.raises(TypeError):
         cairo.Device()
 
 
-def test_has():
+def test_has() -> None:
     assert hasattr(cairo, "HAS_SCRIPT_SURFACE")
 
 
-def test_script_device():
+def test_script_device() -> None:
     dev = cairo.ScriptDevice(io.BytesIO())
     assert dev
     assert issubclass(cairo.ScriptDevice, cairo.Device)
     assert isinstance(dev, cairo.ScriptDevice)
 
     with pytest.raises(TypeError):
-        cairo.ScriptDevice(None)
+        cairo.ScriptDevice(None)  # type: ignore
 
     with pytest.raises(TypeError):
-        cairo.ScriptDevice()
+        cairo.ScriptDevice()  # type: ignore
 
     with pytest.raises(TypeError):
-        cairo.ScriptDevice(io.StringIO())
+        cairo.ScriptDevice(io.StringIO())  # type: ignore
 
     with pytest.raises((ValueError, TypeError)):
         cairo.ScriptDevice("\x00")
 
 
-def test_script_device_mode():
+def test_script_device_mode() -> None:
     assert hasattr(cairo, "ScriptMode")
     assert cairo.ScriptMode.ASCII != cairo.ScriptMode.BINARY
 
@@ -73,10 +73,10 @@ def test_script_device_mode():
     dev.set_mode(cairo.ScriptMode.BINARY)
     assert dev.get_mode() == cairo.ScriptMode.BINARY
     with pytest.raises(TypeError):
-        dev.set_mode(object())
+        dev.set_mode(object())  # type: ignore
 
 
-def test_script_device_write_comment():
+def test_script_device_write_comment() -> None:
     f = io.BytesIO()
     dev = cairo.ScriptDevice(f)
     dev.write_comment("pycairo foo")
@@ -85,10 +85,10 @@ def test_script_device_write_comment():
     assert b"pycairo foo" in f.getvalue()
     assert b"pycairo bar" in f.getvalue()
     with pytest.raises(TypeError):
-        dev.write_comment(object())
+        dev.write_comment(object())  # type: ignore
 
 
-def test_from_recording_surface():
+def test_from_recording_surface() -> None:
     s = cairo.RecordingSurface(cairo.CONTENT_COLOR, None)
     ctx = cairo.Context(s)
     ctx.paint()
@@ -106,21 +106,21 @@ def test_from_recording_surface():
     # only recording surfaces allowed
     image = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
     with pytest.raises(TypeError):
-        dev.from_recording_surface(image)
+        dev.from_recording_surface(image)  # type: ignore
 
     # No None allowed
     with pytest.raises(TypeError):
-        dev.from_recording_surface(None)
+        dev.from_recording_surface(None)  # type: ignore
 
 
-def test_device_acquire():
+def test_device_acquire() -> None:
     f = io.BytesIO()
     dev = cairo.ScriptDevice(f)
     dev.acquire()
     dev.release()
 
 
-def test_script_device_to_path():
+def test_script_device_to_path() -> None:
     fd, fname = tempfile.mkstemp()
     os.close(fd)
     try:

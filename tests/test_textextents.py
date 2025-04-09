@@ -4,12 +4,12 @@ import cairo
 import pytest
 
 
-def test_type():
-    assert cairo.TextExtents
+def test_type() -> None:
+    assert hasattr(cairo, "TextExtents")
     assert issubclass(cairo.TextExtents, tuple)
 
     with pytest.raises(TypeError):
-        cairo.TextExtents()
+        cairo.TextExtents()  # type: ignore
 
     r = cairo.TextExtents(0.0, 0.5, 0.25, 0.75, 0.5, 0.125)
     assert hash(r) == hash(cairo.TextExtents(0.0, 0.5, 0.25, 0.75, 0.5, 0.125))
@@ -23,7 +23,7 @@ def test_type():
     assert r.y_bearing == 0.5
 
     with pytest.raises(AttributeError):
-        assert r.z
+        assert r.z  # type: ignore
 
     assert repr(r) == \
         "cairo.TextExtents(x_bearing=0.0, y_bearing=0.5, " \
@@ -40,7 +40,7 @@ def test_type():
     assert cairo.TextExtents.y_advance
 
 
-def test_methods():
+def test_methods() -> None:
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
     context = cairo.Context(surface)
 
@@ -58,7 +58,7 @@ def test_methods():
     assert isinstance(extents, cairo.TextExtents)
 
 
-def test_text_extents_limits():
+def test_text_extents_limits() -> None:
     max_val = sys.float_info.max
     min_val = sys.float_info.min
 
