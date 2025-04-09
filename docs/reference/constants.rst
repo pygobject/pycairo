@@ -139,3 +139,12 @@ Other Classes and Functions
     This type only exists for documentation purposes.
 
     This represents a :class:`Surface` subclass.
+
+
+.. class:: _WritableBuffer
+
+    This type only exists for documentation purposes.
+
+    This represents a writable buffer object, like :class:`memoryview`,
+    :class:`bytearray`, :class:`array.array`, :class:`collections.abc.Buffer`,
+    or anything implementing the buffer protocol.

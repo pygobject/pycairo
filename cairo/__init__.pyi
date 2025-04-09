@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import os
+import sys
+import array
+import collections.abc
 from typing import (
     Any,
     BinaryIO,
@@ -13,6 +16,7 @@ from typing import (
     Tuple,
     TypeVar,
     Union,
+    TYPE_CHECKING
 )
 
 del annotations
@@ -2068,6 +2072,13 @@ class Device:
 _PathLike = Union[Text, bytes, os.PathLike[Any]]
 _FileLike = BinaryIO
 _SomeSurface = TypeVar("_SomeSurface", bound="Surface")
+if sys.version_info >= (3, 12):
+    _WritableBuffer = collections.abc.Buffer
+else:
+    if TYPE_CHECKING:
+        _WritableBuffer = Union[bytearray, memoryview, array.array[Any]]
+    else:
+        _WritableBuffer = Union[bytearray, memoryview, array.array]
 
 
 class Surface:
@@ -2515,14 +2526,14 @@ class ImageSurface(Surface):
     @classmethod
     def create_for_data(
         cls,
-        data: memoryview,
+        data: _WritableBuffer,
         format: Format,
         width: int,
         height: int,
         stride: int = ...,
     ) -> "ImageSurface":
         """
-        :param data: a writable Python buffer/memoryview object
+        :param data: a writable Python buffer/memoryview object, see :class:`_WritableBuffer`
         :param format: the format of pixels in the
             buffer
         :param width: the width of the image to be stored in the buffer
