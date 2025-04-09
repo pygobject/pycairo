@@ -58,6 +58,10 @@ ignore_errors = true
 module = "tests.*"
 ignore_errors = true
 
+[[tool.mypy.overrides]]
+module = "tests.test_stubs"
+ignore_errors = false
+
 [tool.meson-python.args]
 setup = ["-Dwheel=true", "-Dtests=false"]
 
