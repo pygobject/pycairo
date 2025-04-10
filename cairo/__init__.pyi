@@ -1,8 +1,19 @@
 from __future__ import annotations
 
 import os
-from typing import (Any, BinaryIO, Callable, Generic, List, Optional,
-                    Sequence, Text, Tuple, TypeVar, Union)
+from typing import (
+    Any,
+    BinaryIO,
+    Callable,
+    Generic,
+    List,
+    Optional,
+    Sequence,
+    Text,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
 del annotations
 
@@ -95,6 +106,7 @@ The micro component of the version of cairo available at compile-time.
 .. versionadded:: 1.18.0
 """
 
+
 def cairo_version() -> int:
     """
     :returns: the encoded version
@@ -103,6 +115,7 @@ def cairo_version() -> int:
     integer.
     """
 
+
 def cairo_version_string() -> str:
     """
     :returns: the encoded version
@@ -110,6 +123,7 @@ def cairo_version_string() -> str:
     Returns the version of the underlying C cairo library as a human-readable
     string of the form "X.Y.Z".
     """
+
 
 class Path:
     """
@@ -124,6 +138,7 @@ class Path:
 
     See examples/warpedtext.py for example usage.
     """
+
 
 class Rectangle(Tuple[float, float, float, float]):
     """
@@ -151,8 +166,11 @@ class Rectangle(Tuple[float, float, float, float]):
             height of the rectangle
         """
 
+
 class _IntEnum(int):
-    def __init__(self, value: int) -> None: ...
+    def __init__(self, value: int) -> None:
+        ...
+
 
 class Antialias(_IntEnum):
     """
@@ -194,6 +212,7 @@ class Antialias(_IntEnum):
     elements on devices such as LCD panels.
     """
 
+
 class Content(_IntEnum):
     """
     These constants are used to describe the content that a :class:`Surface`
@@ -211,6 +230,7 @@ class Content(_IntEnum):
 
     COLOR_ALPHA: "Content" = ...
     """The surface will hold color and alpha content."""
+
 
 class FillRule(_IntEnum):
     """
@@ -243,6 +263,7 @@ class FillRule(_IntEnum):
     starting point.) If the total count is non-zero, the point will be
     filled.
     """
+
 
 class Format(_IntEnum):
     """
@@ -313,7 +334,9 @@ class Format(_IntEnum):
     each pixel is a 32-bit quantity, with the upper 8 bits unused. [#]_  Red,
     Green, and Blue are stored in the remaining 24 bits in that order.
 
-    .. [#] Cairo operators (for example CLEAR and SRC) may overwrite unused bytes as an implementation side-effect, their values should be considered undefined.
+    .. [#] Cairo operators (for example CLEAR and SRC) may overwrite unused
+           bytes as an implementation side-effect, their values should be
+           considered undefined.
     """
 
     RGB30: "Format" = ...
@@ -334,6 +357,7 @@ class Format(_IntEnum):
 
     .. versionadded:: 1.23 Only available with cairo 1.17.2+
     """
+
 
 class HintMetrics(_IntEnum):
     """
@@ -357,6 +381,7 @@ class HintMetrics(_IntEnum):
 
     ON: "HintMetrics" = ...
     """Hint font metrics"""
+
 
 class ColorMode(_IntEnum):
     """
@@ -383,6 +408,7 @@ class ColorMode(_IntEnum):
     a glyph, and when supported by the font backend, the glyph will be rendered
     in color.
     """
+
 
 class Dither(_IntEnum):
     """
@@ -423,6 +449,7 @@ class Dither(_IntEnum):
     Best algorithm available in the backend
     """
 
+
 class HintStyle(_IntEnum):
     """
     These constants specify the type of hinting to do on font outlines.
@@ -462,6 +489,7 @@ class HintStyle(_IntEnum):
     fidelity to the original shapes.
     """
 
+
 class SubpixelOrder(_IntEnum):
     """
     The subpixel order specifies the order of color elements within each pixel
@@ -486,6 +514,7 @@ class SubpixelOrder(_IntEnum):
     VRGB: "SubpixelOrder" = ...
     """Subpixel elements are arranged vertically with red at the top"""
 
+
 class LineCap(_IntEnum):
     """
     These constants specify how to render the endpoints of the path when
@@ -504,6 +533,7 @@ class LineCap(_IntEnum):
 
     SQUARE: "LineCap" = ...
     """use squared ending, the center of the square is the end point"""
+
 
 class LineJoin(_IntEnum):
     """
@@ -528,6 +558,7 @@ class LineJoin(_IntEnum):
 
     ROUND: "LineJoin" = ...
     """use a rounded join, the center of the circle is the joint point"""
+
 
 class Filter(_IntEnum):
     """
@@ -564,6 +595,7 @@ class Filter(_IntEnum):
 
     NEAREST: "Filter" = ...
     """Nearest-neighbor filtering"""
+
 
 class Operator(_IntEnum):
     """
@@ -704,6 +736,7 @@ class Operator(_IntEnum):
     XOR: "Operator" = ...
     """source and destination are shown where there is only one of them"""
 
+
 class Extend(_IntEnum):
     """
     These constants are used to describe how :class:`Pattern` color/alpha will
@@ -734,6 +767,7 @@ class Extend(_IntEnum):
     REPEAT: "Extend" = ...
     """the pattern is tiled by repeating"""
 
+
 class FontSlant(_IntEnum):
     """
     These constants specify variants of a :class:`FontFace` based on their
@@ -751,6 +785,7 @@ class FontSlant(_IntEnum):
     OBLIQUE: "FontSlant" = ...
     """Oblique font style"""
 
+
 class FontWeight(_IntEnum):
     """
     These constants specify variants of a :class:`FontFace` based on their
@@ -764,6 +799,7 @@ class FontWeight(_IntEnum):
 
     NORMAL: "FontWeight" = ...
     """Normal font weight"""
+
 
 class Status(_IntEnum):
     """
@@ -838,6 +874,7 @@ class Status(_IntEnum):
     .. versionadded:: 1.25.0 Only available with cairo 1.17.8+
     """
 
+
 class PDFVersion(_IntEnum):
     """
     These constants are used to describe the version number of the PDF
@@ -866,6 +903,7 @@ class PDFVersion(_IntEnum):
     .. versionadded:: 1.23.0 Only available with cairo 1.17.6+
     """
 
+
 class PSLevel(_IntEnum):
     """
     These constants are used to describe the language level of the PostScript
@@ -881,6 +919,7 @@ class PSLevel(_IntEnum):
 
     LEVEL_3: "PSLevel" = ...
     """The language level 3 of the PostScript specification."""
+
 
 class PathDataType(_IntEnum):
     """
@@ -902,6 +941,7 @@ class PathDataType(_IntEnum):
     MOVE_TO: "PathDataType" = ...
     """A move-to operation"""
 
+
 class RegionOverlap(_IntEnum):
     """
     .. versionadded:: 1.13
@@ -916,6 +956,7 @@ class RegionOverlap(_IntEnum):
     PART: "RegionOverlap" = ...
     """The contents are partially inside and partially outside the region."""
 
+
 class SVGVersion(_IntEnum):
     """
     These constants are used to describe the version number of the SVG
@@ -929,6 +970,7 @@ class SVGVersion(_IntEnum):
 
     VERSION_1_2: "SVGVersion" = ...
     """The version 1.2 of the SVG specification."""
+
 
 class SVGUnit(_IntEnum):
     """
@@ -978,6 +1020,7 @@ class SVGUnit(_IntEnum):
     PERCENT: "SVGUnit" = ...
     """Percent, a value that is some fraction of another reference value."""
 
+
 class PDFMetadata(_IntEnum):
     """
     :class:`PDFMetadata` is used by the :meth:`PDFSurface.set_metadata` method
@@ -1007,6 +1050,7 @@ class PDFMetadata(_IntEnum):
     MOD_DATE: "PDFMetadata" = ...
     """The document modification date"""
 
+
 class PDFOutlineFlags(_IntEnum):
     """
     :class:`PDFOutlineFlags` is used by the :meth:`PDFSurface.add_outline`
@@ -1025,6 +1069,7 @@ class PDFOutlineFlags(_IntEnum):
     ITALIC: "PDFOutlineFlags" = ...
     """The outline item is displayed by the viewer in italic text"""
 
+
 class ScriptMode(_IntEnum):
     """
     A set of script output variants.
@@ -1037,6 +1082,7 @@ class ScriptMode(_IntEnum):
 
     BINARY: "ScriptMode" = ...
     """the output will use byte codes."""
+
 
 class Matrix:
     """
@@ -1073,7 +1119,15 @@ class Matrix:
     https://www.cairographics.org/cookbook/matrix_transform/
     """
 
-    def __init__(self, xx: float = 1.0, yx: float = 0.0, xy: float = 0.0, yy: float = 1.0, x0: float = 0.0, y0: float = 0.0) -> None:
+    def __init__(
+        self,
+        xx: float = 1.0,
+        yx: float = 0.0,
+        xy: float = 0.0,
+        yy: float = 1.0,
+        x0: float = 0.0,
+        y0: float = 0.0,
+    ) -> None:
         """
         :param xx: xx component of the affine transformation
         :param yx: yx component of the affine transformation
@@ -1241,6 +1295,7 @@ class Matrix:
     .. versionadded:: 1.12.0
     """
 
+
 class Pattern:
     """
     *Pattern* is the abstract base class from which all the other pattern classes
@@ -1353,6 +1408,7 @@ class Pattern:
         .. versionadded:: 1.25.0 Only available with cairo 1.18.0+
         """
 
+
 class Glyph(Tuple[int, float, float]):
     """
     The :class:`Glyph` holds information about a single glyph when drawing or
@@ -1373,7 +1429,7 @@ class Glyph(Tuple[int, float, float]):
         of :class:`Glyph`.
     """
 
-    index: int = ... # type: ignore
+    index: int = ...  # type: ignore
     x: float = ...
     y: float = ...
 
@@ -1389,6 +1445,7 @@ class Glyph(Tuple[int, float, float]):
             the offset in the Y direction between the origin used for drawing or
             measuring the string and the origin of this glyph.
         """
+
 
 class TextCluster(Tuple[int, int]):
     """
@@ -1407,8 +1464,10 @@ class TextCluster(Tuple[int, int]):
     See :meth:`Context.show_text_glyphs` for how clusters are used in advanced
     text operations.
     """
+
     num_bytes: int = ...
     num_glyphs: int = ...
+
     def __init__(self, num_bytes: int, num_glyphs: int) -> None:
         """
         :param num_bytes:
@@ -1416,6 +1475,7 @@ class TextCluster(Tuple[int, int]):
         :param num_glyphs:
             the number of glyphs covered by cluster
         """
+
 
 class TextClusterFlags(_IntEnum):
     """
@@ -1429,6 +1489,7 @@ class TextClusterFlags(_IntEnum):
     The clusters in the cluster array map to glyphs in the glyph array
     from end to start.
     """
+
 
 class TextExtents(Tuple[float, float, float, float, float, float]):
     """
@@ -1445,13 +1506,23 @@ class TextExtents(Tuple[float, float, float, float, float, float]):
     can't assume that metrics are independent of the transformation matrix),
     but otherwise will remain unchanged.
     """
+
     x_bearing: float = ...
     y_bearing: float = ...
     width: float = ...
     height: float = ...
     x_advance: float = ...
     y_advance: float = ...
-    def __init__(self, x_bearing: float, y_bearing: float, width: float, height: float, x_advance: float, y_advance: float) -> None:
+
+    def __init__(
+        self,
+        x_bearing: float,
+        y_bearing: float,
+        width: float,
+        height: float,
+        x_advance: float,
+        y_advance: float,
+    ) -> None:
         """
         :param x_bearing:
             the horizontal distance from the origin to the leftmost part of the
@@ -1473,6 +1544,7 @@ class TextExtents(Tuple[float, float, float, float, float, float]):
             East-Asian languages.
         """
 
+
 class RectangleInt:
     """
     RectangleInt is a data structure for holding a rectangle with integer coordinates.
@@ -1485,7 +1557,7 @@ class RectangleInt:
     x: int = ...
     y: int = ...
 
-    def __init__(self, x: int=0, y: int=0, width: int=0, height: int=0) -> None:
+    def __init__(self, x: int = 0, y: int = 0, width: int = 0, height: int = 0) -> None:
         """
         :param x:
             X coordinate of the left side of the rectangle.
@@ -1515,6 +1587,7 @@ class FontFace:
     .. note:: This class cannot be instantiated directly, it is returned by
         :meth:`Context.get_font_face`.
     """
+
 
 class FontOptions:
     """
@@ -1713,7 +1786,9 @@ class FontOptions:
         .. versionadded:: 1.25.0 Only available with cairo 1.17.8+
         """
 
-    def set_custom_palette_color(self, index: int, red: float, green: float, blue: float, alpha: float) -> None:
+    def set_custom_palette_color(
+        self, index: int, red: float, green: float, blue: float, alpha: float
+    ) -> None:
         """
         :param index: the index of the color to set
         :param red: red component of color
@@ -1745,6 +1820,7 @@ class FontOptions:
         .. versionadded:: 1.25.0 Only available with cairo 1.17.8+
         """
 
+
 class ScaledFont:
     """
     A *ScaledFont* is a font scaled to a particular size and device resolution. A
@@ -1756,20 +1832,26 @@ class ScaledFont:
     use.
     """
 
-    def __init__(self, font_face: FontFace, font_matrix: Matrix, ctm: Matrix, options: FontOptions) -> None:
+    def __init__(
+        self,
+        font_face: FontFace,
+        font_matrix: Matrix,
+        ctm: Matrix,
+        options: FontOptions,
+    ) -> None:
         """
-            :param font_face: a :class:`FontFace` instance
-            :param font_matrix: font space to user space transformation :class:`Matrix`
-                for the font. In the simplest case of a N point font, this matrix is just
-                a scale by N, but it can also be used to shear the font or stretch it
-                unequally along the two axes. See :meth:`Context.set_font_matrix`.
-            :param ctm: user to device transformation :class:`Matrix` with which the
-                font will be used.
-            :param options: a :class:`FontOptions` instance to use when getting metrics
-                for the font and rendering with it.
+        :param font_face: a :class:`FontFace` instance
+        :param font_matrix: font space to user space transformation :class:`Matrix`
+            for the font. In the simplest case of a N point font, this matrix is just
+            a scale by N, but it can also be used to shear the font or stretch it
+            unequally along the two axes. See :meth:`Context.set_font_matrix`.
+        :param ctm: user to device transformation :class:`Matrix` with which the
+            font will be used.
+        :param options: a :class:`FontOptions` instance to use when getting metrics
+            for the font and rendering with it.
 
-            Creates a *ScaledFont* object from a *FontFace* and matrices that describe
-            the size of the font and the environment in which it will be used.
+        Creates a *ScaledFont* object from a *FontFace* and matrices that describe
+        the size of the font and the environment in which it will be used.
         """
 
     def extents(self) -> Tuple[float, float, float, float, float]:
@@ -1779,116 +1861,120 @@ class ScaledFont:
 
     def get_ctm(self) -> Matrix:
         """
-            :returns: the CTM
+        :returns: the CTM
 
-            Returns the CTM with which scaled_font was created into ctm. Note that
-            the translation offsets (x0, y0) of the CTM are ignored by
-            :func:`ScaledFont`. So, the matrix this function returns always has 0,
-            0 as x0, y0.
+        Returns the CTM with which scaled_font was created into ctm. Note that
+        the translation offsets (x0, y0) of the CTM are ignored by
+        :func:`ScaledFont`. So, the matrix this function returns always has 0,
+        0 as x0, y0.
 
-            .. versionadded:: 1.12.0
+        .. versionadded:: 1.12.0
         """
 
     def get_font_face(self) -> FontFace:
         """
-            :returns: the :class:`FontFace` that this *ScaledFont* was created for.
+        :returns: the :class:`FontFace` that this *ScaledFont* was created for.
 
-            .. versionadded:: 1.2
+        .. versionadded:: 1.2
         """
 
     def get_font_matrix(self) -> Matrix:
         """
-            :returns: the matrix
+        :returns: the matrix
 
-            Returns the font matrix with which scaled_font was created.
+        Returns the font matrix with which scaled_font was created.
         """
 
     def get_font_options(self) -> FontOptions:
         """
-            :returns: font options
+        :returns: font options
 
-            Returns the font options with which scaled_font was created.
+        Returns the font options with which scaled_font was created.
 
-            .. versionadded:: 1.12.0
+        .. versionadded:: 1.12.0
         """
 
     def get_scale_matrix(self) -> Matrix:
         """
-            :returns: the scale :class:`Matrix`
+        :returns: the scale :class:`Matrix`
 
-            The scale matrix is product of the font matrix and the ctm associated
-            with the scaled font, and hence is the matrix mapping from font space to
-            device space.
+        The scale matrix is product of the font matrix and the ctm associated
+        with the scaled font, and hence is the matrix mapping from font space to
+        device space.
 
-            .. versionadded:: 1.8
+        .. versionadded:: 1.8
         """
 
     def glyph_extents(self, glyphs: Sequence[Glyph]) -> TextExtents:
         """
-            :param glyphs: glyphs, a sequence of :class:`Glyph`
+        :param glyphs: glyphs, a sequence of :class:`Glyph`
 
-            .. versionadded:: 1.15
+        .. versionadded:: 1.15
 
-            Gets the extents for a list of glyphs. The extents describe a user-space
-            rectangle that encloses the "inked" portion of the glyphs, (as they
-            would be drawn by :meth:`Context.show_glyphs` if the cairo graphics
-            state were set to the same font_face, font_matrix, ctm, and font_options
-            as scaled_font ). Additionally, the x_advance and y_advance values
-            indicate the amount by which the current point would be advanced by
-            cairo_show_glyphs().
+        Gets the extents for a list of glyphs. The extents describe a user-space
+        rectangle that encloses the "inked" portion of the glyphs, (as they
+        would be drawn by :meth:`Context.show_glyphs` if the cairo graphics
+        state were set to the same font_face, font_matrix, ctm, and font_options
+        as scaled_font ). Additionally, the x_advance and y_advance values
+        indicate the amount by which the current point would be advanced by
+        cairo_show_glyphs().
 
-            Note that whitespace glyphs do not contribute to the size of the
-            rectangle (extents.width and extents.height).
+        Note that whitespace glyphs do not contribute to the size of the
+        rectangle (extents.width and extents.height).
         """
 
     def text_extents(self, text: str) -> TextExtents:
         """
-            :param text: text
+        :param text: text
 
-            Gets the extents for a string of text. The extents describe a user-space
-            rectangle that encloses the "inked" portion of the text drawn at the
-            origin (0,0) (as it would be drawn by :meth:`Context.show_text` if the
-            cairo graphics state were set to the same font_face, font_matrix, ctm,
-            and font_options as *ScaledFont*).  Additionally, the x_advance and
-            y_advance values indicate the amount by which the current point would be
-            advanced by :meth:`Context.show_text`.
+        Gets the extents for a string of text. The extents describe a user-space
+        rectangle that encloses the "inked" portion of the text drawn at the
+        origin (0,0) (as it would be drawn by :meth:`Context.show_text` if the
+        cairo graphics state were set to the same font_face, font_matrix, ctm,
+        and font_options as *ScaledFont*).  Additionally, the x_advance and
+        y_advance values indicate the amount by which the current point would be
+        advanced by :meth:`Context.show_text`.
 
-            Note that whitespace characters do not directly contribute to the size
-            of the rectangle (width and height). They do contribute indirectly by
-            changing the position of non-whitespace characters. In particular,
-            trailing whitespace characters are likely to not affect the size of the
-            rectangle, though they will affect the x_advance and y_advance values.
+        Note that whitespace characters do not directly contribute to the size
+        of the rectangle (width and height). They do contribute indirectly by
+        changing the position of non-whitespace characters. In particular,
+        trailing whitespace characters are likely to not affect the size of the
+        rectangle, though they will affect the x_advance and y_advance values.
 
-            .. versionadded:: 1.2
+        .. versionadded:: 1.2
         """
 
-    def text_to_glyphs(self, x: float, y: float, utf8: str, with_clusters: bool = True) -> Union[Tuple[List[Glyph], List["TextCluster"], TextClusterFlags], List[Glyph]]:
+    def text_to_glyphs(
+        self, x: float, y: float, utf8: str, with_clusters: bool = True
+    ) -> Union[Tuple[List[Glyph], List["TextCluster"], TextClusterFlags], List[Glyph]]:
         """
-            :param x: X position to place first glyph
-            :param y: Y position to place first glyph
-            :param utf8: a string of text
-            :param with_clusters:
-                If :obj:`False` only the glyph list will computed and returned
-            :returns:
-                a tuple of ([:class:`Glyph`], [:class:`TextCluster`],
-                :class:`TextClusterFlags`)
-            :raises Error:
+        :param x: X position to place first glyph
+        :param y: Y position to place first glyph
+        :param utf8: a string of text
+        :param with_clusters:
+            If :obj:`False` only the glyph list will computed and returned
+        :returns:
+            a tuple of ([:class:`Glyph`], [:class:`TextCluster`],
+            :class:`TextClusterFlags`)
+        :raises Error:
 
-            .. versionadded:: 1.15
+        .. versionadded:: 1.15
 
-            Converts UTF-8 text to a list of glyphs, with cluster mapping, that can
-            be used to render later.
+        Converts UTF-8 text to a list of glyphs, with cluster mapping, that can
+        be used to render later.
 
-            For details of how clusters, and cluster_flags map input UTF-8 text to
-            the output glyphs see :meth:`Context.show_text_glyphs`.
+        For details of how clusters, and cluster_flags map input UTF-8 text to
+        the output glyphs see :meth:`Context.show_text_glyphs`.
 
-            The output values can be readily passed to
-            :meth:`Context.show_text_glyphs` :meth:`Context.show_glyphs`, or related
-            functions, assuming that the exact same scaled font is used for the
-            operation.
+        The output values can be readily passed to
+        :meth:`Context.show_text_glyphs` :meth:`Context.show_glyphs`, or related
+        functions, assuming that the exact same scaled font is used for the
+        operation.
         """
+
 
 _SomeDevice = TypeVar("_SomeDevice", bound="Device")
+
 
 class Device:
     """
@@ -1973,12 +2059,16 @@ class Device:
         .. versionadded:: 1.14
         """
 
-    def __enter__(self: _SomeDevice) -> _SomeDevice: ...
+    def __enter__(self: _SomeDevice) -> _SomeDevice:
+        ...
+
     __exit__: Any = ...
+
 
 _PathLike = Union[Text, bytes, os.PathLike[Any]]
 _FileLike = BinaryIO
 _SomeSurface = TypeVar("_SomeSurface", bound="Surface")
+
 
 class Surface:
     """
@@ -2021,7 +2111,9 @@ class Surface:
         .. versionadded:: 1.6
         """
 
-    def create_for_rectangle(self, x: float, y: float, width: float, height: float) -> "Surface":
+    def create_for_rectangle(
+        self, x: float, y: float, width: float, height: float
+    ) -> "Surface":
         """
         :param x: the x-origin of the sub-surface from the top-left of the
             target surface (in device-space units)
@@ -2068,7 +2160,9 @@ class Surface:
         transparency, black otherwise.)
         """
 
-    def create_similar_image(self, format: Format, width: int, height: int) -> "ImageSurface":
+    def create_similar_image(
+        self, format: Format, width: int, height: int
+    ) -> "ImageSurface":
         """
         :param cairo.Format format: the format for the new surface
         :param width: width of the new surface, (in device-space units)
@@ -2282,7 +2376,9 @@ class Surface:
         .. versionadded:: 1.14.0
         """
 
-    def set_fallback_resolution(self, x_pixels_per_inch: float, y_pixels_per_inch: float) -> None:
+    def set_fallback_resolution(
+        self, x_pixels_per_inch: float, y_pixels_per_inch: float
+    ) -> None:
         """
         :param x_pixels_per_inch: horizontal setting for pixels per inch
         :param y_pixels_per_inch: vertical setting for pixels per inch
@@ -2390,8 +2486,11 @@ class Surface:
         .. versionadded:: 1.15.0
         """
 
-    def __enter__(self: _SomeSurface) -> _SomeSurface: ...
+    def __enter__(self: _SomeSurface) -> _SomeSurface:
+        ...
+
     __exit__: Any = ...
+
 
 class ImageSurface(Surface):
     """
@@ -2414,7 +2513,14 @@ class ImageSurface(Surface):
         """
 
     @classmethod
-    def create_for_data(cls, data: memoryview, format: Format, width: int, height: int, stride: int = ...) -> "ImageSurface":
+    def create_for_data(
+        cls,
+        data: memoryview,
+        format: Format,
+        width: int,
+        height: int,
+        stride: int = ...,
+    ) -> "ImageSurface":
         """
         :param data: a writable Python buffer/memoryview object
         :param format: the format of pixels in the
@@ -2508,8 +2614,8 @@ class ImageSurface(Surface):
         :returns: the width of the *ImageSurface* in pixels.
         """
 
-class SurfacePattern(Pattern):
 
+class SurfacePattern(Pattern):
     def __init__(self, surface: Surface) -> None:
         """
         :param surface: a cairo :class:`Surface`
@@ -2521,6 +2627,7 @@ class SurfacePattern(Pattern):
 
         .. versionadded:: 1.4
         """
+
 
 class Context(Generic[_SomeSurface]):
     """
@@ -2555,7 +2662,9 @@ class Context(Generic[_SomeSurface]):
         :meth:`Context.copy_path_flat` or it may be constructed manually (in C).
         """
 
-    def arc(self, xc: float, yc: float, radius: float, angle1: float, angle2: float) -> None:
+    def arc(
+        self, xc: float, yc: float, radius: float, angle1: float, angle2: float
+    ) -> None:
         """
         :param xc: X position of the center of the arc
         :param yc: Y position of the center of the arc
@@ -2599,7 +2708,9 @@ class Context(Generic[_SomeSurface]):
             ctx.restore()
         """
 
-    def arc_negative(self, xc: float, yc: float, radius: float, angle1: float, angle2: float) -> None:
+    def arc_negative(
+        self, xc: float, yc: float, radius: float, angle1: float, angle2: float
+    ) -> None:
         """
         :param xc: X position of the center of the arc
         :param yc: Y position of the center of the arc
@@ -2743,7 +2854,9 @@ class Context(Generic[_SomeSurface]):
         will instead be replaced by a series of CAIRO_PATH_LINE_TO elements.
         """
 
-    def curve_to(self, x1: float, y1: float, x2: float, y2: float, x3: float, y3: float) -> None:
+    def curve_to(
+        self, x1: float, y1: float, x2: float, y2: float, x3: float, y3: float
+    ) -> None:
         """
         :param x1: the X coordinate of the first control point
         :param y1: the Y coordinate of the first control point
@@ -3327,7 +3440,9 @@ class Context(Generic[_SomeSurface]):
             ctx.close_path()
         """
 
-    def rel_curve_to(self, dx1: float, dy1: float, dx2: float, dy2: float, dx3: float, dy3: float) -> None:
+    def rel_curve_to(
+        self, dx1: float, dy1: float, dx2: float, dy2: float, dx3: float, dy3: float
+    ) -> None:
         """
         :param dx1: the X offset to the first control point
         :param dy1: the Y offset to the first control point
@@ -3430,7 +3545,12 @@ class Context(Generic[_SomeSurface]):
         takes place after any existing transformation of user space.
         """
 
-    def select_font_face(self, family: str, slant: FontSlant = FontSlant.NORMAL, weight: FontWeight = FontWeight.NORMAL) -> None:
+    def select_font_face(
+        self,
+        family: str,
+        slant: FontSlant = FontSlant.NORMAL,
+        weight: FontWeight = FontWeight.NORMAL,
+    ) -> None:
         """
         :param family: a font family name
         :param slant: the font slant of the font,
@@ -3747,7 +3867,9 @@ class Context(Generic[_SomeSurface]):
         equivalent to ``set_source_rgb(0.0, 0.0, 0.0)``.
         """
 
-    def set_source_rgba(self, red: float, green: float, blue: float, alpha: float = 1.0) -> None:
+    def set_source_rgba(
+        self, red: float, green: float, blue: float, alpha: float = 1.0
+    ) -> None:
         """
         :param red: red component of color
         :param green: green component of color
@@ -3766,7 +3888,9 @@ class Context(Generic[_SomeSurface]):
         equivalent to ``set_source_rgba(0.0, 0.0, 0.0, 1.0)``.
         """
 
-    def set_source_surface(self, surface: Surface, x: float = 0.0, y: float = 0.0) -> None:
+    def set_source_surface(
+        self, surface: Surface, x: float = 0.0, y: float = 0.0
+    ) -> None:
         """
         :param surface: a :class:`Surface` to be used to set the source pattern
         :param x: User-space X coordinate for surface origin
@@ -3849,7 +3973,13 @@ class Context(Generic[_SomeSurface]):
         "real" text display API in cairo.
         """
 
-    def show_text_glyphs(self, utf8: str, glyphs: List["Glyph"], clusters: List[TextCluster], cluster_flags: TextClusterFlags) -> None:
+    def show_text_glyphs(
+        self,
+        utf8: str,
+        glyphs: List["Glyph"],
+        clusters: List[TextCluster],
+        cluster_flags: TextClusterFlags,
+    ) -> None:
         """
         :param utf8: a string of text
         :param glyphs: list of glyphs to show
@@ -4089,9 +4219,12 @@ class Context(Generic[_SomeSurface]):
         *(dx,dy)*.
         """
 
+
 class Error(Exception):
     """This exception is raised when a cairo object returns an error status."""
+
     status: Status = ...
+
 
 CairoError = Error
 """
@@ -4100,13 +4233,16 @@ An alias for :exc:`Error`
 .. versionadded:: 1.12.0
 """
 
+
 class Gradient(Pattern):
     """
     *Gradient* is an abstract base class from which other *Pattern* classes
     derive. It cannot be instantiated directly.
     """
 
-    def add_color_stop_rgb(self, offset: float, red: float, green: float, blue: float) -> None:
+    def add_color_stop_rgb(
+        self, offset: float, red: float, green: float, blue: float
+    ) -> None:
         """
         :param offset: an offset in the range [0.0 .. 1.0]
         :param red: red component of color
@@ -4128,7 +4264,9 @@ class Gradient(Pattern):
         typical blend.
         """
 
-    def add_color_stop_rgba(self, offset: float, red: float, green: float, blue: float, alpha: float) -> None:
+    def add_color_stop_rgba(
+        self, offset: float, red: float, green: float, blue: float, alpha: float
+    ) -> None:
         """
         :param offset: an offset in the range [0.0 .. 1.0]
         :param red: red component of color
@@ -4161,6 +4299,7 @@ class Gradient(Pattern):
         .. versionadded:: 1.14
         """
 
+
 class LinearGradient(Gradient):
     def __init__(self, x0: float, y0: float, x1: float, y1: float) -> None:
         """
@@ -4192,6 +4331,7 @@ class LinearGradient(Gradient):
 
         .. versionadded:: 1.4
         """
+
 
 class MeshPattern(Pattern):
     """
@@ -4341,7 +4481,9 @@ class MeshPattern(Pattern):
         using pattern as a source or mask.
         """
 
-    def curve_to(self, x1: float, y1: float, x2: float, y2: float, x3: float, y3: float) -> None:
+    def curve_to(
+        self, x1: float, y1: float, x2: float, y2: float, x3: float, y3: float
+    ) -> None:
         """
         :param x1: the X coordinate of the first control point
         :param y1: the Y coordinate of the first control point
@@ -4390,7 +4532,9 @@ class MeshPattern(Pattern):
         points as explained in :class:`MeshPattern`.
         """
 
-    def get_corner_color_rgba(self, patch_num: int, corner_num: int) -> Tuple[float, float, float, float]:
+    def get_corner_color_rgba(
+        self, patch_num: int, corner_num: int
+    ) -> Tuple[float, float, float, float]:
         """
         :param patch_num: the patch number to return data for
         :param corner_num: the corner number to return data for
@@ -4457,7 +4601,9 @@ class MeshPattern(Pattern):
         points as explained in :class:`MeshPattern`.
         """
 
-    def set_corner_color_rgb(self, corner_num: int, red: float, green: float, blue: float) -> None:
+    def set_corner_color_rgb(
+        self, corner_num: int, red: float, green: float, blue: float
+    ) -> None:
         """
         :param corner_num: the corner to set the color for
         :param red: red component of color
@@ -4474,7 +4620,9 @@ class MeshPattern(Pattern):
         as explained in :class:`MeshPattern`.
         """
 
-    def set_corner_color_rgba(self, corner_num: int, red: float, green: float, blue: float, alpha: float) -> None:
+    def set_corner_color_rgba(
+        self, corner_num: int, red: float, green: float, blue: float, alpha: float
+    ) -> None:
         """
         :param corner_num: the corner to set the color for
         :param red: red component of color
@@ -4504,6 +4652,7 @@ class MeshPattern(Pattern):
         by :meth:`get_patch_count`.
         """
 
+
 class PDFSurface(Surface):
     """
     The PDFSurface is used to render cairo graphics to Adobe PDF files and is a
@@ -4512,7 +4661,12 @@ class PDFSurface(Surface):
     .. versionadded:: 1.2
     """
 
-    def __init__(self, fobj: Union[_PathLike, _FileLike], width_in_points: float, height_in_points: float) -> None:
+    def __init__(
+        self,
+        fobj: Union[_PathLike, _FileLike],
+        width_in_points: float,
+        height_in_points: float,
+    ) -> None:
         """
         :param fobj: a filename or writable file object. None may be used to
             specify no output. This will generate a *PDFSurface* that may be
@@ -4602,7 +4756,9 @@ class PDFSurface(Surface):
         .. versionadded:: 1.12.0
         """
 
-    def add_outline(self, parent_id: int, utf8: str, link_attribs: str, flags: PDFOutlineFlags) -> int:
+    def add_outline(
+        self, parent_id: int, utf8: str, link_attribs: str, flags: PDFOutlineFlags
+    ) -> int:
         """
         :param parent_id:
             the id of the parent item or :data:`PDF_OUTLINE_ROOT` if this is a top
@@ -4653,15 +4809,23 @@ class PDFSurface(Surface):
         .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
         """
 
+
 class PSSurface(Surface):
     """
     The *PSSurface* is used to render cairo graphics to Adobe PostScript files and
     is a multi-page vector surface backend.
     """
 
-    def __init__(self, fobj: Union[_FileLike, _PathLike], width_in_points: float, height_in_points: float) -> None:
+    def __init__(
+        self,
+        fobj: Union[_FileLike, _PathLike],
+        width_in_points: float,
+        height_in_points: float,
+    ) -> None:
         """
-        :param fobj: a filename or writable file object. None may be used to specify no output. This will generate a *PSSurface* that may be queried and used as a source, without generating a temporary file.
+        :param fobj: a filename or writable file object. None may be used to specify
+            no output. This will generate a *PSSurface* that may be queried and used
+            as a source, without generating a temporary file.
         :param width_in_points: width of the surface, in points
             (1 point == 1/72.0 inch)
         :param height_in_points: height of the surface, in points
@@ -4877,15 +5041,23 @@ class PSSurface(Surface):
         .. versionadded:: 1.12.0
         """
 
+
 class SVGSurface(Surface):
     """
     The *SVGSurface* is used to render cairo graphics to SVG files and is a
     multi-page vector surface backend
     """
 
-    def __init__(self, fobj: "Union[_PathLike, _FileLike]", width_in_points: float, height_in_points: float) -> None:
+    def __init__(
+        self,
+        fobj: "Union[_PathLike, _FileLike]",
+        width_in_points: float,
+        height_in_points: float,
+    ) -> None:
         """
-        :param fobj: a filename or writable file object. None may be used to specify no output. This will generate a *SVGSurface* that may be queried and used as a source, without generating a temporary file.
+        :param fobj: a filename or writable file object. None may be used to specify
+            no output. This will generate a *SVGSurface* that may be queried and used
+            as a source, without generating a temporary file.
         :param width_in_points: width of the surface, in points (1 point == 1/72.0 inch)
         :param height_in_points: height of the surface, in points (1 point == 1/72.0 inch)
         """
@@ -4962,9 +5134,17 @@ class SVGSurface(Surface):
         .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
         """
 
-class RadialGradient(Gradient):
 
-    def __init__(self, cx0: float, cy0: float, radius0: float, cx1: float, cy1: float, radius1: float) -> None:
+class RadialGradient(Gradient):
+    def __init__(
+        self,
+        cx0: float,
+        cy0: float,
+        radius0: float,
+        cx1: float,
+        cy1: float,
+        radius1: float,
+    ) -> None:
         """
         :param cx0: x coordinate for the center of the start circle
         :param cy0: y coordinate for the center of the start circle
@@ -5000,8 +5180,10 @@ class RadialGradient(Gradient):
         .. versionadded:: 1.4
         """
 
+
 _AcquireCallback = Callable[[Surface, RectangleInt], Surface]
 _ReleaseCallback = Callable[[Surface], None]
+
 
 class RasterSourcePattern(Pattern):
     """
@@ -5040,7 +5222,9 @@ class RasterSourcePattern(Pattern):
         .. versionadded:: 1.15
         """
 
-    def set_acquire(self, acquire: Optional[_AcquireCallback], release: Optional[_ReleaseCallback]) -> None:
+    def set_acquire(
+        self, acquire: Optional[_AcquireCallback], release: Optional[_ReleaseCallback]
+    ) -> None:
         """
         :param acquire:
             acquire callback or :obj:`None` to unset it
@@ -5096,7 +5280,9 @@ class RasterSourcePattern(Pattern):
         .. versionadded:: 1.15
         """
 
-    def get_acquire(self) -> Tuple[Optional[_AcquireCallback], Optional[_ReleaseCallback]]:
+    def get_acquire(
+        self,
+    ) -> Tuple[Optional[_AcquireCallback], Optional[_ReleaseCallback]]:
         """
         :returns: a (acquire, release) tuple of callables or None as set
             through :meth:`set_acquire`
@@ -5105,6 +5291,7 @@ class RasterSourcePattern(Pattern):
 
         .. versionadded:: 1.15
         """
+
 
 class RecordingSurface(Surface):
     """
@@ -5175,6 +5362,7 @@ class RecordingSurface(Surface):
 
         .. versionadded:: 1.12.0
         """
+
 
 class Region:
     """
@@ -5278,6 +5466,7 @@ class Region:
             or rectangle
         """
 
+
 class ScriptDevice(Device):
     """
     .. versionadded:: 1.14
@@ -5321,6 +5510,7 @@ class ScriptDevice(Device):
         Converts the record operations in recording_surface into a script.
         """
 
+
 class ScriptSurface(Surface):
     """
     The script surface provides the ability to render to a native script that
@@ -5330,7 +5520,9 @@ class ScriptSurface(Surface):
     .. versionadded:: 1.14
     """
 
-    def __init__(self, script: ScriptDevice, content: Content, width: float, height: float) -> None:
+    def __init__(
+        self, script: ScriptDevice, content: Content, width: float, height: float
+    ) -> None:
         """
         :param script: the script (output device)
         :param content: the content of the surface
@@ -5342,7 +5534,9 @@ class ScriptSurface(Surface):
         """
 
     @classmethod
-    def create_for_target(cls, script: ScriptDevice, target: Surface) -> "ScriptSurface":
+    def create_for_target(
+        cls, script: ScriptDevice, target: Surface
+    ) -> "ScriptSurface":
         """
         :param script: the script (output device)
         :param target: a target surface to wrap
@@ -5353,6 +5547,7 @@ class ScriptSurface(Surface):
 
         .. versionadded:: 1.14
         """
+
 
 class Win32Surface(Surface):
     """
@@ -5370,6 +5565,7 @@ class Win32Surface(Surface):
         of the cairo surface. The resulting surface will always be of format
         cairo.FORMAT_RGB24, see :class:`cairo.Format`.
         """
+
 
 class Win32PrintingSurface(Surface):
     """
@@ -5391,9 +5587,11 @@ class Win32PrintingSurface(Surface):
         associated methods must be used for correct output.
         """
 
-class SolidPattern(Pattern):
 
-    def __init__(self, red: float, green: float, blue: float, alpha: float=1.0) -> None:
+class SolidPattern(Pattern):
+    def __init__(
+        self, red: float, green: float, blue: float, alpha: float = 1.0
+    ) -> None:
         """
         :param red: red component of the color
         :param green: green component of the color
@@ -5414,6 +5612,7 @@ class SolidPattern(Pattern):
         .. versionadded:: 1.4
         """
 
+
 class SurfaceObserverMode(_IntEnum):
     """
     Whether operations should be recorded.
@@ -5427,6 +5626,7 @@ class SurfaceObserverMode(_IntEnum):
     RECORD_OPERATIONS: "SurfaceObserverMode" = ...
     """operations are recorded"""
 
+
 class TeeSurface(Surface):
     """
     This surface supports redirecting all its input to multiple surfaces.
@@ -5434,7 +5634,8 @@ class TeeSurface(Surface):
     .. versionadded:: 1.14
     """
 
-    def __init__(self, master: Surface) -> None: ...
+    def __init__(self, master: Surface) -> None:
+        ...
 
     def add(self, target: Surface) -> None:
         """
@@ -5467,14 +5668,19 @@ class TeeSurface(Surface):
         .. versionadded:: 1.14
         """
 
+
 class ToyFontFace(FontFace):
     """
-    The *cairo.ToyFontFace* class can be used instead of :meth:`Context.select_font_face` to create a toy font independently of a context.
+    The *cairo.ToyFontFace* class can be used instead of
+    :meth:`Context.select_font_face` to create a toy font independently of a
+    context.
 
     .. versionadded:: 1.8.4
     """
 
-    def __init__(self, family: str, slant: FontSlant=..., weight: FontWeight=...) -> None:
+    def __init__(
+        self, family: str, slant: FontSlant = ..., weight: FontWeight = ...
+    ) -> None:
         """
         :param family: a font family name
         :param slant: the font slant of the font,
@@ -5495,24 +5701,25 @@ class ToyFontFace(FontFace):
 
     def get_family(self) -> str:
         """
-            :returns: the family name of a toy font
+        :returns: the family name of a toy font
 
-            .. versionadded:: 1.8.4
+        .. versionadded:: 1.8.4
         """
 
     def get_slant(self) -> FontSlant:
         """
-            :returns: the font slant value
+        :returns: the font slant value
 
-            .. versionadded:: 1.8.4
+        .. versionadded:: 1.8.4
         """
 
     def get_weight(self) -> FontWeight:
         """
-            :returns: the font weight value
+        :returns: the font weight value
 
-            .. versionadded:: 1.8.4
+        .. versionadded:: 1.8.4
         """
+
 
 class XCBSurface(Surface):
     """
@@ -5523,7 +5730,9 @@ class XCBSurface(Surface):
     extension if it is available.
     """
 
-    def __init__(self, connection: Any, drawable: Any, visualtype: Any, width: int, height: int) -> None:
+    def __init__(
+        self, connection: Any, drawable: Any, visualtype: Any, width: int, height: int
+    ) -> None:
         """
         :param connection: an XCB connection
         :param drawable: a X drawable
@@ -5550,6 +5759,7 @@ class XCBSurface(Surface):
         A Pixmap can never change size, so it is never necessary to call this
         function on a surface created for a Pixmap.
         """
+
 
 class XlibSurface(Surface):
     """
@@ -5587,6 +5797,7 @@ class XlibSurface(Surface):
         .. versionadded:: 1.2
         """
 
+
 def get_include() -> str:
     """
     :returns: a path to the directory containing the C header files
@@ -5595,6 +5806,7 @@ def get_include() -> str:
 
     .. versionadded:: 1.16.0
     """
+
 
 MIME_TYPE_JP2: str = ...
 """
@@ -5857,7 +6069,7 @@ STATUS_WRITE_ERROR = Status.WRITE_ERROR
 SUBPIXEL_ORDER_BGR = SubpixelOrder.BGR
 SUBPIXEL_ORDER_DEFAULT = SubpixelOrder.DEFAULT
 SUBPIXEL_ORDER_RGB = SubpixelOrder.RGB
-SUBPIXEL_ORDER_VBGR = SubpixelOrder. VBGR
+SUBPIXEL_ORDER_VBGR = SubpixelOrder.VBGR
 SUBPIXEL_ORDER_VRGB = SubpixelOrder.VRGB
 SURFACE_OBSERVER_NORMAL = SurfaceObserverMode.NORMAL
 SURFACE_OBSERVER_RECORD_OPERATIONS = SurfaceObserverMode.RECORD_OPERATIONS
