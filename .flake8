@@ -3,3 +3,4 @@ ignore=E402,E741
 builtins=buffer,unichr
 max-line-length = 100
 exclude = build,.git
+filename = *.py,*.pyi
