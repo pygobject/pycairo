@@ -5,7 +5,6 @@ import tempfile
 import base64
 import zlib
 import shutil
-import sysconfig
 
 import cairo
 import pytest
@@ -292,8 +291,6 @@ def test_surface_get_set_mime_data_references() -> None:
     assert sys.getrefcount(x) == recfcount_x
 
 
-@pytest.mark.skipif(
-    sysconfig.get_platform().startswith("win"), reason="msvc fixme")
 def test_surface_mime_data_for_pdf() -> None:
     jpeg_bytes = zlib.decompress(base64.b64decode(
         b'eJz7f+P/AwYBLzdPNwZGRkYGDyBk+H+bwRnEowj8P8TAzcHACDJHkOH/EQYRIBsV'

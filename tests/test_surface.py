@@ -4,7 +4,6 @@ import sys
 import array
 import tempfile
 import struct
-import sysconfig
 
 import cairo
 import pytest
@@ -241,8 +240,6 @@ def test_pdf_set_thumbnail_size() -> None:
         surface.set_thumbnail_size(0, 0)
 
 
-@pytest.mark.skipif(
-    sysconfig.get_platform().startswith("win"), reason="msvc fixme")
 def test_pdf_surface() -> None:
     fd, fname = tempfile.mkstemp()
     os.close(fd)
@@ -294,8 +291,6 @@ def test_svg_surface_restrict_to_version() -> None:
         surface.restrict_to_version(object())  # type: ignore
 
 
-@pytest.mark.skipif(
-    sysconfig.get_platform().startswith("win"), reason="msvc fixme")
 def test_pdf_surface_restrict_to_version() -> None:
     surface = cairo.PDFSurface(None, 10, 10)
     surface.restrict_to_version(cairo.PDF_VERSION_1_4)
@@ -361,8 +356,6 @@ def test_ps_restrict_to_level() -> None:
         surface.restrict_to_level(object())  # type: ignore
 
 
-@pytest.mark.skipif(
-    sysconfig.get_platform().startswith("win"), reason="msvc fixme")
 def test_ps_surface_level_to_string() -> None:
     level_id = cairo.PSSurface.level_to_string(cairo.PS_LEVEL_2)
     assert isinstance(level_id, str)
