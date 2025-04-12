@@ -51,6 +51,12 @@ def test_context() -> None:
     context.glyph_path([g])
     context.show_glyphs([cairo.Glyph(0, 0, 0)])
 
+    with pytest.warns(DeprecationWarning, match="num_glyphs.*glyph_extents"):
+        context.glyph_extents([], 0)  # type: ignore
+
+    with pytest.warns(DeprecationWarning, match="num_glyphs.*glyph_path"):
+        context.glyph_path([], 0)  # type: ignore
+
     with pytest.raises(TypeError):
         context.glyph_path([object()])  # type: ignore
 

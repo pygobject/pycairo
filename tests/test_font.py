@@ -222,6 +222,12 @@ def test_scaled_font_text_extents(scaled_font: cairo.ScaledFont) -> None:
 
 
 def test_scaled_font_glyph_extents(scaled_font: cairo.ScaledFont) -> None:
+
+    scaled_font.glyph_extents([cairo.Glyph(0, 0.5, 0.25)])
+
+    with pytest.warns(DeprecationWarning, match="num_glyphs.*glyph_extents"):
+        scaled_font.glyph_extents([], 0)  # type: ignore
+
     with pytest.raises(TypeError):
         scaled_font.glyph_extents(object())  # type: ignore
     with pytest.raises(TypeError):

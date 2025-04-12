@@ -465,8 +465,9 @@ def test_show_glyphs(context: cairo.Context) -> None:
     with pytest.raises(TypeError):
         context.show_glyphs(object())  # type: ignore
 
-    # the num_glyphs argument is not annotated
-    context.show_glyphs([], 0)  # type: ignore
+    with pytest.warns(DeprecationWarning, match="num_glyphs.*show_glyphs"):
+        # the num_glyphs argument is not annotated
+        context.show_glyphs([], 0)  # type: ignore
 
 
 def test_show_text(context: cairo.Context) -> None:

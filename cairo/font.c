@@ -487,6 +487,12 @@ scaled_font_glyph_extents (PycairoScaledFont *o, PyObject *args) {
       &py_object, &num_glyphs))
     return NULL;
 
+  if (PyTuple_Size (args) > 1) {
+    PyErr_WarnEx (PyExc_DeprecationWarning,
+                  "The num_glyphs parameter to ScaledFont.glyph_extents is deprecated",
+                  1);
+  }
+
   glyphs = _PycairoGlyphs_AsGlyphs (py_object, &num_glyphs);
   if (glyphs == NULL)
     return NULL;
