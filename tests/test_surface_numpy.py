@@ -7,7 +7,7 @@ import pytest
 numpy = pytest.importorskip("numpy")
 
 
-def test_image_surface_create_for_data_numpy_array():
+def test_image_surface_create_for_data_numpy_array() -> None:
     width, height = 255, 255
     data = numpy.ndarray(shape=(height, width), dtype=numpy.uint32)
 
@@ -28,7 +28,7 @@ def test_image_surface_create_for_data_numpy_array():
     os.unlink(filename)
 
 
-def test_image_surface_get_data_to_numpy_array():
+def test_image_surface_get_data_to_numpy_array() -> None:
     w, h = 300, 128
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
     ctx = cairo.Context(surface)

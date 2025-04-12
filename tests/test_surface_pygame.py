@@ -4,7 +4,7 @@ import pytest
 pygame = pytest.importorskip("pygame")
 
 
-def test_image_surface_to_pygame_image():
+def test_image_surface_to_pygame_image() -> None:
     width, height = 100, 100
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
     buf = surface.get_data()

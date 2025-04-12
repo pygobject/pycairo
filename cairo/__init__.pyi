@@ -12,8 +12,10 @@ from typing import (
     Optional,
     TypeVar,
     Union,
+    SupportsIndex,
     TYPE_CHECKING
 )
+from collections.abc import Iterator
 from collections.abc import Sequence
 
 del annotations
@@ -139,6 +141,27 @@ class Path:
 
     See examples/warpedtext.py for example usage.
     """
+
+    def __iter__(self) -> Iterator[tuple[int, tuple[float, ...]]]:
+        ...
+
+    def __eq__(self, other: object) -> bool:
+        ...
+
+    def __ne__(self, other: object) -> bool:
+        ...
+
+    def __lt__(self, other: Path) -> bool:
+        ...
+
+    def __le__(self, other: Path) -> bool:
+        ...
+
+    def __gt__(self, other: Path) -> bool:
+        ...
+
+    def __ge__(self, other: Path) -> bool:
+        ...
 
 
 class Rectangle(tuple[float, float, float, float]):
@@ -1295,6 +1318,18 @@ class Matrix:
 
     .. versionadded:: 1.12.0
     """
+
+    def __getitem__(self, index: SupportsIndex) -> float:
+        """
+        Access the components of the matrix by index.
+        """
+        ...
+
+    def __mul__(self, other: Matrix) -> Matrix:
+        """
+        Same as :meth:`multiply`.
+        """
+        ...
 
 
 class Pattern:

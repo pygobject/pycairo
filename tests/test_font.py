@@ -119,7 +119,7 @@ def test_font_options_merge() -> None:
         font_options.merge(object())  # type: ignore
 
 
-def test_font_options_hashable_protocol():
+def test_font_options_hashable_protocol() -> None:
     # make sure __eq__ and __ne__ work
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
     font_options = surface.get_font_options()
@@ -134,29 +134,29 @@ def test_font_options_hashable_protocol():
 
     # make sure the other operators are undefined
     with pytest.raises(TypeError):
-        font_options < font_options
-    assert font_options.__gt__(font_options) is NotImplemented
+        font_options < font_options  # type: ignore
+    assert font_options.__gt__(font_options) is NotImplemented  # type: ignore
 
 
-def test_font_options_set_antialias(font_options):
+def test_font_options_set_antialias(font_options: cairo.FontOptions) -> None:
     font_options.set_antialias(cairo.Antialias.GRAY)
     assert font_options.get_antialias() == cairo.Antialias.GRAY
     with pytest.raises(TypeError):
-        font_options.set_antialias(object())
+        font_options.set_antialias(object())  # type: ignore
 
 
-def test_font_options_set_hint_metrics(font_options):
+def test_font_options_set_hint_metrics(font_options: cairo.FontOptions) -> None:
     font_options.set_hint_metrics(cairo.HintMetrics.OFF)
     assert font_options.get_hint_metrics() == cairo.HintMetrics.OFF
     with pytest.raises(TypeError):
-        font_options.set_hint_metrics(object())
+        font_options.set_hint_metrics(object())  # type: ignore
 
 
-def test_font_options_set_hint_style(font_options):
+def test_font_options_set_hint_style(font_options: cairo.FontOptions) -> None:
     font_options.set_hint_style(cairo.HintStyle.SLIGHT)
     assert font_options.get_hint_style() == cairo.HintStyle.SLIGHT
     with pytest.raises(TypeError):
-        font_options.set_hint_style(object())
+        font_options.set_hint_style(object())  # type: ignore
 
 
 def test_font_options_set_subpixel_order(font_options: cairo.FontOptions) -> None:
