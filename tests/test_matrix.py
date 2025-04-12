@@ -47,7 +47,7 @@ def test_matrix_properties() -> None:
     assert m.xx == 84
 
 
-def test_get_item():
+def test_get_item() -> None:
     m = cairo.Matrix(1, 2, 3, 4, 5, 6)
     for i in range(6):
         assert m[i] == i + 1
@@ -57,9 +57,9 @@ def test_get_item():
         m[-1]
 
 
-def test_multiply():
+def test_multiply() -> None:
     with pytest.raises(TypeError):
-        cairo.Matrix().multiply(object())
+        cairo.Matrix().multiply(object())  # type: ignore
 
     m = cairo.Matrix(1, 1, 0, 1)
     assert m.multiply(m) == cairo.Matrix(1, 2, 0, 1, 0, 0)

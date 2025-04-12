@@ -150,13 +150,14 @@ def test_image_surface_get_data() -> None:
     assert newbuf[0:1] == b"\xff"
 
 
-def test_surface_file_obj_error():
+def test_surface_file_obj_error() -> None:
 
     class Fail:
 
-        def write(self, data):
+        def write(self, data: bytes) -> int:
             if data:
                 raise OSError
+            return 0
 
     # We don't have these annotated to accept any object with write()
     # method, so we need to ignore the type error.

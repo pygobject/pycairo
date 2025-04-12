@@ -36,20 +36,23 @@ def test_type() -> None:
     assert cairo.Glyph.y
 
 
-def test_context():
+def test_context() -> None:
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 10, 10)
     context = cairo.Context(surface)
-    assert context.glyph_extents([(0, 0, 0)])
-    context.glyph_path([(0, 0, 0)])
-    context.show_glyphs([(0, 0, 0)])
+
+    # We allow tuple[int, float, float] too, but don't expose
+    # in the the annotations
+    assert context.glyph_extents([(0, 0, 0)])  # type: ignore
+    context.glyph_path([(0, 0, 0)])  # type: ignore
+    context.show_glyphs([(0, 0, 0)])  # type: ignore
 
     g = cairo.Glyph(0, 0.5, 0.25)
     assert context.glyph_extents([g])
     context.glyph_path([g])
-    context.show_glyphs([(0, 0, 0)])
+    context.show_glyphs([cairo.Glyph(0, 0, 0)])
 
     with pytest.raises(TypeError):
-        context.glyph_path([object()])
+        context.glyph_path([object()])  # type: ignore
 
 
 def test_glyph_limits() -> None:

@@ -45,7 +45,7 @@ def test_path_str(context: cairo.Context) -> None:
         "move_to 1.000000 2.000000")
 
 
-def test_path_compare_hash(context):
+def test_path_compare_hash(context: cairo.Context) -> None:
     p = context.copy_path()
     assert p == p
     hash(p)
@@ -57,7 +57,7 @@ def test_path_compare_hash(context):
     assert not p > p
 
 
-def test_path_iter(context):
+def test_path_iter(context: cairo.Context) -> None:
     context.line_to(1, 2)
     context.line_to(2, 3)
     context.curve_to(0, 1, 2, 3, 4, 5)

@@ -4,7 +4,7 @@ import ctypes
 
 
 @pytest.fixture
-def context():
+def context() -> cairo.Context:
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 42, 42)
     return cairo.Context(surface)
 
@@ -107,7 +107,7 @@ def test_append_path(context: cairo.Context) -> None:
         context.append_path(object())  # type: ignore
 
 
-def test_arc(context):
+def test_arc(context: cairo.Context) -> None:
     assert not list(context.copy_path())
     context.arc(0, 0, 0, 0, 0)
     assert list(context.copy_path())
@@ -115,7 +115,7 @@ def test_arc(context):
         context.arc(object())  # type: ignore
 
 
-def test_arc_negative(context):
+def test_arc_negative(context: cairo.Context) -> None:
     assert not list(context.copy_path())
     context.arc_negative(0, 0, 0, 0, 0)
     assert list(context.copy_path())

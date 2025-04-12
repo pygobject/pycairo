@@ -12,7 +12,7 @@ def test_raster_source() -> None:
 
     was_called = []
 
-    def acquire_callback(target, extents):
+    def acquire_callback(target: cairo.Surface, extents: cairo.RectangleInt) -> cairo.Surface:
         surface = target.create_similar_image(
             cairo.FORMAT_ARGB32, extents.width, extents.height)
         surface.set_device_offset(extents.x, extents.y)
@@ -22,7 +22,7 @@ def test_raster_source() -> None:
         was_called.append("acquire")
         return surface
 
-    def release_callback(surface):
+    def release_callback(surface: cairo.Surface) -> None:
         was_called.append("release")
         return None
 

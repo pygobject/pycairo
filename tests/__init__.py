@@ -1,7 +1,7 @@
 import os
 
 
-def set_dll_search_path():
+def set_dll_search_path() -> None:
     # Python 3.8 no longer searches for DLLs in PATH, so we have to add
     # everything in PATH manually. Note that unlike PATH add_dll_directory
     # has no defined order, so if there are two cairo DLLs in PATH we

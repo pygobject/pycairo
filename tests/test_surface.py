@@ -510,7 +510,7 @@ def test_supports_mime_type() -> None:
         surface.supports_mime_type(object())  # type: ignore
 
 
-def test_image_surface_create_for_data_array():
+def test_image_surface_create_for_data_array() -> None:
     width, height = 255, 255
     data = array.array('B', [0] * width * height * 4)
 
@@ -758,7 +758,7 @@ def test_image_surface_buffer_get_data_finished() -> None:
     assert excinfo.value.status == cairo.Status.SURFACE_FINISHED
 
 
-def test_image_surface_png_get_data_finished():
+def test_image_surface_png_get_data_finished() -> None:
     surface = cairo.ImageSurface(cairo.Format.ARGB32, 30, 30)
     fileobj = io.BytesIO()
     surface.write_to_png(fileobj)
@@ -796,7 +796,7 @@ def test_recording_surface() -> None:
 
 
 @pytest.mark.skipif(not hasattr(cairo.Format, "RGB96F"), reason="too old cairo")
-def test_format_rgbf():
+def test_format_rgbf() -> None:
     surface = cairo.ImageSurface(cairo.Format.RGB96F, 3, 3)
     assert surface.get_format() == cairo.Format.RGB96F
     surface = cairo.ImageSurface(cairo.Format.RGBA128F, 3, 3)
