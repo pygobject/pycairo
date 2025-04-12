@@ -20,7 +20,7 @@ def do_snippet(snippet):
 
     try:
         os.makedirs(os.path.join("_build", "pdf"))
-    except EnvironmentError:
+    except OSError:
         pass
     filename = os.path.join("_build", "pdf", f"{snippet.name}.pdf")
 

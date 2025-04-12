@@ -21,7 +21,7 @@ def do_snippet(snippet):
 
     try:
         os.makedirs(os.path.join("_build", "svg"))
-    except EnvironmentError:
+    except OSError:
         pass
     filename = os.path.join("_build", "svg", f"{snippet.name}.svg")
 
