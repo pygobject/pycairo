@@ -264,6 +264,7 @@ static PyObject *
 pathiter_next(PycairoPathiter *it) {
   PycairoPath *pypath;
   cairo_path_t *path;
+  PyObject *path_data_type;
 
   assert(it != NULL);
   pypath = it->pypath;
@@ -279,19 +280,24 @@ pathiter_next(PycairoPathiter *it) {
 
     it->index += data[0].header.length;
 
+    path_data_type = CREATE_INT_ENUM(PathDataType, type);
+    if (path_data_type == NULL)
+      return NULL;
+
     switch (type) {
     case CAIRO_PATH_MOVE_TO:
     case CAIRO_PATH_LINE_TO:
-      return Py_BuildValue("(i(dd))", (int)type,
+      return Py_BuildValue("(N(dd))", path_data_type,
 			   data[1].point.x, data[1].point.y);
     case CAIRO_PATH_CURVE_TO:
-      return Py_BuildValue("(i(dddddd))", (int)type,
+      return Py_BuildValue("(N(dddddd))", path_data_type,
 			   data[1].point.x, data[1].point.y,
 			   data[2].point.x, data[2].point.y,
 			   data[3].point.x, data[3].point.y);
     case CAIRO_PATH_CLOSE_PATH:
-      return Py_BuildValue("i()", (int)type);
+      return Py_BuildValue("N()", path_data_type);
     default:
+      Py_DECREF(path_data_type);
       PyErr_SetString(PyExc_RuntimeError, "unknown CAIRO_PATH type");
       return NULL;
     }

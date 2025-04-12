@@ -142,7 +142,7 @@ class Path:
     See examples/warpedtext.py for example usage.
     """
 
-    def __iter__(self) -> Iterator[tuple[int, tuple[float, ...]]]:
+    def __iter__(self) -> Iterator[tuple[PathDataType, tuple[float, ...]]]:
         ...
 
     def __eq__(self, other: object) -> bool:

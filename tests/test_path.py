@@ -63,11 +63,12 @@ def test_path_iter(context: cairo.Context) -> None:
     context.curve_to(0, 1, 2, 3, 4, 5)
     context.close_path()
     p = context.copy_path()
-    i = iter(p)
-    assert list(i) == [
-        (0, (1.0, 2.0)),
-        (1, (2.0, 3.0)),
-        (2, (0.0, 1.0, 2.0, 3.0, 4.0, 5.0)),
-        (3, ()),
-        (0, (1.0, 2.0)),
+    items = list(iter(p))
+    assert isinstance(items[0][0], cairo.PathDataType)
+    assert items == [
+        (cairo.PathDataType.MOVE_TO, (1.0, 2.0)),
+        (cairo.PathDataType.LINE_TO, (2.0, 3.0)),
+        (cairo.PathDataType.CURVE_TO, (0.0, 1.0, 2.0, 3.0, 4.0, 5.0)),
+        (cairo.PathDataType.CLOSE_PATH, ()),
+        (cairo.PathDataType.MOVE_TO, (1.0, 2.0)),
     ]
