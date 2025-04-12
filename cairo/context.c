@@ -514,6 +514,12 @@ pycairo_glyph_extents (PycairoContext *o, PyObject *args) {
 			 &py_object, &num_glyphs))
     return NULL;
 
+  if (PyTuple_Size (args) > 1) {
+    PyErr_WarnEx (PyExc_DeprecationWarning,
+                  "The num_glyphs parameter to Context.glyph_extents is deprecated",
+                  1);
+  }
+
   glyphs = _PycairoGlyphs_AsGlyphs (py_object, &num_glyphs);
   if (glyphs == NULL)
     return NULL;
@@ -537,6 +543,12 @@ pycairo_glyph_path (PycairoContext *o, PyObject *args) {
   if (!PyArg_ParseTuple (args, "O|i:Context.glyph_path",
 			 &py_object, &num_glyphs))
     return NULL;
+
+  if (PyTuple_Size (args) > 1) {
+    PyErr_WarnEx (PyExc_DeprecationWarning,
+                  "The num_glyphs parameter to Context.glyph_path is deprecated",
+                  1);
+  }
 
   glyphs = _PycairoGlyphs_AsGlyphs (py_object, &num_glyphs);
   if (glyphs == NULL)
@@ -1131,6 +1143,12 @@ pycairo_show_glyphs (PycairoContext *o, PyObject *args) {
   if (!PyArg_ParseTuple (args, "O|i:Context.show_glyphs",
 			 &py_object, &num_glyphs))
     return NULL;
+
+  if (PyTuple_Size (args) > 1) {
+    PyErr_WarnEx (PyExc_DeprecationWarning,
+                  "The num_glyphs parameter to Context.show_glyphs is deprecated",
+                  1);
+  }
 
   glyphs = _PycairoGlyphs_AsGlyphs (py_object, &num_glyphs);
   if (glyphs == NULL)
