@@ -20,7 +20,7 @@ def do_snippet(snippet):
 
     try:
         os.makedirs(os.path.join("_build", "ps"))
-    except EnvironmentError:
+    except OSError:
         pass
     filename = os.path.join("_build", "ps", f"{snippet.name}.ps")
 

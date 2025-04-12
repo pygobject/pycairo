@@ -9,15 +9,12 @@ from typing import (
     BinaryIO,
     Callable,
     Generic,
-    List,
     Optional,
-    Sequence,
-    Text,
-    Tuple,
     TypeVar,
     Union,
     TYPE_CHECKING
 )
+from collections.abc import Sequence
 
 del annotations
 
@@ -70,7 +67,7 @@ The default color palette index. See :meth:`FontOptions.set_color_palette`
 version: str = ...
 """the pycairo version, as a string"""
 
-version_info: Tuple[int, int, int] = ...
+version_info: tuple[int, int, int] = ...
 """the pycairo version, as a tuple"""
 
 CAIRO_VERSION: int = ...
@@ -144,7 +141,7 @@ class Path:
     """
 
 
-class Rectangle(Tuple[float, float, float, float]):
+class Rectangle(tuple[float, float, float, float]):
     """
     .. versionadded:: 1.15
         In prior versions a (float, float, float, float) tuple was
@@ -183,34 +180,34 @@ class Antialias(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    BEST: "Antialias" = ...
+    BEST: Antialias = ...
     """
     Hint that the backend should render at the highest quality, sacrificing
     speed if necessary.
     """
 
-    DEFAULT: "Antialias" = ...
+    DEFAULT: Antialias = ...
     """Use the default antialiasing for the subsystem and target device"""
 
-    FAST: "Antialias" = ...
+    FAST: Antialias = ...
     """
     Hint that the backend should perform some antialiasing but prefer
     speed over quality.
     """
 
-    GOOD: "Antialias" = ...
+    GOOD: Antialias = ...
     """The backend should balance quality against performance."""
 
-    GRAY: "Antialias" = ...
+    GRAY: Antialias = ...
     """
     Perform single-color antialiasing (using shades of gray for black text
     on a white background, for example).
     """
 
-    NONE: "Antialias" = ...
+    NONE: Antialias = ...
     """Use a bilevel alpha mask"""
 
-    SUBPIXEL: "Antialias" = ...
+    SUBPIXEL: Antialias = ...
     """
     Perform antialiasing by taking advantage of the order of subpixel
     elements on devices such as LCD panels.
@@ -226,13 +223,13 @@ class Content(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    ALPHA: "Content" = ...
+    ALPHA: Content = ...
     """The surface will hold alpha content only."""
 
-    COLOR: "Content" = ...
+    COLOR: Content = ...
     """The surface will hold color content only."""
 
-    COLOR_ALPHA: "Content" = ...
+    COLOR_ALPHA: Content = ...
     """The surface will hold color and alpha content."""
 
 
@@ -252,14 +249,14 @@ class FillRule(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    EVEN_ODD: "FillRule" = ...
+    EVEN_ODD: FillRule = ...
     """
     Counts the total number of intersections, without regard to the
     orientation of the contour. If the total number of intersections is
     odd, the point will be filled.
     """
 
-    WINDING: "FillRule" = ...
+    WINDING: FillRule = ...
     """
     If the path crosses the ray from left-to-right, counts +1. If the path
     crosses the ray from right to left, counts -1. (Left and right are
@@ -302,7 +299,7 @@ class Format(_IntEnum):
         .. versionadded:: 1.14
         """
 
-    A1: "Format" = ...
+    A1: Format = ...
     """
     each pixel is a 1-bit quantity holding an alpha value. Pixels are
     packed together into 32-bit quantities. The ordering of the bits
@@ -311,12 +308,12 @@ class Format(_IntEnum):
     first pixel is in the least-significant bit.
     """
 
-    A8: "Format" = ...
+    A8: Format = ...
     """
     each pixel is a 8-bit quantity holding an alpha value.
     """
 
-    ARGB32: "Format" = ...
+    ARGB32: Format = ...
     """
     each pixel is a 32-bit quantity, with alpha in the upper 8 bits, then
     red, then green, then blue. The 32-bit quantities are stored
@@ -324,16 +321,16 @@ class Format(_IntEnum):
     red is 0x80800000, not 0x80ff0000.)
     """
 
-    INVALID: "Format" = ...
+    INVALID: Format = ...
     """no such format exists or is supported."""
 
-    RGB16_565: "Format" = ...
+    RGB16_565: Format = ...
     """
     each pixel is a 16-bit quantity with red in the upper 5 bits, then
     green in the middle 6 bits, and blue in the lower 5 bits.
     """
 
-    RGB24: "Format" = ...
+    RGB24: Format = ...
     """
     each pixel is a 32-bit quantity, with the upper 8 bits unused. [#]_  Red,
     Green, and Blue are stored in the remaining 24 bits in that order.
@@ -343,19 +340,19 @@ class Format(_IntEnum):
            considered undefined.
     """
 
-    RGB30: "Format" = ...
+    RGB30: Format = ...
     """
     like :data:`RGB24` but with 10bpc.
     """
 
-    RGB96F: "Format" = ...
+    RGB96F: Format = ...
     """
     3 floats, R, G, B.
 
     .. versionadded:: 1.23 Only available with cairo 1.17.2+
     """
 
-    RGBA128F: "Format" = ...
+    RGBA128F: Format = ...
     """
     4 floats, R, G, B, A.
 
@@ -374,16 +371,16 @@ class HintMetrics(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    DEFAULT: "HintMetrics" = ...
+    DEFAULT: HintMetrics = ...
     """
     Hint metrics in the default manner for the font backend and target
     device
     """
 
-    OFF: "HintMetrics" = ...
+    OFF: HintMetrics = ...
     """"Do not hint font metrics"""
 
-    ON: "HintMetrics" = ...
+    ON: HintMetrics = ...
     """Hint font metrics"""
 
 
@@ -396,17 +393,17 @@ class ColorMode(_IntEnum):
     .. versionadded:: 1.25 Only available with cairo 1.17.8+
     """
 
-    DEFAULT: "ColorMode" = ...
+    DEFAULT: ColorMode = ...
     """
     Use the default color mode for font backend and target device.
     """
 
-    NO_COLOR: "ColorMode" = ...
+    NO_COLOR: ColorMode = ...
     """
     Disable rendering color glyphs. Glyphs are always rendered as outline glyphs
     """
 
-    COLOR: "ColorMode" = ...
+    COLOR: ColorMode = ...
     """
     Enable rendering color glyphs. If the font contains a color presentation for
     a glyph, and when supported by the font backend, the glyph will be rendered
@@ -428,27 +425,27 @@ class Dither(_IntEnum):
     .. versionadded:: 1.25 Only available with cairo 1.18.0+
     """
 
-    NONE: "Dither" = ...
+    NONE: Dither = ...
     """
     No dithering.
     """
 
-    DEFAULT: "Dither" = ...
+    DEFAULT: Dither = ...
     """
     Default choice at cairo compile time. Currently NONE.
     """
 
-    FAST: "Dither" = ...
+    FAST: Dither = ...
     """
     Fastest dithering algorithm supported by the backend
     """
 
-    GOOD: "Dither" = ...
+    GOOD: Dither = ...
     """
     An algorithm with smoother dithering than FAST
     """
 
-    BEST: "Dither" = ...
+    BEST: Dither = ...
     """
     Best algorithm available in the backend
     """
@@ -468,26 +465,26 @@ class HintStyle(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    DEFAULT: "HintStyle" = ...
+    DEFAULT: HintStyle = ...
     """
     Use the default hint style for font backend and target device
     """
 
-    FULL: "HintStyle" = ...
+    FULL: HintStyle = ...
     """
     Hint outlines to maximize contrast
     """
 
-    MEDIUM: "HintStyle" = ...
+    MEDIUM: HintStyle = ...
     """
     Hint outlines with medium strength giving a compromise between fidelity
     to the original shapes and contrast
     """
 
-    NONE: "HintStyle" = ...
+    NONE: HintStyle = ...
     """Do not hint outlines"""
 
-    SLIGHT: "HintStyle" = ...
+    SLIGHT: HintStyle = ...
     """
     Hint outlines slightly to improve contrast while retaining good
     fidelity to the original shapes.
@@ -503,19 +500,19 @@ class SubpixelOrder(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    BGR: "SubpixelOrder" = ...
+    BGR: SubpixelOrder = ...
     """Subpixel elements are arranged horizontally with blue at the left"""
 
-    DEFAULT: "SubpixelOrder" = ...
+    DEFAULT: SubpixelOrder = ...
     """Use the default subpixel order for for the target device"""
 
-    RGB: "SubpixelOrder" = ...
+    RGB: SubpixelOrder = ...
     """Subpixel elements are arranged horizontally with red at the left"""
 
-    VBGR: "SubpixelOrder" = ...
+    VBGR: SubpixelOrder = ...
     """Subpixel elements are arranged vertically with blue at the top"""
 
-    VRGB: "SubpixelOrder" = ...
+    VRGB: SubpixelOrder = ...
     """Subpixel elements are arranged vertically with red at the top"""
 
 
@@ -529,13 +526,13 @@ class LineCap(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    BUTT: "LineCap" = ...
+    BUTT: LineCap = ...
     """start(stop) the line exactly at the start(end) point"""
 
-    ROUND: "LineCap" = ...
+    ROUND: LineCap = ...
     """use a round ending, the center of the circle is the end point"""
 
-    SQUARE: "LineCap" = ...
+    SQUARE: LineCap = ...
     """use squared ending, the center of the square is the end point"""
 
 
@@ -549,18 +546,18 @@ class LineJoin(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    BEVEL: "LineJoin" = ...
+    BEVEL: LineJoin = ...
     """
     use a cut-off join, the join is cut off at half the line width from
     the joint point
     """
 
-    MITER: "LineJoin" = ...
+    MITER: LineJoin = ...
     """
     use a sharp (angled) corner, see :meth:`Context.set_miter_limit`
     """
 
-    ROUND: "LineJoin" = ...
+    ROUND: LineJoin = ...
     """use a rounded join, the center of the circle is the joint point"""
 
 
@@ -573,31 +570,31 @@ class Filter(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    BEST: "Filter" = ...
+    BEST: Filter = ...
     """
     The highest-quality available, performance may not be suitable for
     interactive use.
     """
 
-    BILINEAR: "Filter" = ...
+    BILINEAR: Filter = ...
     """Linear interpolation in two dimensions"""
 
-    FAST: "Filter" = ...
+    FAST: Filter = ...
     """A high-performance filter, with quality similar *FILTER_NEAREST*"""
 
-    GAUSSIAN: "Filter" = ...
+    GAUSSIAN: Filter = ...
     """
     This filter value is currently unimplemented, and should not be used
     in current code.
     """
 
-    GOOD: "Filter" = ...
+    GOOD: Filter = ...
     """
     A reasonable-performance filter, with quality similar to
     *FILTER_BILINEAR*
     """
 
-    NEAREST: "Filter" = ...
+    NEAREST: Filter = ...
     """Nearest-neighbor filtering"""
 
 
@@ -623,121 +620,121 @@ class Operator(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    ADD: "Operator" = ...
+    ADD: Operator = ...
     """source and destination layers are accumulated"""
 
-    ATOP: "Operator" = ...
+    ATOP: Operator = ...
     """draw source on top of destination content and only there"""
 
-    CLEAR: "Operator" = ...
+    CLEAR: Operator = ...
     """clear destination layer (bounded)"""
 
-    COLOR_BURN: "Operator" = ...
+    COLOR_BURN: Operator = ...
     """darkens the destination color to reflect the source color."""
 
-    COLOR_DODGE: "Operator" = ...
+    COLOR_DODGE: Operator = ...
     """brightens the destination color to reflect the source color."""
 
-    DARKEN: "Operator" = ...
+    DARKEN: Operator = ...
     """
     replaces the destination with the source if it is darker, otherwise
     keeps the source.
     """
 
-    DEST: "Operator" = ...
+    DEST: Operator = ...
     """ignore the source"""
 
-    DEST_ATOP: "Operator" = ...
+    DEST_ATOP: Operator = ...
     """leave destination on top of source content and only there (unbounded)"""
 
-    DEST_IN: "Operator" = ...
+    DEST_IN: Operator = ...
     """leave destination only where there was source content (unbounded)"""
 
-    DEST_OUT: "Operator" = ...
+    DEST_OUT: Operator = ...
     """leave destination only where there was no source content"""
 
-    DEST_OVER: "Operator" = ...
+    DEST_OVER: Operator = ...
     """draw destination on top of source"""
 
-    DIFFERENCE: "Operator" = ...
+    DIFFERENCE: Operator = ...
     """Takes the difference of the source and destination color."""
 
-    EXCLUSION: "Operator" = ...
+    EXCLUSION: Operator = ...
     """Produces an effect similar to difference, but with lower contrast."""
 
-    HARD_LIGHT: "Operator" = ...
+    HARD_LIGHT: Operator = ...
     """Multiplies or screens, dependent on source color."""
 
-    HSL_COLOR: "Operator" = ...
+    HSL_COLOR: Operator = ...
     """
     Creates a color with the hue and saturation of the source and the
     luminosity of the target. This preserves the gray levels of the target
     and is useful for coloring monochrome images or tinting color images.
     """
 
-    HSL_HUE: "Operator" = ...
+    HSL_HUE: Operator = ...
     """
     Creates a color with the hue of the source and the saturation and
     luminosity of the target.
     """
 
-    HSL_LUMINOSITY: "Operator" = ...
+    HSL_LUMINOSITY: Operator = ...
     """
     Creates a color with the luminosity of the source and the hue and
     saturation of the target. This produces an inverse effect to
     :attr:`HSL_COLOR`
     """
 
-    HSL_SATURATION: "Operator" = ...
+    HSL_SATURATION: Operator = ...
     """
     Creates a color with the saturation of the source and the hue and
     luminosity of the target. Painting with this mode onto a gray area
     produces no change.
     """
 
-    IN: "Operator" = ...
+    IN: Operator = ...
     """draw source where there was destination content (unbounded)"""
 
-    LIGHTEN: "Operator" = ...
+    LIGHTEN: Operator = ...
     """
     replaces the destination with the source if it is lighter, otherwise
     keeps the source.
     """
 
-    MULTIPLY: "Operator" = ...
+    MULTIPLY: Operator = ...
     """
     source and destination layers are multiplied. This causes the result
     to be at least as dark as the darker inputs.
     """
 
-    OUT: "Operator" = ...
+    OUT: Operator = ...
     """draw source where there was no destination content (unbounded)"""
 
-    OVER: "Operator" = ...
+    OVER: Operator = ...
     """draw source layer on top of destination layer (bounded)"""
 
-    OVERLAY: "Operator" = ...
+    OVERLAY: Operator = ...
     """
     multiplies or screens, depending on the lightness of the destination
     color.
     """
 
-    SATURATE: "Operator" = ...
+    SATURATE: Operator = ...
     """like over, but assuming source and dest are disjoint geometries"""
 
-    SCREEN: "Operator" = ...
+    SCREEN: Operator = ...
     """
     source and destination are complemented and multiplied. This causes
     the result to be at least as light as the lighter inputs.
     """
 
-    SOFT_LIGHT: "Operator" = ...
+    SOFT_LIGHT: Operator = ...
     """Darkens or lightens, dependent on source color."""
 
-    SOURCE: "Operator" = ...
+    SOURCE: Operator = ...
     """replace destination layer (bounded)"""
 
-    XOR: "Operator" = ...
+    XOR: Operator = ...
     """source and destination are shown where there is only one of them"""
 
 
@@ -753,22 +750,22 @@ class Extend(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    NONE: "Extend" = ...
+    NONE: Extend = ...
     """pixels outside of the source pattern are fully transparent"""
 
-    PAD: "Extend" = ...
+    PAD: Extend = ...
     """
     pixels outside of the pattern copy the closest pixel from the source
     (Since 1.2; but only implemented for surface patterns since 1.6)
     """
 
-    REFLECT: "Extend" = ...
+    REFLECT: Extend = ...
     """
     the pattern is tiled by reflecting at the edges (Implemented for
     surface patterns since 1.6)
     """
 
-    REPEAT: "Extend" = ...
+    REPEAT: Extend = ...
     """the pattern is tiled by repeating"""
 
 
@@ -780,13 +777,13 @@ class FontSlant(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    ITALIC: "FontSlant" = ...
+    ITALIC: FontSlant = ...
     """Italic font style"""
 
-    NORMAL: "FontSlant" = ...
+    NORMAL: FontSlant = ...
     """Upright font style"""
 
-    OBLIQUE: "FontSlant" = ...
+    OBLIQUE: FontSlant = ...
     """Oblique font style"""
 
 
@@ -798,10 +795,10 @@ class FontWeight(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    BOLD: "FontWeight" = ...
+    BOLD: FontWeight = ...
     """Bold font weight"""
 
-    NORMAL: "FontWeight" = ...
+    NORMAL: FontWeight = ...
     """Normal font weight"""
 
 
@@ -810,70 +807,70 @@ class Status(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    CLIP_NOT_REPRESENTABLE: "Status" = ...
-    DEVICE_ERROR: "Status" = ...
-    DEVICE_FINISHED: "Status" = ...
-    DEVICE_TYPE_MISMATCH: "Status" = ...
-    FILE_NOT_FOUND: "Status" = ...
-    FONT_TYPE_MISMATCH: "Status" = ...
-    INVALID_CLUSTERS: "Status" = ...
-    INVALID_CONTENT: "Status" = ...
-    INVALID_DASH: "Status" = ...
-    INVALID_DSC_COMMENT: "Status" = ...
-    INVALID_FORMAT: "Status" = ...
-    INVALID_INDEX: "Status" = ...
-    INVALID_MATRIX: "Status" = ...
-    INVALID_MESH_CONSTRUCTION: "Status" = ...
-    INVALID_PATH_DATA: "Status" = ...
-    INVALID_POP_GROUP: "Status" = ...
-    INVALID_RESTORE: "Status" = ...
-    INVALID_SIZE: "Status" = ...
-    INVALID_SLANT: "Status" = ...
-    INVALID_STATUS: "Status" = ...
-    INVALID_STRIDE: "Status" = ...
-    INVALID_STRING: "Status" = ...
-    INVALID_VISUAL: "Status" = ...
-    INVALID_WEIGHT: "Status" = ...
-    JBIG2_GLOBAL_MISSING: "Status" = ...
+    CLIP_NOT_REPRESENTABLE: Status = ...
+    DEVICE_ERROR: Status = ...
+    DEVICE_FINISHED: Status = ...
+    DEVICE_TYPE_MISMATCH: Status = ...
+    FILE_NOT_FOUND: Status = ...
+    FONT_TYPE_MISMATCH: Status = ...
+    INVALID_CLUSTERS: Status = ...
+    INVALID_CONTENT: Status = ...
+    INVALID_DASH: Status = ...
+    INVALID_DSC_COMMENT: Status = ...
+    INVALID_FORMAT: Status = ...
+    INVALID_INDEX: Status = ...
+    INVALID_MATRIX: Status = ...
+    INVALID_MESH_CONSTRUCTION: Status = ...
+    INVALID_PATH_DATA: Status = ...
+    INVALID_POP_GROUP: Status = ...
+    INVALID_RESTORE: Status = ...
+    INVALID_SIZE: Status = ...
+    INVALID_SLANT: Status = ...
+    INVALID_STATUS: Status = ...
+    INVALID_STRIDE: Status = ...
+    INVALID_STRING: Status = ...
+    INVALID_VISUAL: Status = ...
+    INVALID_WEIGHT: Status = ...
+    JBIG2_GLOBAL_MISSING: Status = ...
     """
     .. versionadded:: 1.14
     """
-    LAST_STATUS: "Status" = ...
-    NEGATIVE_COUNT: "Status" = ...
-    NO_CURRENT_POINT: "Status" = ...
-    NO_MEMORY: "Status" = ...
-    NULL_POINTER: "Status" = ...
-    PATTERN_TYPE_MISMATCH: "Status" = ...
-    READ_ERROR: "Status" = ...
-    SUCCESS: "Status" = ...
-    SURFACE_FINISHED: "Status" = ...
-    SURFACE_TYPE_MISMATCH: "Status" = ...
-    TEMP_FILE_ERROR: "Status" = ...
-    USER_FONT_ERROR: "Status" = ...
-    USER_FONT_IMMUTABLE: "Status" = ...
-    USER_FONT_NOT_IMPLEMENTED: "Status" = ...
-    WRITE_ERROR: "Status" = ...
-    TAG_ERROR: "Status" = ...
+    LAST_STATUS: Status = ...
+    NEGATIVE_COUNT: Status = ...
+    NO_CURRENT_POINT: Status = ...
+    NO_MEMORY: Status = ...
+    NULL_POINTER: Status = ...
+    PATTERN_TYPE_MISMATCH: Status = ...
+    READ_ERROR: Status = ...
+    SUCCESS: Status = ...
+    SURFACE_FINISHED: Status = ...
+    SURFACE_TYPE_MISMATCH: Status = ...
+    TEMP_FILE_ERROR: Status = ...
+    USER_FONT_ERROR: Status = ...
+    USER_FONT_IMMUTABLE: Status = ...
+    USER_FONT_NOT_IMPLEMENTED: Status = ...
+    WRITE_ERROR: Status = ...
+    TAG_ERROR: Status = ...
     """
     .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
     """
-    FREETYPE_ERROR: "Status" = ...
+    FREETYPE_ERROR: Status = ...
     """
     .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
     """
-    PNG_ERROR: "Status" = ...
+    PNG_ERROR: Status = ...
     """
     .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
     """
-    WIN32_GDI_ERROR: "Status" = ...
+    WIN32_GDI_ERROR: Status = ...
     """
     .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
     """
-    DWRITE_ERROR: "Status" = ...
+    DWRITE_ERROR: Status = ...
     """
     .. versionadded:: 1.23.0 Only available with cairo 1.17.6+
     """
-    SVG_FONT_ERROR: "Status" = ...
+    SVG_FONT_ERROR: Status = ...
     """
     .. versionadded:: 1.25.0 Only available with cairo 1.17.8+
     """
@@ -887,20 +884,20 @@ class PDFVersion(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    VERSION_1_4: "PDFVersion" = ...
+    VERSION_1_4: PDFVersion = ...
     """The version 1.4 of the PDF specification."""
 
-    VERSION_1_5: "PDFVersion" = ...
+    VERSION_1_5: PDFVersion = ...
     """The version 1.5 of the PDF specification."""
 
-    VERSION_1_6: "PDFVersion" = ...
+    VERSION_1_6: PDFVersion = ...
     """
     The version 1.6 of the PDF specification.
 
     .. versionadded:: 1.23.0 Only available with cairo 1.17.6+
     """
 
-    VERSION_1_7: "PDFVersion" = ...
+    VERSION_1_7: PDFVersion = ...
     """
     The version 1.7 of the PDF specification.
 
@@ -918,10 +915,10 @@ class PSLevel(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    LEVEL_2: "PSLevel" = ...
+    LEVEL_2: PSLevel = ...
     """The language level 2 of the PostScript specification."""
 
-    LEVEL_3: "PSLevel" = ...
+    LEVEL_3: PSLevel = ...
     """The language level 3 of the PostScript specification."""
 
 
@@ -933,16 +930,16 @@ class PathDataType(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    CLOSE_PATH: "PathDataType" = ...
+    CLOSE_PATH: PathDataType = ...
     """A close-path operation"""
 
-    CURVE_TO: "PathDataType" = ...
+    CURVE_TO: PathDataType = ...
     """A curve-to operation"""
 
-    LINE_TO: "PathDataType" = ...
+    LINE_TO: PathDataType = ...
     """ A line-to operation"""
 
-    MOVE_TO: "PathDataType" = ...
+    MOVE_TO: PathDataType = ...
     """A move-to operation"""
 
 
@@ -951,13 +948,13 @@ class RegionOverlap(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    IN: "RegionOverlap" = ...
+    IN: RegionOverlap = ...
     """The contents are entirely inside the region."""
 
-    OUT: "RegionOverlap" = ...
+    OUT: RegionOverlap = ...
     """The contents are entirely outside the region."""
 
-    PART: "RegionOverlap" = ...
+    PART: RegionOverlap = ...
     """The contents are partially inside and partially outside the region."""
 
 
@@ -969,10 +966,10 @@ class SVGVersion(_IntEnum):
     .. versionadded:: 1.13
     """
 
-    VERSION_1_1: "SVGVersion" = ...
+    VERSION_1_1: SVGVersion = ...
     """The version 1.1 of the SVG specification."""
 
-    VERSION_1_2: "SVGVersion" = ...
+    VERSION_1_2: SVGVersion = ...
     """The version 1.2 of the SVG specification."""
 
 
@@ -990,38 +987,38 @@ class SVGUnit(_IntEnum):
     .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
     """
 
-    USER: "SVGUnit" = ...
+    USER: SVGUnit = ...
     """
     User unit, a value in the current coordinate system. If used in the
     root element for the initial coordinate systems it corresponds to
     pixels.
     """
 
-    EM: "SVGUnit" = ...
+    EM: SVGUnit = ...
     """The size of the element's font."""
 
-    EX: "SVGUnit" = ...
+    EX: SVGUnit = ...
     """The x-height of the element’s font."""
 
-    PX: "SVGUnit" = ...
+    PX: SVGUnit = ...
     """Pixels (1px = 1/96th of 1in)."""
 
-    IN: "SVGUnit" = ...
+    IN: SVGUnit = ...
     """Inches (1in = 2.54cm = 96px)"""
 
-    CM: "SVGUnit" = ...
+    CM: SVGUnit = ...
     """Centimeters (1cm = 96px/2.54)."""
 
-    MM: "SVGUnit" = ...
+    MM: SVGUnit = ...
     """Millimeters (1mm = 1/10th of 1cm)."""
 
-    PT: "SVGUnit" = ...
+    PT: SVGUnit = ...
     """Points (1pt = 1/72th of 1in)."""
 
-    PC: "SVGUnit" = ...
+    PC: SVGUnit = ...
     """Picas (1pc = 1/6th of 1in)."""
 
-    PERCENT: "SVGUnit" = ...
+    PERCENT: SVGUnit = ...
     """Percent, a value that is some fraction of another reference value."""
 
 
@@ -1033,25 +1030,25 @@ class PDFMetadata(_IntEnum):
     .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
     """
 
-    TITLE: "PDFMetadata" = ...
+    TITLE: PDFMetadata = ...
     """The document title"""
 
-    AUTHOR: "PDFMetadata" = ...
+    AUTHOR: PDFMetadata = ...
     """The document author"""
 
-    SUBJECT: "PDFMetadata" = ...
+    SUBJECT: PDFMetadata = ...
     """The document subject"""
 
-    KEYWORDS: "PDFMetadata" = ...
+    KEYWORDS: PDFMetadata = ...
     """The document keywords"""
 
-    CREATOR: "PDFMetadata" = ...
+    CREATOR: PDFMetadata = ...
     """The document creator"""
 
-    CREATE_DATE: "PDFMetadata" = ...
+    CREATE_DATE: PDFMetadata = ...
     """The document creation date"""
 
-    MOD_DATE: "PDFMetadata" = ...
+    MOD_DATE: PDFMetadata = ...
     """The document modification date"""
 
 
@@ -1064,13 +1061,13 @@ class PDFOutlineFlags(_IntEnum):
     .. versionadded:: 1.18.0 Only available with cairo 1.15.10+
     """
 
-    OPEN: "PDFOutlineFlags" = ...
+    OPEN: PDFOutlineFlags = ...
     """The outline item defaults to open in the PDF viewer"""
 
-    BOLD: "PDFOutlineFlags" = ...
+    BOLD: PDFOutlineFlags = ...
     """The outline item is displayed by the viewer in bold text"""
 
-    ITALIC: "PDFOutlineFlags" = ...
+    ITALIC: PDFOutlineFlags = ...
     """The outline item is displayed by the viewer in italic text"""
 
 
@@ -1081,10 +1078,10 @@ class ScriptMode(_IntEnum):
     .. versionadded:: 1.14
     """
 
-    ASCII: "ScriptMode" = ...
+    ASCII: ScriptMode = ...
     """the output will be in readable text (default)"""
 
-    BINARY: "ScriptMode" = ...
+    BINARY: ScriptMode = ...
     """the output will use byte codes."""
 
 
@@ -1162,7 +1159,7 @@ class Matrix:
         """
 
     @classmethod
-    def init_rotate(cls, radians: float) -> "Matrix":
+    def init_rotate(cls, radians: float) -> Matrix:
         """
         :param radians: angle of rotation, in radians. The direction of rotation
             is defined such that positive angles rotate in the direction from the
@@ -1171,7 +1168,7 @@ class Matrix:
         :returns: a new *Matrix* set to a transformation that rotates by *radians*.
         """
 
-    def invert(self) -> Optional["Matrix"]:
+    def invert(self) -> Optional[Matrix]:
         """
         :returns: If *Matrix* has an inverse, modifies *Matrix* to be the
             inverse matrix and returns *None*
@@ -1183,7 +1180,7 @@ class Matrix:
         will fail.
         """
 
-    def multiply(self, matrix2: "Matrix") -> "Matrix":
+    def multiply(self, matrix2: Matrix) -> Matrix:
         """
         :param matrix2: a second matrix
         :returns: a new *Matrix*
@@ -1217,7 +1214,7 @@ class Matrix:
         coordinates.
         """
 
-    def transform_distance(self, dx: float, dy: float) -> Tuple[float, float]:
+    def transform_distance(self, dx: float, dy: float) -> tuple[float, float]:
         """
         :param dx: X component of a distance vector.
         :param dy: Y component of a distance vector.
@@ -1237,7 +1234,7 @@ class Matrix:
         of *x1* and *x2*.
         """
 
-    def transform_point(self, x: float, y: float) -> Tuple[float, float]:
+    def transform_point(self, x: float, y: float) -> tuple[float, float]:
         """
         :param x: X position.
         :param y: Y position.
@@ -1413,7 +1410,7 @@ class Pattern:
         """
 
 
-class Glyph(Tuple[int, float, float]):
+class Glyph(tuple[int, float, float]):
     """
     The :class:`Glyph` holds information about a single glyph when drawing or
     measuring text. A font is (in simple terms) a collection of shapes used to
@@ -1451,7 +1448,7 @@ class Glyph(Tuple[int, float, float]):
         """
 
 
-class TextCluster(Tuple[int, int]):
+class TextCluster(tuple[int, int]):
     """
     .. versionadded:: 1.15
 
@@ -1488,14 +1485,14 @@ class TextClusterFlags(_IntEnum):
     .. versionadded:: 1.14
     """
 
-    BACKWARD: "TextClusterFlags" = ...
+    BACKWARD: TextClusterFlags = ...
     """
     The clusters in the cluster array map to glyphs in the glyph array
     from end to start.
     """
 
 
-class TextExtents(Tuple[float, float, float, float, float, float]):
+class TextExtents(tuple[float, float, float, float, float, float]):
     """
     .. versionadded:: 1.15
         In prior versions a (float, float, float, float, float, float) tuple
@@ -1655,7 +1652,7 @@ class FontOptions:
         whether to optimize for fidelity or contrast.
         """
 
-    def merge(self, other: "FontOptions") -> None:
+    def merge(self, other: FontOptions) -> None:
         """
         :param FontOptions other: another :class:`FontOptions`
 
@@ -1667,7 +1664,7 @@ class FontOptions:
         .. versionadded:: 1.12.0
         """
 
-    def copy(self) -> "FontOptions":
+    def copy(self) -> FontOptions:
         """
         :returns: a new :class:`FontOptions`
 
@@ -1688,7 +1685,7 @@ class FontOptions:
         .. versionadded:: 1.12.0
         """
 
-    def equal(self, other: "FontOptions") -> bool:
+    def equal(self, other: FontOptions) -> bool:
         """
         :param other: another :class:`FontOptions`
         :returns: :obj:`True` if all fields of the two font options objects
@@ -1812,7 +1809,7 @@ class FontOptions:
         .. versionadded:: 1.25.0 Only available with cairo 1.17.8+
         """
 
-    def get_custom_palette_color(self, index: int) -> Tuple[float, float, float, float]:
+    def get_custom_palette_color(self, index: int) -> tuple[float, float, float, float]:
         """
         :param index: the index of the color to get
         :returns: a (red, green, blue, alpha) tuple of float
@@ -1858,7 +1855,7 @@ class ScaledFont:
         the size of the font and the environment in which it will be used.
         """
 
-    def extents(self) -> Tuple[float, float, float, float, float]:
+    def extents(self) -> tuple[float, float, float, float, float]:
         """
         Gets the metrics for a *ScaledFont*.
         """
@@ -1950,7 +1947,7 @@ class ScaledFont:
 
     def text_to_glyphs(
         self, x: float, y: float, utf8: str, with_clusters: bool = True
-    ) -> Union[Tuple[List[Glyph], List["TextCluster"], TextClusterFlags], List[Glyph]]:
+    ) -> Union[tuple[list[Glyph], list[TextCluster], TextClusterFlags], list[Glyph]]:
         """
         :param x: X position to place first glyph
         :param y: Y position to place first glyph
@@ -2069,7 +2066,7 @@ class Device:
     __exit__: Any = ...
 
 
-_PathLike = Union[Text, bytes, os.PathLike[Any]]
+_PathLike = Union[str, bytes, os.PathLike[Any]]
 _FileLike = BinaryIO
 _SomeSurface = TypeVar("_SomeSurface", bound="Surface")
 if sys.version_info >= (3, 12):
@@ -2124,7 +2121,7 @@ class Surface:
 
     def create_for_rectangle(
         self, x: float, y: float, width: float, height: float
-    ) -> "Surface":
+    ) -> Surface:
         """
         :param x: the x-origin of the sub-surface from the top-left of the
             target surface (in device-space units)
@@ -2152,7 +2149,7 @@ class Surface:
         .. versionadded:: 1.12.0
         """
 
-    def create_similar(self, content: Content, width: int, height: int) -> "Surface":
+    def create_similar(self, content: Content, width: int, height: int) -> Surface:
         """
         :param content: the content for the new
             surface
@@ -2173,7 +2170,7 @@ class Surface:
 
     def create_similar_image(
         self, format: Format, width: int, height: int
-    ) -> "ImageSurface":
+    ) -> ImageSurface:
         """
         :param cairo.Format format: the format for the new surface
         :param width: width of the new surface, (in device-space units)
@@ -2218,7 +2215,7 @@ class Surface:
         .. versionadded:: 1.2
         """
 
-    def get_device(self) -> Optional["Device"]:
+    def get_device(self) -> Optional[Device]:
         """
         :returns: the device or :obj:`None` if the surface does not have an
             associated device
@@ -2228,7 +2225,7 @@ class Surface:
         .. versionadded:: 1.14.0
         """
 
-    def get_device_offset(self) -> Tuple[float, float]:
+    def get_device_offset(self) -> tuple[float, float]:
         """
         :returns: (x_offset, y_offset) a tuple of float
 
@@ -2241,7 +2238,7 @@ class Surface:
         .. versionadded:: 1.2
         """
 
-    def get_device_scale(self) -> Tuple[float, float]:
+    def get_device_scale(self) -> tuple[float, float]:
         """
         :returns: (x_scale,y_scale) a 2-tuple of float
 
@@ -2251,7 +2248,7 @@ class Surface:
         .. versionadded:: 1.14.0
         """
 
-    def get_fallback_resolution(self) -> Tuple[float, float]:
+    def get_fallback_resolution(self) -> tuple[float, float]:
         """
         :returns: (x_pixels_per_inch, y_pixels_per_inch) a tuple of float
 
@@ -2308,7 +2305,7 @@ class Surface:
         .. versionadded:: 1.12.0
         """
 
-    def map_to_image(self, extents: Optional[RectangleInt]) -> "ImageSurface":
+    def map_to_image(self, extents: Optional[RectangleInt]) -> ImageSurface:
         """
         :param extents: limit the extraction to an rectangular
             region or :obj:`None` for the whole surface
@@ -2482,7 +2479,7 @@ class Surface:
         a filename or a file object opened in binary mode.
         """
 
-    def unmap_image(self, image: "ImageSurface") -> None:
+    def unmap_image(self, image: ImageSurface) -> None:
         """
         :param image: the currently mapped image
 
@@ -2531,7 +2528,7 @@ class ImageSurface(Surface):
         width: int,
         height: int,
         stride: int = ...,
-    ) -> "ImageSurface":
+    ) -> ImageSurface:
         """
         :param data: a writable Python buffer/memoryview object, see :class:`_WritableBuffer`
         :param format: the format of pixels in the
@@ -2562,7 +2559,7 @@ class ImageSurface(Surface):
         """
 
     @classmethod
-    def create_from_png(cls, fobj: Union[_PathLike, _FileLike]) -> "ImageSurface":
+    def create_from_png(cls, fobj: Union[_PathLike, _FileLike]) -> ImageSurface:
         """
         :param fobj:
             a :obj:`_PathLike`, file, or file-like object of the PNG to load.
@@ -2761,7 +2758,7 @@ class Context(Generic[_SomeSurface]):
         :meth:`Context.reset_clip`.
         """
 
-    def clip_extents(self) -> Tuple[float, float, float, float]:
+    def clip_extents(self) -> tuple[float, float, float, float]:
         """
         :returns: (x1, y1, x2, y2), all float
 
@@ -2822,7 +2819,7 @@ class Context(Generic[_SomeSurface]):
         MOVE_TO immediately after the CLOSE_PATH will provide that point.
         """
 
-    def copy_clip_rectangle_list(self) -> List[Rectangle]:
+    def copy_clip_rectangle_list(self) -> list[Rectangle]:
         """
         :returns: the current clip region as a list of rectangles in user
             coordinates. Returns a list of :class:`Rectangle`
@@ -2886,7 +2883,7 @@ class Context(Generic[_SomeSurface]):
         ``ctx.move_to(x1, y1)``.
         """
 
-    def device_to_user(self, x: float, y: float) -> Tuple[float, float]:
+    def device_to_user(self, x: float, y: float) -> tuple[float, float]:
         """
         :param x: X value of coordinate
         :param y: Y value of coordinate
@@ -2897,7 +2894,7 @@ class Context(Generic[_SomeSurface]):
         (CTM).
         """
 
-    def device_to_user_distance(self, dx: float, dy: float) -> Tuple[float, float]:
+    def device_to_user_distance(self, dx: float, dy: float) -> tuple[float, float]:
         """
         :param dx: X component of a distance vector
         :param dy: Y component of a distance vector
@@ -2918,7 +2915,7 @@ class Context(Generic[_SomeSurface]):
         and :meth:`Context.fill_preserve`.
         """
 
-    def fill_extents(self) -> Tuple[float, float, float, float]:
+    def fill_extents(self) -> tuple[float, float, float, float]:
         """
         :returns: (x1, y1, x2, y2), all float
 
@@ -2956,7 +2953,7 @@ class Context(Generic[_SomeSurface]):
         See :meth:`Context.set_fill_rule` and :meth:`Context.fill`.
         """
 
-    def font_extents(self) -> Tuple[float, float, float, float, float]:
+    def font_extents(self) -> tuple[float, float, float, float, float]:
         """
         :returns: (ascent, descent, height, max_x_advance, max_y_advance),
             all float
@@ -2970,7 +2967,7 @@ class Context(Generic[_SomeSurface]):
             as set by :meth:`Context.set_antialias`.
         """
 
-    def get_current_point(self) -> Tuple[float, float]:
+    def get_current_point(self) -> tuple[float, float]:
         """
         :returns: (x, y), both float
 
@@ -3004,7 +3001,7 @@ class Context(Generic[_SomeSurface]):
         :meth:`Context.fill`, :meth:`Context.stroke`.
         """
 
-    def get_dash(self) -> Tuple[List[float], float]:
+    def get_dash(self) -> tuple[list[float], float]:
         """
         :returns: (dashes, offset)
 
@@ -3299,7 +3296,7 @@ class Context(Generic[_SomeSurface]):
         using the alpha value.
         """
 
-    def path_extents(self) -> Tuple[float, float, float, float]:
+    def path_extents(self) -> tuple[float, float, float, float]:
         """
         :returns: (x1, y1, x2, y2), all float
 
@@ -3987,8 +3984,8 @@ class Context(Generic[_SomeSurface]):
     def show_text_glyphs(
         self,
         utf8: str,
-        glyphs: List["Glyph"],
-        clusters: List[TextCluster],
+        glyphs: list[Glyph],
+        clusters: list[TextCluster],
         cluster_flags: TextClusterFlags,
     ) -> None:
         """
@@ -4050,7 +4047,7 @@ class Context(Generic[_SomeSurface]):
         to be drawn in the case of either degenerate segments or sub-paths.
         """
 
-    def stroke_extents(self) -> Tuple[float, float, float, float]:
+    def stroke_extents(self) -> tuple[float, float, float, float]:
         """
         :returns: (x1, y1, x2, y2), all float
 
@@ -4202,7 +4199,7 @@ class Context(Generic[_SomeSurface]):
         origin takes place after any existing transformation.
         """
 
-    def user_to_device(self, x: float, y: float) -> Tuple[float, float]:
+    def user_to_device(self, x: float, y: float) -> tuple[float, float]:
         """
         :param x: X value of coordinate
         :param y: Y value of coordinate
@@ -4215,7 +4212,7 @@ class Context(Generic[_SomeSurface]):
         the given point by the current transformation matrix (CTM).
         """
 
-    def user_to_device_distance(self, dx: float, dy: float) -> Tuple[float, float]:
+    def user_to_device_distance(self, dx: float, dy: float) -> tuple[float, float]:
         """
         :param dx: X value of a distance vector
         :param dy: Y value of a distance vector
@@ -4300,7 +4297,7 @@ class Gradient(Pattern):
         typical blend.
         """
 
-    def get_color_stops_rgba(self) -> List[Tuple[float, float, float, float, float]]:
+    def get_color_stops_rgba(self) -> list[tuple[float, float, float, float, float]]:
         """
         :returns: a list of (offset, red, green, blue, alpha) tuples of float
 
@@ -4329,7 +4326,7 @@ class LinearGradient(Gradient):
         spaces can be changed with :meth:`Pattern.set_matrix`
         """
 
-    def get_linear_points(self) -> Tuple[float, float, float, float]:
+    def get_linear_points(self) -> tuple[float, float, float, float]:
         """
         :returns: (x0, y0, x1, y1) - a tuple of float
 
@@ -4526,7 +4523,7 @@ class MeshPattern(Pattern):
         as if :meth:`line_to` was used.
         """
 
-    def get_control_point(self, patch_num: int, point_num: int) -> Tuple[float, float]:
+    def get_control_point(self, patch_num: int, point_num: int) -> tuple[float, float]:
         """
         :param patch_num: the patch number to return data for
         :param point_num: he control point number to return data for
@@ -4545,7 +4542,7 @@ class MeshPattern(Pattern):
 
     def get_corner_color_rgba(
         self, patch_num: int, corner_num: int
-    ) -> Tuple[float, float, float, float]:
+    ) -> tuple[float, float, float, float]:
         """
         :param patch_num: the patch number to return data for
         :param corner_num: the corner number to return data for
@@ -4744,7 +4741,7 @@ class PDFSurface(Surface):
         """
 
     @staticmethod
-    def get_versions() -> List[PDFVersion]:
+    def get_versions() -> list[PDFVersion]:
         """
         :returns: supported version list
 
@@ -5042,7 +5039,7 @@ class PSSurface(Surface):
         """
 
     @staticmethod
-    def get_levels() -> List[PSLevel]:
+    def get_levels() -> list[PSLevel]:
         """
         :returns: supported level list
 
@@ -5088,7 +5085,7 @@ class SVGSurface(Surface):
         """
 
     @staticmethod
-    def get_versions() -> List[SVGVersion]:
+    def get_versions() -> list[SVGVersion]:
         """
         :returns: supported version list
 
@@ -5174,7 +5171,7 @@ class RadialGradient(Gradient):
         can be changed with :meth:`Pattern.set_matrix`.
         """
 
-    def get_radial_circles(self) -> Tuple[float, float, float, float, float, float]:
+    def get_radial_circles(self) -> tuple[float, float, float, float, float, float]:
         """
         :returns: (x0, y0, r0, x1, y1, r1) - a tuple of float
 
@@ -5293,7 +5290,7 @@ class RasterSourcePattern(Pattern):
 
     def get_acquire(
         self,
-    ) -> Tuple[Optional[_AcquireCallback], Optional[_ReleaseCallback]]:
+    ) -> tuple[Optional[_AcquireCallback], Optional[_ReleaseCallback]]:
         """
         :returns: a (acquire, release) tuple of callables or None as set
             through :meth:`set_acquire`
@@ -5350,7 +5347,7 @@ class RecordingSurface(Surface):
         .. versionadded:: 1.11.0
         """
 
-    def ink_extents(self) -> Tuple[float, float, float, float]:
+    def ink_extents(self) -> tuple[float, float, float, float]:
         """
         * x0: the x-coordinate of the top-left of the ink bounding box
         * y0: the y-coordinate of the top-left of the ink bounding box
@@ -5392,7 +5389,7 @@ class Region:
         containing rectangle(s).
         """
 
-    def copy(self) -> "Region":
+    def copy(self) -> Region:
         """
         :returns: A newly allocated :class:`Region`.
 
@@ -5436,7 +5433,7 @@ class Region:
         region
         """
 
-    def equal(self, region: "Region") -> bool:
+    def equal(self, region: Region) -> bool:
         """
         :param region: a region
         :returns: Whether both regions contained the same coverage
@@ -5450,27 +5447,27 @@ class Region:
         Translates region by (dx , dy ).
         """
 
-    def intersect(self, other: "Union[Region, RectangleInt]") -> "Region":
+    def intersect(self, other: Union[Region, RectangleInt]) -> Region:
         """
         :param other: region or rectangle
         :returns: The intersection of the region and the passed region or
             rectangle
         """
 
-    def subtract(self, other: "Union[Region, RectangleInt]") -> "Region":
+    def subtract(self, other: Union[Region, RectangleInt]) -> Region:
         """
         :param other: region or rectangle
         :returns: The result of the subtraction of the region and the passed
             region or rectangle
         """
 
-    def union(self, other: "Union[Region, RectangleInt]") -> "Region":
+    def union(self, other: Union[Region, RectangleInt]) -> Region:
         """
         :param other: region or rectangle
         :returns: The union of the region and the passed region or rectangle
         """
 
-    def xor(self, other: "Union[Region, RectangleInt]") -> "Region":
+    def xor(self, other: Union[Region, RectangleInt]) -> Region:
         """
         :param other: region or rectangle
         :returns: The exclusive difference of the region and the passed region
@@ -5547,7 +5544,7 @@ class ScriptSurface(Surface):
     @classmethod
     def create_for_target(
         cls, script: ScriptDevice, target: Surface
-    ) -> "ScriptSurface":
+    ) -> ScriptSurface:
         """
         :param script: the script (output device)
         :param target: a target surface to wrap
@@ -5614,7 +5611,7 @@ class SolidPattern(Pattern):
         values passed in are outside that range, they will be clamped.
         """
 
-    def get_rgba(self) -> Tuple[float, float, float, float]:
+    def get_rgba(self) -> tuple[float, float, float, float]:
         """
         :returns: (red, green, blue, alpha) a tuple of float
 
@@ -5631,10 +5628,10 @@ class SurfaceObserverMode(_IntEnum):
     .. versionadded:: 1.14
     """
 
-    NORMAL: "SurfaceObserverMode" = ...
+    NORMAL: SurfaceObserverMode = ...
     """no recording is done"""
 
-    RECORD_OPERATIONS: "SurfaceObserverMode" = ...
+    RECORD_OPERATIONS: SurfaceObserverMode = ...
     """operations are recorded"""
 
 
