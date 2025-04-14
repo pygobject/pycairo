@@ -2617,7 +2617,6 @@ class ImageSurface(Surface):
         """
         :returns: a Python memoryview object for the data of the *ImageSurface*,
             for direct inspection or modification.
-        :raises cairo.Error: In case the surface is finished.
 
         Get a :class:`memoryview` object for the data of the *ImageSurface*, for
         direct inspection or modification.
@@ -2629,7 +2628,8 @@ class ImageSurface(Surface):
         .. versionadded:: 1.2
 
         .. versionchanged:: 1.28.0
-            Will raise in case the surface is finished.
+            Will warn in case the surface is already finished. In a future version
+            this will raise instead.
         """
 
     def get_format(self) -> Format:
