@@ -43,8 +43,8 @@ html_static_path = [
 
 extlinks = {
     'fdobug': ('https://bugs.freedesktop.org/show_bug.cgi?id=%s', '#fdo-%s'),
-    'bug': ('https://github.com/pygobject/pycairo/issues/%s', '#%s'),
-    'pr': ('https://github.com/pygobject/pycairo/pull/%s', '#pr-%s'),
+    'issue': ('https://github.com/pygobject/pycairo/issues/%s', '#%s'),
+    'pr': ('https://github.com/pygobject/pycairo/pull/%s', '#%s'),
     'user': ('https://github.com/%s', '%s'),
 }
 suppress_warnings = ["image.nonlocal_uri"]

@@ -10,7 +10,7 @@ Since version 1.11.0 Pycairo uses `Semantic Versioning <http://semver.org/>`__
     * Updated cairo in Windows wheels from 1.18.2 to 1.18.4 :pr:`393`
     * Release the input buffer passed to :meth:`ImageSurface.create_for_data`
       when calling :meth:`Surface.finish` already, not just when the underlying
-      surface is destroyed :pr:`405` :bug:`392`
+      surface is destroyed :pr:`405` :issue:`392`
     * Return a :class:`PathDataType` (:class:`int` subtype) instead of
       :class:`int` with :meth:`Path.__iter__` :pr:`410`. This was missed in the
       1.13.0 enum change.
@@ -283,7 +283,7 @@ New API:
 1.17.1 - 2018-07-07
 -------------------
 
-* `Meson <https://mesonbuild.com/>`__ support (>=0.46). :bug:`114`
+* `Meson <https://mesonbuild.com/>`__ support (>=0.46). :issue:`114`
 
 
 .. _v1.17.0:
@@ -292,11 +292,11 @@ New API:
 -------------------
 
 * :class:`cairo.Surface` and :class:`cairo.Device` can now be used as context
-  managers. :bug:`103`
+  managers. :issue:`103`
 * Fix a leak when a cairo error was raised.
 * Fix a leak when a mapped surface was GCed instead of unmapped.
 * Make it possible to use the C API with Python 3 outside of the compilation
-  unit doing the import by defining ``PYCAIRO_NO_IMPORT``. :bug:`110`
+  unit doing the import by defining ``PYCAIRO_NO_IMPORT``. :issue:`110`
 * Implement PEP 561 (added a py.typed marker)
 
 
@@ -306,7 +306,7 @@ New API:
 -------------------
 
 * Ship Python type annotation stubs. They are currently supported by mypy and
-  PyCharm. :bug:`99` :pr:`101`
+  PyCharm. :issue:`99` :pr:`101`
 
 
 .. _v1.16.2:
@@ -314,7 +314,7 @@ New API:
 1.16.2 - 2018-02-10
 -------------------
 
-* setup.py: Some fixes for Debian pybuild quirks. :bug:`98`
+* setup.py: Some fixes for Debian pybuild quirks. :issue:`98`
 
 
 .. _v1.16.1:
@@ -333,7 +333,7 @@ New API:
 -------------------
 
 * Add a :func:`get_include` function which returns the compiler include path
-  needed for interfacing with the Pycairo C API :bug:`92`
+  needed for interfacing with the Pycairo C API :issue:`92`
 * Note for packagers: The default header installation path has changed, but a
   compat header is installed to the old location to prevent breakage in case
   anyone has hardcoded the old path instead of using pkg-config.
@@ -345,7 +345,7 @@ New API:
 1.15.6 - 2018-01-30
 -------------------
 
-* Experimental PyPy and PyPy3 support :bug:`90`
+* Experimental PyPy and PyPy3 support :issue:`90`
 
 
 .. _v1.15.5:
@@ -354,7 +354,7 @@ New API:
 -------------------
 
 * Support Unicode paths under Windows with cairo 1.15.10+ :pr:`87`
-* Don't include the pkg-config file when building a wheel :bug:`83`
+* Don't include the pkg-config file when building a wheel :issue:`83`
 
 
 .. _v1.15.4:
@@ -378,7 +378,7 @@ Tests:
 Fixes:
   * setup.py: Install pkgconfig file into /usr/share/pkgconfig to work around
     JHBuild on Fedora not picking it up.
-  * Fix tests on big endian machines. :bug:`75`
+  * Fix tests on big endian machines. :issue:`75`
   * Support building with MSVC :pr:`72` (:user:`Chun-wei Fan <fanc999>`)
 
 Tests:
@@ -392,7 +392,7 @@ Tests:
 
 Fixes:
   * setup.py: Install pkgconfig file to the same library prefix that Python
-    uses. (/usr/lib64 instead of /usr/lib under Fedora for example) :bug:`70`
+    uses. (/usr/lib64 instead of /usr/lib under Fedora for example) :issue:`70`
     :pr:`71` (:user:`Sander Sweers <infirit>`)
 
 
@@ -419,14 +419,14 @@ Tests:
 -------------------
 
 New Features:
-  * Add :meth:`Surface.map_to_image` and :meth:`Surface.unmap_image` :bug:`51`
-  * Add :class:`RasterSourcePattern` :bug:`48`
-  * Add :class:`Glyph` :bug:`53`
-  * Add :class:`Rectangle` :bug:`54`
-  * Add :class:`TextCluster` :bug:`61`
+  * Add :meth:`Surface.map_to_image` and :meth:`Surface.unmap_image` :issue:`51`
+  * Add :class:`RasterSourcePattern` :issue:`48`
+  * Add :class:`Glyph` :issue:`53`
+  * Add :class:`Rectangle` :issue:`54`
+  * Add :class:`TextCluster` :issue:`61`
   * Add :meth:`ScaledFont.text_to_glyphs` and :meth:`ScaledFont.glyph_extents`
   * Add :meth:`Context.show_text_glyphs`
-  * Add :class:`TextExtents` :bug:`62`
+  * Add :class:`TextExtents` :issue:`62`
 
 Changes:
   * Pycairo instances wrapping the same underlying cairo object now hash and
@@ -436,7 +436,7 @@ Changes:
     and :exc:`python3:MemoryError`. Similarly errors with
     :attr:`Status.READ_ERROR` and :attr:`Status.WRITE_ERROR` no longer raise
     :exc:`python3:IOError`, but a subclass of :exc:`Error` and
-    :exc:`python3:IOError`. :bug:`55`
+    :exc:`python3:IOError`. :issue:`55`
   * Some functions which previously returned a tuple now return a tuple
     subclass like :class:`Rectangle`, :class:`Glyph`, :class:`TextCluster` and
     :class:`TextExtents`
@@ -448,7 +448,7 @@ Changes:
 -------------------
 
 Fixes:
-  * Fix a crash with :meth:`Surface.get_device` :bug:`57`
+  * Fix a crash with :meth:`Surface.get_device` :issue:`57`
 
 
 .. _v1.14.0:
@@ -468,7 +468,7 @@ New Features:
   * Add :class:`Device` :pr:`45`
   * Add :meth:`Surface.get_device` :pr:`45`
   * Add :class:`ScriptDevice` and :class:`ScriptMode` :pr:`46`
-  * Add :class:`ScriptSurface` :bug:`17`
+  * Add :class:`ScriptSurface` :issue:`17`
   * Add :attr:`Status.JBIG2_GLOBAL_MISSING`
   * Add :meth:`Format.stride_for_width`
   * Add :class:`TextClusterFlags` and :class:`SurfaceObserverMode`
@@ -494,11 +494,11 @@ Fixes:
 
 Fixes:
   * Fix ImageSurface leaking in case :meth:`get_data() <ImageSurface.get_data>` is used under Python 3.
-    :bug:`41`
+    :issue:`41`
 
 Documentation:
   * Add Pillow to ImageSurface example. :pr:`40` (:user:`Stuart Axon <stuaxo>`)
-  * Describe Freetype-py intergration. :bug:`25` :pr:`43`
+  * Describe Freetype-py intergration. :issue:`25` :pr:`43`
     (:user:`Hin-Tak Leung <HinTak>`)
 
 
@@ -508,10 +508,10 @@ Documentation:
 -------------------
 
 Fixes:
-  * Fix pip failing to install pycairo in some cases. :bug:`39`
+  * Fix pip failing to install pycairo in some cases. :issue:`39`
 
 Testing:
-  * Added continuous testing for Windows using MSYS2 and appveyor. :bug:`19`
+  * Added continuous testing for Windows using MSYS2 and appveyor. :issue:`19`
 
 
 .. _v1.13.1:
@@ -521,10 +521,10 @@ Testing:
 
 Fixes:
   * setup.py install: Fix generated pkg-config file if ``--home`` or
-    ``--user`` is specified. :bug:`34`
+    ``--user`` is specified. :issue:`34`
   * Fix a build error on macOS Sierra. :pr:`36`
     (:user:`Nicolas P. Rougier <rougier>`)
-  * examples: Fix snippet examples when .pyc files are present. :bug:`35`
+  * examples: Fix snippet examples when .pyc files are present. :issue:`35`
 
 Documentation:
   * Add Pyglet integration example. :pr:`33` (:user:`Stuart Axon <stuaxo>`)
@@ -545,7 +545,7 @@ New Features:
     :class:`HintMetrics`, :class:`HintStyle`, :class:`LineCap`,
     :class:`LineJoin`, :class:`Operator`, :class:`PDFVersion`,
     :class:`PSLevel`, :class:`PathDataType`, :class:`RegionOverlap`,
-    :class:`SVGVersion`, :class:`Status`, :class:`SubpixelOrder`. :bug:`26`
+    :class:`SVGVersion`, :class:`Status`, :class:`SubpixelOrder`. :issue:`26`
 
     All relevant constants are now an alias to attributes of those types e.g.
     :data:`ANTIALIAS_DEFAULT` is the same as :attr:`Antialias.DEFAULT`.
@@ -574,12 +574,12 @@ Testing:
 
 General:
   * Require cairo 1.12.0
-  * Use C90 and enforce it on travis-ci. :bug:`5`, :fdobug:`22940`
+  * Use C90 and enforce it on travis-ci. :issue:`5`, :fdobug:`22940`
 
 Constants:
   * Add various new cairo.OPERATOR_*, cairo.ANTIALIAS_* and
-    cairo.FORMAT_* constants. :bug:`1`
-  * Add :data:`HAS_MIME_SURFACE` and cairo.MIME_TYPE_*. :bug:`7`,
+    cairo.FORMAT_* constants. :issue:`1`
+  * Add :data:`HAS_MIME_SURFACE` and cairo.MIME_TYPE_*. :issue:`7`,
     :fdobug:`58771`
   * Add cairo.PDF_VERSION_*. :pr:`16`
   * Add cairo.SVG_VERSION_*
@@ -591,17 +591,17 @@ Constants:
 :class:`Matrix`:
   * Expose matrix components as read/write properties. e.g. :data:`Matrix.xx`
   * Fix type checking of the multiplication operator under
-    Python 3. :bug:`8`, :fdobug:`89162` (Lawrence D'Oliveiro)
+    Python 3. :issue:`8`, :fdobug:`89162` (Lawrence D'Oliveiro)
 
 :class:`Surface`:
-  * Add :meth:`Surface.set_mime_data`. :bug:`7`, :fdobug:`58771`
-  * Add :meth:`Surface.get_mime_data`. :bug:`7`, :fdobug:`58771`
-  * Add :meth:`Surface.supports_mime_type`. :bug:`7`, :fdobug:`58771`
+  * Add :meth:`Surface.set_mime_data`. :issue:`7`, :fdobug:`58771`
+  * Add :meth:`Surface.get_mime_data`. :issue:`7`, :fdobug:`58771`
+  * Add :meth:`Surface.supports_mime_type`. :issue:`7`, :fdobug:`58771`
   * Add :meth:`Surface.create_for_rectangle`. :pr:`13`
   * Add :meth:`Surface.create_similar_image`. :pr:`15`
   * Add :meth:`Surface.has_show_text_glyphs`
   * Fix crash when the surface wrapper gets deallocated before the surface
-    object. :bug:`11`
+    object. :issue:`11`
 
 :class:`Context`:
   * Add :meth:`Context.in_clip`. :pr:`14`
