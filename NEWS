@@ -1,5 +1,41 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning <http://semver.org/>`__
 
+.. _v1.28.0:
+
+1.28.0 - 2025-04-14
+-------------------
+
+* Changes:
+    * Remove hypothesis test dependency :pr:`398`
+    * Updated cairo in Windows wheels from 1.18.2 to 1.18.4 :pr:`393`
+    * Release the input buffer passed to :meth:`ImageSurface.create_for_data`
+      when calling :meth:`Surface.finish` already, not just when the underlying
+      surface is destroyed :pr:`405` :bug:`392`
+    * Return a :class:`PathDataType` (:class:`int` subtype) instead of
+      :class:`int` with :meth:`Path.__iter__` :pr:`410`. This was missed in the
+      1.13.0 enum change.
+    * Emit a :class:`DeprecationWarning` in case :meth:`ImageSurface.get_data`
+      is called on an already finished surface :pr:`400` :pr:`412`. In a future
+      version this will raise an exception instead.
+    * Emit a :class:`DeprecationWarning` for the undocumented ``num_glyphs``
+      parameter in :meth:`Context.glyph_extents`, :meth:`Context.glyph_path`,
+      :meth:`Context.show_glyphs`, :meth:`ScaledFont.glyph_extents` :pr:`409`
+* Fixes:
+    * Remove the executable bit from `cairo/__init__.py` :pr:`383`
+    * Remove usage of removed ``typing.ByteString`` to fix compatibility with
+      Python 3.14.0a1 :pr:`389`
+    * docs: Fix pygame integration example using the wrong format :pr:`411`
+* Typing fixes (no API changes, just type annotations):
+    * Include `os.PathLike` for parameters accepting file paths :pr:`401`
+    * For :meth:`ImageSurface.create_for_data` include all writable buffer types
+      and not just :class:`memoryview` :pr:`402`
+    * Add missing `Optional` for :meth:`Surface.set_mime_data`,
+      :meth:`SVGSurface.__init__` :meth:`PDFSurface.__init__`,
+      :meth:`PSSurface.__init__`, :meth:`RecordingSurface.__init__` :pr:`404`
+    * Add various missing :class:`Path` dunder methods like `__iter__`,
+      `__eq__`, `__lt__`, etc. :pr:`408`
+    * Add missing `__getitem__` and `__mul__` for :class:`Matrix` :pr:`408`
+
 .. _v1.27.0:
 
 1.27.0 - 2024-09-06
