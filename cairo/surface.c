@@ -1014,7 +1014,12 @@ image_surface_get_data (PycairoImageSurface *o, PyObject *ignored) {
   cairo_status_t status = cairo_status (ctx);
   cairo_destroy (ctx);
   if (Pycairo_Check_Status (status)) {
-    return NULL;
+    PyErr_Clear ();
+    PyErr_WarnEx (
+      PyExc_DeprecationWarning,
+      "Calling get_data() on a finished surface is deprecated and will raise in the future",
+      1
+    );
   }
 
   buffer = cairo_image_surface_get_data (surface);

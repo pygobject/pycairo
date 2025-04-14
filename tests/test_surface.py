@@ -741,9 +741,8 @@ def test_image_surface_create_for_data() -> None:
 def test_image_surface_get_data_finished() -> None:
     surface = cairo.ImageSurface(cairo.Format.ARGB32, 30, 30)
     surface.finish()
-    with pytest.raises(cairo.Error) as excinfo:
+    with pytest.warns(DeprecationWarning):
         surface.get_data()
-    assert excinfo.value.status == cairo.Status.SURFACE_FINISHED
 
 
 def test_image_surface_buffer_get_data_finished() -> None:
@@ -753,9 +752,8 @@ def test_image_surface_buffer_get_data_finished() -> None:
         buffer, cairo.FORMAT_ARGB32, width, height, width * 4
     )
     surface.finish()
-    with pytest.raises(cairo.Error) as excinfo:
+    with pytest.warns(DeprecationWarning):
         surface.get_data()
-    assert excinfo.value.status == cairo.Status.SURFACE_FINISHED
 
 
 def test_image_surface_png_get_data_finished() -> None:
@@ -766,9 +764,8 @@ def test_image_surface_png_get_data_finished() -> None:
     fileobj.seek(0)
     surface = cairo.ImageSurface.create_from_png(fileobj)
     surface.finish()
-    with pytest.raises(cairo.Error) as excinfo:
+    with pytest.warns(DeprecationWarning):
         surface.get_data()
-    assert excinfo.value.status == cairo.Status.SURFACE_FINISHED
 
 
 def test_image_surface_stride_for_width() -> None:
