@@ -10,4 +10,4 @@ linkcheck:
 	sphinx-build -b linkcheck -n . _build
 
 watch:
-	sphinx-autobuild -j8 -b html -n . _build
+	sphinx-autobuild --watch ../NEWS -j8 -b html -n . _build
