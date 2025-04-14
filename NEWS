@@ -21,20 +21,20 @@ Since version 1.11.0 Pycairo uses `Semantic Versioning <http://semver.org/>`__
       parameter in :meth:`Context.glyph_extents`, :meth:`Context.glyph_path`,
       :meth:`Context.show_glyphs`, :meth:`ScaledFont.glyph_extents` :pr:`409`
 * Fixes:
-    * Remove the executable bit from `cairo/__init__.py` :pr:`383`
+    * Remove the executable bit from ``cairo/__init__.py`` :pr:`383`
     * Remove usage of removed ``typing.ByteString`` to fix compatibility with
       Python 3.14.0a1 :pr:`389`
     * docs: Fix pygame integration example using the wrong format :pr:`411`
 * Typing fixes (no API changes, just type annotations):
-    * Include `os.PathLike` for parameters accepting file paths :pr:`401`
+    * Include :class:`os.PathLike` for parameters accepting file paths :pr:`401`
     * For :meth:`ImageSurface.create_for_data` include all writable buffer types
       and not just :class:`memoryview` :pr:`402`
-    * Add missing `Optional` for :meth:`Surface.set_mime_data`,
+    * Add missing ``Optional`` for :meth:`Surface.set_mime_data`,
       :meth:`SVGSurface.__init__` :meth:`PDFSurface.__init__`,
       :meth:`PSSurface.__init__`, :meth:`RecordingSurface.__init__` :pr:`404`
-    * Add various missing :class:`Path` dunder methods like `__iter__`,
-      `__eq__`, `__lt__`, etc. :pr:`408`
-    * Add missing `__getitem__` and `__mul__` for :class:`Matrix` :pr:`408`
+    * Add various missing :class:`Path` dunder methods like ``__iter__``,
+      ``__eq__``, ``__lt__``, etc. :pr:`408`
+    * Add missing ``__getitem__`` and ``__mul__`` for :class:`Matrix` :pr:`408`
 
 .. _v1.27.0:
 
