@@ -68,7 +68,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', 'pypy-3.10', 'pypy-3.11']
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14', 'pypy-3.10', 'pypy-3.11']
     steps:
     - uses: actions/checkout@v4
 
@@ -84,13 +84,12 @@ jobs:
         sudo apt-get install -y libcairo2-dev ninja-build
         pipx install poetry
         pipx install meson
-        poetry install --with docs
+        poetry install
 
     - name: Install optional test dependencies
-      if: ${{ !contains(matrix.python-version, 'pypy') }}
+      if: ${{ !contains(matrix.python-version, 'pypy') && !contains(matrix.python-version, '3.14') }}
       run: |
-        poetry run pip install --upgrade pygame || true
-        poetry run pip install --upgrade numpy || true
+        poetry install --with test-extras
 
     - name: Build & Test with meson
       run: |
@@ -117,8 +116,9 @@ jobs:
         poetry run mypy .
 
     - name: Build docs
-      if: ${{ !contains(matrix.python-version, 'pypy') }}
+      if: ${{ !contains(matrix.python-version, 'pypy') && !contains(matrix.python-version, '3.14') }}
       run: |
+        poetry install --with docs
         poetry run python -m sphinx -W -a -E -b html -n docs docs/_build
 
   msvc:
@@ -126,7 +126,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', 'pypy-3.10', 'pypy-3.11']
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14', 'pypy-3.10', 'pypy-3.11']
         architecture: ['x64']
         include:
           - python-version: '3.9'
