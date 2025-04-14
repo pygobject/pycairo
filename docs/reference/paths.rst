@@ -10,3 +10,5 @@ class Path()
 ============
 
 .. autoclass:: cairo.Path
+
+    .. automethod:: __iter__
