@@ -8,6 +8,7 @@ Since version 1.11.0 Pycairo uses `Semantic Versioning <http://semver.org/>`__
 * Changes:
     * Remove hypothesis test dependency :pr:`398`
     * Updated cairo in Windows wheels from 1.18.2 to 1.18.4 :pr:`393`
+    * Provide arm64 Windows wheels again
     * Release the input buffer passed to :meth:`ImageSurface.create_for_data`
       when calling :meth:`Surface.finish` already, not just when the underlying
       surface is destroyed :pr:`405` :issue:`392`
