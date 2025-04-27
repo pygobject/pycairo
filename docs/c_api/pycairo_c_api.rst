@@ -11,18 +11,12 @@ Example showing how to import the pycairo API::
 
   #include "py3cairo.h"
 
-  PyMODINIT_FUNC
-  PyInit_client(void)
+  int exec_module(PyObject *module)
   {
-    PyObject *m;
-
-    m = PyModule_Create(&clientmodule);
-    if (m == NULL)
-        return NULL;
     if (import_cairo() < 0)
-        return NULL;
+        return -1;
     /* additional initialization can happen here */
-    return m;
+    return 0;
   }
 
 In case you want to use the API from another compilation unit::
