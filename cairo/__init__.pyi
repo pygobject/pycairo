@@ -2613,7 +2613,7 @@ class ImageSurface(Surface):
     .. versionadded:: 1.6
     """
 
-    def get_data(self) -> memoryview:
+    def get_data(self) -> memoryview | None:
         """
         :returns: a Python memoryview object for the data of the *ImageSurface*,
             for direct inspection or modification.
