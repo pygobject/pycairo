@@ -998,6 +998,24 @@ image_surface_format_stride_for_width (PyObject *self, PyObject *args) {
   return PyLong_FromLong (cairo_format_stride_for_width (format, width));
 }
 
+/* Create a view into an empty bytes object.
+ * Corresponds to memoryview(b"") in Python.
+ * Returns NULL and sets an exception on error.
+ */
+static PyObject *
+create_empty_memoryview(void)
+{
+    PyObject *empty_bytes, *view;
+
+    empty_bytes = PyBytes_FromStringAndSize (NULL, 0);
+    if (!empty_bytes)
+        return NULL;
+
+    view = PyMemoryView_FromObject (empty_bytes);
+    Py_DECREF(empty_bytes);
+    return view;
+}
+
 static PyObject *
 image_surface_get_data (PycairoImageSurface *o, PyObject *ignored) {
   cairo_surface_t *surface;
@@ -1024,7 +1042,7 @@ image_surface_get_data (PycairoImageSurface *o, PyObject *ignored) {
 
   buffer = cairo_image_surface_get_data (surface);
   if (buffer == NULL) {
-    Py_RETURN_NONE;
+    return create_empty_memoryview();
   }
   height = cairo_image_surface_get_height (surface);
   stride = cairo_image_surface_get_stride (surface);
