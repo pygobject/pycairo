@@ -1042,6 +1042,11 @@ image_surface_get_data (PycairoImageSurface *o, PyObject *ignored) {
 
   buffer = cairo_image_surface_get_data (surface);
   if (buffer == NULL) {
+    // It's documented to return NULL after finish, but that's not always the case:
+    // https://gitlab.freedesktop.org/cairo/cairo/-/issues/406
+    // and it returns NULL if the size is 0 and it's backed by pixman:
+    // https://gitlab.freedesktop.org/cairo/cairo/-/issues/880
+    // Let's paper over this by returning an empty memoryview.
     return create_empty_memoryview();
   }
   height = cairo_image_surface_get_height (surface);
