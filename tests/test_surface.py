@@ -726,9 +726,6 @@ def test_image_surface_create_for_data() -> None:
     with pytest.raises(ValueError):
         cairo.ImageSurface.create_for_data(buf, format_, -1, 3)
 
-    with pytest.raises(ValueError):
-        cairo.ImageSurface.create_for_data(buf, format_, 0, 0, -1)
-
     with pytest.raises(cairo.Error) as excinfo:
         cairo.ImageSurface.create_for_data(buf, format_, 3, 3, 3)
 
@@ -736,6 +733,16 @@ def test_image_surface_create_for_data() -> None:
 
     with pytest.raises(TypeError):
         cairo.ImageSurface.create_for_data(buf, format_, 3, object())  # type: ignore
+
+
+@pytest.mark.parametrize("width, height", [(0, 0), (10, 0), (0, 10)])
+def test_image_surface_create_for_data_empty(width, height) -> None:
+    surface = cairo.ImageSurface.create_for_data(
+        bytearray(), cairo.FORMAT_ARGB32, width, height
+    )
+    assert surface.get_width() == width
+    assert surface.get_height() == height
+    assert surface.get_stride() == 4 * width
 
 
 def test_image_surface_get_data_finished() -> None:
