@@ -857,12 +857,12 @@ image_surface_create_for_data (PyTypeObject *type, PyObject *args) {
 
   format = (cairo_format_t)format_arg;
 
-  if (width <= 0) {
-    PyErr_SetString(PyExc_ValueError, "width must be positive");
+  if (width < 0) {
+    PyErr_SetString(PyExc_ValueError, "width cannot be negative");
     return NULL;
   }
-  if (height <= 0) {
-    PyErr_SetString(PyExc_ValueError, "height must be positive");
+  if (height < 0) {
+    PyErr_SetString(PyExc_ValueError, "height cannot be negative");
     return NULL;
   }
   /* if stride is missing, calculate it from width */
