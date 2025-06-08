@@ -745,6 +745,12 @@ def test_image_surface_get_data_finished() -> None:
         surface.get_data()
 
 
+def test_image_surface_get_data_empty() -> None:
+    surface = cairo.ImageSurface(cairo.Format.ARGB32, 0, 0)
+    assert isinstance(surface.get_data(), memoryview)
+    assert len(surface.get_data()) == 0
+
+
 def test_image_surface_buffer_get_data_finished() -> None:
     width, height = 6, 4
     buffer = bytearray(width * height * 4)
