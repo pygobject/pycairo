@@ -13,7 +13,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Install dependencies
         run: |
@@ -55,11 +55,11 @@ jobs:
           arch : ${{ matrix.arch }}
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.23.2
+        uses: pypa/cibuildwheel@v3.1.0
         env:
           CFLAGS: "-DCAIRO_WIN32_STATIC_BUILD=1"
           CIBW_BEFORE_BUILD: "python {package}/.ci/download-cairo-win32.py ${{ matrix.arch }}"
-          CIBW_BUILD: cp39-${{ matrix.platform_id }} cp310-${{ matrix.platform_id }} cp311-${{ matrix.platform_id }} cp312-${{ matrix.platform_id }} cp313-${{ matrix.platform_id }}
+          CIBW_BUILD: cp39-${{ matrix.platform_id }} cp310-${{ matrix.platform_id }} cp311-${{ matrix.platform_id }} cp312-${{ matrix.platform_id }} cp313-${{ matrix.platform_id }} cp314-${{ matrix.platform_id }}
           CIBW_TEST_REQUIRES: pytest==8.3.5
           CIBW_TEST_COMMAND: bash {package}/.ci/test-wheels.sh {package}
           CIBW_ENVIRONMENT_WINDOWS: PKG_CONFIG_PATH='${{ github.workspace }}/cairo-prebuild/lib/pkgconfig' PKG_CONFIG='${{ github.workspace }}/cairo-prebuild/bin/pkgconf.exe'
