@@ -33,6 +33,7 @@
 #include <Python.h>
 
 #include "private.h"
+#include "dynamic.h"
 
 #ifdef CAIRO_HAS_PDF_SURFACE
 #include <cairo-pdf.h>
@@ -124,7 +125,9 @@ static Pycairo_CAPI_t CAPI = {
 
 static PyObject *
 pycairo_cairo_version (PyObject *self, PyObject *ignored) {
-  return PyLong_FromLong (cairo_version());
+  RETURN_NULL_IF_NOT_HAS_CAIRO_FUNC(cairo_version);
+
+  return PyLong_FromLong (PYCAIRO_GET_CAIRO_FUNC(cairo_version)());
 }
 
 static PyObject *

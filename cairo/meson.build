@@ -22,6 +22,7 @@ sources = [
   'surface.c',
   'textcluster.c',
   'textextents.c',
+  'dynamic.c',
 ]
 
 foreach python_file : python_sources
