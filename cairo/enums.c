@@ -117,21 +117,39 @@ enum_type_register_constant(PyTypeObject *type, const char* name, long value) {
     return en;
 }
 
-/* If returns NULL no error is set */
-static PyObject *
-int_enum_get_name(PyObject *obj) {
+/**
+ * Returns -1 on error with *result NULL, and 0 if successful.
+ * *result can be NULL if the name does not exist
+ */
+static int
+int_enum_get_name(PyObject *obj, PyObject **result) {
     PyObject *value_map, *name_obj;
+    const char *name_str;
 
     value_map = PyDict_GetItemString(Py_TYPE(obj)->tp_dict, map_name);
-    if(value_map == NULL)
-        return NULL;
+    if(value_map == NULL) {
+        *result = NULL;
+        return 0;
+    }
 
     name_obj = PyDict_GetItem(value_map, obj);
-    if(name_obj == NULL)
-        return NULL;
+    if(name_obj == NULL) {
+        *result = NULL;
+        return 0;
+    }
 
-    return PyUnicode_FromFormat ("%s.%s", Py_TYPE(obj)->tp_name,
-                                 PyUnicode_AsUTF8(name_obj));
+    name_str = PyUnicode_AsUTF8(name_obj);
+    if (name_str == NULL) {
+        *result = NULL;
+        return -1;
+    }
+
+    *result = PyUnicode_FromFormat("%s.%s", Py_TYPE(obj)->tp_name, name_str);
+    if (*result == NULL) {
+        return -1;
+    }
+
+    return 0;
 }
 
 static PyObject *
@@ -139,7 +157,9 @@ int_enum_repr(PyObject *obj)
 {
     PyObject *name_obj;
 
-    name_obj = int_enum_get_name(obj);
+    if (int_enum_get_name(obj, &name_obj) < 0) {
+        return NULL;
+    }
     if(name_obj == NULL)
         return PyLong_Type.tp_repr(obj);
 
