@@ -89,7 +89,12 @@ enum_type_register_constant(PyTypeObject *type, const char* name, long value) {
     value_map = PyDict_GetItemString(type->tp_dict, map_name);
     if (value_map == NULL) {
         value_map = PyDict_New();
-        PyDict_SetItemString(type->tp_dict, map_name, value_map);
+        if (value_map == NULL)
+            return NULL;
+        if (PyDict_SetItemString(type->tp_dict, map_name, value_map) < 0) {
+            Py_DECREF(value_map);
+            return NULL;
+        }
         Py_DECREF(value_map);
     }
 
