@@ -251,8 +251,7 @@ init_enum_type (PyObject *module, const char *name, PyTypeObject *type) {
     if (PyType_Ready(type) < 0)
         return -1;
 
-    Py_INCREF(type);
-    if (PyModule_AddObject(module, name, (PyObject *)type) < 0)
+    if (PyModule_AddObjectRef(module, name, (PyObject *)type) < 0)
         return -1;
 
     return 0;
@@ -306,7 +305,7 @@ init_enums (PyObject *module) {
 
 #define CONSTANT(t, a, b) \
     ev = enum_type_register_constant(&Pycairo_##t##_Type, #b, CAIRO_##a##_##b); \
-    if (ev == NULL || PyModule_AddObject(module, #a "_" #b, ev) < 0) \
+    if (ev == NULL || PyModule_Add(module, #a "_" #b, ev) < 0) \
         return -1;
 
     ENUM(Antialias);
