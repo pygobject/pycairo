@@ -41,6 +41,8 @@
 
 #include "py3cairo.h"
 
+#include "pythoncapi_compat.h"
+
 #define PYCAIRO_STRINGIFY(s) PYCAIRO_STRINGIFY_ARG(s)
 #define PYCAIRO_STRINGIFY_ARG(s) #s
 
