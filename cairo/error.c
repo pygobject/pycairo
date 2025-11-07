@@ -265,15 +265,11 @@ init_error (PyObject *module) {
 
     error = (PyObject*)&PycairoError_Type;
 
-    Py_INCREF(error);
-    if (PyModule_AddObject(module, "Error", error) < 0) {
-        Py_DECREF (error);
+    if (PyModule_AddObjectRef(module, "Error", error) < 0) {
         return -1;
     }
 
-    Py_INCREF(error);
-    if (PyModule_AddObject(module, "CairoError", error) < 0) {
-        Py_DECREF (error);
+    if (PyModule_AddObjectRef(module, "CairoError", error) < 0) {
         return -1;
     }
 
