@@ -10,7 +10,7 @@ project(
 )
 
 cair_version_req = '>=1.15.10'
-python_version_req = '>=3.9'
+python_version_req = '>=3.10'
 
 pymod = import('python')
 python = pymod.find_installation(get_option('python'), pure: false)
