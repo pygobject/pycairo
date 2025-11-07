@@ -6,4 +6,4 @@ Maintainer-Email: Christoph Reiter <reiter.christoph@gmail.com>
 License: LGPL-2.1-only OR MPL-1.1
 Project-URL: Homepage, https://pycairo.readthedocs.io
 Project-URL: Source, https://github.com/pygobject/pycairo
-Requires-Python: >=3.9
+Requires-Python: >=3.10
