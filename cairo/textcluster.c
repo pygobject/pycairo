@@ -37,6 +37,7 @@
 int
 _PyTextCluster_AsTextCluster (PyObject *pyobj, cairo_text_cluster_t *cluster) {
     long num_bytes, num_glyphs;
+    PyObject *py_num_bytes, *py_num_glyphs;
 
     if (!PyObject_TypeCheck (pyobj, &PycairoTextCluster_Type)) {
         PyErr_SetString (PyExc_TypeError,
@@ -44,9 +45,13 @@ _PyTextCluster_AsTextCluster (PyObject *pyobj, cairo_text_cluster_t *cluster) {
         return -1;
     }
 
-    num_bytes = PyLong_AsLong (
-        PySequence_Fast_GET_ITEM (pyobj, 0));
-    if (PyErr_Occurred ())
+    py_num_bytes = PySequence_ITEM (pyobj, 0);
+    if (py_num_bytes == NULL)
+        return -1;
+
+    num_bytes = PyLong_AsLong (py_num_bytes);
+    Py_DECREF (py_num_bytes);
+    if (num_bytes == -1 && PyErr_Occurred ())
         return -1;
     if (num_bytes > INT_MAX || num_bytes < INT_MIN) {
         PyErr_SetString (PyExc_ValueError, "num_bytes out of range");
@@ -54,9 +59,13 @@ _PyTextCluster_AsTextCluster (PyObject *pyobj, cairo_text_cluster_t *cluster) {
     }
     cluster->num_bytes = (int)num_bytes;
 
-    num_glyphs = PyLong_AsLong (
-        PySequence_Fast_GET_ITEM (pyobj, 1));
-    if (PyErr_Occurred ())
+    py_num_glyphs = PySequence_ITEM (pyobj, 1);
+    if (py_num_glyphs == NULL)
+        return -1;
+
+    num_glyphs = PyLong_AsLong (py_num_glyphs);
+    Py_DECREF (py_num_glyphs);
+    if (num_glyphs == -1 && PyErr_Occurred ())
         return -1;
     if (num_glyphs > INT_MAX || num_glyphs < INT_MIN) {
         PyErr_SetString (PyExc_ValueError, "num_glyphs out of range");
