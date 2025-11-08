@@ -893,7 +893,14 @@ pycairo_set_dash (PycairoContext *o, PyObject *args) {
   }
 
   for (i = 0; i < num_dashes; i++) {
-    dashes[i] = PyFloat_AsDouble(PySequence_Fast_GET_ITEM(py_dashes, i));
+    PyObject *py_dash = PySequence_ITEM(py_dashes, i);
+    if (py_dash == NULL) {
+      PyMem_Free (dashes);
+      Py_DECREF(py_dashes);
+      return NULL;
+    }
+    dashes[i] = PyFloat_AsDouble(py_dash);
+    Py_DECREF(py_dash);
     if (PyErr_Occurred()) {
       PyMem_Free (dashes);
       Py_DECREF(py_dashes);
@@ -1328,9 +1335,12 @@ pycairo_show_text_glyphs (PycairoContext *o, PyObject *args) {
     goto error;
   }
   for (i=0; i < glyphs_size; i++) {
-    py_item = PySequence_Fast_GET_ITEM (glyphs_seq, i);
-    if (py_item == 0 || _PyGlyph_AsGlyph (py_item, &(glyphs[i])) != 0)
-      goto error;
+    py_item = PySequence_ITEM (glyphs_seq, i);
+    if (py_item == NULL || _PyGlyph_AsGlyph (py_item, &(glyphs[i])) != 0) {
+        Py_XDECREF (py_item);
+        goto error;
+    }
+    Py_DECREF (py_item);
   }
   Py_CLEAR (glyphs_seq);
 
@@ -1348,10 +1358,12 @@ pycairo_show_text_glyphs (PycairoContext *o, PyObject *args) {
     goto error;
   }
   for (i=0; i < clusters_size; i++) {
-    py_item = PySequence_Fast_GET_ITEM (clusters_seq, i);
-    if (py_item == NULL ||
-        _PyTextCluster_AsTextCluster (py_item, &(clusters[i])) != 0)
-      goto error;
+    py_item = PySequence_ITEM (clusters_seq, i);
+    if (py_item == NULL || _PyTextCluster_AsTextCluster (py_item, &(clusters[i])) != 0) {
+        Py_XDECREF (py_item);
+        goto error;
+    }
+    Py_DECREF (py_item);
   }
   Py_CLEAR (clusters_seq);
 
