@@ -65,7 +65,7 @@ _PycairoGlyphs_AsGlyphs (PyObject *py_object, int *num_glyphs)
         goto error;
     }
     for (i = 0, glyph = glyphs; i < *num_glyphs; i++, glyph++) {
-        long index;
+        unsigned long index;
         PyObject *py_item = PySequence_Fast_GET_ITEM (py_glyphs, i);
         py_seq = PySequence_Fast (py_item, "glyph items must be a sequence");
         if (py_seq == NULL)
@@ -75,10 +75,10 @@ _PycairoGlyphs_AsGlyphs (PyObject *py_object, int *num_glyphs)
                              "each glyph item must be an (i,x,y) sequence");
             goto error;
         }
-        index = PyLong_AsLong (PySequence_Fast_GET_ITEM (py_seq, 0));
-        if (PyErr_Occurred ())
+        index = PyLong_AsUnsignedLong (PySequence_Fast_GET_ITEM (py_seq, 0));
+        if (index == (unsigned long)-1 && PyErr_Occurred ())
             goto error;
-        glyph->index = (unsigned long)index;
+        glyph->index = index;
         glyph->x = PyFloat_AsDouble (PySequence_Fast_GET_ITEM (py_seq, 1));
         glyph->y = PyFloat_AsDouble (PySequence_Fast_GET_ITEM (py_seq, 2));
         if (PyErr_Occurred())
@@ -99,21 +99,17 @@ error:
 /* 0 on success */
 int
 _PyGlyph_AsGlyph (PyObject *pyobj, cairo_glyph_t *glyph) {
-    long index;
+    unsigned long index;
 
     if (!PyObject_TypeCheck (pyobj, &PycairoGlyph_Type)) {
         PyErr_SetString (PyExc_TypeError, "item must be of type cairo.Glyph");
         return -1;
     }
 
-    index = PyLong_AsLong (PySequence_Fast_GET_ITEM (pyobj, 0));
-    if (PyErr_Occurred ())
+    index = PyLong_AsUnsignedLong (PySequence_Fast_GET_ITEM (pyobj, 0));
+    if (index == (unsigned long)-1 && PyErr_Occurred ())
         return -1;
-    if (index < 0) {
-        PyErr_SetString (PyExc_ValueError, "negative index");
-        return -1;
-    }
-    glyph->index = (unsigned long) index;
+    glyph->index = index;
     glyph->x = PyFloat_AsDouble (PySequence_Fast_GET_ITEM (pyobj, 1));
     glyph->y = PyFloat_AsDouble (PySequence_Fast_GET_ITEM (pyobj, 2));
     return 0;
