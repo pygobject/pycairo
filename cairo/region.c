@@ -233,8 +233,9 @@ region_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
     }
 
     for(i=0; i<rect_size; i++) {
-      PyObject *obj_tmp = PySequence_Fast_GET_ITEM(seq, i);
-      if (!PyObject_TypeCheck(obj_tmp, &PycairoRectangleInt_Type)) {
+      PyObject *obj_tmp = PySequence_ITEM(seq, i);
+      if (obj_tmp == NULL || !PyObject_TypeCheck(obj_tmp, &PycairoRectangleInt_Type)) {
+        Py_XDECREF(obj_tmp);
         PyErr_SetString(PyExc_TypeError, "Must be RectangleInt");
         Py_DECREF(seq);
         PyMem_Free(rect);
@@ -242,6 +243,7 @@ region_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
       }
       rect_obj = (PycairoRectangleInt*) obj_tmp;
       rect[i] = rect_obj->rectangle_int;
+      Py_DECREF(obj_tmp);
     }
 
     region = cairo_region_create_rectangles(rect, (int)rect_size);
