@@ -1,3 +1,8 @@
 option('python', type : 'string', value : 'python3')
 option('tests', type : 'boolean', value : true, description : 'build unit tests')
 option('wheel', type : 'boolean', value : false, description : 'build for a Python wheel')
+option('no-x11',
+  type: 'boolean',
+  value: false,
+  description: 'Disable X11 surface support (Xlib and XCB) even if cairo has it enabled'
+)

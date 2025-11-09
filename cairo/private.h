@@ -157,11 +157,11 @@ extern PyTypeObject PycairoWin32Surface_Type;
 extern PyTypeObject PycairoWin32PrintingSurface_Type;
 #endif
 
-#ifdef CAIRO_HAS_XCB_SURFACE
+#if defined(CAIRO_HAS_XCB_SURFACE) && !defined(PYCAIRO_NO_X11)
 extern PyTypeObject PycairoXCBSurface_Type;
 #endif
 
-#ifdef CAIRO_HAS_XLIB_SURFACE
+#if defined(CAIRO_HAS_XLIB_SURFACE) && !defined(PYCAIRO_NO_X11)
 extern PyTypeObject PycairoXlibSurface_Type;
 #endif
 

@@ -115,6 +115,10 @@ pyext_c_args = [
   '-DPYCAIRO_VERSION_MICRO=@0@'.format(pycairo_version_micro),
 ]
 
+if get_option('no-x11')
+  pyext_c_args += ['-DPYCAIRO_NO_X11']
+endif
+
 if not for_wheel
   pkginfo_conf = configuration_data()
   pkginfo_conf.set('VERSION', pycairo_version)

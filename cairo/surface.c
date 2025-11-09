@@ -83,12 +83,12 @@ PycairoSurface_FromSurface (cairo_surface_t *surface, PyObject *base) {
     type = &PycairoWin32PrintingSurface_Type;
     break;
 #endif
-#ifdef CAIRO_HAS_XCB_SURFACE
+#if defined(CAIRO_HAS_XCB_SURFACE) && !defined(PYCAIRO_NO_X11)
   case CAIRO_SURFACE_TYPE_XCB:
     type = &PycairoXCBSurface_Type;
     break;
 #endif
-#ifdef CAIRO_HAS_XLIB_SURFACE
+#if defined(CAIRO_HAS_XLIB_SURFACE) && !defined(PYCAIRO_NO_X11)
   case CAIRO_SURFACE_TYPE_XLIB:
     type = &PycairoXlibSurface_Type;
     break;
@@ -2314,7 +2314,7 @@ PyTypeObject PycairoWin32PrintingSurface_Type = {
 
 
 /* Class XCBSurface(Surface) --------------------------------------------- */
-#ifdef CAIRO_HAS_XCB_SURFACE
+#if defined(CAIRO_HAS_XCB_SURFACE) && !defined(PYCAIRO_NO_X11)
 #include <cairo-xcb.h>
 
 static PyObject *
@@ -2382,11 +2382,11 @@ PyTypeObject PycairoXCBSurface_Type = {
   0,                                  /* tp_is_gc */
   0,                                  /* tp_bases */
 };
-#endif  /* CAIRO_HAS_XCB_SURFACE */
+#endif  /* defined(CAIRO_HAS_XCB_SURFACE) && !defined(PYCAIRO_NO_X11) */
 
 
 /* Class XlibSurface(Surface) --------------------------------------------- */
-#ifdef CAIRO_HAS_XLIB_SURFACE
+#if defined(CAIRO_HAS_XLIB_SURFACE) && !defined(PYCAIRO_NO_X11)
 #include <cairo-xlib.h>
 
 static PyObject *
@@ -2461,7 +2461,7 @@ PyTypeObject PycairoXlibSurface_Type = {
   0,                                  /* tp_is_gc */
   0,                                  /* tp_bases */
 };
-#endif  /* CAIRO_HAS_XLIB_SURFACE */
+#endif  /* defined(CAIRO_HAS_XLIB_SURFACE) && !defined(PYCAIRO_NO_X11) */
 
 #ifdef CAIRO_HAS_TEE_SURFACE
 #include <cairo-tee.h>
