@@ -18,7 +18,7 @@ jobs:
             pkgprefix: mingw-w64-clang-x86_64
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: setup-msys2
         uses: msys2/setup-msys2@v2
@@ -61,7 +61,7 @@ jobs:
           poetry run coverage xml -i
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
 
   ubuntu:
     runs-on: ubuntu-latest
@@ -70,10 +70,10 @@ jobs:
       matrix:
         python-version: ['3.10', '3.11', '3.12', '3.13', '3.14', 'pypy-3.11']
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
         allow-prereleases: true
@@ -107,7 +107,7 @@ jobs:
         poetry run coverage xml -i
 
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
 
     - name: Run linters
       if: ${{ !contains(matrix.python-version, 'pypy') }}
@@ -140,11 +140,11 @@ jobs:
             architecture: 'arm64'
             os: 'windows-11-arm'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python ${{ matrix.python-version }}
         id: setup-python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
@@ -191,14 +191,14 @@ jobs:
           poetry run coverage xml -i
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
 
   macos:
     runs-on: macos-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install dependencies
         run: |
@@ -221,4 +221,4 @@ jobs:
           poetry run coverage xml -i
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
