@@ -82,29 +82,29 @@ jobs:
       run: |
         sudo apt-get update -q
         sudo apt-get install -y libcairo2-dev ninja-build
-        pipx install poetry
+        pipx install uv
         pipx install meson
-        poetry install
+        uv sync
 
     - name: Install optional test dependencies
       if: ${{ !contains(matrix.python-version, 'pypy') && !contains(matrix.python-version, '3.14') }}
       run: |
-        poetry install --with test-extras
+        uv sync --group test-extras
 
     - name: Build & Test with meson
       run: |
-        poetry run meson setup --werror _build
-        poetry run meson compile -C _build
-        poetry run meson test -v -C _build
+        uv run meson setup --werror _build
+        uv run meson compile -C _build
+        uv run meson test -v -C _build
         rm -Rf _build
 
-    - name: Build & Test with poetry
+    - name: Build & Test with uv
       run: |
         export CFLAGS="-Werror -coverage"
         export PYTHONDEVMODE=1
-        poetry run pip install --no-build-isolation -e .
-        poetry run coverage run --branch -m pytest
-        poetry run coverage xml -i
+        uv pip install --no-build-isolation -e .
+        uv run coverage run --branch -m pytest
+        uv run coverage xml -i
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5
@@ -112,14 +112,14 @@ jobs:
     - name: Run linters
       if: ${{ !contains(matrix.python-version, 'pypy') }}
       run: |
-        poetry run flake8
-        poetry run mypy .
+        uv run flake8
+        uv run mypy .
 
     - name: Build docs
       if: ${{ !contains(matrix.python-version, 'pypy') }}
       run: |
-        poetry install --with docs
-        poetry run python -m sphinx -W -a -E -b html -n docs docs/_build
+        uv sync --group docs
+        uv run python -m sphinx -W -a -E -b html -n docs docs/_build
 
   msvc:
     runs-on: ${{ matrix.os }}
@@ -161,9 +161,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pipx install --python "${{ steps.setup-python.outputs.python-path }}" poetry
+          pipx install --python "${{ steps.setup-python.outputs.python-path }}" uv
           pipx install --python "${{ steps.setup-python.outputs.python-path }}" meson
-          poetry install
+          uv sync
 
       - name: Build & Test with meson
         env:
@@ -172,23 +172,23 @@ jobs:
           CFLAGS: "-DCAIRO_WIN32_STATIC_BUILD=1"
         run: |
           # XXX: pass python, so global python3 doesn't win
-          poetry run meson setup -Dpython=python --werror _build
-          poetry run meson compile -C _build
-          poetry run meson test -v -C _build
+          uv run meson setup -Dpython=python --werror _build
+          uv run meson compile -C _build
+          uv run meson test -v -C _build
           if (-not $?) { exit 1 }
           rm -r _build
 
-      - name: Build & Test with poetry
+      - name: Build & Test with uv
         env:
           PKG_CONFIG: ${{ github.workspace }}/cairo-prebuild/bin/pkgconf.exe
           PKG_CONFIG_PATH: ${{ github.workspace }}/cairo-prebuild/lib/pkgconfig
           CFLAGS: "-DCAIRO_WIN32_STATIC_BUILD=1"
           PYTHONDEVMODE: 1
         run: |
-          poetry run pip install --no-build-isolation -e .
-          poetry run coverage run --branch -m pytest
+          uv pip install --no-build-isolation -e .
+          uv run coverage run --branch -m pytest
           if (-not $?) { exit 1 }
-          poetry run coverage xml -i
+          uv run coverage xml -i
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
@@ -202,23 +202,23 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew install pkg-config cairo python meson poetry ninja
-          poetry install
+          brew install pkg-config cairo python meson ninja uv
+          uv sync
 
       - name: Build & Test with meson
         run: |
-          poetry run meson setup --werror _build
-          poetry run meson compile -C _build
-          poetry run meson test -v -C _build
+          uv run meson setup --werror _build
+          uv run meson compile -C _build
+          uv run meson test -v -C _build
           rm -Rf _build
 
-      - name: Build & Test with poetry
+      - name: Build & Test with uv
         run: |
           export CFLAGS="-Werror -coverage"
           export PYTHONDEVMODE=1
-          poetry run pip install --no-build-isolation -e .
-          poetry run coverage run --branch -m pytest
-          poetry run coverage xml -i
+          uv pip install --no-build-isolation -e .
+          uv run coverage run --branch -m pytest
+          uv run coverage xml -i
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
