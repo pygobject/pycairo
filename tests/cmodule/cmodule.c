@@ -25,6 +25,9 @@ static int exec_cmod(PyObject *m)
 
 static PyModuleDef_Slot cmod_slots[] = {
     {Py_mod_exec, exec_cmod},
+#if PY_VERSION_HEX >= 0x030D0000
+    {Py_mod_gil, Py_MOD_GIL_NOT_USED},
+#endif
     {0, NULL}};
 
 static struct PyModuleDef cmod_module = {

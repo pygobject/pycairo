@@ -594,6 +594,9 @@ static int exec_cairo(PyObject *m)
 
 static PyModuleDef_Slot cairo_slots[] = {
   {Py_mod_exec, (void*)exec_cairo},
+#if PY_VERSION_HEX >= 0x030D0000
+  {Py_mod_gil, Py_MOD_GIL_NOT_USED},
+#endif
   {0, NULL},
 };
 
