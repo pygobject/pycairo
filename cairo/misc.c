@@ -176,32 +176,3 @@ Pycairo_richcompare (void* a, void *b, int op)
     Py_INCREF (res);
     return res;
 }
-
-/* NULL on error */
-static PyObject *
-_conv_pyobject_to_pylong (PyObject *pyobj) {
-    if (!PyLong_Check (pyobj)) {
-        PyErr_SetString (PyExc_TypeError, "not of type int");
-        return NULL;
-    }
-    Py_INCREF (pyobj);
-    return pyobj;
-}
-
-/* -1 on error */
-int
-_conv_pyobject_to_ulong (PyObject *pyobj, unsigned long *result) {
-    unsigned long temp;
-    PyObject *pylong;
-
-    pylong = _conv_pyobject_to_pylong (pyobj);
-    if (pylong == NULL)
-        return -1;
-
-    temp = PyLong_AsUnsignedLong (pylong);
-    if (temp == (unsigned long)-1 && PyErr_Occurred ())
-        return -1;
-
-    *result = temp;
-    return 0;
-}
