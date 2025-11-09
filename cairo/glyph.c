@@ -181,7 +181,8 @@ glyph_new (PyTypeObject *type, PyObject *args, PyObject *kwds) {
             KWDS, &pyindex, &x, &y))
         return NULL;
 
-    if (_conv_pyobject_to_ulong (pyindex, &index) < 0)
+    index = PyLong_AsUnsignedLong (pyindex);
+    if (index == (unsigned long)-1 && PyErr_Occurred ())
         return NULL;
 
     tuple_args = Py_BuildValue ("((kdd))", index, x, y);
