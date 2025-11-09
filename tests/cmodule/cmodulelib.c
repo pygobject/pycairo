@@ -226,14 +226,14 @@ test_capi (PyObject *self, PyObject *args)
     #endif
 
     // PycairoXCBSurface_Type
-    #ifdef CAIRO_HAS_XCB_SURFACE
+    #if defined(CAIRO_HAS_XCB_SURFACE) && !defined(PYCAIRO_NO_X11)
     if(PyType_Ready(&PycairoXCBSurface_Type) != 0) {
         return NULL;
     }
     #endif
 
     // PycairoXlibSurface_Type
-    #ifdef CAIRO_HAS_XLIB_SURFACE
+    #if defined(CAIRO_HAS_XLIB_SURFACE) && !defined(PYCAIRO_NO_X11)
     if(PyType_Ready(&PycairoXlibSurface_Type) != 0) {
         return NULL;
     }

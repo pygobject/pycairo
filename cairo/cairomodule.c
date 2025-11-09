@@ -96,12 +96,12 @@ static Pycairo_CAPI_t CAPI = {
   0,
   0,
 #endif
-#ifdef CAIRO_HAS_XCB_SURFACE
+#if defined(CAIRO_HAS_XCB_SURFACE) && !defined(PYCAIRO_NO_X11)
   &PycairoXCBSurface_Type,
 #else
   0,
 #endif
-#ifdef CAIRO_HAS_XLIB_SURFACE
+#if defined(CAIRO_HAS_XLIB_SURFACE) && !defined(PYCAIRO_NO_X11)
   &PycairoXlibSurface_Type,
 #else
   0,
@@ -242,11 +242,11 @@ static int exec_cairo(PyObject *m)
   if (PyType_Ready(&PycairoWin32PrintingSurface_Type) < 0)
     return -1;
 #endif
-#ifdef CAIRO_HAS_XCB_SURFACE
+#if defined(CAIRO_HAS_XCB_SURFACE) && !defined(PYCAIRO_NO_X11)
   if (PyType_Ready(&PycairoXCBSurface_Type) < 0)
     return -1;
 #endif
-#ifdef CAIRO_HAS_XLIB_SURFACE
+#if defined(CAIRO_HAS_XLIB_SURFACE) && !defined(PYCAIRO_NO_X11)
   if (PyType_Ready(&PycairoXlibSurface_Type) < 0)
     return -1;
 #endif
@@ -391,13 +391,13 @@ static int exec_cairo(PyObject *m)
       return -1;
 #endif
 
-#ifdef CAIRO_HAS_XCB_SURFACE
+#if defined(CAIRO_HAS_XCB_SURFACE) && !defined(PYCAIRO_NO_X11)
   if (PyModule_AddObjectRef(m, "XCBSurface",
                             (PyObject *)&PycairoXCBSurface_Type) < 0)
       return -1;
 #endif
 
-#ifdef CAIRO_HAS_XLIB_SURFACE
+#if defined(CAIRO_HAS_XLIB_SURFACE) && !defined(PYCAIRO_NO_X11)
   if (PyModule_AddObjectRef(m, "XlibSurface",
                             (PyObject *)&PycairoXlibSurface_Type) < 0)
       return -1;
@@ -501,14 +501,14 @@ static int exec_cairo(PyObject *m)
   if (PyModule_AddIntConstant(m, "HAS_WIN32_SURFACE", 0) < 0)
     return -1;
 #endif
-#ifdef CAIRO_HAS_XCB_SURFACE
+#if defined(CAIRO_HAS_XCB_SURFACE) && !defined(PYCAIRO_NO_X11)
   if (PyModule_AddIntConstant(m, "HAS_XCB_SURFACE", 1) < 0)
     return -1;
 #else
   if (PyModule_AddIntConstant(m, "HAS_XCB_SURFACE", 0) < 0)
     return -1;
 #endif
-#ifdef CAIRO_HAS_XLIB_SURFACE
+#if defined(CAIRO_HAS_XLIB_SURFACE) && !defined(PYCAIRO_NO_X11)
   if (PyModule_AddIntConstant(m, "HAS_XLIB_SURFACE", 1) < 0)
     return -1;
 #else
