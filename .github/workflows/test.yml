@@ -116,7 +116,7 @@ jobs:
         poetry run mypy .
 
     - name: Build docs
-      if: ${{ !contains(matrix.python-version, 'pypy') && !contains(matrix.python-version, '3.14') }}
+      if: ${{ !contains(matrix.python-version, 'pypy') }}
       run: |
         poetry install --with docs
         poetry run python -m sphinx -W -a -E -b html -n docs docs/_build
