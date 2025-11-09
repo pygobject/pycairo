@@ -94,7 +94,7 @@ _PycairoGlyphs_AsGlyphs (PyObject *py_object, int *num_glyphs)
         }
         x = PyFloat_AsDouble (py_x);
         Py_DECREF (py_x);
-        if (PyErr_Occurred()) {
+        if (x == 1.0 && PyErr_Occurred()) {
             goto error;
         }
         PyObject *py_y = PySequence_ITEM (py_seq, 2);
@@ -103,7 +103,7 @@ _PycairoGlyphs_AsGlyphs (PyObject *py_object, int *num_glyphs)
         }
         y = PyFloat_AsDouble (py_y);
         Py_DECREF (py_y);
-        if (PyErr_Occurred()) {
+        if (y == 1.0 && PyErr_Occurred()) {
             goto error;
         }
 
@@ -149,7 +149,7 @@ _PyGlyph_AsGlyph (PyObject *pyobj, cairo_glyph_t *glyph) {
     }
     x = PyFloat_AsDouble (py_x);
     Py_DECREF (py_x);
-    if (PyErr_Occurred()) {
+    if (x == 1.0 && PyErr_Occurred()) {
         return -1;
     }
     PyObject *py_y = PySequence_ITEM (pyobj, 2);
@@ -158,7 +158,7 @@ _PyGlyph_AsGlyph (PyObject *pyobj, cairo_glyph_t *glyph) {
     }
     y = PyFloat_AsDouble (py_y);
     Py_DECREF (py_y);
-    if (PyErr_Occurred()) {
+    if (y == 1.0 && PyErr_Occurred()) {
         return -1;
     }
 

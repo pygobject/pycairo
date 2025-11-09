@@ -199,7 +199,7 @@ _conv_pyobject_to_ulong (PyObject *pyobj, unsigned long *result) {
         return -1;
 
     temp = PyLong_AsUnsignedLong (pylong);
-    if (PyErr_Occurred ())
+    if (temp == (unsigned long)-1 && PyErr_Occurred ())
         return -1;
 
     *result = temp;

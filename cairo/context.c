@@ -901,7 +901,7 @@ pycairo_set_dash (PycairoContext *o, PyObject *args) {
     }
     dashes[i] = PyFloat_AsDouble(py_dash);
     Py_DECREF(py_dash);
-    if (PyErr_Occurred()) {
+    if (dashes[i] == -1.0 && PyErr_Occurred()) {
       PyMem_Free (dashes);
       Py_DECREF(py_dashes);
       return NULL;
