@@ -267,7 +267,7 @@ format_stride_for_width (PyObject *self, PyObject *args) {
     return NULL;
 
   value = PyLong_AsLong (self);
-  if (PyErr_Occurred())
+  if (value == -1 && PyErr_Occurred())
     return NULL;
   if (value > INT_MAX || value < INT_MIN) {
     PyErr_SetString (PyExc_ValueError, "format value out of range");
