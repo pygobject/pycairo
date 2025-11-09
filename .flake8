@@ -2,5 +2,5 @@
 ignore=E402,E741
 builtins=buffer,unichr
 max-line-length = 100
-exclude = build,.git
+exclude = build,.git,.venv
 filename = *.py,*.pyi
