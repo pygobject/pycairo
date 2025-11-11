@@ -1,5 +1,20 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning <http://semver.org/>`__
 
+.. _v1.29.0:
+
+1.29.0 - 2025-11-11
+-------------------
+
+* :meth:`ImageSurface.get_data`: Return empty memoryview for empty image :pr:`418`
+* :meth:`ImageSurface.create_for_data`: support empty images :pr:`419`
+* Drop support for Python 3.9 :pr:`428`
+* Drop support for PyPy 3.10
+* Support multi-phase init :pr:`413`
+* Experimental support for free-threaded Python :pr:`430` :pr:`429`
+* Update dependencies (libpng, pixman) for the Windows wheels :pr:`431`
+* build: add "no-x11" option to disable X11 surface support :pr:`432` :issue:`420`
+* dev: support uv for development :pr:`433`
+
 .. _v1.28.0:
 
 1.28.0 - 2025-04-14
