@@ -1,5 +1,12 @@
 Since version 1.11.0 Pycairo uses `Semantic Versioning <http://semver.org/>`__
 
+.. _v1.29.2:
+
+1.29.2 - 2026-10-04
+-------------------
+
+* Update dependencies (cairo 1.18.4 -> 1.18.6) for the Windows wheels :pr:`448`
+
 .. _v1.29.1:
 
 1.29.1 - 2026-08-07
